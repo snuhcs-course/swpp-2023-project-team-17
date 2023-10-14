@@ -1,5 +1,7 @@
+drop database team17_database;
 create database team17_database;
 use team17_database;
+
 create table Users (
 	user_email varchar(50) not null,
 	user_id int not null auto_increment,
@@ -84,13 +86,15 @@ create table Locations (
 
 create table Attendances (
 	attendance_id int not null auto_increment primary key,
-    attendance_date date not null,
+    attendance_date date not null default (current_date()),
     attendance_status int(1),
     attendance_duration int(10),
-    is_sent tinyint(1),
+    is_sent tinyint(1) not null default 0,
 	student_id int not null,
-    foreign key (student_id) references Users(user_id),
-    check (attendance_status >= 0 and attendance_status <= 2)
+    class_id int not null,
+    foreign key (class_id) references Takes(class_id),
+	foreign key (student_id) references Users(user_id),
+	check (attendance_status >= 0 and attendance_status <= 2)
 );
 
 
