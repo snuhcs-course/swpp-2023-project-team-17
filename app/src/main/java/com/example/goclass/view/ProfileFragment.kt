@@ -49,8 +49,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
             if (selectedRole == null) {
                 errorTextView.visibility = View.VISIBLE
-            }
-            else {
+            } else {
                 errorTextView.visibility = View.GONE
             }
 
