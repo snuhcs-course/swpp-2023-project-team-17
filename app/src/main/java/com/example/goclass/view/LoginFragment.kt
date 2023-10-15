@@ -9,7 +9,6 @@ import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.goclass.R
-import com.example.goclass.view.ProfileFragment
 
 class LoginFragment : Fragment() {
     override fun onCreateView(
