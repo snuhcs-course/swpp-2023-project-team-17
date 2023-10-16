@@ -158,10 +158,12 @@ app.post('/class/create', (req, res) => {
     const className = req.body.className;
     const classCode = req.body.classCode;
     const professorId = req.body.professorId;
+    const buildingNumber = req.body.buildingNumber;
+    const roomNumber = req.body.roomNumber;
 
-    const sql = 'insert into Classes(class_name, class_code, professor_id) values(?, ?, ?)';
+    var sql = 'insert into Classes(class_name, class_code, professor_id) values(?, ?, ?)';
 
-    const params = [className, classCode, professorId];
+    var params = [className, classCode, professorId];
 
     connection.query(sql, params, (err, result) => {
         let resultCode = 404;
@@ -181,10 +183,10 @@ app.post('/class/create', (req, res) => {
         });
     });
 
-    const sql = 'insert into Teaches(class_id, professor_id) ' +
+    sql = 'insert into Teaches(class_id, professor_id) ' +
                 '(SELECT class_id, professor_id FROM Class WHERE class_name = ? and class_code = ? and professor_id = ?)';
 
-    const params = [className, classCode, professorId];
+    params = [className, classCode, professorId];
 
     connection.query(sql, params, (err, result) => {
         let resultCode = 404;
@@ -195,6 +197,29 @@ app.post('/class/create', (req, res) => {
         } else {
             resultCode = 200;
             message = 'link class to professor Success';
+            console.log(message);
+        }
+
+        res.json({
+            'code': resultCode,
+            'message': message
+        });
+    });
+
+    sql = 'insert into Class_Classroom(building_number, room_number, class_id) ' +
+                'VALUES(?, ?, (SELECT class_id FROM Class WHERE class_name = ? and class_code = ? and professor_id = ?))';
+
+    params = [buildingNumber, roomNumber, professorId];
+
+    connection.query(sql, params, (err, result) => {
+        let resultCode = 404;
+        let message = 'Error occured';
+
+        if (err) {
+            console.log(err);
+        } else {
+            resultCode = 200;
+            message = 'link class to classroom Success';
             console.log(message);
         }
 
@@ -536,7 +561,7 @@ app.post('/attendance/:user_id', (req, res) => {
     const classId = req.body.classId;
 
     const sql = 'insert into Attendances(attendance_status, attendance_duration, student_id, class_id) '
-              + 'values(?, ?, ?, ?);';
+              + 'values(?, ?, ?, ?)';
 
     const params = [attendanceStatus, attendanceDuration, userId, classId];
 
