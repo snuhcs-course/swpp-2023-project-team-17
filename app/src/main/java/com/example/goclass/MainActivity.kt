@@ -14,6 +14,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // User role from ClassActivity back button
+        if(intent.hasExtra("userRole")) {
+            val userRole = intent.getStringExtra("userRole")
+            val sharedPref = getPreferences(Context.MODE_PRIVATE)
+            with(sharedPref?.edit()) {
+                this?.putString("userRole", userRole)
+                this?.apply()
+            }
+        }
+
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 

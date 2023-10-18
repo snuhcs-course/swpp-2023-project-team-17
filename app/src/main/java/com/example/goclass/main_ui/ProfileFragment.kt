@@ -1,4 +1,4 @@
-package com.example.goclass.view
+package com.example.goclass.main_ui
 
 import android.annotation.SuppressLint
 import android.content.Context
