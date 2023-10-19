@@ -24,7 +24,7 @@ const connection = mysql.createConnection({
     port: 3306
 });
 
-// May need changes for social login
+// May need changes for social login - current: get token -> process token -> if auth, pass user_email
 app.post('/login', (req, res) => {
     console.log(req.body);
     const userEmail = req.body.userEmail;
@@ -42,11 +42,18 @@ app.post('/login', (req, res) => {
             resultCode = 200;
             message = 'login Success';
             console.log(message);
+            userId = result[0].user_id;
+            userName = result[0].user_name;
+            userType = result[0].user_type
         }
 
         res.json({
             'code': resultCode,
-            'message': message
+            'message': message,
+            'user_email': userEmail,
+            'user_id': userId, 
+            'user_name': userName,
+            'user_type': userType
         });
     });
 });
@@ -142,6 +149,70 @@ app.get('/users/:id/classes', (req, res) => {
         } else {
             resultCode = 200;
             message = 'get classes Success';
+            console.log(message);
+        }
+
+        res.json({
+            'code': resultCode,
+            'message': message
+        });
+    });
+});
+
+app.get('users/attendance/:date', (req, res) => {
+    console.log(req.body);
+
+    const attendanceDate = req.params.date;
+    const professorId = req.body.userId;
+    const userType = req.body.userType;
+
+    const sql = 'select * from Attendances '
+                + 'where is_sent = 1 and attendance_date = ? and class_id '
+                + 'in (select class_id from Teaches where professor_id = ?)';
+
+    const params = [attendanceDate, professorId];
+
+    connection.query(sql, params, (err, result) => {
+        let resultCode = 404;
+        let message = 'Error occured';
+        if (!userType) message = 'You must be a professor' // only for professors
+
+        if (err) {
+            console.log(err);
+        } else {
+            resultCode = 200;
+            message = 'get all attendances in specific date Success';
+            console.log(message);
+        }
+
+        res.json({
+            'code': resultCode,
+            'message': message
+        });
+    });
+});
+
+app.get('users/attendance', (req, res) => {
+    console.log(req.body);
+
+    const professorId = req.body.professorId;
+
+    const sql = 'select attendance_date from Attendances '
+                + 'where is_sent = 1 and class_id '
+                + 'in (select class_id from Teaches where professor_id = ?)';
+
+    const params = [professorId];
+
+    connection.query(sql, params, (err, result) => {
+        let resultCode = 404;
+        let message = 'Error occured';
+        if (!userType) message = 'You must be a professor' // only for professors
+
+        if (err) {
+            console.log(err);
+        } else {
+            resultCode = 200;
+            message = 'get attendance date list Success';
             console.log(message);
         }
 
@@ -318,6 +389,63 @@ app.delete('/class/:id', (req, res) => {
     });
 });
 
+app.get('class/chat_channel/:type', (req, res) => {
+    console.log(req.body);
+
+    const channelType = req.params.type; // 0 or 1
+    const classId = req.body.classId;
+
+    const sql = 'select * from Channels where channel_type = ? and class_id in (select class_id from Classes where class_id = ?)';
+    const params = [channelType, classId];
+
+    connection.query(sql, params, (err, result) => {
+        let resultCode = 404;
+        let message = 'Error occured';
+
+        if (err) {
+            console.log(err);
+        } else {
+            resultCode = 200;
+            message = 'get chatting channel Success';
+            console.log(message);
+        }
+
+        res.json({
+            'code': resultCode,
+            'message': message
+        });
+    });
+});
+
+app.get('class/attendance/:user_id', (req, res) => {
+    console.log(req.body);
+
+    const userId = req.params.user_id;
+    const classId = req.body.classId;
+
+    const sql = 'select * from Attendances where student_id = ? and class_id = ?';
+
+    const params = [userId, classId];
+
+    connection.query(sql, params, (err, result) => {
+        let resultCode = 404;
+        let message = 'Error occured';
+
+        if (err) {
+            console.log(err);
+        } else {
+            resultCode = 200;
+            message = 'get user attendance list Success';
+            console.log(message);
+        }
+
+        res.json({
+            'code': resultCode,
+            'message': message
+        });
+    });
+});
+
 app.get('/chat_channel/:id', (req, res) => {
     console.log(req.body);
 
@@ -366,68 +494,6 @@ app.post('/chat_channel/:id', (req, res) => {
         } else {
             resultCode = 200;
             message = 'send new chat Success';
-            console.log(message);
-        }
-
-        res.json({
-            'code': resultCode,
-            'message': message
-        });
-    });
-});
-
-app.get('/attendance', (req, res) => {
-    console.log(req.body);
-
-    const professorId = req.body.professorId;
-
-    const sql = 'select attendance_date from Attendances '
-                + 'where is_sent = 1 and class_id '
-                + 'in (select class_id from Teaches where professor_id = ?)';
-
-    const params = [professorId];
-
-    connection.query(sql, params, (err, result) => {
-        let resultCode = 404;
-        let message = 'Error occured';
-
-        if (err) {
-            console.log(err);
-        } else {
-            resultCode = 200;
-            message = 'get attendance date list Success';
-            console.log(message);
-        }
-
-        res.json({
-            'code': resultCode,
-            'message': message
-        });
-    });
-});
-
-
-app.get('/attendance/:date', (req, res) => {
-    console.log(req.body);
-
-    const attendanceDate = req.params.date;
-    const professorId = req.body.professorId;
-
-    const sql = 'select * from Attendances '
-                + 'where is_sent = 1 and attendance_date = ? and class_id '
-                + 'in (select class_id from Teaches where professor_id = ?)';
-
-    const params = [attendanceDate, professorId];
-
-    connection.query(sql, params, (err, result) => {
-        let resultCode = 404;
-        let message = 'Error occured';
-
-        if (err) {
-            console.log(err);
-        } else {
-            resultCode = 200;
-            message = 'get all attendances in specific date Success';
             console.log(message);
         }
 
@@ -523,36 +589,7 @@ app.delete('/attendance/:id', (req, res) => {
     });
 });
 
-app.get('/attendance/:user_id', (req, res) => {
-    console.log(req.body);
-
-    const userId = req.params.user_id;
-    const classId = req.body.classId;
-
-    const sql = 'select * from Attendances where student_id = ? and class_id = ?';
-
-    const params = [userId, classId];
-
-    connection.query(sql, params, (err, result) => {
-        let resultCode = 404;
-        let message = 'Error occured';
-
-        if (err) {
-            console.log(err);
-        } else {
-            resultCode = 200;
-            message = 'get user attendance list Success';
-            console.log(message);
-        }
-
-        res.json({
-            'code': resultCode,
-            'message': message
-        });
-    });
-});
-
-app.post('/attendance/:user_id', (req, res) => {
+app.post('attendance/:user_id', (req, res) => {
     console.log(req.body);
 
     const attendanceStatus = req.body.attendanceStatus;

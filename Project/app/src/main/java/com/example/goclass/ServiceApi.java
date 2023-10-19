@@ -18,41 +18,43 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 
 public interface ServiceApi {
+    // naming format: model+description (e.g. user+login -> userLogin)
     @POST("/login")
-    Call<UsersResponse> userLogin(@Body Users users);
+    Call<UsersResponse> userLogin(@Body Users user);
     @POST("/logout")
     Call<UsersResponse> userLogout();
     @GET("/users/:id")
-    Call<UsersResponse> userGet(@Body Users users);
+    Call<UsersResponse> userGet(@Body Users user);
     @PUT("/users/:id")
-    Call<UsersResponse> userEdit(@Body Users users);
+    Call<UsersResponse> userEdit(@Body Users user);
     @GET("/users/:id/classes")
-    Call<TakesResponse> userGetClassList(@Body Users users);
+    Call<TakesResponse> userGetClassList(@Body Users user);
+    @GET("users/attendance/:date")
+    Call<AttendancesResponse> userGetAttendanceListByDate(@Body Users user);
+    @GET("users/attendance")
+    Call<AttendancesResponse> attendanceGetDateList(@Body Users user);
     @POST("/class/create")
-    Call<ClassesResponse> classCreate(@Body Classes classes);
+    Call<ClassesResponse> classCreate(@Body Classes class);
     @POST("/class/join")
-    Call<TakesResponse> classJoin(@Body Classes classes);
+    Call<TakesResponse> classJoin(@Body Classes class);
     @GET("/class/:id")
-    Call<ClassesResponse> classGet(@Body Classes classes);
+    Call<ClassesResponse> classGet(@Body Classes class);
     @DELETE("/class/:id")
-    Call<ClassesResponse> classDelete(@Body Classes classes);
+    Call<ClassesResponse> classDelete(@Body Classes class);
+    @GET("class/chat_channel/:type")
+    Call<ChannelsResponse> classGetChannel(@Body Classes class);
+    @GET("class/attendance/:user_id")
+    Call<AttendancesResponse> classGetAttendanceListByUserId(@Body Classes class);
     @GET("/chat_channel/:id")
-    Call<MessagesResponse> chatChannelGetList(@Body Channels channels);
+    Call<MessagesResponse> chatChannelGetList(@Body Channels channel);
     @POST("/chat_channel/:id")
-    Call<MessagesResponse> chatChannelSend(@Body Channels channels);
-    @GET("/attendance")
-    Call<AttendancesResponse> attendanceGetDateList(@Body Attendances attendances);
-    @GET("/attendance/:date")
-    Call<AttendancesResponse> attendanceGetListByDate(@Body Attendances attendances);
+    Call<MessagesResponse> chatChannelSend(@Body Messages message);
     @GET("/attendance/:id")
-    Call<AttendancesResponse> attendanceGet(@Body Attendances attendances);
+    Call<AttendancesResponse> attendanceGet(@Body Attendances attendance);
     @PUT("/attendance/:id")
-    Call<AttendancesResponse> attendanceEdit(@Body Attendances attendances);
+    Call<AttendancesResponse> attendanceEdit(@Body Attendances attendance);
     @DELETE("/attendance/:id")
-    Call<AttendancesResponse> attendanceDelete(@Body Attendances attendances);
-    @GET("/attendance/:user_id")
-    Call<AttendancesResponse> attendanceGetListByUserId(@Body Attendances attendances);
+    Call<AttendancesResponse> attendanceDelete(@Body Attendances attendance);
     @POST("/attendance/:user_id")
-    Call<AttendancesResponse> attendanceAdd(@Body Attendances attendances);
-
+    Call<AttendancesResponse> attendanceAdd(@Body Attendances attendance);
 }

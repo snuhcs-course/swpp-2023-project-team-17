@@ -15,7 +15,7 @@ create table Classes (
     class_name varchar(50) not null,
     class_code varchar(20) not null,
     professor_id int not null,
-    class_time varchar(100) not null, # Class time format should be specified (i.e. 
+    class_time varchar(100) not null, -- ex. "TUE 15:30-17:00, THU 15:30-17:00"
     primary key (class_id),
     foreign key (professor_id) references Users(user_id)
 );
@@ -43,14 +43,6 @@ create table Teaches (
     foreign key (class_id) references Classes(class_id)
 );
 
--- create table Class_times (
--- 	class_id int not null,
--- 	start_time time,
---     end_time time,
---     day_of_week varchar(10),
---     foreign key (class_id) references Classes(class_id)
--- );
-
 create table Channels (
 	channel_id int not null auto_increment primary key,
     class_id int not null,
@@ -74,15 +66,6 @@ create table Class_Classroom (
     class_id int not null,
     foreign key (class_id) references Classes(class_id),
     foreign key (building_number, room_number) references Classrooms(building_number, room_number)
-);
-
-create table Locations (
-	time_stamp datetime not null,
-    beacon_correct tinyint(1) not null,
-    longitude float(13, 10),
-    latitude float(13, 10),
-    student_id int not null,
-    foreign key (student_id) references Users(user_id)
 );
 
 create table Attendances (
