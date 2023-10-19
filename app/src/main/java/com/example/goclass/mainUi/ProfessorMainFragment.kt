@@ -1,4 +1,4 @@
-package com.example.goclass.main_ui
+package com.example.goclass.mainUi
 
 import android.app.Dialog
 import android.content.Intent
@@ -9,15 +9,13 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
 import android.widget.EditText
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.goclass.ClassActivity
-import com.example.goclass.databinding.FragmentProfessorMainBinding
 import com.example.goclass.R
+import com.example.goclass.databinding.FragmentProfessorMainBinding
 
 class ProfessorMainFragment : Fragment() {
-
     private lateinit var binding: FragmentProfessorMainBinding
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,7 +46,10 @@ class ProfessorMainFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+        ) {
         super.onViewCreated(view, savedInstanceState)
 
         // Profile Button

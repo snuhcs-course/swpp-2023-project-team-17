@@ -1,4 +1,4 @@
-package com.example.goclass.class_ui.Announcement
+package com.example.goclass.classUi.announcement
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.goclass.databinding.FragmentAnnouncementBinding
 
 class AnnouncementFragment : Fragment() {
-
     private var _binding: FragmentAnnouncementBinding? = null
 
     // This property is only valid between onCreateView and
@@ -20,10 +19,10 @@ class AnnouncementFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         val announcementViewModel =
-            ViewModelProvider(this).get(AnnouncementViewModel::class.java)
+            ViewModelProvider(this)[AnnouncementViewModel::class.java]
 
         _binding = FragmentAnnouncementBinding.inflate(inflater, container, false)
         val root: View = binding.root

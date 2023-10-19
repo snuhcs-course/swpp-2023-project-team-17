@@ -1,4 +1,4 @@
-package com.example.goclass.class_ui.Qna
+package com.example.goclass.classUi.qna
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.goclass.databinding.FragmentQnaBinding
 
 class QnaFragment : Fragment() {
-
     private var _binding: FragmentQnaBinding? = null
 
     // This property is only valid between onCreateView and
@@ -20,7 +19,7 @@ class QnaFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         val qnaViewModel =
             ViewModelProvider(this).get(QnaViewModel::class.java)

@@ -3,15 +3,13 @@ package com.example.goclass
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.goclass.databinding.ActivityClassBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class ClassActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityClassBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

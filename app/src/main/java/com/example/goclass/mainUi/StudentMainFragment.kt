@@ -1,4 +1,4 @@
-package com.example.goclass.main_ui
+package com.example.goclass.mainUi
 
 import android.app.Dialog
 import android.content.Intent
@@ -13,23 +13,24 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.goclass.ClassActivity
 import com.example.goclass.R
-import com.example.goclass.databinding.ActivityClassBinding
 import com.example.goclass.databinding.FragmentStudentMainBinding
 
 class StudentMainFragment : Fragment() {
-
     private lateinit var binding: FragmentStudentMainBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         binding = FragmentStudentMainBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         // Join Button

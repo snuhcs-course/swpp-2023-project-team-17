@@ -1,4 +1,4 @@
-package com.example.goclass.main_ui
+package com.example.goclass.mainUi
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -7,8 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -17,14 +15,13 @@ import com.example.goclass.R
 import com.example.goclass.databinding.FragmentProfileBinding
 
 class ProfileFragment : Fragment() {
-
     private lateinit var binding: FragmentProfileBinding
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
         return binding.root
@@ -104,4 +101,3 @@ class ProfileFragment : Fragment() {
         }
     }
 }
-

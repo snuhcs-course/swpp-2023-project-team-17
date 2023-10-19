@@ -7,13 +7,13 @@
 
     <fragment
         android:id="@+id/announcementFragment"
-        android:name="com.example.goclass.class_ui.Announcement.AnnouncementFragment"
+        android:name="com.example.goclass.classUi.announcement.AnnouncementFragment"
         android:label="@string/title_announcement"
         tools:layout="@layout/fragment_announcement" />
 
     <fragment
         android:id="@+id/qnaFragment"
-        android:name="com.example.goclass.class_ui.Qna.QnaFragment"
+        android:name="com.example.goclass.classUi.qna.QnaFragment"
         android:label="@string/title_qna"
         tools:layout="@layout/fragment_qna" />
 </navigation>
