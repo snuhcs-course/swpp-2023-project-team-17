@@ -13,6 +13,17 @@
         android:inputType="text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/classTimeEdittext"
+        />
+
+    <EditText
+        android:id="@+id/classTimeEdittext"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="Class Time"
+        android:inputType="text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/codeEdittext"
         />
 

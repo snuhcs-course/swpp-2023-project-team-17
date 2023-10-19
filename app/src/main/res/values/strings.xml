@@ -2,7 +2,6 @@
     <string name="app_name">Go class</string>
     <string name="title_activity_class">ClassActivity</string>
     <string name="title_announcement">Announcement</string>
-    <string name="title_chatting">Chatting</string>
     <string name="title_qna">QnA</string>
     <string name="title_activity_professor_attendance">ProfessorAttendanceActivity</string>
     <string name="large_text">

@@ -12,12 +12,6 @@
         tools:layout="@layout/fragment_announcement" />
 
     <fragment
-        android:id="@+id/chattingFragment"
-        android:name="com.example.goclass.class_ui.Chatting.ChattingFragment"
-        android:label="@string/title_chatting"
-        tools:layout="@layout/fragment_chatting" />
-
-    <fragment
         android:id="@+id/qnaFragment"
         android:name="com.example.goclass.class_ui.Qna.QnaFragment"
         android:label="@string/title_qna"

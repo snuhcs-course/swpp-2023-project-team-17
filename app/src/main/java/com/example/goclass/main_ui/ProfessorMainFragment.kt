@@ -27,11 +27,13 @@ class ProfessorMainFragment : Fragment(R.layout.fragment_professor_main) {
 
             val editCode = dialog.findViewById<EditText>(R.id.codeEdittext)
             val editClassName = dialog.findViewById<EditText>(R.id.classNameEdittext)
+            val editClassTime = dialog.findViewById<EditText>(R.id.classTimeEdittext)
             val createButtonDialog = dialog.findViewById<Button>(R.id.createButton)
 
             createButtonDialog.setOnClickListener {
                 val enteredCode = editCode.text.toString()
                 val enteredClassName = editClassName.text.toString()
+                val enteredClassTime = editClassTime.text.toString()
                 dialog.dismiss()
             }
             dialog.show()
