@@ -25,6 +25,37 @@ const connection = mysql.createConnection({
 });
 
 /*
+    user sign up - first time logging in with gmail
+*/
+app.post('/signup', (req, res) => {
+    console.log(req.body);
+    const userEmail = req.body.userEmail;
+    const userName = req.body.userName;
+    const userType = req.body.userType;
+
+    const sql = 'insert into Users(user_email, user_name, user_type) values(?, ?, ?)';
+    const params = [userEmail, userName, userType];
+
+    connection.query(sql, params, (err, result) => {
+        let resultCode = 404;
+        let message = 'Error occured';
+
+        if (err) {
+            console.log(err);
+        } else {
+            resultCode = 200;
+            message = 'login Success';
+            console.log(message);
+        }
+
+        res.json({
+            'code': resultCode,
+            'message': message,
+        });
+    });
+});
+
+/*
     user log in using gmail
     NOTE: May need changes for social login - current: get token -> process token -> if auth, pass user_email
 */
@@ -615,9 +646,9 @@ app.get('/attendance/:id', (req, res) => {
     connection.query(sql, params, (err, result) => {
         let resultCode = 404;
         let message = 'Error occured';
-        let attendaceDate = -1;
+        let attendanceDate = -1;
         let attendanceStatus = -1;
-        let attendaceDuration = -1;
+        let attendanceDuration = -1;
         let isSent = -1;
         let studentId = -1;
         let classId = -1;
@@ -628,9 +659,9 @@ app.get('/attendance/:id', (req, res) => {
             resultCode = 200;
             message = 'get attendance information Success';
             console.log(message);
-            attendaceDate = result[0].attendance_date;
+            attendanceDate = result[0].attendance_date;
             attendanceStatus = result[0].attendance_status;
-            attendaceDuration = result[0].attendance_duration;
+            attendanceDuration = result[0].attendance_duration;
             isSent = result[0].is_sent;
             studentId = result[0].student_id;
             classId = result[0].class_id;
@@ -639,9 +670,9 @@ app.get('/attendance/:id', (req, res) => {
         res.json({
             'code': resultCode,
             'message': message,
-            'attendaceDate': attendaceDate,
+            'attendanceDate': attendanceDate,
             'attendanceStatus': attendanceStatus,
-            'attendaceDuration': attendaceDuration,
+            'attendanceDuration': attendanceDuration,
             'isSent': isSent,
             'studentId': studentId,
             'classId': classId

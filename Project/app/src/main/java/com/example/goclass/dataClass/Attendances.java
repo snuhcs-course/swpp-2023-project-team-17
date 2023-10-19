@@ -16,7 +16,7 @@ public class Attendances {
     @SerializedName("class_id")
     String classId;
 
-    public Attendances(String attendanceDate, String attendanceStatus, String attendanceDuration, String isSent, String studentId, String classId, String studentId) {
+    public Attendances(String attendanceDate, String attendanceStatus, String attendanceDuration, String isSent, String studentId, String classId) {
         this.attendanceDate = attendanceDate;
         this.attendanceStatus = attendanceStatus;
         this.attendanceDuration = attendanceDuration;
