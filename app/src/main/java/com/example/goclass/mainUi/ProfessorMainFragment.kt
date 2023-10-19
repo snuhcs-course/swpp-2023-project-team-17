@@ -17,6 +17,7 @@ import com.example.goclass.databinding.FragmentProfessorMainBinding
 
 class ProfessorMainFragment : Fragment() {
     private lateinit var binding: FragmentProfessorMainBinding
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -49,7 +50,7 @@ class ProfessorMainFragment : Fragment() {
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
-        ) {
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         // Profile Button

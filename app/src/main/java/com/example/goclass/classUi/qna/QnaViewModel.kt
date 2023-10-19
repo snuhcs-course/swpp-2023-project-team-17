@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 class QnaViewModel : ViewModel() {
     private val _text = MutableLiveData<String>()
         .apply {
-        value = "This is Q&A Channel"
-    }
+            value = "This is Q&A Channel"
+        }
     val text: LiveData<String> = _text
 }
