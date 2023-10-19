@@ -3,7 +3,9 @@ package com.example.goclass.main_ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.RadioButton
@@ -12,10 +14,21 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.goclass.R
+import com.example.goclass.databinding.FragmentProfileBinding
 
-class ProfileFragment : Fragment(R.layout.fragment_profile) {
+class ProfileFragment : Fragment() {
+
+    private lateinit var binding: FragmentProfileBinding
 
     @SuppressLint("ClickableViewAccessibility")
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentProfileBinding.inflate(inflater, container, false)
+        return binding.root
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -23,7 +36,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         val errorTextView = view.findViewById<TextView>(R.id.errorTextView)
 
         // Logout Button
-        view.findViewById<Button>(R.id.logoutButton).setOnClickListener {
+        binding.logoutButton.setOnClickListener {
             sharedPref ?: return@setOnClickListener
             with(sharedPref.edit()) {
                 putBoolean("isLoggedIn", false)
@@ -38,9 +51,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
         // Confirm Button
         val radioGroup = view.findViewById<RadioGroup>(R.id.roleRadioGroup)
-        val confirmButton = view.findViewById<Button>(R.id.confirmButton)
 
-        confirmButton.setOnClickListener {
+        binding.confirmButton.setOnClickListener {
             val selectedRole = when (radioGroup.checkedRadioButtonId) {
                 R.id.studentRadioButton -> "student"
                 R.id.professorRadioButton -> "professor"
@@ -74,10 +86,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         // Remember whether user is a student or a professor
         when (sharedPref?.getString("userRole", "")) {
             "student" -> {
-                view.findViewById<RadioButton>(R.id.studentRadioButton).isChecked = true
+                binding.studentRadioButton.isChecked = true
             }
             "professor" -> {
-                view.findViewById<RadioButton>(R.id.professorRadioButton).isChecked = true
+                binding.professorRadioButton.isChecked = true
             }
             else -> {
                 // Do Nothing
@@ -85,7 +97,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         }
 
         // Keyboard down when you touch other space in screen
-        view.setOnTouchListener { _, _ ->
+        binding.root.setOnTouchListener { _, _ ->
             val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             imm?.hideSoftInputFromWindow(view.windowToken, 0)
             false

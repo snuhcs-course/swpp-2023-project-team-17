@@ -9,15 +9,18 @@ import com.example.goclass.databinding.ActivityProfessorAttendanceListBinding
 
 class ProfessorAttendanceListActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityProfessorAttendanceListBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_professor_attendance_list)
+
+        binding = ActivityProfessorAttendanceListBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val userRole = intent.getStringExtra("userRole")
 
         // Back Button
-        val backButton = findViewById<Button>(R.id.backButton)
-        backButton.setOnClickListener {
+        binding.backButton.setOnClickListener {
             val intent = Intent(this, ProfessorAttendanceActivity::class.java)
             intent.putExtra("userRole", userRole)
             startActivity(intent)

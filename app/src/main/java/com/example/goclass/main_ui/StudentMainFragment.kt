@@ -16,13 +16,24 @@ import com.example.goclass.R
 import com.example.goclass.databinding.ActivityClassBinding
 import com.example.goclass.databinding.FragmentStudentMainBinding
 
-class StudentMainFragment : Fragment(R.layout.fragment_student_main) {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_student_main, container, false)
+class StudentMainFragment : Fragment() {
 
-        val joinButton = view.findViewById<Button>(R.id.joinButton)
+    private lateinit var binding: FragmentStudentMainBinding
 
-        joinButton.setOnClickListener {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentStudentMainBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Join Button
+        binding.joinButton.setOnClickListener {
             val dialog = Dialog(requireContext())
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setContentView(R.layout.dialog_join)
@@ -38,21 +49,13 @@ class StudentMainFragment : Fragment(R.layout.fragment_student_main) {
             dialog.show()
         }
 
-        return view
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
         // Profile Button
-        val profileButton = view.findViewById<Button>(R.id.profileButton)
-        profileButton.setOnClickListener {
+        binding.profileButton.setOnClickListener {
             findNavController().navigate(R.id.action_studentMainFragment_to_profileFragment)
         }
 
         // Class Button
-        val classButton = view.findViewById<Button>(R.id.classButton)
-        classButton.setOnClickListener {
+        binding.classButton.setOnClickListener {
             val intent = Intent(view.context, ClassActivity::class.java)
             intent.putExtra("userRole", "student")
             startActivity(intent)

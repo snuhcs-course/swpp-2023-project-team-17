@@ -9,18 +9,24 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
 import android.widget.EditText
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.goclass.ClassActivity
+import com.example.goclass.databinding.FragmentProfessorMainBinding
 import com.example.goclass.R
 
-class ProfessorMainFragment : Fragment(R.layout.fragment_professor_main) {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_professor_main, container, false)
+class ProfessorMainFragment : Fragment() {
 
-        val createButton = view.findViewById<Button>(R.id.createButton)
+    private lateinit var binding: FragmentProfessorMainBinding
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
+        binding = FragmentProfessorMainBinding.inflate(inflater, container, false)
 
-        createButton.setOnClickListener {
+        binding.createButton.setOnClickListener {
             val dialog = Dialog(requireContext())
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setContentView(R.layout.dialog_create)
@@ -39,21 +45,19 @@ class ProfessorMainFragment : Fragment(R.layout.fragment_professor_main) {
             dialog.show()
         }
 
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         // Profile Button
-        val profileButton = view.findViewById<Button>(R.id.profileButton)
-        profileButton.setOnClickListener {
+        binding.profileButton.setOnClickListener {
             findNavController().navigate(R.id.action_professorMainFragment_to_profileFragment)
         }
 
         // Class Button
-        val classButton = view.findViewById<Button>(R.id.classButton)
-        classButton.setOnClickListener {
+        binding.classButton.setOnClickListener {
             val intent = Intent(view.context, ClassActivity::class.java)
             intent.putExtra("userRole", "professor")
             startActivity(intent)
