@@ -24,7 +24,10 @@ const connection = mysql.createConnection({
     port: 3306
 });
 
-// May need changes for social login - current: get token -> process token -> if auth, pass user_email
+/*
+    user log in using gmail
+    NOTE: May need changes for social login - current: get token -> process token -> if auth, pass user_email
+*/
 app.post('/login', (req, res) => {
     console.log(req.body);
     const userEmail = req.body.userEmail;
@@ -35,6 +38,9 @@ app.post('/login', (req, res) => {
     connection.query(sql, params, (err, result) => {
         let resultCode = 404;
         let message = 'Error occured';
+        let userId = -1;
+        let userName = -1;
+        let userType = -1;
 
         if (err) {
             console.log(err);
@@ -44,7 +50,7 @@ app.post('/login', (req, res) => {
             console.log(message);
             userId = result[0].user_id;
             userName = result[0].user_name;
-            userType = result[0].user_type
+            userType = result[0].user_type;
         }
 
         res.json({
@@ -58,6 +64,9 @@ app.post('/login', (req, res) => {
     });
 });
 
+/*
+    user log out
+*/
 app.post('/logout', (req, res) => {
     console.log(req.body);
 
@@ -70,6 +79,9 @@ app.post('/logout', (req, res) => {
     });
 });
 
+/*
+    get user name, email, and user type with user_id of Users
+*/
 app.get('/users/:id', (req, res) => {
     console.log(req.body);
 
@@ -80,6 +92,9 @@ app.get('/users/:id', (req, res) => {
     connection.query(sql, params, (err, result) => {
         let resultCode = 404;
         let message = 'Error occured';
+        let userEmail = -1;
+        let userName = -1;
+        let userType = -1;
 
         if (err) {
             console.log(err);
@@ -87,15 +102,24 @@ app.get('/users/:id', (req, res) => {
             resultCode = 200;
             message = 'get userName and userType Success';
             console.log(message);
+            userEmail = result[0].user_id;
+            userName = result[0].user_name;
+            userType = result[0].user_type;
         }
 
         res.json({
             'code': resultCode,
-            'message': message
+            'message': message,
+            'user_email': userEmail,
+            'user_name': userName,
+            'user_type': userType
         });
     });
 });
 
+/*
+    edit user name and user type with user_id of Users
+*/
 app.put('/users/:id', (req, res) => {
     console.log(req.body);
 
@@ -125,6 +149,9 @@ app.put('/users/:id', (req, res) => {
     });
 });
 
+/*
+    get all user's classes with user_id and user_type of Users
+*/
 app.get('/users/:id/classes', (req, res) => {
     console.log(req.body);
 
@@ -143,6 +170,7 @@ app.get('/users/:id/classes', (req, res) => {
     connection.query(sql, params, (err, result) => {
         let resultCode = 404;
         let message = 'Error occured';
+        let classList = -1;
 
         if (err) {
             console.log(err);
@@ -150,15 +178,21 @@ app.get('/users/:id/classes', (req, res) => {
             resultCode = 200;
             message = 'get classes Success';
             console.log(message);
+            classList = result;
         }
 
         res.json({
             'code': resultCode,
-            'message': message
+            'message': message,
+            'classList': classList
         });
     });
 });
 
+/*
+    get all attendance in specific date with user_id and user_type of Users
+    User type must be professor
+*/
 app.get('users/attendance/:date', (req, res) => {
     console.log(req.body);
 
@@ -175,6 +209,7 @@ app.get('users/attendance/:date', (req, res) => {
     connection.query(sql, params, (err, result) => {
         let resultCode = 404;
         let message = 'Error occured';
+        let attendanceList = -1;
         if (!userType) message = 'You must be a professor' // only for professors
 
         if (err) {
@@ -183,19 +218,25 @@ app.get('users/attendance/:date', (req, res) => {
             resultCode = 200;
             message = 'get all attendances in specific date Success';
             console.log(message);
+            attendanceList = result;
         }
 
         res.json({
             'code': resultCode,
-            'message': message
+            'message': message,
+            'attendanceList': attendanceList
         });
     });
 });
 
+/*
+    get attendace_date list from Attendances with user_id of Users
+    User type must be professor
+*/
 app.get('users/attendance', (req, res) => {
     console.log(req.body);
 
-    const professorId = req.body.professorId;
+    const professorId = req.body.userId;
 
     const sql = 'select attendance_date from Attendances '
                 + 'where is_sent = 1 and class_id '
@@ -206,6 +247,7 @@ app.get('users/attendance', (req, res) => {
     connection.query(sql, params, (err, result) => {
         let resultCode = 404;
         let message = 'Error occured';
+        let attendanceDateList = -1;
         if (!userType) message = 'You must be a professor' // only for professors
 
         if (err) {
@@ -214,21 +256,28 @@ app.get('users/attendance', (req, res) => {
             resultCode = 200;
             message = 'get attendance date list Success';
             console.log(message);
+            attendanceDateList = result; // TODO: change to list with only date values
         }
 
         res.json({
             'code': resultCode,
-            'message': message
+            'message': message,
+            'attendanceDateList': attendanceDateList
         });
     });
 });
 
-app.post('/class/create', (req, res) => {
+/*
+    create new class and insert to Classes, Class_classroom, Teaches
+    User type must be professor
+*/
+// TODO: check user_type == 1 (TBD later)
+app.post('/class/create/:user_id', (req, res) => {
     console.log(req.body);
 
     const className = req.body.className;
     const classCode = req.body.classCode;
-    const professorId = req.body.professorId;
+    const professorId = req.params.user_id;
     const buildingNumber = req.body.buildingNumber;
     const roomNumber = req.body.roomNumber;
 
@@ -239,6 +288,7 @@ app.post('/class/create', (req, res) => {
     connection.query(sql, params, (err, result) => {
         let resultCode = 404;
         let message = 'Error occured';
+        if (!userType) message = 'You must be a professor' // only for professors
 
         if (err) {
             console.log(err);
@@ -301,12 +351,17 @@ app.post('/class/create', (req, res) => {
     });
 });
 
-app.post('/class/join', (req, res) => {
+/*
+    join class and insert to Classes, Class_classroom, Teaches
+    User type must be student
+*/
+// TODO: check user_type == 1 (TBD later)
+app.post('/class/join/:user_id', (req, res) => {
     console.log(req.body);
 
     const className = req.body.className;
     const classCode = req.body.classCode;
-    const userId = req.body.userId;
+    const userId = req.params.user_id;
 
     const sql = 'insert into Takes(class_id, student_id) ' +
                 'values((SELECT class_id FROM Class WHERE class_name = ? and class_code = ?), ?)';
@@ -332,6 +387,9 @@ app.post('/class/join', (req, res) => {
     });
 });
 
+/*
+    get specific class from Classes
+*/
 app.get('/class/:id', (req, res) => {
     console.log(req.body);
 
@@ -344,6 +402,10 @@ app.get('/class/:id', (req, res) => {
     connection.query(sql, params, (err, result) => {
         let resultCode = 404;
         let message = 'Error occured';
+        let className = -1;
+        let classCode = -1;
+        let professorId = -1;
+        let classTime = -1;
 
         if (err) {
             console.log(err);
@@ -351,16 +413,26 @@ app.get('/class/:id', (req, res) => {
             resultCode = 200;
             message = 'get specific class Success';
             console.log(message);
+            className = result[0].class_name;
+            classCode = result[0].class_code;
+            professorId = result[0].professor_id;
+            classTime = result[0].class_time;
         }
 
         res.json({
             'code': resultCode,
-            'message': message
+            'message': message,
+            'className': className,
+            'classCode': classCode,
+            'professorId': professorId,
+            'classTime': classTime
         });
     });
 });
 
-
+/*
+    delete specific class from Classes
+*/
 app.delete('/class/:id', (req, res) => {
     console.log(req.body);
 
@@ -389,18 +461,23 @@ app.delete('/class/:id', (req, res) => {
     });
 });
 
+/*
+    get chatting channel with class_id of Classes
+*/
 app.get('class/chat_channel/:type', (req, res) => {
     console.log(req.body);
 
     const channelType = req.params.type; // 0 or 1
     const classId = req.body.classId;
 
-    const sql = 'select * from Channels where channel_type = ? and class_id in (select class_id from Classes where class_id = ?)';
+    const sql = 'select * from Channels where channel_type = ? and class_id = ?';
     const params = [channelType, classId];
 
     connection.query(sql, params, (err, result) => {
         let resultCode = 404;
         let message = 'Error occured';
+        let classId = -1;
+        let channelType = -1;
 
         if (err) {
             console.log(err);
@@ -408,15 +485,22 @@ app.get('class/chat_channel/:type', (req, res) => {
             resultCode = 200;
             message = 'get chatting channel Success';
             console.log(message);
+            classId = result[0].class_id;
+            channelType = result[0].channel_type;
         }
 
         res.json({
             'code': resultCode,
-            'message': message
+            'message': message,
+            'classId': classId,
+            'channelType': channelType
         });
     });
 });
 
+/*
+    get student’s attendance information list with class_id of Classes
+*/
 app.get('class/attendance/:user_id', (req, res) => {
     console.log(req.body);
 
@@ -430,6 +514,7 @@ app.get('class/attendance/:user_id', (req, res) => {
     connection.query(sql, params, (err, result) => {
         let resultCode = 404;
         let message = 'Error occured';
+        let attendanceList = -1;
 
         if (err) {
             console.log(err);
@@ -437,15 +522,20 @@ app.get('class/attendance/:user_id', (req, res) => {
             resultCode = 200;
             message = 'get user attendance list Success';
             console.log(message);
+            attendanceList = result;
         }
 
         res.json({
             'code': resultCode,
-            'message': message
+            'message': message,
+            'attendanceList': attendanceList
         });
     });
 });
 
+/*
+    get messages list in chatting channel
+*/
 app.get('/chat_channel/:id', (req, res) => {
     console.log(req.body);
 
@@ -458,6 +548,7 @@ app.get('/chat_channel/:id', (req, res) => {
     connection.query(sql, params, (err, result) => {
         let resultCode = 404;
         let message = 'Error occured';
+        let messageList = -1;
 
         if (err) {
             console.log(err);
@@ -465,15 +556,20 @@ app.get('/chat_channel/:id', (req, res) => {
             resultCode = 200;
             message = 'get chatting list Success';
             console.log(message);
+            messageList = result;
         }
 
         res.json({
             'code': resultCode,
-            'message': message
+            'message': message,
+            'messageList': messageList
         });
     });
 });
 
+/*
+    send new message with channel_id, content of Messages
+*/
 app.post('/chat_channel/:id', (req, res) => {
     console.log(req.body);
 
@@ -493,7 +589,7 @@ app.post('/chat_channel/:id', (req, res) => {
             console.log(err);
         } else {
             resultCode = 200;
-            message = 'send new chat Success';
+            message = 'send new message Success';
             console.log(message);
         }
 
@@ -504,6 +600,9 @@ app.post('/chat_channel/:id', (req, res) => {
     });
 });
 
+/*
+    get attendance information
+*/
 app.get('/attendance/:id', (req, res) => {
     console.log(req.body);
 
@@ -516,6 +615,12 @@ app.get('/attendance/:id', (req, res) => {
     connection.query(sql, params, (err, result) => {
         let resultCode = 404;
         let message = 'Error occured';
+        let attendaceDate = -1;
+        let attendanceStatus = -1;
+        let attendaceDuration = -1;
+        let isSent = -1;
+        let studentId = -1;
+        let classId = -1;
 
         if (err) {
             console.log(err);
@@ -523,15 +628,30 @@ app.get('/attendance/:id', (req, res) => {
             resultCode = 200;
             message = 'get attendance information Success';
             console.log(message);
+            attendaceDate = result[0].attendance_date;
+            attendanceStatus = result[0].attendance_status;
+            attendaceDuration = result[0].attendance_duration;
+            isSent = result[0].is_sent;
+            studentId = result[0].student_id;
+            classId = result[0].class_id;
         }
 
         res.json({
             'code': resultCode,
-            'message': message
+            'message': message,
+            'attendaceDate': attendaceDate,
+            'attendanceStatus': attendanceStatus,
+            'attendaceDuration': attendaceDuration,
+            'isSent': isSent,
+            'studentId': studentId,
+            'classId': classId
         });
     });
 });
 
+/*
+    edit is_sent as sent (i.e. is_sent = 1)
+*/
 app.put('/attendance/:id', (req, res) => {
     console.log(req.body);
 
@@ -560,7 +680,9 @@ app.put('/attendance/:id', (req, res) => {
     });
 });
 
-
+/*
+    delete attendance information
+*/
 app.delete('/attendance/:id', (req, res) => {
     console.log(req.body);
 
@@ -589,6 +711,9 @@ app.delete('/attendance/:id', (req, res) => {
     });
 });
 
+/*
+    add student’s attendance information with attendance_status, attendace_duration, class_id of Attendances
+*/
 app.post('attendance/:user_id', (req, res) => {
     console.log(req.body);
 

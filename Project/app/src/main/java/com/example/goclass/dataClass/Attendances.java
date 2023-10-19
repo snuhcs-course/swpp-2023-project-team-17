@@ -16,13 +16,13 @@ public class Attendances {
     @SerializedName("class_id")
     String classId;
 
-    public Attendances(String attendanceDate, String attendanceStatus, String attendanceDuration, String isSent, String studentId, String classId, String studentId1) {
+    public Attendances(String attendanceDate, String attendanceStatus, String attendanceDuration, String isSent, String studentId, String classId, String studentId) {
         this.attendanceDate = attendanceDate;
         this.attendanceStatus = attendanceStatus;
         this.attendanceDuration = attendanceDuration;
         this.isSent = isSent;
         this.classId = classId;
-        this.studentId = studentId1;
+        this.studentId = studentId;
     }
 
 }
