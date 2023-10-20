@@ -1,16 +1,18 @@
 package com.example.goclass;
 
-import com.example.goclass.dataClass.Attendances;
-import com.example.goclass.dataClass.Channels;
-import com.example.goclass.dataClass.Classes;
 import com.example.goclass.dataClass.Users;
+import com.example.goclass.dataClass.Classes;
 import com.example.goclass.dataClass.Messages;
-import com.example.goclass.dataClass.AttendancesResponse;
-import com.example.goclass.dataClass.ClassesResponse;
-import com.example.goclass.dataClass.MessagesResponse;
-import com.example.goclass.dataClass.TakesResponse;
+import com.example.goclass.dataClass.Attendances;
 import com.example.goclass.dataClass.UsersResponse;
+import com.example.goclass.dataClass.CodeMessageResponse;
+import com.example.goclass.dataClass.ClassListsResponse;
+import com.example.goclass.dataClass.AttendanceListsResponse;
+import com.example.goclass.dataClass.AttendanceDateListsResponse;
+import com.example.goclass.dataClass.ClassesResponse;
 import com.example.goclass.dataClass.ChannelsResponse;
+import com.example.goclass.dataClass.MessagesResponse;
+import com.example.goclass.dataClass.AttendancesResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -21,42 +23,46 @@ import retrofit2.http.PUT;
 
 public interface ServiceApi {
     // naming format: model+description (e.g. user+login -> userLogin)
-    @POST("/login")
-    Call<UsersResponse> userLogin(@Body Users users);
+
+    // TODO: handle response that are lists -> return on index or return on all list and handle on front?
+    @POST("/signup")
+    Call<UsersResponse> userSignup(@Body Users users);
+    @POST("/login/:email")
+    Call<UsersResponse> userLogin();
     @POST("/logout")
-    Call<UsersResponse> userLogout();
+    Call<CodeMessageResponse> userLogout();
     @GET("/users/:id")
-    Call<UsersResponse> userGet(@Body Users users);
+    Call<UsersResponse> userGet();
     @PUT("/users/:id")
-    Call<UsersResponse> userEdit(@Body Users users);
+    Call<CodeMessageResponse> userEdit(@Body Users users);
     @GET("/users/:id/classes")
-    Call<TakesResponse> userGetClassList(@Body Users users);
+    Call<ClassListsResponse> userGetClassList(@Body Users users);
     @GET("users/attendance/:date")
-    Call<AttendancesResponse> userGetAttendanceListByDate(@Body Users users);
+    Call<AttendanceListsResponse> userGetAttendanceListByDate(@Body Users users);
     @GET("users/attendance")
-    Call<AttendancesResponse> attendanceGetDateList(@Body Users users);
-    @POST("/class/create")
-    Call<ClassesResponse> classCreate(@Body Classes classes);
+    Call<AttendanceDateListsResponse> attendanceGetDateList(@Body Users users);
+    @POST("/class/create/:user_id")
+    Call<CodeMessageResponse> classCreate(@Body Classes classes);
     @POST("/class/join")
-    Call<TakesResponse> classJoin(@Body Classes classes);
+    Call<CodeMessageResponse> classJoin(@Body Classes classes);
     @GET("/class/:id")
-    Call<ClassesResponse> classGet(@Body Classes classes);
+    Call<ClassesResponse> classGet();
     @DELETE("/class/:id")
-    Call<ClassesResponse> classDelete(@Body Classes classes);
-    @GET("class/chat_channel/:type")
-    Call<ChannelsResponse> classGetChannel(@Body Classes classes);
-    @GET("class/attendance/:user_id")
-    Call<AttendancesResponse> classGetAttendanceListByUserId(@Body Classes classes);
+    Call<CodeMessageResponse> classDelete();
+    @GET("class/:id/chat_channel/:type")
+    Call<ChannelsResponse> classGetChannel();
+    @GET("class/:id/attendance/:user_id")
+    Call<AttendanceListsResponse> classGetAttendanceListByUserId();
     @GET("/chat_channel/:id")
-    Call<MessagesResponse> chatChannelGetList(@Body Channels channels);
+    Call<CodeMessageResponse> chatChannelGetList();
     @POST("/chat_channel/:id")
     Call<MessagesResponse> chatChannelSend(@Body Messages messages);
     @GET("/attendance/:id")
-    Call<AttendancesResponse> attendanceGet(@Body Attendances attendances);
+    Call<AttendancesResponse> attendanceGet();
     @PUT("/attendance/:id")
-    Call<AttendancesResponse> attendanceEdit(@Body Attendances attendances);
+    Call<CodeMessageResponse> attendanceEdit();
     @DELETE("/attendance/:id")
-    Call<AttendancesResponse> attendanceDelete(@Body Attendances attendances);
+    Call<CodeMessageResponse> attendanceDelete();
     @POST("/attendance/:user_id")
-    Call<AttendancesResponse> attendanceAdd(@Body Attendances attendances);
+    Call<CodeMessageResponse> attendanceAdd(@Body Attendances attendances);
 }

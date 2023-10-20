@@ -16,6 +16,8 @@ create table Classes (
     class_code varchar(20) not null,
     professor_id int not null,
     class_time varchar(100) not null, -- ex. "TUE 15:30-17:00, THU 15:30-17:00"
+    building_number int not null,
+    room_number int not null,
     primary key (class_id),
     foreign key (professor_id) references Users(user_id)
 );
@@ -23,7 +25,7 @@ create table Classes (
 create table Classrooms (
     building_number int not null,
     room_number int not null,
-    logitude float(13, 10),
+    longitude float(13, 10),
     latitude float(13, 10),
     beacon_id varchar(50),
     primary key (building_number, room_number)
@@ -33,21 +35,20 @@ create table Takes (
 	student_id int not null,
     class_id int not null,
     foreign key (student_id) references Users(user_id),
-    foreign key (class_id) references Classes(class_id)
+    foreign key (class_id) references Classes(class_id) ON DELETE CASCADE
 );
 
 create table Teaches (
 	professor_id int not null,
     class_id int not null,
     foreign key (professor_id) references Users(user_id),
-    foreign key (class_id) references Classes(class_id)
+    foreign key (class_id) references Classes(class_id) ON DELETE CASCADE
 );
 
 create table Channels (
-	channel_id int not null auto_increment primary key,
     class_id int not null,
     channel_type int not null,
-	foreign key (class_id) references Classes(class_id)
+	foreign key (class_id) references Classes(class_id) ON DELETE CASCADE
 );
 
 create table Messages (
@@ -56,16 +57,8 @@ create table Messages (
     sender_id int not null,
     content varchar(500),
     channel_id int not null,
-    foreign key (channel_id) references Channels(channel_id),
+    foreign key (channel_id) references Channels(channel_id) ON DELETE CASCADE,
     foreign key (sender_id) references Users(user_id)
-);
-
-create table Class_Classroom (
-    building_number int not null,
-    room_number int not null,
-    class_id int not null,
-    foreign key (class_id) references Classes(class_id),
-    foreign key (building_number, room_number) references Classrooms(building_number, room_number)
 );
 
 create table Attendances (
@@ -76,7 +69,7 @@ create table Attendances (
     is_sent tinyint(1) not null default 0,
 	student_id int not null,
     class_id int not null,
-    foreign key (class_id) references Takes(class_id),
+    foreign key (class_id) references Takes(class_id) ON DELETE CASCADE,
 	foreign key (student_id) references Users(user_id),
 	check (attendance_status >= 0 and attendance_status <= 2)
 );

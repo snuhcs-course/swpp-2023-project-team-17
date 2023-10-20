@@ -3,26 +3,25 @@ package com.example.goclass.dataClass;
 import com.google.gson.annotations.SerializedName;
 
 public class Attendances {
-    @SerializedName("attendance_date")
-    String attendanceDate;
     @SerializedName("attendance_status")
-    String attendanceStatus;
+    int attendanceStatus = -1;
     @SerializedName("attendance_duration")
-    String attendanceDuration;
-    @SerializedName("is_sent")
-    String isSent;
-    @SerializedName("student_id")
-    String studentId;
+    int attendanceDuration = -1;
     @SerializedName("class_id")
-    String classId;
+    int classId = -1;
+    @SerializedName("student_id")
+    int studentId = -1;
 
-    public Attendances(String attendanceDate, String attendanceStatus, String attendanceDuration, String isSent, String studentId, String classId) {
-        this.attendanceDate = attendanceDate;
+    public Attendances(String attendanceStatus, String attendanceDuration, String studentId, String classId) {
         this.attendanceStatus = attendanceStatus;
         this.attendanceDuration = attendanceDuration;
-        this.isSent = isSent;
-        this.classId = classId;
         this.studentId = studentId;
+        this.classId = classId;
     }
 
+    public Attendances(String attendanceStatus, String attendanceDuration, String classId) {
+        this.attendanceStatus = attendanceStatus;
+        this.attendanceDuration = attendanceDuration;
+        this.classId = classId;
+    }
 }

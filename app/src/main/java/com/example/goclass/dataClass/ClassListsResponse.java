@@ -1,24 +1,19 @@
 package com.example.goclass.dataClass;
+import java.util.HashMap;
+import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ChannelsResponse {
-    @SerializedName("class_id")
-    String classId;
-    @SerializedName("channel_type")
-    String channelType;
+public class ClassListsResponse {
+    @SerializedName("class_list")
+    private List<HashMap<String, String>> classList;
     @SerializedName("code")
     private int code;
     @SerializedName("message")
     private String message;
 
-
-    public String getClassId() {
-        return classId;
-    }
-
-    public String getChannelType() {
-        return channelType;
+    public List<HashMap<String, String>> getClassList() {
+        return classList;
     }
 
     public int getCode() {

@@ -33,35 +33,49 @@ app.post('/signup', (req, res) => {
     const userName = req.body.userName;
     const userType = req.body.userType;
 
-    const sql = 'insert into Users(user_email, user_name, user_type) values(?, ?, ?)';
+    var sql = 'insert into Users(user_email, user_name, user_type) values(?, ?, ?)';
     const params = [userEmail, userName, userType];
 
     connection.query(sql, params, (err, result) => {
         let resultCode = 404;
         let message = 'Error occured';
+        let userId = -1;
 
         if (err) {
             console.log(err);
         } else {
-            resultCode = 200;
-            message = 'login Success';
-            console.log(message);
+            sql = 'SELECT LAST_INSERT_ID()';
+            connection.query(sql, (err, result) => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    resultCode = 200;
+                    message = 'login Success';
+                    console.log(message);
+                    userId = result[0]['LAST_INSERT_ID()'];
+                }
+
+            }
         }
 
         res.json({
             'code': resultCode,
             'message': message,
+            'user_email': userEmail,
+            'user_id': userId,
+            'user_name': userName,
+            'user_type': userType
         });
     });
 });
 
 /*
-    user log in using gmail
+    user login using gmail and get user information
     NOTE: May need changes for social login - current: get token -> process token -> if auth, pass user_email
 */
-app.post('/login', (req, res) => {
+app.post('/login/:email', (req, res) => {
     console.log(req.body);
-    const userEmail = req.body.userEmail;
+    const userEmail = req.params.email;
 
     const sql = 'select * from Users where user_email = ?';
     const params = [userEmail];
@@ -111,7 +125,7 @@ app.post('/logout', (req, res) => {
 });
 
 /*
-    get user name, email, and user type with user_id of Users
+    get user name, email, and user type
 */
 app.get('/users/:id', (req, res) => {
     console.log(req.body);
@@ -133,7 +147,7 @@ app.get('/users/:id', (req, res) => {
             resultCode = 200;
             message = 'get userName and userType Success';
             console.log(message);
-            userEmail = result[0].user_id;
+            userEmail = result[0].user_email;
             userName = result[0].user_name;
             userType = result[0].user_type;
         }
@@ -141,6 +155,7 @@ app.get('/users/:id', (req, res) => {
         res.json({
             'code': resultCode,
             'message': message,
+            'user_id': userId,
             'user_email': userEmail,
             'user_name': userName,
             'user_type': userType
@@ -149,12 +164,12 @@ app.get('/users/:id', (req, res) => {
 });
 
 /*
-    edit user name and user type with user_id of Users
+    edit user name and user type with user_name and user_type of Users
 */
 app.put('/users/:id', (req, res) => {
     console.log(req.body);
 
-    const userName = req.body.userName;
+    const userName = req.body.userName;s
     const userType = req.body.userType;
     const userId = req.params.id;
 
@@ -181,7 +196,7 @@ app.put('/users/:id', (req, res) => {
 });
 
 /*
-    get all user's classes with user_id and user_type of Users
+    get all user's classes with user_type of Users
 */
 app.get('/users/:id/classes', (req, res) => {
     console.log(req.body);
@@ -215,7 +230,7 @@ app.get('/users/:id/classes', (req, res) => {
         res.json({
             'code': resultCode,
             'message': message,
-            'classList': classList
+            'class_list': classList
         });
     });
 });
@@ -255,7 +270,7 @@ app.get('users/attendance/:date', (req, res) => {
         res.json({
             'code': resultCode,
             'message': message,
-            'attendanceList': attendanceList
+            'attendance_list': attendanceList
         });
     });
 });
@@ -293,7 +308,7 @@ app.get('users/attendance', (req, res) => {
         res.json({
             'code': resultCode,
             'message': message,
-            'attendanceDateList': attendanceDateList
+            'attendance_date_list': attendanceDateList
         });
     });
 });
@@ -311,10 +326,12 @@ app.post('/class/create/:user_id', (req, res) => {
     const professorId = req.params.user_id;
     const buildingNumber = req.body.buildingNumber;
     const roomNumber = req.body.roomNumber;
+    const classTime = req.body.classTime;
 
-    var sql = 'insert into Classes(class_name, class_code, professor_id) values(?, ?, ?)';
+    var sql = 'insert into Classes(class_name, class_code, professor_id, class_time, building_number, room_number) '
+                + 'values(?, ?, ?, ?, ?, ?)';
 
-    var params = [className, classCode, professorId];
+    var params = [className, classCode, professorId, classTime, buildingNumber, roomNumber];
 
     connection.query(sql, params, (err, result) => {
         let resultCode = 404;
@@ -324,55 +341,23 @@ app.post('/class/create/:user_id', (req, res) => {
         if (err) {
             console.log(err);
         } else {
-            resultCode = 200;
-            message = 'create class Success';
-            console.log(message);
-        }
+            sql = 'insert into Teaches(class_id, professor_id) ' +
+                            '(SELECT class_id, professor_id FROM Class WHERE class_name = ? and class_code = ? and professor_id = ?)';
 
-        res.json({
-            'code': resultCode,
-            'message': message
-        });
-    });
+            params = [className, classCode, professorId];
 
-    sql = 'insert into Teaches(class_id, professor_id) ' +
-                '(SELECT class_id, professor_id FROM Class WHERE class_name = ? and class_code = ? and professor_id = ?)';
+            connection.query(sql, params, (err, result) => {
+                let resultCode = 404;
+                let message = 'Error occured';
 
-    params = [className, classCode, professorId];
-
-    connection.query(sql, params, (err, result) => {
-        let resultCode = 404;
-        let message = 'Error occured';
-
-        if (err) {
-            console.log(err);
-        } else {
-            resultCode = 200;
-            message = 'link class to professor Success';
-            console.log(message);
-        }
-
-        res.json({
-            'code': resultCode,
-            'message': message
-        });
-    });
-
-    sql = 'insert into Class_Classroom(building_number, room_number, class_id) ' +
-                'VALUES(?, ?, (SELECT class_id FROM Class WHERE class_name = ? and class_code = ? and professor_id = ?))';
-
-    params = [buildingNumber, roomNumber, professorId];
-
-    connection.query(sql, params, (err, result) => {
-        let resultCode = 404;
-        let message = 'Error occured';
-
-        if (err) {
-            console.log(err);
-        } else {
-            resultCode = 200;
-            message = 'link class to classroom Success';
-            console.log(message);
+                if (err) {
+                    console.log(err);
+                } else {
+                    resultCode = 200;
+                    message = 'create and link class to professor Success';
+                    console.log(message);
+                }
+            });
         }
 
         res.json({
@@ -448,15 +433,19 @@ app.get('/class/:id', (req, res) => {
             classCode = result[0].class_code;
             professorId = result[0].professor_id;
             classTime = result[0].class_time;
+            building_number = result[0].building_number;
+            roomNumber = result[0].room_number;
         }
 
         res.json({
             'code': resultCode,
             'message': message,
-            'className': className,
-            'classCode': classCode,
-            'professorId': professorId,
-            'classTime': classTime
+            'class_name': className,
+            'class_code': classCode,
+            'professor_id': professorId,
+            'class_time': classTime,
+            'building_number': buildingNumber,
+            'room_number': roomNumber
         });
     });
 });
@@ -495,11 +484,11 @@ app.delete('/class/:id', (req, res) => {
 /*
     get chatting channel with class_id of Classes
 */
-app.get('class/chat_channel/:type', (req, res) => {
+app.get('class/:id/chat_channel/:type', (req, res) => {
     console.log(req.body);
 
     const channelType = req.params.type; // 0 or 1
-    const classId = req.body.classId;
+    const classId = req.params.classId;
 
     const sql = 'select * from Channels where channel_type = ? and class_id = ?';
     const params = [channelType, classId];
@@ -523,8 +512,8 @@ app.get('class/chat_channel/:type', (req, res) => {
         res.json({
             'code': resultCode,
             'message': message,
-            'classId': classId,
-            'channelType': channelType
+            'class_id': classId,
+            'channel_type': channelType
         });
     });
 });
@@ -532,11 +521,11 @@ app.get('class/chat_channel/:type', (req, res) => {
 /*
     get student’s attendance information list with class_id of Classes
 */
-app.get('class/attendance/:user_id', (req, res) => {
+app.get('class/:id/attendance/:user_id', (req, res) => {
     console.log(req.body);
 
     const userId = req.params.user_id;
-    const classId = req.body.classId;
+    const classId = req.params.classId;
 
     const sql = 'select * from Attendances where student_id = ? and class_id = ?';
 
@@ -559,7 +548,7 @@ app.get('class/attendance/:user_id', (req, res) => {
         res.json({
             'code': resultCode,
             'message': message,
-            'attendanceList': attendanceList
+            'attendance_list': attendanceList
         });
     });
 });
@@ -593,7 +582,7 @@ app.get('/chat_channel/:id', (req, res) => {
         res.json({
             'code': resultCode,
             'message': message,
-            'messageList': messageList
+            'message_list': messageList
         });
     });
 });
@@ -670,12 +659,12 @@ app.get('/attendance/:id', (req, res) => {
         res.json({
             'code': resultCode,
             'message': message,
-            'attendanceDate': attendanceDate,
-            'attendanceStatus': attendanceStatus,
-            'attendanceDuration': attendanceDuration,
-            'isSent': isSent,
-            'studentId': studentId,
-            'classId': classId
+            'attendance_date': attendanceDate,
+            'attendance_status': attendanceStatus,
+            'attendance_duration': attendanceDuration,
+            'is_sent': isSent,
+            'student_id': studentId,
+            'class_id': classId
         });
     });
 });
