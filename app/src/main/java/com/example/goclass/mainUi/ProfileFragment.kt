@@ -30,7 +30,6 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
-        val errorTextView = view.findViewById<TextView>(R.id.errorTextView)
 
         // Logout Button
         binding.logoutButton.setOnClickListener {
@@ -47,19 +46,17 @@ class ProfileFragment : Fragment() {
         }
 
         // Confirm Button
-        val radioGroup = view.findViewById<RadioGroup>(R.id.roleRadioGroup)
-
         binding.confirmButton.setOnClickListener {
-            val selectedRole = when (radioGroup.checkedRadioButtonId) {
+            val selectedRole = when (binding.roleRadioGroup.checkedRadioButtonId) {
                 R.id.studentRadioButton -> "student"
                 R.id.professorRadioButton -> "professor"
                 else -> null
             }
 
             if (selectedRole == null) {
-                errorTextView.visibility = View.VISIBLE
+                binding.errorTextView.visibility = View.VISIBLE
             } else {
-                errorTextView.visibility = View.GONE
+                binding.errorTextView.visibility = View.GONE
             }
 
             selectedRole?.let {

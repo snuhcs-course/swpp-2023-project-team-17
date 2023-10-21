@@ -27,10 +27,11 @@ class QnaFragment : Fragment() {
         _binding = FragmentQnaBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        /*
         val textView: TextView = binding.hintText
         qnaViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
-        }
+        }*/
         return root
     }
 

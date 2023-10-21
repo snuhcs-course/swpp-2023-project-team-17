@@ -27,10 +27,11 @@ class AnnouncementFragment : Fragment() {
         _binding = FragmentAnnouncementBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        /*
         val textView: TextView = binding.hintText
         announcementViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
-        }
+        }*/
         return root
     }
 
