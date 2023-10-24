@@ -8,7 +8,7 @@ import com.example.goclass.ProfessorAttendanceListActivity
 import com.example.goclass.dataClass.ProfessorAttendance
 import com.example.goclass.databinding.ItemProfessorAttendanceBinding
 
-class ProfessorAttendanceAdapter(private val professorAttendances:List<ProfessorAttendance>) :
+class ProfessorAttendanceAdapter(private val professorAttendances: List<ProfessorAttendance>) :
     RecyclerView.Adapter<ProfessorAttendanceAdapter.ProfessorAttendanceViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -29,10 +29,11 @@ class ProfessorAttendanceAdapter(private val professorAttendances:List<Professor
     ) {
         holder.bind(professorAttendances[position])
         holder.binding.studentListButton.setOnClickListener {
-            val intent = Intent(
-                holder.binding.root.context,
-                ProfessorAttendanceListActivity::class.java,
-            )
+            val intent =
+                Intent(
+                    holder.binding.root.context,
+                    ProfessorAttendanceListActivity::class.java,
+                )
             holder.binding.root.context.startActivity(intent)
         }
     }
@@ -41,8 +42,8 @@ class ProfessorAttendanceAdapter(private val professorAttendances:List<Professor
 
     class ProfessorAttendanceViewHolder(var binding: ItemProfessorAttendanceBinding) :
         RecyclerView.ViewHolder(binding.root) {
-            fun bind(professorAttendance: ProfessorAttendance) {
-                binding.attendanceText.text = professorAttendance.content
-            }
+        fun bind(professorAttendance: ProfessorAttendance) {
+            binding.attendanceText.text = professorAttendance.content
         }
+    }
 }

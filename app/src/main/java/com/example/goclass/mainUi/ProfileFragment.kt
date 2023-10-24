@@ -21,11 +21,12 @@ class ProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        binding = FragmentProfileBinding.inflate(
-            inflater,
-            container,
-            false,
-        )
+        binding =
+            FragmentProfileBinding.inflate(
+                inflater,
+                container,
+                false,
+            )
         return binding.root
     }
 
@@ -63,10 +64,11 @@ class ProfileFragment : Fragment() {
 
         // Confirm Button
         binding.confirmButton.setOnClickListener {
-            val selectedRole = when (binding.roleRadioGroup.checkedRadioButtonId) {
-                R.id.studentRadioButton -> "student"
-                R.id.professorRadioButton -> "professor"
-                else -> null
+            val selectedRole =
+                when (binding.roleRadioGroup.checkedRadioButtonId) {
+                    R.id.studentRadioButton -> "student"
+                    R.id.professorRadioButton -> "professor"
+                    else -> null
             }
 
             if (selectedRole == null) {

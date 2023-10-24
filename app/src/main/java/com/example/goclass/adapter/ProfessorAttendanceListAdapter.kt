@@ -11,20 +11,20 @@ class ProfessorAttendanceListAdapter(private val professorAttendanceLists: List<
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-        ): ProfessorAttendanceListViewHolder {
+    ): ProfessorAttendanceListViewHolder {
         var binding =
             ItemProfessorAttendanceListBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false,
-                )
+            )
         return ProfessorAttendanceListViewHolder(binding)
     }
 
     override fun onBindViewHolder(
         holder: ProfessorAttendanceListViewHolder,
         position: Int,
-        ) {
+    ) {
         holder.bind(professorAttendanceLists[position])
     }
 

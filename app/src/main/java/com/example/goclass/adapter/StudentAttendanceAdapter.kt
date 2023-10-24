@@ -21,8 +21,9 @@ class StudentAttendanceAdapter(private val studentAttendances: List<StudentAtten
         return StudentAttendanceViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: StudentAttendanceViewHolder,
-                                  position: Int,
+    override fun onBindViewHolder(
+        holder: StudentAttendanceViewHolder,
+        position: Int,
     ) {
         holder.bind(studentAttendances[position])
     }
