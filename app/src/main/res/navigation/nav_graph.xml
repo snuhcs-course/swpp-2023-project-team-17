@@ -1,0 +1,58 @@
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.goclass.mainUi.LoginFragment"
+        android:label="LoginFragment">
+        <action
+            android:id="@+id/action_loginFragment_to_profileFragment"
+            app:destination="@id/profileFragment"
+            app:popUpTo="@+id/loginFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.goclass.mainUi.ProfileFragment"
+        android:label="ProfileFragment">
+        <action
+            android:id="@+id/action_profileFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/profileFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_profileFragment_to_studentMainFragment"
+            app:destination="@id/studentMainFragment"
+            app:popUpTo="@+id/profileFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_profileFragment_to_professorMainFragment"
+            app:destination="@id/professorMainFragment"
+            app:popUpTo="@+id/profileFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/studentMainFragment"
+        android:name="com.example.goclass.mainUi.StudentMainFragment"
+        android:label="StudentMainFragment">
+        <action
+            android:id="@+id/action_studentMainFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/professorMainFragment"
+        android:name="com.example.goclass.mainUi.ProfessorMainFragment"
+        android:label="ProfessorMainFragment">
+        <action
+            android:id="@+id/action_professorMainFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+
+
+</navigation>
