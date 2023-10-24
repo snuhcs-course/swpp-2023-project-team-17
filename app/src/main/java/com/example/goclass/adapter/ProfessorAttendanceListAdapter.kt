@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.goclass.dataClass.ProfessorAttendanceList
 import com.example.goclass.databinding.ItemProfessorAttendanceListBinding
 
-class ProfessorAttendanceListAdapter(private val professorAttendanceLists: List<ProfessorAttendanceList>): RecyclerView.Adapter<ProfessorAttendanceListAdapter.ProfessorAttendanceListViewHolder>() {
+class ProfessorAttendanceListAdapter(private val professorAttendanceLists: List<ProfessorAttendanceList>) : RecyclerView.Adapter<ProfessorAttendanceListAdapter.ProfessorAttendanceListViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -29,7 +29,7 @@ class ProfessorAttendanceListAdapter(private val professorAttendanceLists: List<
 
     override fun getItemCount(): Int = professorAttendanceLists.size
 
-    class ProfessorAttendanceListViewHolder(var binding: ItemProfessorAttendanceListBinding): RecyclerView.ViewHolder(binding.root) {
+    class ProfessorAttendanceListViewHolder(var binding: ItemProfessorAttendanceListBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(professorAttendanceList: ProfessorAttendanceList) {
             binding.attendanceText.text = professorAttendanceList.content
         }

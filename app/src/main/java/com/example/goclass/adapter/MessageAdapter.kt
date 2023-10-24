@@ -6,17 +6,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.goclass.dataClass.Message
 import com.example.goclass.databinding.ItemMessageBinding
 
-class MessageAdapter(private val messages: List<Message>): RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int,
-        ): MessageViewHolder {
+class MessageAdapter(private val messages: List<Message>) : RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
         var binding =
-            ItemMessageBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false,
-                )
+            ItemMessageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MessageViewHolder(binding)
     }
 
@@ -29,7 +22,7 @@ class MessageAdapter(private val messages: List<Message>): RecyclerView.Adapter<
 
     override fun getItemCount(): Int = messages.size
 
-    class MessageViewHolder(var binding: ItemMessageBinding): RecyclerView.ViewHolder(binding.root) {
+    class MessageViewHolder(var binding: ItemMessageBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(message: Message) {
             binding.messageText.text = message.content
         }
