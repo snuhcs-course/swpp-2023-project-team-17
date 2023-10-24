@@ -33,7 +33,7 @@ class ProfessorAttendanceActivity : AppCompatActivity() {
             ProfessorAttendance("Recycler View Example #18"),
             ProfessorAttendance("Recycler View Example #19"),
             ProfessorAttendance("Recycler View Example #20"),
-            )
+        )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -7,8 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.RadioGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.goclass.R
@@ -27,7 +25,7 @@ class ProfileFragment : Fragment() {
             inflater,
             container,
             false,
-            )
+        )
         return binding.root
     }
 
@@ -35,8 +33,11 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
-        ) {
-        super.onViewCreated(view, savedInstanceState)
+    ) {
+        super.onViewCreated(
+            view,
+            savedInstanceState,
+        )
 
         val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
 
@@ -47,14 +48,14 @@ class ProfileFragment : Fragment() {
                 putBoolean(
                     "isLoggedIn",
                     false,
-                    )
+                )
                 apply()
             }
             with(sharedPref.edit()) {
                 putString(
                     "userRole",
                     "",
-                    )
+                )
                 apply()
             }
             findNavController().navigate(R.id.action_profileFragment_to_loginFragment)

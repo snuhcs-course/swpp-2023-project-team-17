@@ -36,7 +36,7 @@ class ClassActivity : AppCompatActivity() {
             Message("Recycler View Example #18"),
             Message("Recycler View Example #19"),
             Message("Recycler View Example #20"),
-            )
+        )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
