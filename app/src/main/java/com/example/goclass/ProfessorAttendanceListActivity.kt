@@ -4,16 +4,15 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.goclass.adapter.ProfessorAttendanceAdapter
 import com.example.goclass.adapter.ProfessorAttendanceListAdapter
-import com.example.goclass.dataClass.ProfessorAttendance
 import com.example.goclass.dataClass.ProfessorAttendanceList
 import com.example.goclass.databinding.ActivityProfessorAttendanceListBinding
 
 class ProfessorAttendanceListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProfessorAttendanceListBinding
 
-    private val professorAttendanceLists = listOf(
+    private val professorAttendanceLists =
+        listOf(
         ProfessorAttendanceList("Recycler View Example #1"),
         ProfessorAttendanceList("Recycler View Example #2"),
         ProfessorAttendanceList("Recycler View Example #3"),
@@ -33,8 +32,8 @@ class ProfessorAttendanceListActivity : AppCompatActivity() {
         ProfessorAttendanceList("Recycler View Example #17"),
         ProfessorAttendanceList("Recycler View Example #18"),
         ProfessorAttendanceList("Recycler View Example #19"),
-        ProfessorAttendanceList("Recycler View Example #20")
-    )
+        ProfessorAttendanceList("Recycler View Example #20"),
+            )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

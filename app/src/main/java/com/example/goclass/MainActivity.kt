@@ -8,7 +8,6 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.goclass.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-
     private lateinit var navController: NavController
     private lateinit var binding: ActivityMainBinding
 

@@ -2,8 +2,6 @@ package com.example.goclass
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.goclass.adapter.ProfessorAttendanceAdapter
@@ -13,7 +11,8 @@ import com.example.goclass.databinding.ActivityProfessorAttendanceBinding
 class ProfessorAttendanceActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProfessorAttendanceBinding
 
-    private val professorAttendances = listOf(
+    private val professorAttendances =
+        listOf(
         ProfessorAttendance("Recycler View Example #1"),
         ProfessorAttendance("Recycler View Example #2"),
         ProfessorAttendance("Recycler View Example #3"),
@@ -33,8 +32,8 @@ class ProfessorAttendanceActivity : AppCompatActivity() {
         ProfessorAttendance("Recycler View Example #17"),
         ProfessorAttendance("Recycler View Example #18"),
         ProfessorAttendance("Recycler View Example #19"),
-        ProfessorAttendance("Recycler View Example #20")
-    )
+        ProfessorAttendance("Recycler View Example #20"),
+            )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +52,7 @@ class ProfessorAttendanceActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
+
     private fun initViews() {
         binding.attendanceList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.attendanceList.adapter = ProfessorAttendanceAdapter(professorAttendances)

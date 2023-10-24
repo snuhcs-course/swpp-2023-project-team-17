@@ -2,7 +2,6 @@ package com.example.goclass
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
@@ -15,7 +14,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 class ClassActivity : AppCompatActivity() {
     private lateinit var binding: ActivityClassBinding
 
-    private val messages = listOf(
+    private val messages =
+        listOf(
         Message("Recycler View Example #1"),
         Message("Recycler View Example #2"),
         Message("Recycler View Example #3"),
@@ -35,8 +35,8 @@ class ClassActivity : AppCompatActivity() {
         Message("Recycler View Example #17"),
         Message("Recycler View Example #18"),
         Message("Recycler View Example #19"),
-        Message("Recycler View Example #20")
-    )
+        Message("Recycler View Example #20"),
+            )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,6 +78,7 @@ class ClassActivity : AppCompatActivity() {
             }
         }
     }
+
     private fun initViews() {
         binding.messageList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.messageList.adapter = MessageAdapter(messages)

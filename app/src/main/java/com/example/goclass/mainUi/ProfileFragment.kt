@@ -23,10 +23,19 @@ class ProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        binding = FragmentProfileBinding.inflate(inflater, container, false)
+        binding = FragmentProfileBinding.inflate(
+            inflater,
+            container,
+            false,
+            )
         return binding.root
     }
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+        ) {
         super.onViewCreated(view, savedInstanceState)
 
         val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
@@ -35,11 +44,17 @@ class ProfileFragment : Fragment() {
         binding.logoutButton.setOnClickListener {
             sharedPref ?: return@setOnClickListener
             with(sharedPref.edit()) {
-                putBoolean("isLoggedIn", false)
+                putBoolean(
+                    "isLoggedIn",
+                    false,
+                    )
                 apply()
             }
             with(sharedPref.edit()) {
-                putString("userRole", "")
+                putString(
+                    "userRole",
+                    "",
+                    )
                 apply()
             }
             findNavController().navigate(R.id.action_profileFragment_to_loginFragment)
