@@ -69,7 +69,7 @@ class ProfileFragment : Fragment() {
                     R.id.studentRadioButton -> "student"
                     R.id.professorRadioButton -> "professor"
                     else -> null
-            }
+                }
 
             if (selectedRole == null) {
                 binding.errorTextView.visibility = View.VISIBLE
