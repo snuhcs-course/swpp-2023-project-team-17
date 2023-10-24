@@ -13,8 +13,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GoClass"
-        android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".ProfessorAttendanceListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".StudentAttendanceActivity"
+            android:exported="false"
+            android:label="@string/title_activity_student_attendance"
+            android:theme="@style/Theme.GoClass.NoActionBar" />
+        <activity
+            android:name=".ProfessorAttendanceActivity"
+            android:exported="false"
+            android:label="@string/title_activity_professor_attendance"
+            android:theme="@style/Theme.GoClass.NoActionBar" />
+        <activity
+            android:name=".ClassActivity"
+            android:exported="false"
+            android:label="@string/title_activity_class" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
