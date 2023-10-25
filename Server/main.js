@@ -17,7 +17,7 @@ app.listen(port, () => {
 });
 
 const connection = mysql.createConnection({
-    host: "swpp-2023-project-team-17-database.c8tunufhlk0u.us-east-1.rds.amazonaws.com",
+    host: "team17-database.cqeij4pxj0w8.ap-northeast-2.rds.amazonaws.com",
     user: "admin",
     database: "team17_database",
     password: "admin1234",
@@ -50,12 +50,17 @@ app.post('/signup', (req, res) => {
                     console.log(err);
                 } else {
                     resultCode = 200;
-                    message = 'login Success';
+                    message = 'signup Success';
                     console.log(message);
                     userId = result[0]['LAST_INSERT_ID()'];
                 }
+            });
 
-            }
+            res.json({
+                'code': resultCode,
+                'message': message,
+                'user_id': userId
+            });
         }
 
         res.json({
