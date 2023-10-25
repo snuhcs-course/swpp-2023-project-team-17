@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.goclass.adapter.StudentAttendanceAdapter
-import com.example.goclass.dataClass.StudentAttendance
+import com.example.goclass.dataClass.StudentAttendanceDummy
 import com.example.goclass.databinding.ActivityStudentAttendanceBinding
 
 class StudentAttendanceActivity : AppCompatActivity() {
@@ -13,26 +13,26 @@ class StudentAttendanceActivity : AppCompatActivity() {
 
     private val studentAttendances =
         listOf(
-            StudentAttendance("Recycler View Example #1"),
-            StudentAttendance("Recycler View Example #2"),
-            StudentAttendance("Recycler View Example #3"),
-            StudentAttendance("Recycler View Example #4"),
-            StudentAttendance("Recycler View Example #5"),
-            StudentAttendance("Recycler View Example #6"),
-            StudentAttendance("Recycler View Example #7"),
-            StudentAttendance("Recycler View Example #8"),
-            StudentAttendance("Recycler View Example #9"),
-            StudentAttendance("Recycler View Example #10"),
-            StudentAttendance("Recycler View Example #11"),
-            StudentAttendance("Recycler View Example #12"),
-            StudentAttendance("Recycler View Example #13"),
-            StudentAttendance("Recycler View Example #14"),
-            StudentAttendance("Recycler View Example #15"),
-            StudentAttendance("Recycler View Example #16"),
-            StudentAttendance("Recycler View Example #17"),
-            StudentAttendance("Recycler View Example #18"),
-            StudentAttendance("Recycler View Example #19"),
-            StudentAttendance("Recycler View Example #20"),
+            StudentAttendanceDummy("Recycler View Example #1"),
+            StudentAttendanceDummy("Recycler View Example #2"),
+            StudentAttendanceDummy("Recycler View Example #3"),
+            StudentAttendanceDummy("Recycler View Example #4"),
+            StudentAttendanceDummy("Recycler View Example #5"),
+            StudentAttendanceDummy("Recycler View Example #6"),
+            StudentAttendanceDummy("Recycler View Example #7"),
+            StudentAttendanceDummy("Recycler View Example #8"),
+            StudentAttendanceDummy("Recycler View Example #9"),
+            StudentAttendanceDummy("Recycler View Example #10"),
+            StudentAttendanceDummy("Recycler View Example #11"),
+            StudentAttendanceDummy("Recycler View Example #12"),
+            StudentAttendanceDummy("Recycler View Example #13"),
+            StudentAttendanceDummy("Recycler View Example #14"),
+            StudentAttendanceDummy("Recycler View Example #15"),
+            StudentAttendanceDummy("Recycler View Example #16"),
+            StudentAttendanceDummy("Recycler View Example #17"),
+            StudentAttendanceDummy("Recycler View Example #18"),
+            StudentAttendanceDummy("Recycler View Example #19"),
+            StudentAttendanceDummy("Recycler View Example #20"),
         )
 
     override fun onCreate(savedInstanceState: Bundle?) {

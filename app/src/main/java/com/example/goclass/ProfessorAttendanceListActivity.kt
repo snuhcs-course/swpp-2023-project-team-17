@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.goclass.adapter.ProfessorAttendanceListAdapter
-import com.example.goclass.dataClass.ProfessorAttendanceList
+import com.example.goclass.dataClass.ProfessorAttendanceListDummy
 import com.example.goclass.databinding.ActivityProfessorAttendanceListBinding
 
 class ProfessorAttendanceListActivity : AppCompatActivity() {
@@ -13,26 +13,26 @@ class ProfessorAttendanceListActivity : AppCompatActivity() {
 
     private val professorAttendanceLists =
         listOf(
-            ProfessorAttendanceList("Recycler View Example #1"),
-            ProfessorAttendanceList("Recycler View Example #2"),
-            ProfessorAttendanceList("Recycler View Example #3"),
-            ProfessorAttendanceList("Recycler View Example #4"),
-            ProfessorAttendanceList("Recycler View Example #5"),
-            ProfessorAttendanceList("Recycler View Example #6"),
-            ProfessorAttendanceList("Recycler View Example #7"),
-            ProfessorAttendanceList("Recycler View Example #8"),
-            ProfessorAttendanceList("Recycler View Example #9"),
-            ProfessorAttendanceList("Recycler View Example #10"),
-            ProfessorAttendanceList("Recycler View Example #11"),
-            ProfessorAttendanceList("Recycler View Example #12"),
-            ProfessorAttendanceList("Recycler View Example #13"),
-            ProfessorAttendanceList("Recycler View Example #14"),
-            ProfessorAttendanceList("Recycler View Example #15"),
-            ProfessorAttendanceList("Recycler View Example #16"),
-            ProfessorAttendanceList("Recycler View Example #17"),
-            ProfessorAttendanceList("Recycler View Example #18"),
-            ProfessorAttendanceList("Recycler View Example #19"),
-            ProfessorAttendanceList("Recycler View Example #20"),
+            ProfessorAttendanceListDummy("Recycler View Example #1"),
+            ProfessorAttendanceListDummy("Recycler View Example #2"),
+            ProfessorAttendanceListDummy("Recycler View Example #3"),
+            ProfessorAttendanceListDummy("Recycler View Example #4"),
+            ProfessorAttendanceListDummy("Recycler View Example #5"),
+            ProfessorAttendanceListDummy("Recycler View Example #6"),
+            ProfessorAttendanceListDummy("Recycler View Example #7"),
+            ProfessorAttendanceListDummy("Recycler View Example #8"),
+            ProfessorAttendanceListDummy("Recycler View Example #9"),
+            ProfessorAttendanceListDummy("Recycler View Example #10"),
+            ProfessorAttendanceListDummy("Recycler View Example #11"),
+            ProfessorAttendanceListDummy("Recycler View Example #12"),
+            ProfessorAttendanceListDummy("Recycler View Example #13"),
+            ProfessorAttendanceListDummy("Recycler View Example #14"),
+            ProfessorAttendanceListDummy("Recycler View Example #15"),
+            ProfessorAttendanceListDummy("Recycler View Example #16"),
+            ProfessorAttendanceListDummy("Recycler View Example #17"),
+            ProfessorAttendanceListDummy("Recycler View Example #18"),
+            ProfessorAttendanceListDummy("Recycler View Example #19"),
+            ProfessorAttendanceListDummy("Recycler View Example #20"),
         )
 
     override fun onCreate(savedInstanceState: Bundle?) {

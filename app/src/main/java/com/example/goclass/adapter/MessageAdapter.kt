@@ -3,10 +3,10 @@ package com.example.goclass.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.goclass.dataClass.Message
+import com.example.goclass.dataClass.MessageDummy
 import com.example.goclass.databinding.ItemMessageBinding
 
-class MessageAdapter(private val messages: List<Message>) :
+class MessageAdapter(private val messages: List<MessageDummy>) :
     RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -28,7 +28,7 @@ class MessageAdapter(private val messages: List<Message>) :
 
     class MessageViewHolder(var binding: ItemMessageBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(message: Message) {
+        fun bind(message: MessageDummy) {
             binding.messageText.text = message.content
         }
     }

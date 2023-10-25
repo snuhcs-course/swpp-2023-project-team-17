@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.goclass.ProfessorAttendanceListActivity
-import com.example.goclass.dataClass.ProfessorAttendance
+import com.example.goclass.dataClass.ProfessorAttendanceDummy
 import com.example.goclass.databinding.ItemProfessorAttendanceBinding
 
-class ProfessorAttendanceAdapter(private val professorAttendances: List<ProfessorAttendance>) :
+class ProfessorAttendanceAdapter(private val professorAttendances: List<ProfessorAttendanceDummy>) :
     RecyclerView.Adapter<ProfessorAttendanceAdapter.ProfessorAttendanceViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -42,7 +42,7 @@ class ProfessorAttendanceAdapter(private val professorAttendances: List<Professo
 
     class ProfessorAttendanceViewHolder(var binding: ItemProfessorAttendanceBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(professorAttendance: ProfessorAttendance) {
+        fun bind(professorAttendance: ProfessorAttendanceDummy) {
             binding.attendanceText.text = professorAttendance.content
         }
     }

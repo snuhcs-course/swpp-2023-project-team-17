@@ -7,7 +7,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.goclass.adapter.MessageAdapter
-import com.example.goclass.dataClass.Message
+import com.example.goclass.dataClass.MessageDummy
 import com.example.goclass.databinding.ActivityClassBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -16,26 +16,26 @@ class ClassActivity : AppCompatActivity() {
 
     private val messages =
         listOf(
-            Message("Recycler View Example #1"),
-            Message("Recycler View Example #2"),
-            Message("Recycler View Example #3"),
-            Message("Recycler View Example #4"),
-            Message("Recycler View Example #5"),
-            Message("Recycler View Example #6"),
-            Message("Recycler View Example #7"),
-            Message("Recycler View Example #8"),
-            Message("Recycler View Example #9"),
-            Message("Recycler View Example #10"),
-            Message("Recycler View Example #11"),
-            Message("Recycler View Example #12"),
-            Message("Recycler View Example #13"),
-            Message("Recycler View Example #14"),
-            Message("Recycler View Example #15"),
-            Message("Recycler View Example #16"),
-            Message("Recycler View Example #17"),
-            Message("Recycler View Example #18"),
-            Message("Recycler View Example #19"),
-            Message("Recycler View Example #20"),
+            MessageDummy("Recycler View Example #1"),
+            MessageDummy("Recycler View Example #2"),
+            MessageDummy("Recycler View Example #3"),
+            MessageDummy("Recycler View Example #4"),
+            MessageDummy("Recycler View Example #5"),
+            MessageDummy("Recycler View Example #6"),
+            MessageDummy("Recycler View Example #7"),
+            MessageDummy("Recycler View Example #8"),
+            MessageDummy("Recycler View Example #9"),
+            MessageDummy("Recycler View Example #10"),
+            MessageDummy("Recycler View Example #11"),
+            MessageDummy("Recycler View Example #12"),
+            MessageDummy("Recycler View Example #13"),
+            MessageDummy("Recycler View Example #14"),
+            MessageDummy("Recycler View Example #15"),
+            MessageDummy("Recycler View Example #16"),
+            MessageDummy("Recycler View Example #17"),
+            MessageDummy("Recycler View Example #18"),
+            MessageDummy("Recycler View Example #19"),
+            MessageDummy("Recycler View Example #20"),
         )
 
     override fun onCreate(savedInstanceState: Bundle?) {
