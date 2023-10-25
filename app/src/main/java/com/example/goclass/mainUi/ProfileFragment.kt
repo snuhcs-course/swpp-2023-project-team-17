@@ -7,8 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.RadioGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.goclass.R
@@ -23,43 +21,60 @@ class ProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        binding = FragmentProfileBinding.inflate(inflater, container, false)
+        binding =
+            FragmentProfileBinding.inflate(
+                inflater,
+                container,
+                false,
+            )
         return binding.root
     }
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
+        super.onViewCreated(
+            view,
+            savedInstanceState,
+        )
 
         val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
-        val errorTextView = view.findViewById<TextView>(R.id.errorTextView)
 
         // Logout Button
         binding.logoutButton.setOnClickListener {
             sharedPref ?: return@setOnClickListener
             with(sharedPref.edit()) {
-                putBoolean("isLoggedIn", false)
+                putBoolean(
+                    "isLoggedIn",
+                    false,
+                )
                 apply()
             }
             with(sharedPref.edit()) {
-                putString("userRole", "")
+                putString(
+                    "userRole",
+                    "",
+                )
                 apply()
             }
             findNavController().navigate(R.id.action_profileFragment_to_loginFragment)
         }
 
         // Confirm Button
-        val radioGroup = view.findViewById<RadioGroup>(R.id.roleRadioGroup)
-
         binding.confirmButton.setOnClickListener {
-            val selectedRole = when (radioGroup.checkedRadioButtonId) {
-                R.id.studentRadioButton -> "student"
-                R.id.professorRadioButton -> "professor"
-                else -> null
-            }
+            val selectedRole =
+                when (binding.roleRadioGroup.checkedRadioButtonId) {
+                    R.id.studentRadioButton -> "student"
+                    R.id.professorRadioButton -> "professor"
+                    else -> null
+                }
 
             if (selectedRole == null) {
-                errorTextView.visibility = View.VISIBLE
+                binding.errorTextView.visibility = View.VISIBLE
             } else {
-                errorTextView.visibility = View.GONE
+                binding.errorTextView.visibility = View.GONE
             }
 
             selectedRole?.let {
