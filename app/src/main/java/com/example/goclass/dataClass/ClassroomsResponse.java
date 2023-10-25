@@ -8,9 +8,9 @@ public class ClassroomsResponse {
     @SerializedName("room_number")
     String roomNumber;
     @SerializedName("longitude")
-    String longitude;
+    float longitude;
     @SerializedName("latitude")
-    String latitude;
+    float latitude;
     @SerializedName("beacon_id")
     String beaconId;
     @SerializedName("code")
@@ -26,11 +26,11 @@ public class ClassroomsResponse {
         return roomNumber;
     }
 
-    public String getLongitude() {
+    public float getLongitude() {
         return longitude;
     }
 
-    public String getLatitude() {
+    public float getLatitude() {
         return latitude;
     }
 

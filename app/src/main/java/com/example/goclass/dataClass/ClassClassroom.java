@@ -8,9 +8,9 @@ public class ClassClassroom {
     @SerializedName("room_number")
     String roomNumber;
     @SerializedName("class_id")
-    String classId;
+    int classId;
 
-    public ClassClassroom(String buildingNumber, String roomNumber, String classId) {
+    public ClassClassroom(String buildingNumber, String roomNumber, int classId) {
         this.buildingNumber = buildingNumber;
         this.roomNumber = roomNumber;
         this.classId = classId;

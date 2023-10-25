@@ -35,15 +35,15 @@ public interface ServiceApi {
     Call<UsersResponse> userGet();
     @PUT("/users/:id")
     Call<CodeMessageResponse> userEdit(@Body Users users);
-    @GET("/users/:id/classes")
+    @GET("/users/classes")
     Call<ClassListsResponse> userGetClassList(@Body Users users);
     @GET("users/attendance/:date")
     Call<AttendanceListsResponse> userGetAttendanceListByDate(@Body Users users);
     @GET("users/attendance")
     Call<AttendanceDateListsResponse> attendanceGetDateList(@Body Users users);
-    @POST("/class/create/:user_id")
+    @POST("/class/create")
     Call<CodeMessageResponse> classCreate(@Body Classes classes);
-    @POST("/class/join")
+    @POST("/class/join/:user_id")
     Call<CodeMessageResponse> classJoin(@Body Classes classes);
     @GET("/class/:id")
     Call<ClassesResponse> classGet();

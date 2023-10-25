@@ -4,20 +4,20 @@ import com.google.gson.annotations.SerializedName;
 
 public class ChannelsResponse {
     @SerializedName("class_id")
-    String classId;
+    int classId;
     @SerializedName("channel_type")
-    String channelType;
+    int channelType;
     @SerializedName("code")
     private int code;
     @SerializedName("message")
     private String message;
 
 
-    public String getClassId() {
+    public int getClassId() {
         return classId;
     }
 
-    public String getChannelType() {
+    public int getChannelType() {
         return channelType;
     }
 

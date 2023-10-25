@@ -8,7 +8,7 @@ public class ClassClassroomResponse {
     @SerializedName("room_number")
     String roomNumber;
     @SerializedName("class_id")
-    String classId;
+    int classId;
     @SerializedName("code")
     private int code;
     @SerializedName("message")
@@ -22,7 +22,7 @@ public class ClassClassroomResponse {
         return roomNumber;
     }
 
-    public String getClassId() {
+    public int getClassId() {
         return classId;
     }
 

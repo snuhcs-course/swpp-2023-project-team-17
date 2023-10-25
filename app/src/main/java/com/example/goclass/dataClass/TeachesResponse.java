@@ -4,19 +4,19 @@ import com.google.gson.annotations.SerializedName;
 
 public class TeachesResponse {
     @SerializedName("professor_id")
-    String professorId;
+    int professorId;
     @SerializedName("class_id")
-    String classId;
+    int classId;
     @SerializedName("code")
     private int code;
     @SerializedName("message")
     private String message;
 
-    public String getProfessorId() {
+    public int getProfessorId() {
         return professorId;
     }
 
-    public String getClassId() {
+    public int getClassId() {
         return classId;
     }
 

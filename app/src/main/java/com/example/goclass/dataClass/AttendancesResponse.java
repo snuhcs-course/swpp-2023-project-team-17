@@ -6,15 +6,15 @@ public class AttendancesResponse {
     @SerializedName("attendance_date")
     String attendanceDate;
     @SerializedName("attendance_status")
-    String attendanceStatus;
+    int attendanceStatus;
     @SerializedName("attendance_duration")
-    String attendanceDuration;
+    int attendanceDuration;
     @SerializedName("is_sent")
-    String isSent;
+    int isSent;
     @SerializedName("student_id")
-    String studentId;
+    int studentId;
     @SerializedName("class_id")
-    String classId;
+    int classId;
 
     @SerializedName("code")
     private int code;
@@ -25,23 +25,23 @@ public class AttendancesResponse {
         return attendanceDate;
     }
 
-    public String getAttendanceStatus() {
+    public int getAttendanceStatus() {
         return attendanceStatus;
     }
 
-    public String getAttendanceDuration() {
+    public int getAttendanceDuration() {
         return attendanceDuration;
     }
 
-    public String getIsSent() {
+    public int getIsSent() {
         return isSent;
     }
 
-    public String getStudentId() {
+    public int getStudentId() {
         return studentId;
     }
 
-    public String getClassId() {
+    public int getClassId() {
         return classId;
     }
 

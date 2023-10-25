@@ -8,13 +8,13 @@ public class Classrooms {
     @SerializedName("room_number")
     String roomNumber;
     @SerializedName("longitude")
-    String longitude;
+    float longitude;
     @SerializedName("latitude")
-    String latitude;
+    float latitude;
     @SerializedName("beacon_id")
     String beaconId;
 
-    public Classrooms(String buildingNumber, String roomNumber, String longitude, String latitude, String beaconId) {
+    public Classrooms(String buildingNumber, String roomNumber, float longitude, float latitude, String beaconId) {
         this.buildingNumber = buildingNumber;
         this.roomNumber = roomNumber;
         this.longitude = longitude;

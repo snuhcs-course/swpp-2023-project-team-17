@@ -12,14 +12,14 @@ public class Attendances {
     @SerializedName("student_id")
     int studentId = -1;
 
-    public Attendances(String attendanceStatus, String attendanceDuration, String studentId, String classId) {
+    public Attendances(int attendanceStatus, int attendanceDuration, int studentId, int classId) {
         this.attendanceStatus = attendanceStatus;
         this.attendanceDuration = attendanceDuration;
         this.studentId = studentId;
         this.classId = classId;
     }
 
-    public Attendances(String attendanceStatus, String attendanceDuration, String classId) {
+    public Attendances(int attendanceStatus, int attendanceDuration, int classId) {
         this.attendanceStatus = attendanceStatus;
         this.attendanceDuration = attendanceDuration;
         this.classId = classId;

@@ -4,13 +4,13 @@ import com.google.gson.annotations.SerializedName;
 
 public class Channels {
     @SerializedName("channel_id")
-    String channelId;
+    int channelId;
     @SerializedName("class_id")
-    String classId;
+    int classId;
     @SerializedName("channel_type")
-    String channelType;
+    int channelType;
 
-    public Channels(String channelId, String classId, String channelType) {
+    public Channels(int channelId, int classId, int channelType) {
         this.channelId = channelId;
         this.classId = classId;
         this.channelType = channelType;

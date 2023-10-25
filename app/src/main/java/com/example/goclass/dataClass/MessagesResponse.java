@@ -4,21 +4,21 @@ import com.google.gson.annotations.SerializedName;
 
 public class MessagesResponse {
     @SerializedName("message_id")
-    String messageId;
+    int messageId;
     @SerializedName("time_stamp")
     String timeStamp;
     @SerializedName("sender_id")
-    String senderId;
+    int senderId;
     @SerializedName("content")
     String content;
     @SerializedName("channel_id")
-    String channelId;
+    int channelId;
     @SerializedName("code")
     private int code;
     @SerializedName("message")
     private String message;
 
-    public String getMessageId() {
+    public int getMessageId() {
         return messageId;
     }
 
@@ -26,7 +26,7 @@ public class MessagesResponse {
         return timeStamp;
     }
 
-    public String getSenderId() {
+    public int getSenderId() {
         return senderId;
     }
 
@@ -34,7 +34,7 @@ public class MessagesResponse {
         return content;
     }
 
-    public String getChannelId() {
+    public int getChannelId() {
         return channelId;
     }
 

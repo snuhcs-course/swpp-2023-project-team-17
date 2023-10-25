@@ -18,7 +18,7 @@ public class Classes {
     @SerializedName("room_numer")
     String roomNumber = "";
 
-    public Classes(String classId, String className, String classCode, String professorId, String classTime) {
+    public Classes(int classId, String className, String classCode, int professorId, String classTime) {
         this.classId = classId;
         this.className = className;
         this.classCode = classCode;

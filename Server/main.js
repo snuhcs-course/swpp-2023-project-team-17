@@ -198,10 +198,10 @@ app.put('/users/:id', (req, res) => {
 /*
     get all user's classes with user_type of Users
 */
-app.get('/users/:id/classes', (req, res) => {
+app.get('/users/classes', (req, res) => {
     console.log(req.body);
 
-    const userId = req.params.id;
+    const userId = req.body.userId;
     const userType = req.body.userType;
 
     const sql = 'select * from Classes ';
@@ -318,12 +318,12 @@ app.get('users/attendance', (req, res) => {
     User type must be professor
 */
 // TODO: check user_type == 1 (TBD later)
-app.post('/class/create/:user_id', (req, res) => {
+app.post('/class/create', (req, res) => {
     console.log(req.body);
 
     const className = req.body.className;
     const classCode = req.body.classCode;
-    const professorId = req.params.user_id;
+    const professorId = req.body.professorId;
     const buildingNumber = req.body.buildingNumber;
     const roomNumber = req.body.roomNumber;
     const classTime = req.body.classTime;

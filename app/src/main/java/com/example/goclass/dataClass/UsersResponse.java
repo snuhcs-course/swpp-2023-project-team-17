@@ -6,11 +6,11 @@ public class UsersResponse {
     @SerializedName("user_email")
     String userEmail;
     @SerializedName("user_id")
-    String userId;
+    int userId;
     @SerializedName("user_name")
     String userName;
     @SerializedName("user_type")
-    String userType;
+    int userType;
     @SerializedName("code")
     private int code;
     @SerializedName("message")
@@ -20,7 +20,7 @@ public class UsersResponse {
         return userEmail;
     }
 
-    public String getUserId() {
+    public int getUserId() {
         return userId;
     }
 
@@ -28,7 +28,7 @@ public class UsersResponse {
         return userName;
     }
 
-    public String getUserType() {
+    public int getUserType() {
         return userType;
     }
 

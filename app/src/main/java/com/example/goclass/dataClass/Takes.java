@@ -4,11 +4,11 @@ import com.google.gson.annotations.SerializedName;
 
 public class Takes {
     @SerializedName("student_id")
-    String studentId;
+    int studentId;
     @SerializedName("class_id")
-    String classId;
+    int classId;
 
-    public Takes(String studentId, String classId) {
+    public Takes(int studentId, int classId) {
         this.studentId = studentId;
         this.classId = classId;
     }

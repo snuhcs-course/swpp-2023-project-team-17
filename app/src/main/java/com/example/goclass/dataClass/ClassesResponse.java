@@ -4,13 +4,13 @@ import com.google.gson.annotations.SerializedName;
 
 public class ClassesResponse {
     @SerializedName("class_id")
-    String classId;
+    int classId;
     @SerializedName("class_name")
     String className;
     @SerializedName("class_code")
     String classCode;
     @SerializedName("professor_id")
-    String professorId;
+    int professorId;
 
     @SerializedName("class_time")
     String classTime;
@@ -19,7 +19,7 @@ public class ClassesResponse {
     @SerializedName("message")
     private String message;
 
-    public String getClassId() {
+    public int getClassId() {
         return classId;
     }
 
@@ -31,7 +31,7 @@ public class ClassesResponse {
         return classCode;
     }
 
-    public String getProfessorId() {
+    public int getProfessorId() {
         return professorId;
     }
 
