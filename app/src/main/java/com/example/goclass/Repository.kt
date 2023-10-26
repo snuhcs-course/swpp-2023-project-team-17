@@ -7,34 +7,35 @@ import com.example.goclass.dataClass.Messages
 import com.example.goclass.dataClass.Users
 
 class Repository(private val serviceApi: ServiceApi) {
+
     // User related functions
-    fun userSignup(users: Users) = serviceApi.userSignup(users)
-    fun userLogin(email: String) = serviceApi.userLogin(email)
-    fun userLogout() = serviceApi.userLogout()
-    fun userGet(userId: Int) = serviceApi.userGet(userId)
-    fun userEdit(userId: Int, users: Users) = serviceApi.userEdit(userId, users)
-    fun userGetClassList(users: Users) = serviceApi.userGetClassList(users)
-    fun userGetAttendanceListByDate(date: String, users: Users) = serviceApi.userGetAttendanceListByDate(date, users)
-    fun attendanceGetDateList(users: Users) = serviceApi.attendanceGetDateList(users)
+    suspend fun userSignup(users: Users) = serviceApi.userSignup(users)
+    suspend fun userLogin(email: String) = serviceApi.userLogin(email)
+    suspend fun userLogout() = serviceApi.userLogout()
+    suspend fun userGet(userId: Int) = serviceApi.userGet(userId)
+    suspend fun userEdit(userId: Int, users: Users) = serviceApi.userEdit(userId, users)
+    suspend fun userGetClassList(users: Users) = serviceApi.userGetClassList(users)
+    suspend fun userGetAttendanceListByDate(date: String, users: Users) = serviceApi.userGetAttendanceListByDate(date, users)
+    suspend fun attendanceGetDateList(users: Users) = serviceApi.attendanceGetDateList(users)
 
     // Class related functions
-    fun classCreate(classes: Classes) {
+    suspend fun classCreate(classes: Classes) {
         serviceApi.classCreate(classes)
-        Log.d("okhttp", "create")
+        Log.d("okhttp", "create call in repository")
     }
-    fun classJoin(userId: Int, classes: Classes) = serviceApi.classJoin(userId, classes)
-    fun classGet(classId: Int) = serviceApi.classGet(classId)
-    fun classDelete(classId: Int) = serviceApi.classDelete(classId)
-    fun classGetChannel(classId: Int, channelType: Int) = serviceApi.classGetChannel(classId, channelType)
-    fun classGetAttendanceListByUserId(classId: Int, userId: Int) = serviceApi.classGetAttendanceListByUserId(classId, userId)
+    suspend fun classJoin(userId: Int, classes: Classes) = serviceApi.classJoin(userId, classes)
+    suspend fun classGet(classId: Int) = serviceApi.classGet(classId)
+    suspend fun classDelete(classId: Int) = serviceApi.classDelete(classId)
+    suspend fun classGetChannel(classId: Int, channelType: Int) = serviceApi.classGetChannel(classId, channelType)
+    suspend fun classGetAttendanceListByUserId(classId: Int, userId: Int) = serviceApi.classGetAttendanceListByUserId(classId, userId)
 
     // Chat Channel related functions
-    fun chatChannelGetList(channelId: Int) = serviceApi.chatChannelGetList(channelId)
-    fun chatChannelSend(channelId: Int, messages: Messages) = serviceApi.chatChannelSend(channelId, messages)
+    suspend fun chatChannelGetList(channelId: Int) = serviceApi.chatChannelGetList(channelId)
+    suspend fun chatChannelSend(channelId: Int, messages: Messages) = serviceApi.chatChannelSend(channelId, messages)
 
     // Attendance related functions
-    fun attendanceGet(attendanceId: Int) = serviceApi.attendanceGet(attendanceId)
-    fun attendanceEdit(attendanceId: Int) = serviceApi.attendanceEdit(attendanceId)
-    fun attendanceDelete(attendanceId: Int) = serviceApi.attendanceDelete(attendanceId)
-    fun attendanceAdd(userId: Int, attendances: Attendances) = serviceApi.attendanceAdd(userId, attendances)
+    suspend fun attendanceGet(attendanceId: Int) = serviceApi.attendanceGet(attendanceId)
+    suspend fun attendanceEdit(attendanceId: Int) = serviceApi.attendanceEdit(attendanceId)
+    suspend fun attendanceDelete(attendanceId: Int) = serviceApi.attendanceDelete(attendanceId)
+    suspend fun attendanceAdd(userId: Int, attendances: Attendances) = serviceApi.attendanceAdd(userId, attendances)
 }

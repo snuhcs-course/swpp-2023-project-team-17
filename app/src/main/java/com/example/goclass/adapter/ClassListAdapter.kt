@@ -41,6 +41,7 @@ class ClassListAdapter : RecyclerView.Adapter<ClassListAdapter.ClassViewHolder>(
             itemView.setOnClickListener{
                 val intent = Intent(itemView.context, ClassActivity::class.java)
                 intent.putExtra("userRole", "professor")
+                intent.putExtra("className", classItem.className)
                 ContextCompat.startActivity(itemView.context, intent, null)
             }
         }
