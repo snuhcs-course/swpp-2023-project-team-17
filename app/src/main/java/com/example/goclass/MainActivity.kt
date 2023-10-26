@@ -1,11 +1,13 @@
 package com.example.goclass
 
-import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.goclass.databinding.ActivityMainBinding
+import com.example.goclass.utility.PermissionUtils
 
 class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
@@ -14,17 +16,28 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val permissionUtils = PermissionUtils(this)
+
+        // start tracking location (gps) if permission granted
+        if (permissionUtils.requestLocationPermissions()) {
+            Log.d("Debug", "Location Permission Given")
+            startLocationService()
+        }
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         // User role from ClassActivity back button
         if (intent.hasExtra("userRole")) {
             val userRole = intent.getStringExtra("userRole")
-            val sharedPref = getPreferences(Context.MODE_PRIVATE)
+            val sharedPref = getPreferences(MODE_PRIVATE)
             with(sharedPref?.edit()) {
                 this?.putString("userRole", userRole)
                 this?.apply()
             }
+
+
+
         }
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -39,7 +52,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkLoginStatus() {
-        val sharedPref = getPreferences(Context.MODE_PRIVATE)
+        val sharedPref = getPreferences(MODE_PRIVATE)
         val isLoggedIn = sharedPref.getBoolean("isLoggedIn", false)
         val userRole = sharedPref.getString("userRole", "")
 
@@ -58,5 +71,13 @@ class MainActivity : AppCompatActivity() {
         } else {
             navController.navigate(R.id.loginFragment)
         }
+    }
+
+    private fun startLocationService() {
+        Log.d("Debug", "before starting LocationService")
+//        val serviceIntent = Intent(this, LocationService::class.java)
+//        startService(serviceIntent)
+        startService(Intent(this, LocationService::class.java))
+        Log.d("Debug", "after starting LocationService")
     }
 }
