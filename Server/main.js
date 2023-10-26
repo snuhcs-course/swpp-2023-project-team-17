@@ -27,28 +27,46 @@ const connection = mysql.createConnection({
 /*
     user sign up - first time logging in with gmail
 */
-app.post('/signup', async (req, res) => {
+app.post('/signup', (req, res) => {
     console.log(req.body);
-    const { userEmail, userName, userType } = req.body;
+    const userEmail = req.body.userEmail;
+    const userName = req.body.userName;
+    const userType = req.body.userType;
 
-    try {
-        const sql = 'INSERT INTO Users (user_email, user_name, user_type) VALUES (?, ?, ?)';
-        const params = [userEmail, userName, userType];
-        const [insertResult] = await connection.promise().query(sql, params);
-        const userId = insertResult.insertId;
+    var sql = 'insert into Users(user_email, user_name, user_type) values(?, ?, ?)';
+    const params = [userEmail, userName, userType];
 
-        res.status(200).json({
-            'code': 200,
-            'message': 'Signup success',
-            'user_id': userId,
-            'user_email': userEmail,
-            'user_name': userName,
-            'user_type': userType
+    connection.query(sql, params, (err, result) => {
+        if (err) {
+            console.log(err);
+            return res.json({
+                'code': 404,
+                'message': 'Error occurred',
+            });
+        }
+
+        sql = 'SELECT LAST_INSERT_ID() AS userId';
+        connection.query(sql, (err, result) => {
+            if (err) {
+                console.log(err);
+                return res.json({
+                    'code': 404,
+                    'message': 'Error occurred',
+                });
+            }
+
+            const userId = result[0].userId;
+            console.log('Signup Success');
+            return res.json({
+                'code': 200,
+                'message': 'Signup Success',
+                'user_email': userEmail,
+                'user_id': userId,
+                'user_name': userName,
+                'user_type': userType
+            });
         });
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({ 'code': 500, 'message': 'Error occurred' });
-    }
+    });
 });
 
 /*
@@ -300,34 +318,35 @@ app.get('users/attendance', (req, res) => {
     User type must be professor
 */
 
-app.post('/class/create', async (req, res) => {
+// TODO: check user_type == 1 (TBD later)
+app.post('/class/create', (req, res) => {
     console.log(req.body);
 
-    const { className, classCode, professorId, buildingNumber, roomNumber, classTime, userType } = req.body;
+    const { className, classCode, professorId, classTime, buildingNumber, roomNumber } = req.body;
 
-// TODO: check user_type == 1 (TBD later)
-//    if (!userType) {
-//        return res.status(403).json({ 'code': 403, 'message': 'You must be a professor' });
-//    }
+    let sql = 'INSERT INTO Classes (class_name, class_code, professor_id, class_time, building_number, room_number) VALUES (?, ?, ?, ?, ?, ?)';
+    const params = [className, classCode, professorId, classTime, buildingNumber, roomNumber];
 
-    var sql = 'INSERT INTO Classes (class_name, class_code, professor_id, class_time, building_number, room_number) VALUES (?, ?, ?, ?, ?, ?)';
-    var params = [className, classCode, professorId, classTime, buildingNumber, roomNumber];
-
-    try {
-        const result = await connection.promise().query(sql, params);
-        const classId = result[0].insertId;
+    connection.query(sql, params, (err, result) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).json({ 'code': 500, 'message': 'Error occurred' });
+        }
 
         sql = 'INSERT INTO Teaches (class_id, professor_id) VALUES (?, ?)';
-        params = [classId, professorId];
-        await connection.promise().query(sql, params);
+        const newParams = [result.insertId, professorId];
 
-        console.log('create and link class to professor Success');
-        res.status(200).json({ 'code': 200, 'message': 'create and link class to professor Success' });
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({ 'code': 500, 'message': 'Error occured' });
-    }
+        connection.query(sql, newParams, (err, result) => {
+            if (err) {
+                console.log(err);
+                return res.status(500).json({ 'code': 500, 'message': 'Error occurred' });
+            }
+
+            res.status(200).json({ 'code': 200, 'message': 'Class created and linked to professor successfully' });
+        });
+    });
 });
+
 
 /*
     join class and insert to Classes, Class_classroom, Teaches
