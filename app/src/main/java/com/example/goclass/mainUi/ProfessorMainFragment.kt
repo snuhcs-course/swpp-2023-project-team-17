@@ -14,9 +14,11 @@ import androidx.navigation.fragment.findNavController
 import com.example.goclass.ClassActivity
 import com.example.goclass.R
 import com.example.goclass.databinding.FragmentProfessorMainBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ProfessorMainFragment : Fragment() {
     private lateinit var binding: FragmentProfessorMainBinding
+    private val viewModel: ProfessorMainViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,6 +41,9 @@ class ProfessorMainFragment : Fragment() {
                 val enteredCode = editCode.text.toString()
                 val enteredClassName = editClassName.text.toString()
                 val enteredClassTime = editClassTime.text.toString()
+
+                viewModel.createClass(enteredClassName, enteredCode, 1, enteredClassTime, "301", "311")
+
                 dialog.dismiss()
             }
             dialog.show()
@@ -61,7 +66,7 @@ class ProfessorMainFragment : Fragment() {
         // Class Button
         binding.classButton.setOnClickListener {
             val intent = Intent(view.context, ClassActivity::class.java)
-            intent.putExtra("userRole", "professor")
+
             startActivity(intent)
         }
     }

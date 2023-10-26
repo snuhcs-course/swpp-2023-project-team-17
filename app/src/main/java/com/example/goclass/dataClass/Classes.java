@@ -18,8 +18,7 @@ public class Classes {
     @SerializedName("room_numer")
     String roomNumber = "";
 
-    public Classes(int classId, String className, String classCode, int professorId, String classTime) {
-        this.classId = classId;
+    public Classes(String className, String classCode, int professorId, String classTime, String buildingNumber, String roomNumber) {
         this.className = className;
         this.classCode = classCode;
         this.professorId = professorId;
@@ -31,5 +30,9 @@ public class Classes {
     public Classes(String className, String classCode) {
         this.className = className;
         this.classCode = classCode;
+    }
+
+    public String getClassName() {
+        return className;
     }
 }

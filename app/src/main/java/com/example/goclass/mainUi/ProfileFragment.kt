@@ -70,6 +70,7 @@ class ProfileFragment : Fragment() {
                     R.id.professorRadioButton -> "professor"
                     else -> null
                 }
+            val username = binding.nameEditText.text.toString()
 
             if (selectedRole == null) {
                 binding.errorTextView.visibility = View.VISIBLE
