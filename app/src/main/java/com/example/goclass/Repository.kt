@@ -19,10 +19,7 @@ class Repository(private val serviceApi: ServiceApi) {
     suspend fun attendanceGetDateList(users: Users) = serviceApi.attendanceGetDateList(users)
 
     // Class related functions
-    suspend fun classCreate(classes: Classes) {
-        serviceApi.classCreate(classes)
-        Log.d("okhttp", "create call in repository")
-    }
+    suspend fun classCreate(classes: Classes) = serviceApi.classCreate(classes)
     suspend fun classJoin(userId: Int, classes: Classes) = serviceApi.classJoin(userId, classes)
     suspend fun classGet(classId: Int) = serviceApi.classGet(classId)
     suspend fun classDelete(classId: Int) = serviceApi.classDelete(classId)

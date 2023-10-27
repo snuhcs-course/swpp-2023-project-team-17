@@ -3,11 +3,14 @@ package com.example.goclass.mainUi
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.goclass.R
 import com.example.goclass.databinding.FragmentProfileBinding
@@ -44,6 +47,47 @@ class ProfileFragment : Fragment() {
         )
 
         val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
+
+        binding = FragmentProfileBinding.bind(view)
+        viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
+            Log.d("toast", "toastcall")
+            Toast.makeText(requireActivity().applicationContext, message, Toast.LENGTH_SHORT).show()
+        }
+
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            if(isLoading){
+                binding.progressBar.visibility = View.VISIBLE
+            } else {
+                binding.progressBar.visibility = View.GONE
+            }
+        }
+
+        viewModel.editSuccess.observe(viewLifecycleOwner) {isSuccess ->
+            if (isSuccess) {
+                val selectedRole = when (binding.roleRadioGroup.checkedRadioButtonId) {
+                    R.id.studentRadioButton -> "student"
+                    R.id.professorRadioButton -> "professor"
+                    else -> null
+                }
+
+                selectedRole?.let {
+                    val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
+                    with(sharedPref?.edit()) {
+                        this?.putString("userRole", it)
+                        this?.apply()
+                    }
+
+                    when (it) {
+                        "student" -> {
+                            findNavController().navigate(R.id.action_profileFragment_to_studentMainFragment)
+                        }
+                        "professor" -> {
+                            findNavController().navigate(R.id.action_profileFragment_to_professorMainFragment)
+                        }
+                    }
+                }
+            }
+        }
 
         // Logout Button
         binding.logoutButton.setOnClickListener {
@@ -83,23 +127,6 @@ class ProfileFragment : Fragment() {
             } else {
                 binding.errorTextView.visibility = View.GONE
                 viewModel.userEdit(1, userType, userName)
-            }
-
-            selectedRole?.let {
-                val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
-                with(sharedPref?.edit()) {
-                    this?.putString("userRole", it)
-                    this?.apply()
-                }
-
-                when (it) {
-                    "student" -> {
-                        findNavController().navigate(R.id.action_profileFragment_to_studentMainFragment)
-                    }
-                    "professor" -> {
-                        findNavController().navigate(R.id.action_profileFragment_to_professorMainFragment)
-                    }
-                }
             }
         }
 
