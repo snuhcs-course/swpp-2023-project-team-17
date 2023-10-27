@@ -54,7 +54,6 @@ class ProfileFragment : Fragment() {
 
         binding = FragmentProfileBinding.bind(view)
         viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
-            Log.d("toast", "toastcall")
             Toast.makeText(requireActivity().applicationContext, message, Toast.LENGTH_SHORT).show()
         }
 
