@@ -1,6 +1,7 @@
 package com.example.goclass.mainUi
 
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -27,6 +28,9 @@ class ProfessorMainFragment : Fragment() {
     ): View? {
         binding = FragmentProfessorMainBinding.inflate(inflater, container, false)
 
+        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
+        val userId = sharedPref!!.getInt("userId", -1)
+
         binding.createButton.setOnClickListener {
             val dialog = Dialog(requireContext())
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -42,7 +46,7 @@ class ProfessorMainFragment : Fragment() {
                 val enteredClassName = editClassName.text.toString()
                 val enteredClassTime = editClassTime.text.toString()
 
-                viewModel.createClass(enteredClassName, enteredCode, 1, enteredClassTime, "301", "311")
+                viewModel.createClass(enteredClassName, enteredCode, userId, enteredClassTime, "301", "311")
 
                 dialog.dismiss()
             }

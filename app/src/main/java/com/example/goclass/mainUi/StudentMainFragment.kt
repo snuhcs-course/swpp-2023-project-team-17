@@ -1,6 +1,7 @@
 package com.example.goclass.mainUi
 
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,9 +15,12 @@ import androidx.navigation.fragment.findNavController
 import com.example.goclass.ClassActivity
 import com.example.goclass.R
 import com.example.goclass.databinding.FragmentStudentMainBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class StudentMainFragment : Fragment() {
     private lateinit var binding: FragmentStudentMainBinding
+    private val viewModel: StudentMainViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -24,6 +28,30 @@ class StudentMainFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View? {
         binding = FragmentStudentMainBinding.inflate(inflater, container, false)
+        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
+        val userId = sharedPref!!.getInt("userId", -1)
+
+        // Join Button
+        binding.joinButton.setOnClickListener {
+            val dialog = Dialog(requireContext())
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.dialog_join)
+
+            val editCode = dialog.findViewById<EditText>(R.id.codeEditText)
+            val editName = dialog.findViewById<EditText>(R.id.nameEditText)
+            val joinButtonDialog = dialog.findViewById<Button>(R.id.joinButton)
+
+            joinButtonDialog.setOnClickListener {
+                val enteredCode = editCode.text.toString()
+                val enteredName = editName.text.toString()
+
+                viewModel.classJoin(userId, enteredName, enteredCode)
+
+                dialog.dismiss()
+            }
+
+            dialog.show()
+        }
         return binding.root
     }
 
@@ -32,23 +60,6 @@ class StudentMainFragment : Fragment() {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-
-        // Join Button
-        binding.joinButton.setOnClickListener {
-            val dialog = Dialog(requireContext())
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-            dialog.setContentView(R.layout.dialog_join)
-
-            val editCode = dialog.findViewById<EditText>(R.id.codeEdittext)
-            val joinButtonDialog = dialog.findViewById<Button>(R.id.joinButton)
-
-            joinButtonDialog.setOnClickListener {
-                val enteredCode = editCode.text.toString()
-                dialog.dismiss()
-            }
-
-            dialog.show()
-        }
 
         // Profile Button
         binding.profileButton.setOnClickListener {
