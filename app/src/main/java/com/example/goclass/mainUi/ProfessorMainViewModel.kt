@@ -1,6 +1,7 @@
 package com.example.goclass.mainUi
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,6 +14,8 @@ import retrofit2.Call
 import java.lang.Exception
 
 class ProfessorMainViewModel(private val repository: Repository) : ViewModel() {
+    private val _toastMessage = MutableLiveData<String>()
+    val toastMessage: LiveData<String> get() = _toastMessage
     val classListLiveData: MutableLiveData<List<Classes>> = MutableLiveData()
     fun createClass(
         className: String,
@@ -24,7 +27,16 @@ class ProfessorMainViewModel(private val repository: Repository) : ViewModel() {
     ) {
         viewModelScope.launch {
             val newClass = Classes(className, classCode, professorId, classTime, buildingNumber, roomNumber)
-            repository.classCreate(newClass)
+            try {
+                val response = repository.classCreate(newClass)
+                if(response.code == 200){
+                    _toastMessage.postValue("Successfully created!")
+                } else {
+                    _toastMessage.postValue("create failed")
+                }
+            } catch (e: Exception){
+                _toastMessage.postValue("Error: $(e.message}")
+            }
         }
     }
 
