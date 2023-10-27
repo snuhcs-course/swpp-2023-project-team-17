@@ -47,6 +47,10 @@ class ProfileFragment : Fragment() {
         )
 
         val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
+        with(sharedPref?.edit()){
+            this?.putInt("userId", 1)
+            this?.apply()
+        }
 
         binding = FragmentProfileBinding.bind(view)
         viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
@@ -111,6 +115,7 @@ class ProfileFragment : Fragment() {
 
         // Confirm Button
         binding.confirmButton.setOnClickListener {
+            val userId = sharedPref?.getInt("userId", -1) ?: -1
             val userType =
                 when (binding.roleRadioGroup.checkedRadioButtonId) {
                     R.id.studentRadioButton -> 0
@@ -126,7 +131,7 @@ class ProfileFragment : Fragment() {
             } else {
                 binding.errorNameView.visibility = View.GONE
                 binding.errorTextView.visibility = View.GONE
-                viewModel.userEdit(1, userType, userName)
+                viewModel.userEdit(userId, userType, userName)
             }
         }
 
