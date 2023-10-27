@@ -111,20 +111,20 @@ class ProfileFragment : Fragment() {
 
         // Confirm Button
         binding.confirmButton.setOnClickListener {
-            val result =
+            val userType =
                 when (binding.roleRadioGroup.checkedRadioButtonId) {
-                    R.id.studentRadioButton -> Pair("student", 0)
-                    R.id.professorRadioButton -> Pair("professor", 1)
+                    R.id.studentRadioButton -> 0
+                    R.id.professorRadioButton -> 1
                     else -> null
                 }
-            val selectedRole = result?.first
-            val userType: Int? = result?.second
             val userName = binding.nameEditText.text.toString()
-
 
             if (userType == null) {
                 binding.errorTextView.visibility = View.VISIBLE
+            } else if (userName == ""){
+                binding.errorNameView.visibility = View.VISIBLE
             } else {
+                binding.errorNameView.visibility = View.GONE
                 binding.errorTextView.visibility = View.GONE
                 viewModel.userEdit(1, userType, userName)
             }
