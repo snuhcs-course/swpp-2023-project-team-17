@@ -11,9 +11,12 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.goclass.R
 import com.example.goclass.databinding.FragmentProfileBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class ProfileFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
+    private val viewModel: ProfileViewModel by viewModel()
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
@@ -64,18 +67,22 @@ class ProfileFragment : Fragment() {
 
         // Confirm Button
         binding.confirmButton.setOnClickListener {
-            val selectedRole =
+            val result =
                 when (binding.roleRadioGroup.checkedRadioButtonId) {
-                    R.id.studentRadioButton -> "student"
-                    R.id.professorRadioButton -> "professor"
+                    R.id.studentRadioButton -> Pair("student", 0)
+                    R.id.professorRadioButton -> Pair("professor", 1)
                     else -> null
                 }
-            val username = binding.nameEditText.text.toString()
+            val selectedRole = result?.first
+            val userType: Int? = result?.second
+            val userName = binding.nameEditText.text.toString()
 
-            if (selectedRole == null) {
+
+            if (userType == null) {
                 binding.errorTextView.visibility = View.VISIBLE
             } else {
                 binding.errorTextView.visibility = View.GONE
+                viewModel.userEdit(1, userType, userName)
             }
 
             selectedRole?.let {
