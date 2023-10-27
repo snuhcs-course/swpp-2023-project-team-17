@@ -3,17 +3,17 @@ package com.example.goclass.dataClass;
 import com.google.gson.annotations.SerializedName;
 
 public class AttendancesResponse {
-    @SerializedName("attendance_date")
+    @SerializedName("attendanceDate")
     String attendanceDate;
-    @SerializedName("attendance_status")
+    @SerializedName("attendanceStatus")
     int attendanceStatus;
-    @SerializedName("attendance_duration")
+    @SerializedName("attendanceDuration")
     int attendanceDuration;
-    @SerializedName("is_sent")
+    @SerializedName("isSent")
     int isSent;
-    @SerializedName("student_id")
+    @SerializedName("studentId")
     int studentId;
-    @SerializedName("class_id")
+    @SerializedName("classId")
     int classId;
 
     @SerializedName("code")

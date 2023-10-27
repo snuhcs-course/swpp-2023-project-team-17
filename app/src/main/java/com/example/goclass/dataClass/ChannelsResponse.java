@@ -3,9 +3,9 @@ package com.example.goclass.dataClass;
 import com.google.gson.annotations.SerializedName;
 
 public class ChannelsResponse {
-    @SerializedName("class_id")
+    @SerializedName("classId")
     int classId;
-    @SerializedName("channel_type")
+    @SerializedName("channelType")
     int channelType;
     @SerializedName("code")
     private int code;

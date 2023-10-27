@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
 public class MessageListsResponse {
-    @SerializedName("message_list")
+    @SerializedName("messageList")
     private List<HashMap<String, String>> messageList;
 
     @SerializedName("code")
