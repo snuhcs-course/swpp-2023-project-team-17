@@ -31,6 +31,7 @@ class ProfessorMainViewModel(private val repository: Repository) : ViewModel() {
                 val response = repository.classCreate(newClass)
                 if(response.code == 200){
                     _toastMessage.postValue("Successfully created!")
+                    getClassList(mapOf("userId" to professorId.toString(), "userType" to "1"))
                 } else {
                     _toastMessage.postValue("create failed")
                 }

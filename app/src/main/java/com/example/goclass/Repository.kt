@@ -15,8 +15,9 @@ class Repository(private val serviceApi: ServiceApi) {
     suspend fun userGet(userId: Int) = serviceApi.userGet(userId)
     suspend fun userEdit(userId: Int, users: Users) = serviceApi.userEdit(userId, users)
     suspend fun userGetClassList(userMap: Map<String, String>) = serviceApi.userGetClassList(userMap)
-    suspend fun userGetAttendanceListByDate(date: String, users: Users) = serviceApi.userGetAttendanceListByDate(date, users)
-    suspend fun attendanceGetDateList(users: Users) = serviceApi.attendanceGetDateList(users)
+    suspend fun userGetAttendanceListByDate(date: String, usersMap: Map<String, String>) = serviceApi.userGetAttendanceListByDate(date, usersMap)
+    suspend fun attendanceGetDateList(usersMap: Map<String, String>) = serviceApi.attendanceGetDateList(usersMap)
+
 
     // Class related functions
     suspend fun classCreate(classes: Classes) = serviceApi.classCreate(classes)

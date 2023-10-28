@@ -23,6 +23,7 @@ class StudentMainViewModel(private val repository: Repository) : ViewModel() {
                 val response = repository.classJoin(userId, joinClass)
                 if(response.code == 200){
                     _toastMessage.postValue("Successfully joined!")
+                    getClassList(mapOf("userId" to userId.toString(), "userType" to "0"))
                 } else {
                     _toastMessage.postValue("join failed")
                 }
