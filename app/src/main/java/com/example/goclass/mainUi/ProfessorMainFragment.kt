@@ -1,6 +1,7 @@
 package com.example.goclass.mainUi
 
 import android.app.Dialog
+import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -52,15 +54,54 @@ class ProfessorMainFragment : Fragment() {
             val editBuildingNumber = dialog.findViewById<EditText>(R.id.buildingNumberEdittext)
             val editRoomNumber = dialog.findViewById<EditText>(R.id.roomNumberEditText)
             val createButtonDialog = dialog.findViewById<Button>(R.id.createButton)
+            val startTimeButton = dialog.findViewById<Button>(R.id.startTimeButton)
+            val endTimeButton = dialog.findViewById<Button>(R.id.endTimeButton)
+            val mondayCheckbox = dialog.findViewById<CheckBox>(R.id.mondayCheckbox)
+            val tuesdayCheckbox = dialog.findViewById<CheckBox>(R.id.tuesdayCheckbox)
+            val wednesdayCheckbox = dialog.findViewById<CheckBox>(R.id.wednesdayCheckbox)
+            val thursdayCheckbox = dialog.findViewById<CheckBox>(R.id.thursdayCheckbox)
+            val fridayCheckbox = dialog.findViewById<CheckBox>(R.id.fridayCheckbox)
+
+            startTimeButton.setOnClickListener {
+                val timePickerDialog = TimePickerDialog(requireContext(), android.R.style.Theme_Holo_Light_Dialog_NoActionBar, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+                    startTimeButton.text = String.format("%02d:%02d", hourOfDay, minute)
+                }, 12, 0, true)
+
+                timePickerDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+                timePickerDialog.show()
+            }
+
+            endTimeButton.setOnClickListener {
+                val timePickerDialog = TimePickerDialog(requireContext(), android.R.style.Theme_Holo_Light_Dialog_NoActionBar, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+                    endTimeButton.text = String.format("%02d:%02d", hourOfDay, minute)
+                }, 12, 0, true)
+
+                timePickerDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+                timePickerDialog.show()
+            }
 
             createButtonDialog.setOnClickListener {
                 val enteredCode = editCode.text.toString()
                 val enteredClassName = editClassName.text.toString()
+                val classTime = "${startTimeButton.text}-${endTimeButton.text}"
+                val combinedClassTime = generateClassTimeString(
+                    classTime,
+                    mondayCheckbox,
+                    tuesdayCheckbox,
+                    wednesdayCheckbox,
+                    thursdayCheckbox,
+                    fridayCheckbox
+                )
                 val enteredClassTime = editClassTime.text.toString()
+                val finalClassTime = if(enteredClassTime.isNotEmpty()){
+                    "$combinedClassTime, $enteredClassTime"
+                } else {
+                    combinedClassTime
+                }
                 val enteredBuildingNumber = editBuildingNumber.text.toString()
                 val enteredRoomNumber = editRoomNumber.text.toString()
 
-                viewModel.createClass(enteredClassName, enteredCode, userId, enteredClassTime, enteredBuildingNumber, enteredRoomNumber)
+                viewModel.createClass(enteredClassName, enteredCode, userId, finalClassTime, enteredBuildingNumber, enteredRoomNumber)
 
                 dialog.dismiss()
             }
@@ -98,5 +139,34 @@ class ProfessorMainFragment : Fragment() {
             intent.putExtra("userRole", "professor")
             startActivity(intent)
         }
+    }
+
+    private fun generateClassTimeString(
+        classTime: String,
+        mondayCheckbox: CheckBox,
+        tuesdayCheckbox: CheckBox,
+        wednesdayCheckbox: CheckBox,
+        thursdayCheckbox: CheckBox,
+        fridayCheckbox: CheckBox
+    ): String {
+        val selectedDays = mutableListOf<String>()
+
+        if (mondayCheckbox.isChecked) {
+            selectedDays.add("Mon $classTime")
+        }
+        if (tuesdayCheckbox.isChecked) {
+            selectedDays.add("Tue $classTime")
+        }
+        if (wednesdayCheckbox.isChecked) {
+            selectedDays.add("Wed $classTime")
+        }
+        if (thursdayCheckbox.isChecked) {
+            selectedDays.add("Thu $classTime")
+        }
+        if (fridayCheckbox.isChecked) {
+            selectedDays.add("Fri $classTime")
+        }
+
+        return selectedDays.joinToString(", ")
     }
 }
