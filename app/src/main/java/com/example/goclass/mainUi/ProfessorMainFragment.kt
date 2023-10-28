@@ -60,42 +60,46 @@ class ProfessorMainFragment : Fragment() {
             val fridayCheckbox = dialog.findViewById<CheckBox>(R.id.fridayCheckbox)
 
             startTimeButton.setOnClickListener {
-                val timeSetListener = TimePickerDialog.OnTimeSetListener {
-                        _,
-                        hourOfDay,
-                        minute ->
-                    startTimeButton.text = String.format("%02d:%02d", hourOfDay, minute)
-                }
+                val timeSetListener =
+                    TimePickerDialog.OnTimeSetListener{
+                            _,
+                            hourOfDay,
+                            minute,
+                        -> startTimeButton.text = String.format("%02d:%02d", hourOfDay, minute)
+                    }
 
-                val timePickerDialog = TimePickerDialog(
-                    requireContext(),
-                    android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
-                    timeSetListener,
-                    12,
-                    0,
-                    true,
-                )
+                val timePickerDialog =
+                    TimePickerDialog(
+                        requireContext(),
+                        android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
+                        timeSetListener,
+                        12,
+                        0,
+                        true,
+                    )
 
                 timePickerDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
                 timePickerDialog.show()
             }
 
             endTimeButton.setOnClickListener {
-                val timeSetListener = TimePickerDialog.OnTimeSetListener {
-                        _,
-                        hourOfDay,
-                        minute ->
-                    endTimeButton.text = String.format("%02d:%02d", hourOfDay, minute)
-                }
+                val timeSetListener =
+                    TimePickerDialog.OnTimeSetListener {
+                            _,
+                            hourOfDay,
+                            minute,
+                        -> endTimeButton.text = String.format("%02d:%02d", hourOfDay, minute)
+                    }
 
-                val timePickerDialog = TimePickerDialog(
-                    requireContext(),
-                    android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
-                    timeSetListener,
-                    12,
-                    0,
-                    true,
-                )
+                val timePickerDialog =
+                    TimePickerDialog(
+                        requireContext(),
+                        android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
+                        timeSetListener,
+                        12,
+                        0,
+                        true,
+                    )
 
                 timePickerDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
                 timePickerDialog.show()
@@ -106,14 +110,15 @@ class ProfessorMainFragment : Fragment() {
                 val enteredCode = editCode.text.toString()
                 val enteredClassName = editClassName.text.toString()
                 val classTime = "${startTimeButton.text}-${endTimeButton.text}"
-                val combinedClassTime = generateClassTimeString(
-                    classTime,
-                    mondayCheckbox,
-                    tuesdayCheckbox,
-                    wednesdayCheckbox,
-                    thursdayCheckbox,
-                    fridayCheckbox,
-                )
+                val combinedClassTime =
+                    generateClassTimeString(
+                        classTime,
+                        mondayCheckbox,
+                        tuesdayCheckbox,
+                        wednesdayCheckbox,
+                        thursdayCheckbox,
+                        fridayCheckbox,
+                    )
                 val enteredClassTime = editClassTime.text.toString()
                 val finalClassTime = if (enteredClassTime.isNotEmpty()) {
                     "$combinedClassTime, $enteredClassTime"

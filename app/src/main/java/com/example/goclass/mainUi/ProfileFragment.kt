@@ -80,11 +80,11 @@ class ProfileFragment : Fragment() {
         viewModel.editSuccess.observe(viewLifecycleOwner) { isSuccess ->
             if (isSuccess) {
                 val selectedRole = when (binding.roleRadioGroup.checkedRadioButtonId)
-                {
-                    R.id.studentRadioButton -> "student"
-                    R.id.professorRadioButton -> "professor"
-                    else -> null
-                }
+                    {
+                        R.id.studentRadioButton -> "student"
+                        R.id.professorRadioButton -> "professor"
+                        else -> null
+                    }
                 saveToSharedPref("userName", binding.nameEditText.text.toString())
 
                 selectedRole?.let {
