@@ -24,10 +24,10 @@ interface ServiceApi {
     suspend fun userGetClassList(@QueryMap users: Map<String, String>): ClassListsResponse
 
     @GET("users/attendance/{date}")
-    suspend fun userGetAttendanceListByDate(@Path("date") date: String, @Body users: Users): AttendanceListsResponse
+    suspend fun userGetAttendanceListByDate(@Path("date") date: String, @QueryMap users: Map<String, String>): AttendanceListsResponse
 
     @GET("users/attendance")
-    suspend fun attendanceGetDateList(@Body users: Users): AttendanceDateListsResponse
+    suspend fun attendanceGetDateList(@QueryMap users: Map<String, String>): AttendanceDateListsResponse
 
     @POST("/class/create")
     suspend fun classCreate(@Body classes: Classes): CodeMessageResponse
