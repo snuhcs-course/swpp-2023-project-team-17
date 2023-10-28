@@ -11,6 +11,7 @@ import android.util.Log
 import androidx.core.content.ContextCompat
 import android.Manifest
 import android.content.pm.PackageManager
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
 class LocationService : Service() {
     private lateinit var locationManager: LocationManager
@@ -24,9 +25,15 @@ class LocationService : Service() {
         locationListener = object : LocationListener {
             override fun onLocationChanged(location: Location) {
                 // Handle new location updates here
-                val latitude = location.latitude
-                val longitude = location.longitude
+                val latitude = location.latitude.toString()
+                val longitude = location.longitude.toString()
                 Log.d("LocationService", "Latitude: $latitude, Longitude: $longitude")
+
+                // Broadcast location
+                val intent = Intent("LocationUpdate")
+                intent.putExtra("latitude", latitude)
+                intent.putExtra("longitude", longitude)
+                sendBroadcast(intent)
             }
 
             override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
@@ -45,7 +52,8 @@ class LocationService : Service() {
         Log.i("LocationService", "Received start id $startId: $intent");
         Log.d("Debug", "onStartCommand")
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // Permission is not granted; TODO: show a notification
             return START_NOT_STICKY
         }
