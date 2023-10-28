@@ -51,5 +51,4 @@ class ClassListAdapter : RecyclerView.Adapter<ClassListAdapter.ClassViewHolder>(
             }
         }
     }
-
 }

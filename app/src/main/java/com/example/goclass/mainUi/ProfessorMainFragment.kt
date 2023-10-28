@@ -60,7 +60,8 @@ class ProfessorMainFragment : Fragment() {
             val fridayCheckbox = dialog.findViewById<CheckBox>(R.id.fridayCheckbox)
 
             startTimeButton.setOnClickListener {
-                val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+                val timeSetListener = TimePickerDialog.OnTimeSetListener {
+                        _, hourOfDay, minute ->
                     startTimeButton.text = String.format("%02d:%02d", hourOfDay, minute)
                 }
 
@@ -68,16 +69,18 @@ class ProfessorMainFragment : Fragment() {
                     requireContext(),
                     android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
                     timeSetListener,
-                    12, 0, true
+                    12,
+                    0,
+                    true,
                 )
 
                 timePickerDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
                 timePickerDialog.show()
             }
 
-
             endTimeButton.setOnClickListener {
-                val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+                val timeSetListener = TimePickerDialog.OnTimeSetListener {
+                        _, hourOfDay, minute ->
                     endTimeButton.text = String.format("%02d:%02d", hourOfDay, minute)
                 }
 
@@ -85,7 +88,9 @@ class ProfessorMainFragment : Fragment() {
                     requireContext(),
                     android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
                     timeSetListener,
-                    12, 0, true
+                    12,
+                    0,
+                    true,
                 )
 
                 timePickerDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)

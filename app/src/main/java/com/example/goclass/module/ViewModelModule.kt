@@ -6,7 +6,8 @@ import com.example.goclass.mainUi.StudentMainViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-val viewModelModule = module {
+val viewModelModule =
+    module {
     viewModel {
         ProfessorMainViewModel(get())
     }

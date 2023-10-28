@@ -60,10 +60,9 @@ class ProfileFragment : Fragment() {
                 Observer { receivedUserName ->
                     binding.nameEditText.setText(receivedUserName)
                     saveToSharedPref("userName", receivedUserName)
-                }
+                },
             )
         }
-
 
         binding = FragmentProfileBinding.bind(view)
         viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
@@ -71,7 +70,7 @@ class ProfileFragment : Fragment() {
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            if(isLoading) {
+            if (isLoading) {
                 binding.progressBar.visibility = View.VISIBLE
             } else {
                 binding.progressBar.visibility = View.GONE
@@ -157,7 +156,7 @@ class ProfileFragment : Fragment() {
 
     private fun saveToSharedPref(
         key: String,
-        value: Any?
+        value: Any?,
     ) {
         val sharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE) ?: return
         with(sharedPref.edit()) {

@@ -11,9 +11,8 @@ import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class StudentMainViewModel(
-    private val repository: Repository
+    private val repository: Repository,
 ) : ViewModel() {
-
     private val _toastMessage = MutableLiveData<String>()
     val toastMessage: LiveData<String> get() = _toastMessage
     val classListLiveData: MutableLiveData<List<Classes>> = MutableLiveData()
@@ -21,7 +20,7 @@ class StudentMainViewModel(
     fun classJoin(
         userId: Int,
         className: String,
-        classCode: String
+        classCode: String,
     ) {
         viewModelScope.launch {
             val joinClass = Classes(className, classCode)

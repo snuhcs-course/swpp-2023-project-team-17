@@ -10,9 +10,8 @@ import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class ProfileViewModel(
-    private val repository: Repository
+    private val repository: Repository,
 ) : ViewModel() {
-
     private val _toastMessage = MutableLiveData<String>()
     private val _editSuccess = MutableLiveData<Boolean>()
 
@@ -21,7 +20,11 @@ class ProfileViewModel(
     val isLoading = MutableLiveData<Boolean>()
     val userName: MutableLiveData<String> = MutableLiveData()
 
-    fun userEdit(userId: Int, userType: Int, userName: String) {
+    fun userEdit(
+        userId: Int,
+        userType: Int,
+        userName: String,
+    ) {
         val editProfile = Users(userType, userName)
         viewModelScope.launch {
             isLoading.postValue(true)
