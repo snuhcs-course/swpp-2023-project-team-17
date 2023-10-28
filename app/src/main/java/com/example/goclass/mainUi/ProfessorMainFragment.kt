@@ -15,8 +15,10 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.goclass.ClassActivity
 import com.example.goclass.R
+import com.example.goclass.adapter.ClassListAdapter
 import com.example.goclass.dataClass.Users
 import com.example.goclass.databinding.FragmentProfessorMainBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -68,7 +70,13 @@ class ProfessorMainFragment : Fragment() {
         // show classList
         val userMap = mapOf("userId" to "1", "userType" to "0")
         val classListLiveData = viewModel.getClassList(userMap)
+        val classListAdapter = ClassListAdapter()
+        binding.classRecyclerView.adapter = classListAdapter
+        binding.classRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+        classListLiveData.observe(viewLifecycleOwner) { classList ->
+            classListAdapter.setClassList(classList)
+        }
 
         return binding.root
     }
