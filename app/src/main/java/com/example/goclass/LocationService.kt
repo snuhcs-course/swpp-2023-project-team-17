@@ -61,7 +61,7 @@ class LocationService : Service() {
         // Permission is granted
         locationManager.requestLocationUpdates(
             LocationManager.GPS_PROVIDER,
-            10000,
+            5000,
             0f,
             locationListener
         )

@@ -19,10 +19,8 @@ class MainActivity : AppCompatActivity() {
         val permissionUtils = PermissionUtils(this)
 
         // start tracking location (gps) if permission granted
-        if (permissionUtils.requestLocationPermissions()) {
-            Log.d("Debug", "Location Permission Given")
-            startLocationService()
-        }
+        while (!permissionUtils.requestLocationPermissions()) Thread.sleep(100)
+        startLocationService()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -35,9 +33,6 @@ class MainActivity : AppCompatActivity() {
                 this?.putString("userRole", userRole)
                 this?.apply()
             }
-
-
-
         }
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -75,8 +70,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun startLocationService() {
         Log.d("Debug", "before starting LocationService")
-//        val serviceIntent = Intent(this, LocationService::class.java)
-//        startService(serviceIntent)
         startService(Intent(this, LocationService::class.java))
         Log.d("Debug", "after starting LocationService")
     }
