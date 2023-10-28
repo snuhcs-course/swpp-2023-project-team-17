@@ -22,7 +22,6 @@ import retrofit2.http.Path
 import retrofit2.http.QueryMap
 
 interface ServiceApi {
-
     @POST("/signup")
     suspend fun userSignup(
         @Body users: Users,

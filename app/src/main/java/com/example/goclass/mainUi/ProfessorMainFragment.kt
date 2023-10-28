@@ -61,7 +61,9 @@ class ProfessorMainFragment : Fragment() {
 
             startTimeButton.setOnClickListener {
                 val timeSetListener = TimePickerDialog.OnTimeSetListener {
-                        _, hourOfDay, minute ->
+                        _,
+                        hourOfDay,
+                        minute ->
                     startTimeButton.text = String.format("%02d:%02d", hourOfDay, minute)
                 }
 
@@ -80,7 +82,9 @@ class ProfessorMainFragment : Fragment() {
 
             endTimeButton.setOnClickListener {
                 val timeSetListener = TimePickerDialog.OnTimeSetListener {
-                        _, hourOfDay, minute ->
+                        _,
+                        hourOfDay,
+                        minute ->
                     endTimeButton.text = String.format("%02d:%02d", hourOfDay, minute)
                 }
 

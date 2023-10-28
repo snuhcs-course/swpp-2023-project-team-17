@@ -8,13 +8,13 @@ import org.koin.dsl.module
 
 val viewModelModule =
     module {
-    viewModel {
-        ProfessorMainViewModel(get())
+        viewModel {
+            ProfessorMainViewModel(get())
+        }
+        viewModel {
+            ProfileViewModel(get())
+        }
+        viewModel {
+            StudentMainViewModel(get())
+        }
     }
-    viewModel {
-        ProfileViewModel(get())
-    }
-    viewModel {
-        StudentMainViewModel(get())
-    }
-}
