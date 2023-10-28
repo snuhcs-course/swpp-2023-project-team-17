@@ -47,7 +47,7 @@ class ProfileFragment : Fragment() {
             savedInstanceState,
         )
 
-        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
+        val sharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         saveToSharedPref("userId", 1)
 
         val storedUserName = sharedPref?.getString("userName", "")
@@ -86,7 +86,7 @@ class ProfileFragment : Fragment() {
                 saveToSharedPref("userName", binding.nameEditText.text.toString())
 
                 selectedRole?.let {
-                    val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
+                    val sharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
                     saveToSharedPref("userRole", it)
 
                     when (it) {
@@ -154,7 +154,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun saveToSharedPref(key: String, value: Any?) {
-        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
+        val sharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE) ?: return
         with(sharedPref.edit()) {
             when (value) {
                 is String -> putString(key, value)

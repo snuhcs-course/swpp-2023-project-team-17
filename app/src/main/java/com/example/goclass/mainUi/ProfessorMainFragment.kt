@@ -34,7 +34,7 @@ class ProfessorMainFragment : Fragment() {
     ): View? {
         binding = FragmentProfessorMainBinding.inflate(inflater, container, false)
 
-        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
+        val sharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         val userId = sharedPref!!.getInt("userId", -1)
 
         viewModel.toastMessage.observe(viewLifecycleOwner) { message ->

@@ -1,5 +1,6 @@
 package com.example.goclass.adapter
 
+import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -39,8 +40,12 @@ class ClassListAdapter : RecyclerView.Adapter<ClassListAdapter.ClassViewHolder>(
         fun bind(classItem: Classes) {
             binding.classNameTextView.text = classItem.className
             itemView.setOnClickListener{
+                val context = itemView.context
+                val sharedPref = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+                val userRole = sharedPref.getString("userRole", "") ?: ""
+
                 val intent = Intent(itemView.context, ClassActivity::class.java)
-                intent.putExtra("userRole", "professor")
+                intent.putExtra("userRole", userRole)
                 intent.putExtra("className", classItem.className)
                 ContextCompat.startActivity(itemView.context, intent, null)
             }
