@@ -61,11 +61,11 @@ class ProfessorMainFragment : Fragment() {
 
             startTimeButton.setOnClickListener {
                 val timeSetListener =
-                    TimePickerDialog.OnTimeSetListener{
+                    TimePickerDialog.OnTimeSetListener {
                             _,
                             hourOfDay,
-                            minute,
-                        -> startTimeButton.text = String.format("%02d:%02d", hourOfDay, minute)
+                            minute, ->
+                        startTimeButton.text = String.format("%02d:%02d", hourOfDay, minute)
                     }
 
                 val timePickerDialog =
@@ -87,8 +87,8 @@ class ProfessorMainFragment : Fragment() {
                     TimePickerDialog.OnTimeSetListener {
                             _,
                             hourOfDay,
-                            minute,
-                        -> endTimeButton.text = String.format("%02d:%02d", hourOfDay, minute)
+                            minute, ->
+                        endTimeButton.text = String.format("%02d:%02d", hourOfDay, minute)
                     }
 
                 val timePickerDialog =
@@ -120,11 +120,12 @@ class ProfessorMainFragment : Fragment() {
                         fridayCheckbox,
                     )
                 val enteredClassTime = editClassTime.text.toString()
-                val finalClassTime = if (enteredClassTime.isNotEmpty()) {
-                    "$combinedClassTime, $enteredClassTime"
-                } else {
-                    combinedClassTime
-                }
+                val finalClassTime =
+                    if (enteredClassTime.isNotEmpty()) {
+                        "$combinedClassTime, $enteredClassTime"
+                    } else {
+                        combinedClassTime
+                    }
                 val enteredBuildingNumber = editBuildingNumber.text.toString()
                 val enteredRoomNumber = editRoomNumber.text.toString()
 
