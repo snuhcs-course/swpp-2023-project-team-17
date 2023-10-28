@@ -3,7 +3,6 @@ package com.example.goclass.mainUi
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.goclass.R
 import com.example.goclass.databinding.FragmentProfileBinding
@@ -51,17 +49,21 @@ class ProfileFragment : Fragment() {
         saveToSharedPref("userId", 1)
 
         val storedUserName = sharedPref?.getString("userName", "")
-        if(storedUserName != ""){
+        if (storedUserName != "") {
             binding.nameEditText.setText(storedUserName)
         } else {
             val userId = sharedPref?.getInt("userId", -1) ?: -1
             viewModel.userGet(userId)
 
-            viewModel.userName.observe(viewLifecycleOwner, Observer{ receivedUserName ->
-                binding.nameEditText.setText(receivedUserName)
-                saveToSharedPref("userName", receivedUserName)
-            })
+            viewModel.userName.observe(
+                viewLifecycleOwner,
+                Observer { receivedUserName ->
+                    binding.nameEditText.setText(receivedUserName)
+                    saveToSharedPref("userName", receivedUserName)
+                }
+            )
         }
+
 
         binding = FragmentProfileBinding.bind(view)
         viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
@@ -69,14 +71,14 @@ class ProfileFragment : Fragment() {
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            if(isLoading){
+            if(isLoading) {
                 binding.progressBar.visibility = View.VISIBLE
             } else {
                 binding.progressBar.visibility = View.GONE
             }
         }
 
-        viewModel.editSuccess.observe(viewLifecycleOwner) {isSuccess ->
+        viewModel.editSuccess.observe(viewLifecycleOwner) { isSuccess ->
             if (isSuccess) {
                 val selectedRole = when (binding.roleRadioGroup.checkedRadioButtonId) {
                     R.id.studentRadioButton -> "student"
@@ -123,7 +125,7 @@ class ProfileFragment : Fragment() {
 
             if (userType == null) {
                 binding.errorTextView.visibility = View.VISIBLE
-            } else if (userName == ""){
+            } else if (userName == "") {
                 binding.errorNameView.visibility = View.VISIBLE
             } else {
                 binding.errorNameView.visibility = View.GONE
@@ -153,7 +155,10 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    private fun saveToSharedPref(key: String, value: Any?) {
+    private fun saveToSharedPref(
+        key: String,
+        value: Any?
+    ) {
         val sharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE) ?: return
         with(sharedPref.edit()) {
             when (value) {
@@ -167,5 +172,4 @@ class ProfileFragment : Fragment() {
             apply()
         }
     }
-
 }

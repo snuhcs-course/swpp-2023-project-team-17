@@ -5,7 +5,6 @@ import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,13 +14,11 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.goclass.ClassActivity
 import com.example.goclass.R
 import com.example.goclass.adapter.ClassListAdapter
-import com.example.goclass.dataClass.Users
 import com.example.goclass.databinding.FragmentProfessorMainBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -63,22 +60,38 @@ class ProfessorMainFragment : Fragment() {
             val fridayCheckbox = dialog.findViewById<CheckBox>(R.id.fridayCheckbox)
 
             startTimeButton.setOnClickListener {
-                val timePickerDialog = TimePickerDialog(requireContext(), android.R.style.Theme_Holo_Light_Dialog_NoActionBar, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+                val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
                     startTimeButton.text = String.format("%02d:%02d", hourOfDay, minute)
-                }, 12, 0, true)
+                }
+
+                val timePickerDialog = TimePickerDialog(
+                    requireContext(),
+                    android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
+                    timeSetListener,
+                    12, 0, true
+                )
 
                 timePickerDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
                 timePickerDialog.show()
             }
+
 
             endTimeButton.setOnClickListener {
-                val timePickerDialog = TimePickerDialog(requireContext(), android.R.style.Theme_Holo_Light_Dialog_NoActionBar, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+                val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
                     endTimeButton.text = String.format("%02d:%02d", hourOfDay, minute)
-                }, 12, 0, true)
+                }
+
+                val timePickerDialog = TimePickerDialog(
+                    requireContext(),
+                    android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
+                    timeSetListener,
+                    12, 0, true
+                )
 
                 timePickerDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
                 timePickerDialog.show()
             }
+
 
             createButtonDialog.setOnClickListener {
                 val enteredCode = editCode.text.toString()
@@ -90,10 +103,10 @@ class ProfessorMainFragment : Fragment() {
                     tuesdayCheckbox,
                     wednesdayCheckbox,
                     thursdayCheckbox,
-                    fridayCheckbox
+                    fridayCheckbox,
                 )
                 val enteredClassTime = editClassTime.text.toString()
-                val finalClassTime = if(enteredClassTime.isNotEmpty()){
+                val finalClassTime = if (enteredClassTime.isNotEmpty()) {
                     "$combinedClassTime, $enteredClassTime"
                 } else {
                     combinedClassTime
@@ -147,7 +160,7 @@ class ProfessorMainFragment : Fragment() {
         tuesdayCheckbox: CheckBox,
         wednesdayCheckbox: CheckBox,
         thursdayCheckbox: CheckBox,
-        fridayCheckbox: CheckBox
+        fridayCheckbox: CheckBox,
     ): String {
         val selectedDays = mutableListOf<String>()
 
