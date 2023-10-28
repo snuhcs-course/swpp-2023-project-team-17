@@ -5,9 +5,9 @@ import com.example.goclass.dataClass.AttendanceListsResponse
 import com.example.goclass.dataClass.Attendances
 import com.example.goclass.dataClass.AttendancesResponse
 import com.example.goclass.dataClass.ChannelsResponse
+import com.example.goclass.dataClass.ClassListsResponse
 import com.example.goclass.dataClass.Classes
 import com.example.goclass.dataClass.ClassesResponse
-import com.example.goclass.dataClass.ClassListsResponse
 import com.example.goclass.dataClass.CodeMessageResponse
 import com.example.goclass.dataClass.Messages
 import com.example.goclass.dataClass.MessagesResponse
