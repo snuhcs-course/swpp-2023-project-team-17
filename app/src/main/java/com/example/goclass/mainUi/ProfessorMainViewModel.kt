@@ -53,5 +53,4 @@ class ProfessorMainViewModel(private val repository: Repository) : ViewModel() {
         }
         return classListLiveData
     }
-
 }

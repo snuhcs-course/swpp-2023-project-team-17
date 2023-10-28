@@ -67,12 +67,12 @@ class ProfessorMainFragment : Fragment() {
             dialog.show()
         }
 
-        // show classList
-        val userMap = mapOf("userId" to "1", "userType" to "0")
+        // show classList with dummy data
+        val userMap = mapOf("userId" to "2", "userType" to "1")
         val classListLiveData = viewModel.getClassList(userMap)
         val classListAdapter = ClassListAdapter()
-        binding.classRecyclerView.adapter = classListAdapter
-        binding.classRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.professorClassRecyclerView.adapter = classListAdapter
+        binding.professorClassRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         classListLiveData.observe(viewLifecycleOwner) { classList ->
             classListAdapter.setClassList(classList)
@@ -92,10 +92,10 @@ class ProfessorMainFragment : Fragment() {
             findNavController().navigate(R.id.action_professorMainFragment_to_profileFragment)
         }
 
-        // Class Button
-        binding.classButton.setOnClickListener {
+        // recyclerView
+        binding.professorClassRecyclerView.setOnClickListener {
             val intent = Intent(view.context, ClassActivity::class.java)
-
+            intent.putExtra("userRole", "professor")
             startActivity(intent)
         }
     }

@@ -22,17 +22,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/hintText" />
 
-    <Button
-        android:id="@+id/classButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Class"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/createButton" />
-
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/classRecyclerView"
+        android:id="@+id/professorClassRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
@@ -40,7 +31,7 @@
         android:scrollbars="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/classButton" />
+        app:layout_constraintTop_toBottomOf="@+id/createButton" />
 
     <TextView
         android:id="@+id/hintText"

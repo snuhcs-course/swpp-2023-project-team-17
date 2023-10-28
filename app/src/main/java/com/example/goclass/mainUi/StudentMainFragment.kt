@@ -14,8 +14,10 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.goclass.ClassActivity
 import com.example.goclass.R
+import com.example.goclass.adapter.ClassListAdapter
 import com.example.goclass.databinding.FragmentStudentMainBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -58,6 +60,18 @@ class StudentMainFragment : Fragment() {
 
             dialog.show()
         }
+
+        // show classList with dummy data
+        val userMap = mapOf("userId" to "1", "userType" to "0")
+        val classListLiveData = viewModel.getClassList(userMap)
+        val classListAdapter = ClassListAdapter()
+        binding.studentClassRecyclerView.adapter = classListAdapter
+        binding.studentClassRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        classListLiveData.observe(viewLifecycleOwner) { classList ->
+            classListAdapter.setClassList(classList)
+        }
+
         return binding.root
     }
 
@@ -72,8 +86,8 @@ class StudentMainFragment : Fragment() {
             findNavController().navigate(R.id.action_studentMainFragment_to_profileFragment)
         }
 
-        // Class Button
-        binding.classButton.setOnClickListener {
+        // recyclerView
+        binding.studentClassRecyclerView.setOnClickListener {
             val intent = Intent(view.context, ClassActivity::class.java)
             intent.putExtra("userRole", "student")
             startActivity(intent)
