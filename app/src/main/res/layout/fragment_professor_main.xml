@@ -22,11 +22,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/hintText" />
 
-    <Button
-        android:id="@+id/classButton"
-        android:layout_width="wrap_content"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/professorClassRecyclerView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Class"
+        android:clipToPadding="false"
+        android:padding="16dp"
+        android:scrollbars="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/createButton" />

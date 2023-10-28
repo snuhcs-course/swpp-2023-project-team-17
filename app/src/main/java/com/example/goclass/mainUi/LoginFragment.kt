@@ -31,7 +31,7 @@ class LoginFragment : Fragment() {
 
         // Login Button
         binding.loginButton.setOnClickListener {
-            val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return@setOnClickListener
+            val sharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE) ?: return@setOnClickListener
             with(sharedPref.edit()) {
                 putBoolean("isLoggedIn", true)
                 apply()

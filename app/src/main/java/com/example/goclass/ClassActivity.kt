@@ -2,6 +2,7 @@ package com.example.goclass
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
@@ -82,5 +83,9 @@ class ClassActivity : AppCompatActivity() {
     private fun initViews() {
         binding.messageList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.messageList.adapter = MessageAdapter(messages)
+
+        val className = intent.getStringExtra("className")
+        val classNameView = findViewById<TextView>(R.id.className)
+        classNameView.text = className
     }
 }

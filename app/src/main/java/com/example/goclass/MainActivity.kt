@@ -1,5 +1,6 @@
 package com.example.goclass
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -28,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         // User role from ClassActivity back button
         if (intent.hasExtra("userRole")) {
             val userRole = intent.getStringExtra("userRole")
-            val sharedPref = getPreferences(MODE_PRIVATE)
+            val sharedPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
             with(sharedPref?.edit()) {
                 this?.putString("userRole", userRole)
                 this?.apply()
@@ -47,7 +48,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkLoginStatus() {
-        val sharedPref = getPreferences(MODE_PRIVATE)
+        val sharedPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         val isLoggedIn = sharedPref.getBoolean("isLoggedIn", false)
         val userRole = sharedPref.getString("userRole", "")
 

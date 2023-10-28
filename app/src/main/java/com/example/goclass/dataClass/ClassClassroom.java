@@ -3,11 +3,11 @@ package com.example.goclass.dataClass;
 import com.google.gson.annotations.SerializedName;
 
 public class ClassClassroom {
-    @SerializedName("building_number")
+    @SerializedName("buildingNumber")
     String buildingNumber;
-    @SerializedName("room_number")
+    @SerializedName("roomNumber")
     String roomNumber;
-    @SerializedName("class_id")
+    @SerializedName("classId")
     int classId;
 
     public ClassClassroom(String buildingNumber, String roomNumber, int classId) {
