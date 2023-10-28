@@ -10,7 +10,6 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
-
 import androidx.core.content.ContextCompat
 
 class LocationService : Service() {
@@ -49,7 +48,7 @@ class LocationService : Service() {
 
                 override fun onProviderDisabled(provider: String) {
                 }
-        }
+            }
     }
 
     override fun onStartCommand(
@@ -58,12 +57,13 @@ class LocationService : Service() {
         startId: Int,
     ): Int {
         // Check if the permission is already granted
-        Log.i("LocationService", "Received start id $startId: $intent");
+        Log.i("LocationService", "Received start id $startId: $intent")
         Log.d("Debug", "onStartCommand")
 
         if (ContextCompat.checkSelfPermission(
                 this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                Manifest.permission.ACCESS_FINE_LOCATION,
+        ) != PackageManager.PERMISSION_GRANTED
             ) {
             // Permission is not granted; TODO: show a notification
             return START_NOT_STICKY
@@ -74,7 +74,7 @@ class LocationService : Service() {
             LocationManager.GPS_PROVIDER,
             5000,
             0f,
-            locationListener
+            locationListener,
         )
 
         return START_STICKY
