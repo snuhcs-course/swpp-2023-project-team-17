@@ -8,10 +8,9 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
-import androidx.core.content.ContextCompat
 import android.Manifest
 import android.content.pm.PackageManager
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.core.content.ContextCompat
 
 class LocationService : Service() {
     private lateinit var locationManager: LocationManager
@@ -22,7 +21,8 @@ class LocationService : Service() {
         Log.d("Debug", "created LocationService")
 
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
-        locationListener = object : LocationListener {
+        locationListener =
+            object : LocationListener {
             override fun onLocationChanged(location: Location) {
                 // Handle new location updates here
                 val latitude = location.latitude.toString()
@@ -36,7 +36,10 @@ class LocationService : Service() {
                 sendBroadcast(intent)
             }
 
-            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+            override fun onStatusChanged(provider: String?,
+                                         status: Int,
+                                         extras: Bundle?,
+            ) {
             }
 
             override fun onProviderEnabled(provider: String) {

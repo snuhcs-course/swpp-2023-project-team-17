@@ -26,8 +26,6 @@ class StudentAttendanceActivity : AppCompatActivity() {
         binding = ActivityStudentAttendanceBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //initViews()
-
         val userRole = "student"
 
         // Back Button
@@ -39,27 +37,26 @@ class StudentAttendanceActivity : AppCompatActivity() {
 
         // Receive location and check "In Class"
         locationReceiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
+            override fun onReceive(context: Context?,
+                                   intent: Intent?,
+            ) {
                 if (intent?.action == "LocationUpdate") {
                     val latitude = intent.getStringExtra("latitude")?.toDouble() ?: 0.0
                     val longitude = intent.getStringExtra("longitude")?.toDouble() ?: 0.0
 
-                    val isInClass = kotlin.math.abs(latitude - classLocation[0]) < epsilon &&
-                            kotlin.math.abs(longitude - classLocation[1]) < epsilon
+                    val isInClass =
+                                kotlin.math.abs(latitude - classLocation[0]) < epsilon &&
+                                kotlin.math.abs(longitude - classLocation[1]) < epsilon
 
                     if(isInClass) binding.inClassText.text = "In Class"
                     else binding.inClassText.text = "Not In Class"
                 }
             }
         }
-        registerReceiver(locationReceiver, IntentFilter("LocationUpdate"))
+        registerReceiver(locationReceiver,
+            IntentFilter("LocationUpdate"),
+        )
     }
-
-    /*
-    private fun initViews() {
-        binding.attendanceList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        binding.attendanceList.adapter = StudentAttendanceAdapter(studentAttendances)
-    }*/
 
     override fun onDestroy() {
         super.onDestroy()
