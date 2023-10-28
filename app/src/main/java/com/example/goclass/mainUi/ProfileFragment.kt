@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.goclass.R
@@ -47,9 +48,19 @@ class ProfileFragment : Fragment() {
         )
 
         val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
-        with(sharedPref?.edit()){
-            this?.putInt("userId", 1)
-            this?.apply()
+        saveToSharedPref("userId", 1)
+
+        val storedUserName = sharedPref?.getString("userName", "")
+        if(storedUserName != ""){
+            binding.nameEditText.setText(storedUserName)
+        } else {
+            val userId = sharedPref?.getInt("userId", -1) ?: -1
+            viewModel.userGet(userId)
+
+            viewModel.userName.observe(viewLifecycleOwner, Observer{ receivedUserName ->
+                binding.nameEditText.setText(receivedUserName)
+                saveToSharedPref("userName", receivedUserName)
+            })
         }
 
         binding = FragmentProfileBinding.bind(view)
@@ -72,13 +83,11 @@ class ProfileFragment : Fragment() {
                     R.id.professorRadioButton -> "professor"
                     else -> null
                 }
+                saveToSharedPref("userName", binding.nameEditText.text.toString())
 
                 selectedRole?.let {
                     val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
-                    with(sharedPref?.edit()) {
-                        this?.putString("userRole", it)
-                        this?.apply()
-                    }
+                    saveToSharedPref("userRole", it)
 
                     when (it) {
                         "student" -> {
@@ -95,20 +104,9 @@ class ProfileFragment : Fragment() {
         // Logout Button
         binding.logoutButton.setOnClickListener {
             sharedPref ?: return@setOnClickListener
-            with(sharedPref.edit()) {
-                putBoolean(
-                    "isLoggedIn",
-                    false,
-                )
-                apply()
-            }
-            with(sharedPref.edit()) {
-                putString(
-                    "userRole",
-                    "",
-                )
-                apply()
-            }
+            saveToSharedPref("isLoggedIn", false)
+            saveToSharedPref("userRole", "")
+            saveToSharedPref("userName", "")
             findNavController().navigate(R.id.action_profileFragment_to_loginFragment)
         }
 
@@ -154,4 +152,20 @@ class ProfileFragment : Fragment() {
             false
         }
     }
+
+    private fun saveToSharedPref(key: String, value: Any?) {
+        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
+        with(sharedPref.edit()) {
+            when (value) {
+                is String -> putString(key, value)
+                is Int -> putInt(key, value)
+                is Boolean -> putBoolean(key, value)
+                is Float -> putFloat(key, value)
+                is Long -> putLong(key, value)
+                else -> throw IllegalArgumentException("Not a valid type to save in Shared Preferences")
+            }
+            apply()
+        }
+    }
+
 }

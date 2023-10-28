@@ -19,6 +19,7 @@ class ProfileViewModel(private val repository: Repository) : ViewModel() {
     val toastMessage: LiveData<String> get() = _toastMessage
     val editSuccess: LiveData<Boolean> get() = _editSuccess
     val isLoading = MutableLiveData<Boolean>()
+    val userName: MutableLiveData<String> = MutableLiveData()
 
     fun userEdit(userId: Int, userType: Int, userName: String){
         val editProfile = Users(userType, userName)
@@ -39,6 +40,13 @@ class ProfileViewModel(private val repository: Repository) : ViewModel() {
             } finally {
                 isLoading.postValue(false)
             }
+        }
+    }
+
+    fun userGet(userId: Int){
+        viewModelScope.launch {
+            val result = repository.userGet(userId)
+            userName.postValue(result?.userName ?: "")
         }
     }
 }
