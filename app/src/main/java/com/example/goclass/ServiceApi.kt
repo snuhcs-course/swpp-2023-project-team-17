@@ -21,7 +21,7 @@ interface ServiceApi {
     suspend fun userEdit(@Path("id") userId: Int, @Body users: Users): CodeMessageResponse
 
     @GET("/users/classes")
-    suspend fun userGetClassList(@Body users: Users): ClassListsResponse
+    suspend fun userGetClassList(@QueryMap users: Map<String, String>): ClassListsResponse
 
     @GET("users/attendance/{date}")
     suspend fun userGetAttendanceListByDate(@Path("date") date: String, @Body users: Users): AttendanceListsResponse

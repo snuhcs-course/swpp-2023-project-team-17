@@ -13,9 +13,11 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.goclass.ClassActivity
 import com.example.goclass.R
+import com.example.goclass.dataClass.Users
 import com.example.goclass.databinding.FragmentProfessorMainBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -62,6 +64,11 @@ class ProfessorMainFragment : Fragment() {
             }
             dialog.show()
         }
+
+        // show classList
+        val userMap = mapOf("userId" to "1", "userType" to "0")
+        val classListLiveData = viewModel.getClassList(userMap)
+
 
         return binding.root
     }

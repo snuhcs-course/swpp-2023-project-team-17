@@ -40,15 +40,18 @@ class ProfessorMainViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-
-    fun getClassList(user: Users) {
-//        viewModelScope.launch {
-//            try {
-//                val classList = repository.userGetClassList(user)
-//                classListLiveData.postValue(classList)
-//            } catch (e: Exception){
-//
-//            }
-//        }
+    fun getClassList(user: Map<String, String>): MutableLiveData<List<Classes>> {
+        viewModelScope.launch {
+            try {
+                val response = repository.userGetClassList(user)
+                if(response.code == 200){
+                    classListLiveData.postValue(response.classList)
+                }
+            } catch (e: Exception) {
+                Log.d("classListError", e.message.toString())
+            }
+        }
+        return classListLiveData
     }
+
 }

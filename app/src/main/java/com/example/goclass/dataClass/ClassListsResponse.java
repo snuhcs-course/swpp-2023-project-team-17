@@ -6,13 +6,13 @@ import com.google.gson.annotations.SerializedName;
 
 public class ClassListsResponse {
     @SerializedName("classList")
-    private List<HashMap<String, String>> classList;
+    private List<Classes> classList;
     @SerializedName("code")
     private int code;
     @SerializedName("message")
     private String message;
 
-    public List<HashMap<String, String>> getClassList() {
+    public List<Classes> getClassList() {
         return classList;
     }
 
