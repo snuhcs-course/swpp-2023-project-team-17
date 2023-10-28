@@ -17,7 +17,7 @@ app.listen(port, () => {
 });
 
 const connection = mysql.createConnection({
-    host: "swpp-2023-project-team-17-database.c8tunufhlk0u.us-east-1.rds.amazonaws.com",
+    host: "team17-database.cqeij4pxj0w8.ap-northeast-2.rds.amazonaws.com",
     user: "admin",
     database: "team17_database",
     password: "admin1234",
@@ -37,34 +37,34 @@ app.post('/signup', (req, res) => {
     const params = [userEmail, userName, userType];
 
     connection.query(sql, params, (err, result) => {
-        let resultCode = 404;
-        let message = 'Error occured';
-        let userId = -1;
-
         if (err) {
             console.log(err);
-        } else {
-            sql = 'SELECT LAST_INSERT_ID()';
-            connection.query(sql, (err, result) => {
-                if (err) {
-                    console.log(err);
-                } else {
-                    resultCode = 200;
-                    message = 'login Success';
-                    console.log(message);
-                    userId = result[0]['LAST_INSERT_ID()'];
-                }
-
-            }
+            return res.json({
+                'code': 404,
+                'message': 'Error occurred',
+            });
         }
 
-        res.json({
-            'code': resultCode,
-            'message': message,
-            'user_email': userEmail,
-            'user_id': userId,
-            'user_name': userName,
-            'user_type': userType
+        sql = 'SELECT LAST_INSERT_ID() AS userId';
+        connection.query(sql, (err, result) => {
+            if (err) {
+                console.log(err);
+                return res.json({
+                    'code': 404,
+                    'message': 'Error occurred',
+                });
+            }
+
+            const userId = result[0].userId;
+            console.log('Signup Success');
+            return res.json({
+                'code': 200,
+                'message': 'Signup Success',
+                'user_email': userEmail,
+                'user_id': userId,
+                'user_name': userName,
+                'user_type': userType
+            });
         });
     });
 });
@@ -317,55 +317,36 @@ app.get('users/attendance', (req, res) => {
     create new class and insert to Classes, Class_classroom, Teaches
     User type must be professor
 */
+
 // TODO: check user_type == 1 (TBD later)
 app.post('/class/create', (req, res) => {
     console.log(req.body);
 
-    const className = req.body.className;
-    const classCode = req.body.classCode;
-    const professorId = req.body.professorId;
-    const buildingNumber = req.body.buildingNumber;
-    const roomNumber = req.body.roomNumber;
-    const classTime = req.body.classTime;
+    const { className, classCode, professorId, classTime, buildingNumber, roomNumber } = req.body;
 
-    var sql = 'insert into Classes(class_name, class_code, professor_id, class_time, building_number, room_number) '
-                + 'values(?, ?, ?, ?, ?, ?)';
-
-    var params = [className, classCode, professorId, classTime, buildingNumber, roomNumber];
+    let sql = 'INSERT INTO Classes (class_name, class_code, professor_id, class_time, building_number, room_number) VALUES (?, ?, ?, ?, ?, ?)';
+    const params = [className, classCode, professorId, classTime, buildingNumber, roomNumber];
 
     connection.query(sql, params, (err, result) => {
-        let resultCode = 404;
-        let message = 'Error occured';
-        if (!userType) message = 'You must be a professor' // only for professors
-
         if (err) {
             console.log(err);
-        } else {
-            sql = 'insert into Teaches(class_id, professor_id) ' +
-                            '(SELECT class_id, professor_id FROM Class WHERE class_name = ? and class_code = ? and professor_id = ?)';
-
-            params = [className, classCode, professorId];
-
-            connection.query(sql, params, (err, result) => {
-                let resultCode = 404;
-                let message = 'Error occured';
-
-                if (err) {
-                    console.log(err);
-                } else {
-                    resultCode = 200;
-                    message = 'create and link class to professor Success';
-                    console.log(message);
-                }
-            });
+            return res.status(500).json({ 'code': 500, 'message': 'Error occurred' });
         }
 
-        res.json({
-            'code': resultCode,
-            'message': message
+        sql = 'INSERT INTO Teaches (class_id, professor_id) VALUES (?, ?)';
+        const newParams = [result.insertId, professorId];
+
+        connection.query(sql, newParams, (err, result) => {
+            if (err) {
+                console.log(err);
+                return res.status(500).json({ 'code': 500, 'message': 'Error occurred' });
+            }
+
+            res.status(200).json({ 'code': 200, 'message': 'Class created and linked to professor successfully' });
         });
     });
 });
+
 
 /*
     join class and insert to Classes, Class_classroom, Teaches

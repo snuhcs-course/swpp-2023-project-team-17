@@ -46,6 +46,7 @@ create table Teaches (
 );
 
 create table Channels (
+	channel_id int not null auto_increment primary key,
     class_id int not null,
     channel_type int not null,
 	foreign key (class_id) references Classes(class_id) ON DELETE CASCADE
