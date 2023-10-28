@@ -4,8 +4,9 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
-import androidx.core.content.ContextCompat
+
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 
 class PermissionUtils(private val context: Context) {
     fun requestLocationPermissions(): Boolean {
@@ -17,7 +18,7 @@ class PermissionUtils(private val context: Context) {
                 ActivityCompat.requestPermissions(
                     context as Activity,
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    1000
+                    1000,
                 )
             }
             permissionGranted = false

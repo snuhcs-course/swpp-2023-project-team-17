@@ -36,16 +36,18 @@ class StudentAttendanceActivity : AppCompatActivity() {
         }
 
         // Receive location and check "In Class"
-        locationReceiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context?,
-                                   intent: Intent?,
+        locationReceiver =
+            object : BroadcastReceiver() {
+            override fun onReceive(
+                context: Context?,
+                intent: Intent?,
             ) {
                 if (intent?.action == "LocationUpdate") {
                     val latitude = intent.getStringExtra("latitude")?.toDouble() ?: 0.0
                     val longitude = intent.getStringExtra("longitude")?.toDouble() ?: 0.0
 
                     val isInClass =
-                                kotlin.math.abs(latitude - classLocation[0]) < epsilon &&
+                        kotlin.math.abs(latitude - classLocation[0]) < epsilon &&
                                 kotlin.math.abs(longitude - classLocation[1]) < epsilon
 
                     if(isInClass) binding.inClassText.text = "In Class"
@@ -53,7 +55,8 @@ class StudentAttendanceActivity : AppCompatActivity() {
                 }
             }
         }
-        registerReceiver(locationReceiver,
+        registerReceiver(
+            locationReceiver,
             IntentFilter("LocationUpdate"),
         )
     }
