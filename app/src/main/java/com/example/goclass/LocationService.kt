@@ -63,8 +63,8 @@ class LocationService : Service() {
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION,
-        ) != PackageManager.PERMISSION_GRANTED
-            ) {
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             // Permission is not granted; TODO: show a notification
             return START_NOT_STICKY
         }

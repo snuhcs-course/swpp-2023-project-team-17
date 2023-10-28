@@ -48,12 +48,11 @@ class StudentAttendanceActivity : AppCompatActivity() {
 
                         val isInClass =
                             kotlin.math.abs(latitude - classLocation[0]) < epsilon &&
-                                    kotlin.math.abs(longitude - classLocation[1]) < epsilon
+                                kotlin.math.abs(longitude - classLocation[1]) < epsilon
 
                         if (isInClass) {
                             binding.inClassText.text = "In Class"
-                        }
-                        else {
+                        } else {
                             binding.inClassText.text = "Not In Class"
                         }
                     }
