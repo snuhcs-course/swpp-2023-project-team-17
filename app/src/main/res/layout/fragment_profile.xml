@@ -96,19 +96,20 @@
         android:id="@+id/confirmButton"
         android:layout_width="100dp"
         android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
         android:background="@color/white"
-        android:text="Confirm"
-        android:textSize="16sp"
-        android:textColor="@color/blue"
         android:fontFamily="@font/relay_noto_sans_semibold"
+        android:text="Confirm"
+        android:textColor="@color/blue"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginEnd="16dp"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/name"
         style="@style/SmallFont"
-        android:layout_width="48dp"
+        android:layout_width="wrap_content"
         android:layout_height="22dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
@@ -121,7 +122,7 @@
 
     <TextView
         android:id="@+id/role"
-        android:layout_width="48dp"
+        android:layout_width="wrap_content"
         android:layout_height="22dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
