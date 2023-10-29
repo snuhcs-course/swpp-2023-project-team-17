@@ -1,7 +1,6 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-//    id("jacoco")
 }
 
 android {
@@ -25,12 +24,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-//            enableUnitTestCoverage = false
-//            enableAndroidTestCoverage = false
-        }
-        debug {
-//            enableUnitTestCoverage = true
-//            enableAndroidTestCoverage = true
         }
     }
     testOptions{
@@ -47,9 +40,6 @@ android {
         viewBinding = true
         dataBinding = true
     }
-//    testCoverage {
-//        jacocoVersion = "0.8.7"
-//    }
 }
 
 dependencies {
@@ -78,15 +68,3 @@ dependencies {
     implementation("com.google.android.gms:play-services-maps:18.1.0")
 }
 
-//tasks.register("jacocoTestReport", JacocoReport::class.java) {
-//    dependsOn("testDebugUnitTest")
-//
-//    reports {
-//        xml.required.set(true)
-//        html.required.set(true)
-//    }
-//
-//    sourceDirectories.setFrom(files("src/main/java"))
-//    classDirectories.setFrom(files("${buildDir}/intermediates/javac/debug/classes"))
-//    executionData.setFrom(fileTree(buildDir).include("jacoco/testDebugUnitTest.exec"))
-//}
