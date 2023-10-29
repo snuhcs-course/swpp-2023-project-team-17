@@ -26,7 +26,7 @@ android {
             )
         }
     }
-    testOptions{
+    testOptions {
         unitTests.isReturnDefaultValues = true
     }
     compileOptions {
