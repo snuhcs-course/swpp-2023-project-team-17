@@ -3,15 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="4dp">
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/classNameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="280dp"
+        android:layout_height="70dp"
+        android:clipToOutline="true"
         android:text="Class Name"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="8dp"/>
+        android:background="@drawable/class_list_bg"
+        android:fontFamily="@font/relay_noto_sans_black"
+        android:textSize="25sp"/>
 
 </LinearLayout>
