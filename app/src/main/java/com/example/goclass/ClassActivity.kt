@@ -3,6 +3,7 @@ package com.example.goclass
 import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
@@ -75,10 +76,11 @@ class ClassActivity : AppCompatActivity() {
                     startActivity(intent)
                 }
                 "professor" -> {
-                    val intent = Intent(this, ProfessorAttendanceActivity::class.java)
-                    intent.putExtra("userRole", userRole)
-                    intent.putExtra("className", className)
-                    startActivity(intent)
+                    Toast.makeText(this, "Not Implemented Yet", Toast.LENGTH_SHORT).show()
+//                    val intent = Intent(this, ProfessorAttendanceActivity::class.java)
+//                    intent.putExtra("userRole", userRole)
+//                    intent.putExtra("className", className)
+//                    startActivity(intent)
                 }
             }
         }

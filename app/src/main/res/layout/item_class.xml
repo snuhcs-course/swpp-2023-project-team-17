@@ -12,7 +12,7 @@
         android:clipToOutline="true"
         android:text="Class Name"
         android:background="@drawable/class_list_bg"
-        android:fontFamily="@font/relay_noto_sans_black"
-        android:textSize="25sp"/>
+        android:fontFamily="@font/relay_noto_sans_semibold"
+        android:textSize="20sp"/>
 
 </LinearLayout>
