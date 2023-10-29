@@ -43,6 +43,7 @@ class StudentMainFragment : Fragment() {
             val dialog = Dialog(requireContext())
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setContentView(R.layout.dialog_join)
+            dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_bg)
 
             val editCode = dialog.findViewById<EditText>(R.id.codeEditText)
             val editName = dialog.findViewById<EditText>(R.id.nameEditText)

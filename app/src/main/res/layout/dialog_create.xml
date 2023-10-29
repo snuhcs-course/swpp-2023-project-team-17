@@ -7,32 +7,35 @@
 
     <EditText
         android:id="@+id/classNameEdittext"
-        android:layout_width="200dp"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
-        android:hint="Class Name"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:hint="Enter Class Name"
         android:inputType="text"
-        app:layout_constraintBottom_toTopOf="@+id/classTimeEdittext"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/className" />
 
     <Button
         android:id="@+id/startTimeButton"
-        android:layout_width="200dp"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="Start Time"
-        app:layout_constraintTop_toBottomOf="@+id/classNameEdittext"
+        app:layout_constraintEnd_toStartOf="@id/endTimeButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/endTimeButton" />
+        app:layout_constraintTop_toBottomOf="@+id/classTime" />
 
     <Button
         android:id="@+id/endTimeButton"
-        android:layout_width="200dp"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="End Time"
-        app:layout_constraintTop_toBottomOf="@+id/classNameEdittext"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/startTimeButton"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/classTime" />
 
     <LinearLayout
         android:id="@+id/weekdaysCheckboxLayout"
@@ -84,54 +87,132 @@
 
     <EditText
         android:id="@+id/classTimeEdittext"
-        android:layout_width="200dp"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:hint="ex) FRI 1500-1600"
         android:inputType="text"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/weekdaysCheckboxLayout"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/labSession" />
 
     <EditText
         android:id="@+id/codeEdittext"
-        android:layout_width="200dp"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
-        android:hint="Code"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:hint="Enter Class Code"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/classTimeEdittext" />
+        app:layout_constraintTop_toBottomOf="@id/classCode" />
 
     <EditText
         android:id="@+id/buildingNumberEdittext"
-        android:layout_width="200dp"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
-        android:hint="Building Number"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:hint="Enter Building Number"
         android:inputType="text"
-        app:layout_constraintTop_toBottomOf="@id/codeEdittext"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bldgNum" />
 
     <EditText
         android:id="@+id/roomNumberEditText"
-        android:layout_width="200dp"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
-        android:hint="Room Number"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:hint="Enter Room Number"
         android:inputType="text"
-        app:layout_constraintTop_toBottomOf="@id/buildingNumberEdittext"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/roomNum" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/createButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/SmallFont"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
         android:layout_marginTop="8dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/join_btn_bg"
+        android:clipToOutline="true"
         android:text="Create"
+        android:textColor="@color/blue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/roomNumberEditText" />
+
+    <TextView
+        android:id="@+id/className"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:text="Class Name"
+        style="@style/SmallFont"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/classTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:text="Class Time"
+        style="@style/SmallFont"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/classNameEdittext" />
+
+    <TextView
+        android:id="@+id/labSession"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:text="Lab Session"
+        style="@style/SmallFont"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/weekdaysCheckboxLayout" />
+
+    <TextView
+        android:id="@+id/classCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:text="Class Code"
+        style="@style/SmallFont"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/classTimeEdittext" />
+
+    <TextView
+        android:id="@+id/bldgNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:text="Building Number"
+        style="@style/SmallFont"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/codeEdittext" />
+
+    <TextView
+        android:id="@+id/roomNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:text="Room Number"
+        style="@style/SmallFont"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/buildingNumberEdittext" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
