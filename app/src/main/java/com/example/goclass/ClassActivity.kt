@@ -81,8 +81,8 @@ class ClassActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        binding.messageList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        binding.messageList.adapter = MessageAdapter(messages)
+//        binding.messageList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+//        binding.messageList.adapter = MessageAdapter(messages)
 
         val className = intent.getStringExtra("className")
         val classNameView = findViewById<TextView>(R.id.className)

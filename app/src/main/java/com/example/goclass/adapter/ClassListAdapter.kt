@@ -2,6 +2,7 @@ package com.example.goclass.adapter
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -39,7 +40,8 @@ class ClassListAdapter : RecyclerView.Adapter<ClassListAdapter.ClassViewHolder>(
     class ClassViewHolder(private val binding: ItemClassBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(classItem: Classes) {
             binding.classNameTextView.text = classItem.className
-            itemView.setOnClickListener {
+            binding.classNameTextView.setOnClickListener {
+                Log.d("ClassViewHolder", "Item clicked!")
                 val context = itemView.context
                 val sharedPref = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
                 val userRole = sharedPref.getString("userRole", "") ?: ""
