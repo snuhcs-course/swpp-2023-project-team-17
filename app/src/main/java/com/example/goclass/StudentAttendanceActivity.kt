@@ -26,12 +26,16 @@ class StudentAttendanceActivity : AppCompatActivity() {
         binding = ActivityStudentAttendanceBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val className = intent.getStringExtra("className")
         val userRole = "student"
+
+        binding.classNameText.text = className
 
         // Back Button
         binding.backButton.setOnClickListener {
             val intent = Intent(this, ClassActivity::class.java)
             intent.putExtra("userRole", userRole)
+            intent.putExtra("className", className)
             startActivity(intent)
         }
 
@@ -51,9 +55,8 @@ class StudentAttendanceActivity : AppCompatActivity() {
                                 kotlin.math.abs(longitude - classLocation[1]) < epsilon
 
                         if (isInClass) {
-                            binding.inClassText.text = "In Class"
-                        } else {
-                            binding.inClassText.text = "Not In Class"
+                            binding.inClassButton.text = "In Class"
+                            binding.inClassButton.setBackgroundResource(R.drawable.inclass_btn_bg)
                         }
                     }
                 }

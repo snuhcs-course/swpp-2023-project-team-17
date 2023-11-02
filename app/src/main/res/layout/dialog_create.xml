@@ -17,22 +17,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/className" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/startTimeButton"
         android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Start Time"
+        android:textColor="@color/black"
+        android:clipToOutline="true"
+        android:background="@drawable/pflogoutbtn_bg"
         app:layout_constraintEnd_toStartOf="@id/endTimeButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/classTime" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/endTimeButton"
         android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="End Time"
+        android:textColor="@color/black"
+        android:clipToOutline="true"
+        android:background="@drawable/pflogoutbtn_bg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/startTimeButton"
         app:layout_constraintTop_toBottomOf="@+id/classTime" />
@@ -53,6 +59,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Mon"
+            android:textSize="12sp"
             android:layout_weight="1"/>
 
         <CheckBox
@@ -60,6 +67,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Tue"
+            android:textSize="12sp"
             android:layout_weight="1"/>
 
         <CheckBox
@@ -67,6 +75,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Wed"
+            android:textSize="12sp"
             android:layout_weight="1"/>
 
         <CheckBox
@@ -74,6 +83,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Thu"
+            android:textSize="12sp"
             android:layout_weight="1"/>
 
         <CheckBox
@@ -81,6 +91,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Fri"
+            android:textSize="12sp"
             android:layout_weight="1"/>
 
     </LinearLayout>
@@ -143,6 +154,7 @@
         android:background="@drawable/join_btn_bg"
         android:clipToOutline="true"
         android:text="Create"
+        android:textAllCaps="false"
         android:textColor="@color/blue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -3,6 +3,7 @@ package com.example.goclass
 import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
@@ -45,7 +46,9 @@ class ClassActivity : AppCompatActivity() {
         binding = ActivityClassBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        initViews()
+        val className = intent.getStringExtra("className")!!
+
+        initViews(className)
 
         // User role from Professor(Student)Fragment class button
         val userRole = intent.getStringExtra("userRole")
@@ -69,23 +72,24 @@ class ClassActivity : AppCompatActivity() {
                 "student" -> {
                     val intent = Intent(this, StudentAttendanceActivity::class.java)
                     intent.putExtra("userRole", userRole)
+                    intent.putExtra("className", className)
                     startActivity(intent)
                 }
                 "professor" -> {
-                    val intent = Intent(this, ProfessorAttendanceActivity::class.java)
-                    intent.putExtra("userRole", userRole)
-                    startActivity(intent)
+                    Toast.makeText(this, "Not Implemented Yet", Toast.LENGTH_SHORT).show()
+//                    val intent = Intent(this, ProfessorAttendanceActivity::class.java)
+//                    intent.putExtra("userRole", userRole)
+//                    intent.putExtra("className", className)
+//                    startActivity(intent)
                 }
             }
         }
     }
 
-    private fun initViews() {
+    private fun initViews(className: String) {
 //        binding.messageList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 //        binding.messageList.adapter = MessageAdapter(messages)
 
-        val className = intent.getStringExtra("className")
-        val classNameView = findViewById<TextView>(R.id.className)
-        classNameView.text = className
+        binding.className.text = className
     }
 }

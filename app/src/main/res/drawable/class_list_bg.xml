@@ -18,6 +18,6 @@
         <path
             android:pathData="M10 0H270C275.523 0 280 4.47715 280 10V60C280 65.5228 275.523 70 270 70H10C4.47715 70 0 65.5228 0 60V10C0 4.47715 4.47715 0 10 0Z"
             android:strokeWidth="2"
-            android:strokeColor="#616161"/>
+            android:strokeColor="#B6B6B6"/>
     </group>
 </vector>

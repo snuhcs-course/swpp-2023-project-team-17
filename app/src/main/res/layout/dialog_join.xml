@@ -41,6 +41,7 @@
         android:background="@drawable/join_btn_bg"
         android:clipToOutline="true"
         android:text="Join"
+        android:textAllCaps="false"
         android:textColor="@color/blue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
