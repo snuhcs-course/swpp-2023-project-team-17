@@ -1,9 +1,6 @@
 package com.example.goclass.mainUi
 
-import org.junit.jupiter.api.Assertions.*
-
 class ProfessorMainViewModelTest {
-
     @org.junit.jupiter.api.Test
     fun getToastMessage() {
     }
