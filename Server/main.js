@@ -87,72 +87,6 @@ app.post('/login/:email', (req, res) => {
     });
 });
 
-
-/*
-    get user name and user type
-*/
-app.get('/users/:id', (req, res) => {
-    const userId = req.params.id;
-    const sql = 'select user_name, user_type from Users where user_id = ?';
-    const params = [userId];
-
-    connection.query(sql, params, (err, result) => {
-        let resultCode = 404;
-        let message = 'Error occured';
-        let userName = "";
-        let userType = -1;
-
-        if (err) {
-            console.log(err);
-        } else {
-            resultCode = 200;
-            message = 'get userName and userType Success';
-            console.log(message);
-            userName = result[0].user_name;
-            userType = result[0].user_type;
-        }
-
-        res.json({
-            'code': resultCode,
-            'message': message,
-            'userName': userName,
-            'userType': userType
-        });
-    });
-});
-
-/*
-    edit user name and user type with user_name and user_type of Users
-*/
-app.put('/users/:id', (req, res) => {
-    console.log(req.body);
-
-    const userName = req.body.userName;
-    const userType = req.body.userType;
-    const userId = req.params.id;
-
-    const sql = 'update Users set user_name = ?, user_type = ? where user_id = ?';
-    const params = [userName, userType, userId];
-
-    connection.query(sql, params, (err, result) => {
-        let resultCode = 404;
-        let message = 'Error occured';
-
-        if (err) {
-            console.log(err);
-        } else {
-            resultCode = 200;
-            message = 'update userName, userType Success';
-            console.log(message);  
-        }
-
-        res.json({
-            'code': resultCode,
-            'message': message
-        });
-    });
-});
-
 /*
     get all user's classes with user_type of Users
 */
@@ -200,6 +134,74 @@ app.get('/users/classes', (req, res) => {
     });
 });
 
+
+
+/*
+    get user name and user type
+*/
+app.get('/users/:id', (req, res) => {
+    const userId = req.params.id;
+    const sql = 'select user_name, user_type from Users where user_id = ?';
+    const params = [userId];
+
+    connection.query(sql, params, (err, result) => {
+        let resultCode = 404;
+        let message = 'Error occured';
+        let userName = "";
+        let userType = -1;
+
+        if (err) {
+            console.log(err);
+        } else {
+            if(result.length > 0) {
+                resultCode = 200;
+                message = 'get userName and userType Success';
+                console.log(message);
+                userName = result[0].user_name;
+                userType = result[0].user_type;
+            }
+        }
+
+        res.json({
+            'code': resultCode,
+            'message': message,
+            'userName': userName,
+            'userType': userType
+        });
+    });
+});
+
+/*
+    edit user name and user type with user_name and user_type of Users
+*/
+app.put('/users/:id', (req, res) => {
+    console.log(req.body);
+
+    const userName = req.body.userName;
+    const userType = req.body.userType;
+    const userId = req.params.id;
+
+    const sql = 'update Users set user_name = ?, user_type = ? where user_id = ?';
+    const params = [userName, userType, userId];
+
+    connection.query(sql, params, (err, result) => {
+        let resultCode = 404;
+        let message = 'Error occured';
+
+        if (err) {
+            console.log(err);
+        } else {
+            resultCode = 200;
+            message = 'update userName, userType Success';
+            console.log(message);  
+        }
+
+        res.json({
+            'code': resultCode,
+            'message': message
+        });
+    });
+});
 
 /*
     get all attendance in specific date with user_id and user_type of Users
