@@ -45,7 +45,7 @@ class Repository(private val serviceApi: ServiceApi) {
     // Chat Channel related functions
     suspend fun chatChannelGetList(
         classId: Int,
-        channelType: Int
+        channelType: Int,
     ) = serviceApi.chatChannelGetList(classId, channelType)
 
     suspend fun chatChannelSend(

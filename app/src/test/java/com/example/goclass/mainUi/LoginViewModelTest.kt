@@ -17,9 +17,8 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.koin.core.component.getScopeId
 
-class LoginViewModelTest{
+class LoginViewModelTest {
     private lateinit var viewModel: LoginViewModel
     private val mockRepository = mockk<Repository>()
     private val testDispatcher = UnconfinedTestDispatcher()
@@ -58,10 +57,7 @@ class LoginViewModelTest{
     @Test
     fun userLogin_failure() =
         runTest {
-            val mockUsersResponse = UsersResponse(
-                400,
-                "Login failed"
-            )
+            val mockUsersResponse = UsersResponse(400, "Login failed")
 
             coEvery { mockRepository.userLogin(userEmail) } returns mockUsersResponse
 

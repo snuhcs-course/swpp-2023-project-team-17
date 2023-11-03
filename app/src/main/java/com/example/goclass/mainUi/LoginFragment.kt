@@ -2,7 +2,6 @@ package com.example.goclass.mainUi
 
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -29,17 +28,18 @@ class LoginFragment : Fragment() {
     private val viewModel: LoginViewModel by viewModel()
 
     private lateinit var googleSignInClient: GoogleSignInClient
-    private val RC_SIGN_IN = 9001
-    private val signINLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-            try {
-                val account = task.getResult(ApiException::class.java)
-                firebaseAuthWithGoogle(account!!)
-            } catch (e: ApiException){
-                Log.d("signinlauncher", e.toString())
-            }
-        }
+    private val signINLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+                    try {
+                        val account = task.getResult(ApiException::class.java)
+                        firebaseAuthWithGoogle(account!!)
+                    } catch (e: ApiException) {
+                        Log.d("signinlauncher", e.toString())
+                    }
+                }
     }
 
     override fun onCreateView(
@@ -57,10 +57,11 @@ class LoginFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
-            .requestEmail()
-            .build()
+        val gso =
+            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build()
 
         googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
 
@@ -91,7 +92,7 @@ class LoginFragment : Fragment() {
         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
         FirebaseAuth.getInstance().signInWithCredential(credential)
             .addOnCompleteListener(requireActivity()) { task ->
-                if (task.isSuccessful){
+                if (task.isSuccessful) {
                     viewModel.userLogin(account.email!!)
                 } else {
                     Log.d("viewmodelcall", "fail")
