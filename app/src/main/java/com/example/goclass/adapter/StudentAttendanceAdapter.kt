@@ -3,13 +3,13 @@ package com.example.goclass.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.goclass.dataClass.Attendances
+import com.example.goclass.dataClass.AttendancesResponse
 import com.example.goclass.databinding.ItemStudentAttendanceBinding
 
 class StudentAttendanceAdapter : RecyclerView.Adapter<StudentAttendanceAdapter.StudentAttendanceViewHolder>() {
-    private var studentAttendanceList = listOf<Attendances>()
+    private var studentAttendanceList = listOf<AttendancesResponse>()
 
-    fun setStudentAttendanceList(list: List<Attendances>) {
+    fun setStudentAttendanceList(list: List<AttendancesResponse>) {
         studentAttendanceList = list
         notifyDataSetChanged()
     }
@@ -39,8 +39,8 @@ class StudentAttendanceAdapter : RecyclerView.Adapter<StudentAttendanceAdapter.S
 
     class StudentAttendanceViewHolder(var binding: ItemStudentAttendanceBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(studentAttendanceItem: Attendances) {
-            binding.attendanceDateText.text = "Attendance Date"
+        fun bind(studentAttendanceItem: AttendancesResponse) {
+            binding.attendanceDateText.text = studentAttendanceItem.attendanceDate
             val attendanceStatus = studentAttendanceItem.attendanceStatus
             if(attendanceStatus == 1) binding.attendanceStatusText.text = "Present"
             else binding.attendanceStatusText.text = "Absent"

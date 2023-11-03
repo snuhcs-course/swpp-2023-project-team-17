@@ -11,7 +11,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.goclass.adapter.StudentAttendanceAdapter
 import com.example.goclass.databinding.ActivityStudentAttendanceBinding
-import com.example.goclass.mainUi.StudentMainViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
