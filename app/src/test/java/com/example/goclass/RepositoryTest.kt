@@ -6,7 +6,6 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 
@@ -20,49 +19,53 @@ class RepositoryTest {
     }
 
     @Test
-    fun userGet_call() = runBlocking {
-        val userId = 1
+    fun userGet_call() =
+        runBlocking {
+            val userId = 1
 
-        coEvery { mockServiceApi.userGet(userId) } returns mockk()
+            coEvery { mockServiceApi.userGet(userId) } returns mockk()
 
-        repository.userGet(userId)
+            repository.userGet(userId)
 
-        coVerify { mockServiceApi.userGet(userId) }
-    }
-
-    @Test
-    fun userEdit_call() = runBlocking {
-        val userId = 1
-        val user = Users(0, "name")
-
-        coEvery { mockServiceApi.userEdit(userId, user) } returns mockk()
-
-        repository.userEdit(userId, user)
-
-        coVerify { mockServiceApi.userEdit(userId, user) }
-    }
+            coVerify { mockServiceApi.userGet(userId) }
+        }
 
     @Test
-    fun userGetClassList_call() = runBlocking {
-        val userMap = mapOf("key1" to "value1", "key2" to "value2")  // 실제로 필요한 키와 값으로 맵을 초기화하세요.
+    fun userEdit_call() =
+        runBlocking {
+            val userId = 1
+            val user = Users(0, "name")
 
-        coEvery { mockServiceApi.userGetClassList(userMap) } returns mockk()
+            coEvery { mockServiceApi.userEdit(userId, user) } returns mockk()
 
-        repository.userGetClassList(userMap)
+            repository.userEdit(userId, user)
 
-        coVerify { mockServiceApi.userGetClassList(userMap) }
-    }
+            coVerify { mockServiceApi.userEdit(userId, user) }
+        }
 
     @Test
-    fun classCreate_call() = runBlocking {
-        val classes = Classes("name", "code")
+    fun userGetClassList_call() =
+        runBlocking {
+            val userMap = mapOf("key1" to "value1", "key2" to "value2")
 
-        coEvery { mockServiceApi.classCreate(classes) } returns mockk()
+            coEvery { mockServiceApi.userGetClassList(userMap) } returns mockk()
 
-        repository.classCreate(classes)
+            repository.userGetClassList(userMap)
 
-        coVerify { mockServiceApi.classCreate(classes) }
-    }
+            coVerify { mockServiceApi.userGetClassList(userMap) }
+        }
+
+    @Test
+    fun classCreate_call() =
+        runBlocking {
+            val classes = Classes("name", "code")
+
+            coEvery { mockServiceApi.classCreate(classes) } returns mockk()
+
+            repository.classCreate(classes)
+
+            coVerify { mockServiceApi.classCreate(classes) }
+        }
 
     @Test
     fun classJoin_call() = runBlocking {

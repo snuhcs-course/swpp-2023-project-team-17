@@ -2,13 +2,10 @@ package com.example.goclass
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.goclass.adapter.MessageAdapter
 import com.example.goclass.dataClass.MessageDummy
 import com.example.goclass.databinding.ActivityClassBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
