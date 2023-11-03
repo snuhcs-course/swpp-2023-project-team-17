@@ -1,5 +1,6 @@
 package com.example.goclass.module
 
+import com.example.goclass.mainUi.LoginViewModel
 import com.example.goclass.mainUi.ProfessorMainViewModel
 import com.example.goclass.mainUi.ProfileViewModel
 import com.example.goclass.mainUi.StudentMainViewModel
@@ -16,5 +17,8 @@ val viewModelModule =
         }
         viewModel {
             StudentMainViewModel(get())
+        }
+        viewModel {
+            LoginViewModel(get())
         }
     }
