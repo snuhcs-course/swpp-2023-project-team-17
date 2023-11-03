@@ -9,6 +9,7 @@ import com.example.goclass.dataClass.CodeMessageResponse
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -16,7 +17,6 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -94,7 +94,9 @@ class ProfessorMainViewModelTest {
                             1,
                             "TestTime",
                             "TestBuilding",
-                            "TestRoom")),
+                            "TestRoom",
+                        ),
+                    ),
                     200,
                     "Success",
                 )

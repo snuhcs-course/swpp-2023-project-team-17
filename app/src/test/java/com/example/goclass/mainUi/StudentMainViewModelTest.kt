@@ -88,7 +88,9 @@ class StudentMainViewModelTest {
                             1,
                             "TestTime",
                             "TestBuilding",
-                            "TestRoom")),
+                            "TestRoom",
+                        ),
+                    ),
                     200,
                     "Success",
                 )
