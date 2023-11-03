@@ -30,7 +30,7 @@ class LoginFragment : Fragment() {
     private lateinit var googleSignInClient: GoogleSignInClient
     private val signINLauncher =
         registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
+            ActivityResultContracts.StartActivityForResult(),
         ) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
@@ -41,7 +41,7 @@ class LoginFragment : Fragment() {
                     Log.d("signinlauncher", e.toString())
                 }
             }
-    }
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
