@@ -26,7 +26,7 @@ public class Users {
     }
 
     public Users(int userId, int userType) {
-        this.userType = userType;
+        this.userId = userId;
         this.userType = userType;
     }
 
