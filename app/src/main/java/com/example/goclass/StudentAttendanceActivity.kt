@@ -5,18 +5,20 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.goclass.adapter.ProfessorAttendanceAdapter
 import com.example.goclass.adapter.StudentAttendanceAdapter
 import com.example.goclass.databinding.ActivityStudentAttendanceBinding
+import com.example.goclass.mainUi.StudentMainViewModel
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class StudentAttendanceActivity : AppCompatActivity() {
     private lateinit var binding: ActivityStudentAttendanceBinding
     private lateinit var locationReceiver: BroadcastReceiver
-    val viewModel = ViewModelProvider(this)[StudentAttendanceViewModel::class.java]
-
+    private val viewModel: StudentAttendanceViewModel by viewModel()
 
     // Error range of location distance
     private val epsilon = 0.1
@@ -35,8 +37,8 @@ class StudentAttendanceActivity : AppCompatActivity() {
         val userId = userSharedPref!!.getInt("userId", -1)
 
         val classSharedPref = getSharedPreferences("ClassPrefs", Context.MODE_PRIVATE)
-        val className = intent.getStringExtra("className")!!
-        val classId = classSharedPref!!.getInt("classId", -1)!!
+        val className = classSharedPref!!.getString("className", "")
+        val classId = classSharedPref!!.getInt("classId", -1)
 
         binding.classNameText.text = className
 
@@ -48,10 +50,18 @@ class StudentAttendanceActivity : AppCompatActivity() {
         }
 
         // show studentAttendanceList with dummy data
-        val studentAttendanceListLiveData = viewModel.getStudentAttendanceList(classId, userId)
         val studentAttendanceAdapter = StudentAttendanceAdapter()
         binding.studentAttendanceRecyclerView.adapter = studentAttendanceAdapter
         binding.studentAttendanceRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        lifecycleScope.launch {
+            try {
+                val studentAttendanceList = viewModel.getStudentAttendanceList(classId, userId)
+                studentAttendanceAdapter.setStudentAttendanceList(studentAttendanceList)
+            } catch (e: Exception) {
+                Log.e("studentAttendanceListError", e.message.toString())
+            }
+        }
+
 
         /*
         // Receive location and check "In Class"
@@ -85,6 +95,6 @@ class StudentAttendanceActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        unregisterReceiver(locationReceiver)
+        //unregisterReceiver(locationReceiver)
     }
 }

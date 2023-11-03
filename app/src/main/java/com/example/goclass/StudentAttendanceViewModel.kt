@@ -13,16 +13,14 @@ class StudentAttendanceViewModel(
 
     private var studentAttendanceList: List<Attendances> = listOf<Attendances>()
 
-    fun getStudentAttendanceList(classId: Int, userId: Int): List<Attendances> {
-        viewModelScope.launch {
-            try {
-                val response = repository.classGetAttendanceListByUserId(classId, userId)
-                if (response.code == 200) {
-                    studentAttendanceList = response.attendanceList
-                }
-            } catch (e: Exception) {
-                Log.d("studentAttendanceListError", e.message.toString())
+    suspend fun getStudentAttendanceList(classId: Int, userId: Int): List<Attendances> {
+        try {
+            val response = repository.classGetAttendanceListByUserId(classId, userId)
+            if (response.code == 200) {
+                studentAttendanceList = response.attendanceList
             }
+        } catch (e: Exception) {
+            Log.d("studentAttendanceListError", e.message.toString())
         }
         return studentAttendanceList
     }
