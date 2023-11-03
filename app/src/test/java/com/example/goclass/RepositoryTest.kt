@@ -68,15 +68,15 @@ class RepositoryTest {
         }
 
     @Test
-    fun classJoin_call() = runBlocking {
-        val userId = 1
-        val classes =
-            Classes("name", "code")
+    fun classJoin_call() =
+        runBlocking {
+            val userId = 1
+            val classes = Classes("name", "code")
 
-        coEvery { mockServiceApi.classJoin(userId, classes) } returns mockk()
+            coEvery { mockServiceApi.classJoin(userId, classes) } returns mockk()
 
-        repository.classJoin(userId, classes)
+            repository.classJoin(userId, classes)
 
-        coVerify { mockServiceApi.classJoin(userId, classes) }
-    }
+            coVerify { mockServiceApi.classJoin(userId, classes) }
+        }
 }
