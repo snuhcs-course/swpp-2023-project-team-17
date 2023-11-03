@@ -1,5 +1,6 @@
 package com.example.goclass
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
@@ -46,23 +47,27 @@ class ClassActivity : AppCompatActivity() {
         binding = ActivityClassBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val userSharedPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val userRole = userSharedPref.getString("userRole", "") ?: ""
+
+        val classSharedPref = getSharedPreferences("ClassPrefs", Context.MODE_PRIVATE)
+        val classId = intent.getIntExtra("classId", -1)!!
         val className = intent.getStringExtra("className")!!
+        with(classSharedPref?.edit()) {
+            this?.putInt("classId", classId)
+            this?.putString("className", className)
+            this?.apply()
+        }
 
         initViews(className)
 
-        // User role from Professor(Student)Fragment class button
-        val userRole = intent.getStringExtra("userRole")
-
         val navView: BottomNavigationView = binding.navView
-
         val navController = findNavController(R.id.nav_host_fragment_activity_class)
-
         navView.setupWithNavController(navController)
 
         // Back Button
         binding.backButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
-            intent.putExtra("userRole", userRole)
             startActivity(intent)
         }
 
@@ -71,16 +76,15 @@ class ClassActivity : AppCompatActivity() {
             when (userRole) {
                 "student" -> {
                     val intent = Intent(this, StudentAttendanceActivity::class.java)
-                    intent.putExtra("userRole", userRole)
-                    intent.putExtra("className", className)
                     startActivity(intent)
                 }
                 "professor" -> {
                     Toast.makeText(this, "Not Implemented Yet", Toast.LENGTH_SHORT).show()
 //                    val intent = Intent(this, ProfessorAttendanceActivity::class.java)
-//                    intent.putExtra("userRole", userRole)
-//                    intent.putExtra("className", className)
 //                    startActivity(intent)
+                }
+                else -> {
+                    Toast.makeText(this, "Invalid user role", Toast.LENGTH_SHORT).show()
                 }
             }
         }

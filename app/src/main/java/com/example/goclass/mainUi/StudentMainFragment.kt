@@ -89,7 +89,6 @@ class StudentMainFragment : Fragment() {
         // recyclerView
         binding.studentClassRecyclerView.setOnClickListener {
             val intent = Intent(view.context, ClassActivity::class.java)
-            intent.putExtra("userRole", "student")
             startActivity(intent)
         }
     }

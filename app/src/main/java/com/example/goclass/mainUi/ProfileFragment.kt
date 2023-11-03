@@ -48,7 +48,7 @@ class ProfileFragment : Fragment() {
         val sharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         saveToSharedPref("userId", 1)
 
-        val storedUserName = sharedPref?.getString("userName", "")
+        val storedUserName = sharedPref?.getString("userName", "") ?: ""
         if (storedUserName != "") {
             binding.nameEditText.setText(storedUserName)
         } else {
@@ -135,7 +135,7 @@ class ProfileFragment : Fragment() {
         }
 
         // Remember whether user is a student or a professor
-        when (sharedPref?.getString("userRole", "")) {
+        when (sharedPref?.getString("userRole", "") ?: "") {
             "student" -> {
                 binding.studentRadioButton.isChecked = true
             }

@@ -1,5 +1,6 @@
 package com.example.goclass
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -43,12 +44,9 @@ class ProfessorAttendanceActivity : AppCompatActivity() {
 
         initViews()
 
-        val userRole = "professor"
-
         // Back Button
         binding.backButton.setOnClickListener {
             val intent = Intent(this, ClassActivity::class.java)
-            intent.putExtra("userRole", userRole)
             startActivity(intent)
         }
     }
