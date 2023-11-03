@@ -14,4 +14,8 @@ public class CodeMessageResponse {
     public String getMessage() {
         return message;
     }
+    public CodeMessageResponse(int code, String message) {
+        this.code = code;
+        this.message = message;
+    }
 }

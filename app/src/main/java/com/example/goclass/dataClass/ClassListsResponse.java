@@ -5,14 +5,19 @@ import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
 public class ClassListsResponse {
-    @SerializedName("class_list")
-    private List<HashMap<String, String>> classList;
+    @SerializedName("classList")
+    private List<Classes> classList;
     @SerializedName("code")
     private int code;
     @SerializedName("message")
     private String message;
 
-    public List<HashMap<String, String>> getClassList() {
+    public ClassListsResponse(List<Classes> classList, int code, String message) {
+        this.classList = classList;
+        this.code = code;
+        this.message = message;
+    }
+    public List<Classes> getClassList() {
         return classList;
     }
 

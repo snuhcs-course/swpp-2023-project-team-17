@@ -5,15 +5,15 @@ import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
 public class MessageListsResponse {
-    @SerializedName("message_list")
-    private List<HashMap<String, String>> messageList;
+    @SerializedName("messageList")
+    private List<Messages> messageList;
 
     @SerializedName("code")
     private int code;
     @SerializedName("message")
     private String message;
 
-    public List<HashMap<String, String>> getMessageId() {
+    public List<Messages> getMessageId() {
         return messageList;
     }
 

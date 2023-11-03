@@ -3,15 +3,15 @@ package com.example.goclass.dataClass;
 import com.google.gson.annotations.SerializedName;
 
 public class Classrooms {
-    @SerializedName("building_number")
+    @SerializedName("buildingNumber")
     String buildingNumber;
-    @SerializedName("room_number")
+    @SerializedName("roomNumber")
     String roomNumber;
     @SerializedName("longitude")
     float longitude;
     @SerializedName("latitude")
     float latitude;
-    @SerializedName("beacon_id")
+    @SerializedName("beaconId")
     String beaconId;
 
     public Classrooms(String buildingNumber, String roomNumber, float longitude, float latitude, String beaconId) {

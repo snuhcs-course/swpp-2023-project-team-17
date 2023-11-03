@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="4dp">
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/classNameTextView"
+        android:layout_width="280dp"
+        android:layout_height="70dp"
+        android:clipToOutline="true"
+        android:text="Class Name"
+        android:background="@drawable/class_list_bg"
+        android:fontFamily="@font/relay_noto_sans_semibold"
+        android:textSize="20sp"/>
+
+</LinearLayout>

@@ -3,11 +3,11 @@ package com.example.goclass.dataClass;
 import com.google.gson.annotations.SerializedName;
 
 public class Channels {
-    @SerializedName("channel_id")
+    @SerializedName("channelId")
     int channelId;
-    @SerializedName("class_id")
+    @SerializedName("classId")
     int classId;
-    @SerializedName("channel_type")
+    @SerializedName("channelType")
     int channelType;
 
     public Channels(int channelId, int classId, int channelType) {

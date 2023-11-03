@@ -3,23 +3,22 @@ package com.example.goclass.dataClass;
 import com.google.gson.annotations.SerializedName;
 
 public class Classes {
-    @SerializedName("class_id")
+    @SerializedName("classId")
     int classId = -1;
-    @SerializedName("class_name")
+    @SerializedName("className")
     String className = "";
-    @SerializedName("class_code")
+    @SerializedName("classCode")
     String classCode = "";
-    @SerializedName("professor_id")
+    @SerializedName("professorId")
     int professorId = -1;
-    @SerializedName("class_time")
+    @SerializedName("classTime")
     String classTime = "";
-    @SerializedName("building_numer")
+    @SerializedName("buildingNumber")
     String buildingNumber = "";
-    @SerializedName("room_numer")
+    @SerializedName("roomNumber")
     String roomNumber = "";
 
-    public Classes(int classId, String className, String classCode, int professorId, String classTime) {
-        this.classId = classId;
+    public Classes(String className, String classCode, int professorId, String classTime, String buildingNumber, String roomNumber) {
         this.className = className;
         this.classCode = classCode;
         this.professorId = professorId;
@@ -31,5 +30,9 @@ public class Classes {
     public Classes(String className, String classCode) {
         this.className = className;
         this.classCode = classCode;
+    }
+
+    public String getClassName() {
+        return className;
     }
 }

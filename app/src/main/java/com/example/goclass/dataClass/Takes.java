@@ -3,9 +3,9 @@ package com.example.goclass.dataClass;
 import com.google.gson.annotations.SerializedName;
 
 public class Takes {
-    @SerializedName("student_id")
+    @SerializedName("studentId")
     int studentId;
-    @SerializedName("class_id")
+    @SerializedName("classId")
     int classId;
 
     public Takes(int studentId, int classId) {

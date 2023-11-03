@@ -3,15 +3,15 @@ package com.example.goclass.dataClass;
 import com.google.gson.annotations.SerializedName;
 
 public class MessagesResponse {
-    @SerializedName("message_id")
+    @SerializedName("messageId")
     int messageId;
-    @SerializedName("time_stamp")
+    @SerializedName("timeStamp")
     String timeStamp;
-    @SerializedName("sender_id")
+    @SerializedName("senderId")
     int senderId;
     @SerializedName("content")
     String content;
-    @SerializedName("channel_id")
+    @SerializedName("channelId")
     int channelId;
     @SerializedName("code")
     private int code;
