@@ -38,12 +38,12 @@ create table Takes (
     foreign key (class_id) references Classes(class_id) ON DELETE CASCADE
 );
 
-create table Teaches (
-	professor_id int not null,
-    class_id int not null,
-    foreign key (professor_id) references Users(user_id),
-    foreign key (class_id) references Classes(class_id) ON DELETE CASCADE
-);
+-- create table Teaches (
+-- 	professor_id int not null,
+--     class_id int not null,
+--     foreign key (professor_id) references Users(user_id),
+--     foreign key (class_id) references Classes(class_id) ON DELETE CASCADE
+-- );
 
 create table Channels (
 	channel_id int not null auto_increment primary key,
@@ -75,6 +75,5 @@ create table Attendances (
 	check (attendance_status >= 0 and attendance_status <= 2)
 );
 
-
-
+COMMIT;
 
