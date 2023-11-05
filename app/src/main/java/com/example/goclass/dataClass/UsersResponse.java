@@ -48,4 +48,9 @@ public class UsersResponse {
         this.code = code;
         this.message = message;
     }
+
+    public UsersResponse(int code, String message) {
+        this.code = code;
+        this.message = message;
+    }
 }

@@ -7,11 +7,7 @@ import com.example.goclass.dataClass.Users
 
 class Repository(private val serviceApi: ServiceApi) {
     // User related functions
-    suspend fun userSignup(users: Users) = serviceApi.userSignup(users)
-
     suspend fun userLogin(email: String) = serviceApi.userLogin(email)
-
-    suspend fun userLogout() = serviceApi.userLogout()
 
     suspend fun userGet(userId: Int) = serviceApi.userGet(userId)
 
@@ -41,23 +37,22 @@ class Repository(private val serviceApi: ServiceApi) {
 
     suspend fun classDelete(classId: Int) = serviceApi.classDelete(classId)
 
-    suspend fun classGetChannel(
-        classId: Int,
-        channelType: Int,
-    ) = serviceApi.classGetChannel(classId, channelType)
-
     suspend fun classGetAttendanceListByUserId(
         classId: Int,
         userId: Int,
     ) = serviceApi.classGetAttendanceListByUserId(classId, userId)
 
     // Chat Channel related functions
-    suspend fun chatChannelGetList(channelId: Int) = serviceApi.chatChannelGetList(channelId)
+    suspend fun chatChannelGetList(
+        classId: Int,
+        channelType: Int,
+    ) = serviceApi.chatChannelGetList(classId, channelType)
 
     suspend fun chatChannelSend(
-        channelId: Int,
+        classId: Int,
+        channelType: Int,
         messages: Messages,
-    ) = serviceApi.chatChannelSend(channelId, messages)
+    ) = serviceApi.chatChannelSend(classId, channelType, messages)
 
     // Attendance related functions
     suspend fun attendanceGet(attendanceId: Int) = serviceApi.attendanceGet(attendanceId)
