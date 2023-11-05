@@ -5,6 +5,7 @@ import com.example.goclass.dataClass.AttendanceListsResponse
 import com.example.goclass.dataClass.Attendances
 import com.example.goclass.dataClass.AttendancesResponse
 import com.example.goclass.dataClass.ChannelsResponse
+import com.example.goclass.dataClass.ClassIdResponse
 import com.example.goclass.dataClass.ClassListsResponse
 import com.example.goclass.dataClass.Classes
 import com.example.goclass.dataClass.ClassesResponse
@@ -71,7 +72,7 @@ interface ServiceApi {
     suspend fun classJoin(
         @Path("user_id") userId: Int,
         @Body classes: Classes,
-    ): CodeMessageResponse
+    ): ClassIdResponse
 
     @GET("/class/{id}")
     suspend fun classGet(
