@@ -11,7 +11,6 @@ import java.lang.Exception
 class ProfessorAttendanceViewModel(
     private val repository: Repository,
 ) : ViewModel() {
-
     private var professorAttendanceListLiveDate: MutableLiveData<List<AttendancesResponse>> = MutableLiveData()
 
     fun getProfessorAttendanceList(user: Map<String, String>): MutableLiveData<List<AttendancesResponse>> {

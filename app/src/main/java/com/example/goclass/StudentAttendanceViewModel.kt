@@ -11,10 +11,12 @@ import java.lang.Exception
 class StudentAttendanceViewModel(
     private val repository: Repository,
 ) : ViewModel() {
-
     private var studentAttendanceListLiveData: MutableLiveData<List<AttendancesResponse>> = MutableLiveData()
 
-    fun getStudentAttendanceList(classId: Int, userId: Int): MutableLiveData<List<AttendancesResponse>> {
+    fun getStudentAttendanceList(
+        classId: Int,
+        userId: Int,
+    ): MutableLiveData<List<AttendancesResponse>> {
         viewModelScope.launch {
             try {
                 val response = repository.classGetAttendanceListByUserId(classId, userId)

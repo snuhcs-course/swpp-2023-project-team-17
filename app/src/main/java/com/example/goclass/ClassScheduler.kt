@@ -8,7 +8,16 @@ import android.icu.util.Calendar
 
 class ClassScheduler {
 //    fun scheduleClass(context: Context, userId: Int, classId: Int, minPresentDuration: Int, minLateDuration: Int, dayOfWeek: Int, hour: Int, minute: Int) {
-    fun scheduleClass(context: Context, userId: Int, classId: Int, dayOfWeek: Int, startHour: Int, startMinute: Int, endHour: Int, endMinute: Int) {
+    fun scheduleClass(
+        context: Context,
+        userId: Int,
+        classId: Int,
+        dayOfWeek: Int,
+        startHour: Int,
+        startMinute: Int,
+        endHour: Int,
+        endMinute: Int,
+    ) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, AttendanceReceiver::class.java)
 
@@ -42,11 +51,14 @@ class ClassScheduler {
             AlarmManager.RTC_WAKEUP,
             alarmTime.timeInMillis,
             AlarmManager.INTERVAL_DAY * 7,
-            pendingIntent
+            pendingIntent,
         )
     }
 
-    private fun uniqueRequestId(userId: Int, classId: Int): Int {
+    private fun uniqueRequestId(
+        userId: Int,
+        classId: Int,
+    ): Int {
         return userId.hashCode() * 31 + classId.hashCode()
     }
 }

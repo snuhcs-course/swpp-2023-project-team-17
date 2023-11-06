@@ -42,8 +42,11 @@ class ProfessorAttendanceListAdapter : RecyclerView.Adapter<ProfessorAttendanceL
         fun bind(studentAttendanceItem: AttendancesResponse) {
             binding.studentIdText.text = studentAttendanceItem.studentId.toString()
             val attendanceStatus = studentAttendanceItem.attendanceStatus
-            if(attendanceStatus == 1) binding.attendanceStatusText.text = "Present"
-            else binding.attendanceStatusText.text = "Absent"
+            if (attendanceStatus == 1) {
+                binding.attendanceStatusText.text = "Present"
+            } else {
+                binding.attendanceStatusText.text = "Absent"
+            }
         }
     }
 }

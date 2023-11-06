@@ -17,6 +17,7 @@ class StudentAttendanceAdapter(
     private val repository: Repository,
 ) : RecyclerView.Adapter<StudentAttendanceAdapter.StudentAttendanceViewHolder>() {
     private var studentAttendanceList = listOf<AttendancesResponse>()
+
     fun setStudentAttendanceList(list: List<AttendancesResponse>) {
         studentAttendanceList = list
         notifyDataSetChanged()
@@ -51,14 +52,19 @@ class StudentAttendanceAdapter(
             binding.attendanceDateText.text = studentAttendanceItem.attendanceDate
 
             val attendanceStatus = studentAttendanceItem.attendanceStatus
-            if(attendanceStatus == 1) binding.attendanceStatusText.text = "Present"
-            else binding.attendanceStatusText.text = "Absent"
+            if (attendanceStatus == 1) {
+                binding.attendanceStatusText.text = "Present"
+            } else {
+                binding.attendanceStatusText.text = "Absent"
+            }
 
             val isSent = studentAttendanceItem.isSent
-            if(isSent == 1) binding.sendButton.isEnabled = false
+            if (isSent == 1) {
+                binding.sendButton.isEnabled = false
+            }
 
             binding.sendButton.setOnClickListener {
-                if(binding.sendButton.isEnabled) {
+                if (binding.sendButton.isEnabled) {
                     CoroutineScope(Dispatchers.Main).launch {
                         withContext(Dispatchers.IO) {
                             val attendanceId = studentAttendanceItem.attendanceId

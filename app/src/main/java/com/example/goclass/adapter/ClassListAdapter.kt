@@ -26,7 +26,7 @@ class ClassListAdapter : RecyclerView.Adapter<ClassListAdapter.ClassViewHolder>(
             ItemClassBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
-            false,
+                false,
             )
         return ClassViewHolder(binding)
     }

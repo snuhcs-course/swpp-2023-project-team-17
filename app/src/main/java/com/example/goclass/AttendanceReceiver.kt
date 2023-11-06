@@ -6,7 +6,10 @@ import android.content.Intent
 import com.example.goclass.service.AttendanceService
 
 class AttendanceReceiver : BroadcastReceiver() {
-    override fun onReceive(context: Context, intent: Intent) {
+    override fun onReceive(
+        context: Context,
+        intent: Intent,
+    ) {
         if (intent != null) {
             val action = intent.action
             if (action == "ATTENDANCE_ALARM_ACTION") {

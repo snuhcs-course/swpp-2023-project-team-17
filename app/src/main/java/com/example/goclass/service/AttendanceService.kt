@@ -1,29 +1,28 @@
 package com.example.goclass.service
 
-import android.Manifest
 import android.app.Service
 import android.content.Intent
-import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
-import androidx.core.content.ContextCompat
 import com.example.goclass.Repository
 import com.example.goclass.dataClass.Attendances
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.Calendar
 
 class AttendanceService : Service() {
-
     private lateinit var repository: Repository
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    override fun onStartCommand(
+        intent: Intent?,
+        flags: Int,
+        startId: Int,
+    ): Int {
         if (intent != null) {
             val action = intent.action
 
@@ -46,7 +45,14 @@ class AttendanceService : Service() {
         return START_STICKY
     }
 
-    private fun performAttendanceCheck(userId: Int, classId: Int, startHour: Int, startMinute: Int, endHour: Int, endMinute: Int) {
+    private fun performAttendanceCheck(
+        userId: Int,
+        classId: Int,
+        startHour: Int,
+        startMinute: Int,
+        endHour: Int,
+        endMinute: Int,
+    ) {
         var attendanceStatus = 0
         var attendanceDuration = 0
 
@@ -64,8 +70,8 @@ class AttendanceService : Service() {
         }
 
         // TODO: professor should set this
-        val minPresentDuration = classDuration*0.85
-        val minLateDuration = classDuration*0.6
+        val minPresentDuration = classDuration * 0.85
+        val minLateDuration = classDuration * 0.6
 
         // determine attendanceStatus
         if (attendanceDuration >= minPresentDuration) {
@@ -81,7 +87,7 @@ class AttendanceService : Service() {
         }
     }
 
-    private fun inClass() : Boolean {
+    private fun inClass(): Boolean {
         // TODO: implement checkGPS() and checkBLE() and checkProf() elsewhere
 //        if (checkGPS() and checkBLE() and checkProf()) {
 //            return true
@@ -90,9 +96,13 @@ class AttendanceService : Service() {
         return true
     }
 
-    private fun saveAttendance(attendanceStatus: Int, attendanceDuration: Int, userId: Int, classId: Int) {
+    private fun saveAttendance(
+        attendanceStatus: Int,
+        attendanceDuration: Int,
+        userId: Int,
+        classId: Int,
+    ) {
         val attendances = Attendances(attendanceStatus, attendanceDuration, classId)
-
 
         GlobalScope.launch(Dispatchers.IO) {
             try {
@@ -103,5 +113,4 @@ class AttendanceService : Service() {
             }
         }
     }
-
 }

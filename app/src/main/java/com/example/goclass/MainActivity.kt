@@ -1,10 +1,7 @@
 package com.example.goclass
 
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.icu.util.Calendar
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity

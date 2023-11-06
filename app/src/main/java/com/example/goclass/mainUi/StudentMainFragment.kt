@@ -24,7 +24,7 @@ import org.koin.core.parameter.parametersOf
 
 class StudentMainFragment : Fragment() {
     private lateinit var binding: FragmentStudentMainBinding
-    private val viewModel: StudentMainViewModel by viewModel() {
+    private val viewModel: StudentMainViewModel by viewModel {
         parametersOf(requireActivity().application)
     }
 
