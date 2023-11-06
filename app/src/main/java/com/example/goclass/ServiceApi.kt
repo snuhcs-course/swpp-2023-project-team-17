@@ -4,6 +4,7 @@ import com.example.goclass.dataClass.AttendanceDateListsResponse
 import com.example.goclass.dataClass.AttendanceListsResponse
 import com.example.goclass.dataClass.Attendances
 import com.example.goclass.dataClass.AttendancesResponse
+import com.example.goclass.dataClass.ClassIdResponse
 import com.example.goclass.dataClass.ClassListsResponse
 import com.example.goclass.dataClass.Classes
 import com.example.goclass.dataClass.ClassesResponse
