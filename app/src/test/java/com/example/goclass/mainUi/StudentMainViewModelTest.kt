@@ -22,8 +22,8 @@ import org.junit.Rule
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
-class ProfessorMainViewModelTest {
-    private lateinit var viewModel: ProfessorMainViewModel
+class StudentMainViewModelTest {
+    private lateinit var viewModel: StudentMainViewModel
     private val mockRepository = mockk<Repository>()
     private val testDispatcher = UnconfinedTestDispatcher()
 
@@ -33,50 +33,44 @@ class ProfessorMainViewModelTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        viewModel = ProfessorMainViewModel(mockRepository)
+        viewModel = StudentMainViewModel(mockRepository)
     }
 
     @Test
-    fun createClass_success() =
+    fun classJoin_success() =
         runTest {
             val mockResponse = CodeMessageResponse(200, "Message")
 
-            coEvery { mockRepository.classCreate(any()) } returns mockResponse
+            coEvery { mockRepository.classJoin(any(), any()) } returns mockResponse
 
-            viewModel.createClass("TestName", "TestCode", 1, "TestTime", "TestBuilding", "TestRoom")
+            viewModel.classJoin(1, "TestName", "TestCode")
 
             val toastValue = viewModel.toastMessage.getOrAwaitValue()
-            assertEquals("Successfully created!", toastValue)
-            coVerify { viewModel.getClassList(mapOf("userId" to "1", "userType" to "1")) }
+            assertEquals("Successfully joined!", toastValue)
+            coVerify { viewModel.getClassList(mapOf("userId" to "1", "userType" to "0")) }
         }
 
     @Test
-    fun createClass_failure() =
+    fun classJoin_failure() =
         runTest {
-            // Given a failed response from the repository
-            val mockFailureResponse = CodeMessageResponse(400, "Failed to create class") // 400 or any non-success code
+            val mockFailureResponse = CodeMessageResponse(400, "Failed to join class")
 
-            coEvery { mockRepository.classCreate(any()) } returns mockFailureResponse
+            coEvery { mockRepository.classJoin(any(), any()) } returns mockFailureResponse
 
-            // When calling createClass
-            viewModel.createClass("TestName", "TestCode", 1, "TestTime", "TestBuilding", "TestRoom")
+            viewModel.classJoin(1, "TestName", "TestCode")
 
-            // Then we expect a failure message in the toastMessage LiveData
             val toastValue = viewModel.toastMessage.getOrAwaitValue()
-            assertEquals("create failed", toastValue) // Adjust this expected value as per your ViewModel's logic
+            assertEquals("join failed", toastValue)
         }
 
     @Test
-    fun createClass_exception() =
+    fun classJoin_exception() =
         runTest {
-            // Given that the repository throws an exception
             val exceptionMessage = "Network error"
-            coEvery { mockRepository.classCreate(any()) } throws Exception(exceptionMessage)
+            coEvery { mockRepository.classJoin(any(), any()) } throws Exception(exceptionMessage)
 
-            // When calling createClass
-            viewModel.createClass("TestName", "TestCode", 1, "TestTime", "TestBuilding", "TestRoom")
+            viewModel.classJoin(1, "TestName", "TestCode")
 
-            // Then we expect an error message in the toastMessage LiveData
             val toastValue = viewModel.toastMessage.getOrAwaitValue()
             assertEquals("Error: $exceptionMessage", toastValue)
         }
@@ -84,7 +78,7 @@ class ProfessorMainViewModelTest {
     @Test
     fun getClassList_success() =
         runTest {
-            val mockUserMap = mapOf("userId" to "1", "userType" to "1")
+            val mockUserMap = mapOf("userId" to "1", "userType" to "0")
             val mockClassListResponse =
                 ClassListsResponse(
                     listOf(
@@ -101,13 +95,10 @@ class ProfessorMainViewModelTest {
                     "Success",
                 )
 
-            // Define the mock behavior
             coEvery { mockRepository.userGetClassList(any()) } returns mockClassListResponse
 
-            // Invoke the function
             viewModel.getClassList(mockUserMap)
 
-            // Check if the LiveData has been updated
             val liveDataValue = viewModel.classListLiveData.getOrAwaitValue()
             assertEquals(1, liveDataValue.size)
             assertEquals("TestName", liveDataValue[0].className)

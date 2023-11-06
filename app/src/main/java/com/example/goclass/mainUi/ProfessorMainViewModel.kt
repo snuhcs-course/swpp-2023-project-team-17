@@ -34,7 +34,7 @@ class ProfessorMainViewModel(private val repository: Repository) : ViewModel() {
                     _toastMessage.postValue("create failed")
                 }
             } catch (e: Exception) {
-                _toastMessage.postValue("Error: $(e.message}")
+                _toastMessage.postValue("Error: ${e.message}")
             }
         }
     }

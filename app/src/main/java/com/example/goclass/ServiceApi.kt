@@ -4,12 +4,11 @@ import com.example.goclass.dataClass.AttendanceDateListsResponse
 import com.example.goclass.dataClass.AttendanceListsResponse
 import com.example.goclass.dataClass.Attendances
 import com.example.goclass.dataClass.AttendancesResponse
-import com.example.goclass.dataClass.ChannelsResponse
-import com.example.goclass.dataClass.ClassIdResponse
 import com.example.goclass.dataClass.ClassListsResponse
 import com.example.goclass.dataClass.Classes
 import com.example.goclass.dataClass.ClassesResponse
 import com.example.goclass.dataClass.CodeMessageResponse
+import com.example.goclass.dataClass.MessageListsResponse
 import com.example.goclass.dataClass.Messages
 import com.example.goclass.dataClass.MessagesResponse
 import com.example.goclass.dataClass.Users
@@ -23,18 +22,10 @@ import retrofit2.http.Path
 import retrofit2.http.QueryMap
 
 interface ServiceApi {
-    @POST("/signup")
-    suspend fun userSignup(
-        @Body users: Users,
-    ): UsersResponse
-
     @POST("/login/{email}")
     suspend fun userLogin(
         @Path("email") email: String,
     ): UsersResponse
-
-    @POST("/logout")
-    suspend fun userLogout(): CodeMessageResponse
 
     @GET("/users/{id}")
     suspend fun userGet(
@@ -84,26 +75,22 @@ interface ServiceApi {
         @Path("id") classId: Int,
     ): CodeMessageResponse
 
-    @GET("class/{id}/chat_channel/{type}")
-    suspend fun classGetChannel(
-        @Path("id") classId: Int,
-        @Path("type") channelType: Int,
-    ): ChannelsResponse
-
     @GET("class/{id}/attendance/{user_id}")
     suspend fun classGetAttendanceListByUserId(
         @Path("id") classId: Int,
         @Path("user_id") userId: Int,
     ): AttendanceListsResponse
 
-    @GET("/chat_channel/{id}")
+    @GET("/chat_channel/{class_id}/{channel_type}")
     suspend fun chatChannelGetList(
-        @Path("id") channelId: Int,
-    ): CodeMessageResponse
+        @Path("class_id") classId: Int,
+        @Path("channel_type") channelType: Int,
+    ): MessageListsResponse
 
-    @POST("/chat_channel/{id}")
+    @POST("/chat_channel/{class_id}/{channel_type}")
     suspend fun chatChannelSend(
-        @Path("id") channelId: Int,
+        @Path("class_id") classId: Int,
+        @Path("channel_type") channelType: Int,
         @Body messages: Messages,
     ): MessagesResponse
 
