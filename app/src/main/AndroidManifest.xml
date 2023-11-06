@@ -22,24 +22,12 @@
         android:theme="@style/Theme.GoClass"
         tools:targetApi="31">
         <activity
-            android:name=".ProfessorAttendanceListActivity"
-            android:exported="false" />
-        <activity
-            android:name=".StudentAttendanceActivity"
+            android:name=".UI.ClassUI.ClassActivity"
             android:exported="false"
-            android:label="@string/title_activity_student_attendance"
-            android:theme="@style/Theme.GoClass.NoActionBar" />
+            android:label="@string/title_activity_class"
+            />
         <activity
-            android:name=".ProfessorAttendanceActivity"
-            android:exported="false"
-            android:label="@string/title_activity_professor_attendance"
-            android:theme="@style/Theme.GoClass.NoActionBar" />
-        <activity
-            android:name=".ClassActivity"
-            android:exported="false"
-            android:label="@string/title_activity_class" />
-        <activity
-            android:name=".MainActivity"
+            android:name=".UI.MainUI.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -47,13 +35,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".service.LocationService"></service>
+
+        <service android:name=".UI.ClassUI.Attendances.LocationService" />
         <service
-            android:name=".service.AttendanceService"
+            android:name=".UI.ClassUI.Attendances.AttendanceService"
             android:enabled="true"
-            android:exported="false" ></service>
+            android:exported="false" />
         <receiver
-            android:name=".AttendanceReceiver"
+            android:name=".UI.ClassUI.Attendances.AttendanceReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -61,5 +50,4 @@
             </intent-filter>
         </receiver>
     </application>
-
 </manifest>

@@ -1,7 +1,9 @@
 package com.example.goclass
 
-import com.example.goclass.dataClass.Classes
-import com.example.goclass.dataClass.Users
+import com.example.goclass.Network.ServiceApi
+import com.example.goclass.Network.DataClass.Classes
+import com.example.goclass.Network.DataClass.Users
+import com.example.goclass.Repository.Repository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -58,7 +60,8 @@ class RepositoryTest {
     @Test
     fun classCreate_call() =
         runBlocking {
-            val classes = Classes("name", "code")
+            val classes =
+                Classes("name", "code")
 
             coEvery { mockServiceApi.classCreate(classes) } returns mockk()
 
@@ -71,7 +74,8 @@ class RepositoryTest {
     fun classJoin_call() =
         runBlocking {
             val userId = 1
-            val classes = Classes("name", "code")
+            val classes =
+                Classes("name", "code")
 
             coEvery { mockServiceApi.classJoin(userId, classes) } returns mockk()
 
