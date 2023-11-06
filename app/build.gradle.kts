@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -45,7 +46,7 @@ android {
 dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.google.code.gson:gson:2.8.9")
-    implementation("com.squareup.retrofit2:converter-gson:2.4.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:okhttp:4.9.1")
     implementation("com.squareup.okhttp3:logging-interceptor:4.8.0")
     implementation("com.squareup.okhttp3:okhttp-urlconnection:4.9.1")
@@ -61,9 +62,21 @@ dependencies {
     implementation("io.insert-koin:koin-android:3.5.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation(platform("com.google.firebase:firebase-bom:32.5.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
+    implementation("com.google.firebase:firebase-auth:22.2.0")
+
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    testImplementation("io.mockk:mockk:1.11.0")
+    testImplementation("com.jraska.livedata:testing-ktx:1.3.0")
     testImplementation("org.mockito:mockito-core:5.5.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2")
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:3.2.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    testImplementation("junit:junit:4.12")
+
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation("com.google.android.gms:play-services-location:19.0.1")

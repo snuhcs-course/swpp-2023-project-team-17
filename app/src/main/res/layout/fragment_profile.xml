@@ -83,7 +83,7 @@
         android:id="@+id/logoutButton"
         android:layout_width="100dp"
         android:layout_height="50dp"
-        android:text="Back"
+        android:text="Logout"
         style="@style/SmallFont"
         android:textColor="#616161"
         android:clipToOutline="true"

@@ -10,7 +10,7 @@
         android:layout_width="280dp"
         android:layout_height="50dp"
         style="@style/SmallFont"
-        android:text="Let's Go!"
+        android:text="Log in with Google"
         android:textColor="@color/blue"
         android:clipToOutline="true"
         android:background="@drawable/loginbtn_bg"

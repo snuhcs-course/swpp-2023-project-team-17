@@ -46,7 +46,6 @@ class ProfileFragment : Fragment() {
         )
 
         val sharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        saveToSharedPref("userId", 1)
 
         val storedUserName = sharedPref?.getString("userName", "") ?: ""
         if (storedUserName != "") {
@@ -109,6 +108,7 @@ class ProfileFragment : Fragment() {
             saveToSharedPref("isLoggedIn", false)
             saveToSharedPref("userRole", "")
             saveToSharedPref("userName", "")
+            saveToSharedPref("userId", -1)
             findNavController().navigate(R.id.action_profileFragment_to_loginFragment)
         }
 
