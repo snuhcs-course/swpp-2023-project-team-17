@@ -7,7 +7,6 @@ import android.content.Intent
 import android.icu.util.Calendar
 
 class ClassScheduler {
-//    fun scheduleClass(context: Context, userId: Int, classId: Int, minPresentDuration: Int, minLateDuration: Int, dayOfWeek: Int, hour: Int, minute: Int) {
     fun scheduleClass(
         context: Context,
         userId: Int,
