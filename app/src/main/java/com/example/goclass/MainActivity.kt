@@ -10,9 +10,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import com.example.goclass.dataClass.Classes
 import com.example.goclass.databinding.ActivityMainBinding
-import com.example.goclass.service.AttendanceService
 import com.example.goclass.service.LocationService
 import com.example.goclass.utility.PermissionUtils
 

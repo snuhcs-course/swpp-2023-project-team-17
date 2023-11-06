@@ -16,16 +16,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class StudentAttendanceActivity : AppCompatActivity() {
     private lateinit var binding: ActivityStudentAttendanceBinding
-    private lateinit var locationReceiver: BroadcastReceiver
     private val viewModel: StudentAttendanceViewModel by viewModel()
 
-    // Error range of location distance
-    private val epsilon = 0.1
-
-    // GPS Data of Classroom
-    private val classLocation = listOf(37.42, -122.08)
-
-    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -60,40 +52,5 @@ class StudentAttendanceActivity : AppCompatActivity() {
                 Log.e("studentAttendanceListError", e.message.toString())
             }
         }
-
-
-        /*
-        // Receive location and check "In Class"
-        locationReceiver =
-            object : BroadcastReceiver() {
-                override fun onReceive(
-                    context: Context?,
-                    intent: Intent?,
-                ) {
-                    if (intent?.action == "LocationUpdate") {
-                        val latitude = intent.getStringExtra("latitude")?.toDouble() ?: 0.0
-                        val longitude = intent.getStringExtra("longitude")?.toDouble() ?: 0.0
-
-                        val isInClass =
-                            kotlin.math.abs(latitude - classLocation[0]) < epsilon &&
-                                kotlin.math.abs(longitude - classLocation[1]) < epsilon
-
-                        if (isInClass) {
-                            binding.inClassButton.text = "In Class"
-                            binding.inClassButton.setBackgroundResource(R.drawable.inclass_btn_bg)
-                        }
-                    }
-                }
-            }
-        registerReceiver(
-            locationReceiver,
-            IntentFilter("LocationUpdate"),
-        )
-        */
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        //unregisterReceiver(locationReceiver)
     }
 }

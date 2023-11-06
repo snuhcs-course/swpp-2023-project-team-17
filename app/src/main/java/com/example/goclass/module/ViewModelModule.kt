@@ -1,5 +1,7 @@
 package com.example.goclass.module
 
+import com.example.goclass.ProfessorAttendanceListViewModel
+import com.example.goclass.ProfessorAttendanceViewModel
 import com.example.goclass.StudentAttendanceViewModel
 import com.example.goclass.mainUi.ProfessorMainViewModel
 import com.example.goclass.mainUi.ProfileViewModel
@@ -21,5 +23,11 @@ val viewModelModule =
         }
         viewModel {
             StudentAttendanceViewModel(get())
+        }
+        viewModel {
+            ProfessorAttendanceViewModel(get())
+        }
+        viewModel {
+            ProfessorAttendanceListViewModel(get())
         }
     }

@@ -6,14 +6,14 @@ import com.google.gson.annotations.SerializedName;
 
 public class AttendanceDateListsResponse {
     @SerializedName("attendanceDateList")
-    private List<Attendances> attendanceDateList;
+    private List<AttendancesResponse> attendanceDateList;
 
     @SerializedName("code")
     private int code;
     @SerializedName("message")
     private String message;
 
-    public List<Attendances> getAttendanceDateList() {
+    public List<AttendancesResponse> getAttendanceDateList() {
         return attendanceDateList;
     }
 
