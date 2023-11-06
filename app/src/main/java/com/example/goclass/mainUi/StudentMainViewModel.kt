@@ -58,7 +58,7 @@ class StudentMainViewModel(
                         } else {
                             null
                         }
-                }
+                    }
 
                 for ((dayOfWeek, startHour, startMinute, endHour, endMinute) in parsedTimes) {
 //                    val minPresentDuration = classResponse.minPresentDuration
