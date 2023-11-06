@@ -332,20 +332,24 @@ app.post('/class/join/:user_id', (req, res) => {
     const params = [className, classCode, userId];
 
     connection.query(sql, params, (err, result) => {
-        let resultCode = 404;
-        let message = 'Error occured';
+        let classId = -1;
 
         if (err) {
             console.log(err);
-        } else {
-            resultCode = 200;
-            message = 'class join Success';
-            console.log(message);
+            return res.status(404).json({ 'code': 404, 'message': 'Error occurred' });
         }
 
-        res.json({
-            'code': resultCode,
-            'message': message
+        sql = 'SELECT class_id FROM Class WHERE class_name = ? and class_code = ?';
+        const newParams = [className, classCode];
+
+        connection.query(sql, newParams, (err, result) => {
+            if (err) {
+                console.log(err);
+                return res.status(404).json({ 'code': 404, 'message': 'Error occurred' });
+            } else {
+                classId = result[0].class_id;
+            }
+            res.status(200).json({ 'code': 200, 'message': 'class join Success', 'clas_id':  classId});
         });
     });
 });

@@ -1,4 +1,4 @@
-package com.example.goclass
+package com.example.goclass.service
 
 import android.Manifest
 import android.app.Service

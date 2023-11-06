@@ -3,11 +3,17 @@ package com.example.goclass.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.goclass.dataClass.ProfessorAttendanceListDummy
+import com.example.goclass.dataClass.AttendancesResponse
 import com.example.goclass.databinding.ItemProfessorAttendanceListBinding
 
-class ProfessorAttendanceListAdapter(private val professorAttendanceLists: List<ProfessorAttendanceListDummy>) :
-    RecyclerView.Adapter<ProfessorAttendanceListAdapter.ProfessorAttendanceListViewHolder>() {
+class ProfessorAttendanceListAdapter : RecyclerView.Adapter<ProfessorAttendanceListAdapter.ProfessorAttendanceListViewHolder>() {
+    private var studentAttendanceList = listOf<AttendancesResponse>()
+
+    fun setStudentAttendanceList(list: List<AttendancesResponse>) {
+        studentAttendanceList = list
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -25,15 +31,22 @@ class ProfessorAttendanceListAdapter(private val professorAttendanceLists: List<
         holder: ProfessorAttendanceListViewHolder,
         position: Int,
     ) {
-        holder.bind(professorAttendanceLists[position])
+        val studentAttendanceItem = studentAttendanceList[position]
+        holder.bind(studentAttendanceItem)
     }
 
-    override fun getItemCount(): Int = professorAttendanceLists.size
+    override fun getItemCount(): Int = studentAttendanceList.size
 
     class ProfessorAttendanceListViewHolder(var binding: ItemProfessorAttendanceListBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(professorAttendanceList: ProfessorAttendanceListDummy) {
-            binding.attendanceText.text = professorAttendanceList.content
+        fun bind(studentAttendanceItem: AttendancesResponse) {
+            binding.studentIdText.text = studentAttendanceItem.studentId.toString()
+            val attendanceStatus = studentAttendanceItem.attendanceStatus
+            if (attendanceStatus == 1) {
+                binding.attendanceStatusText.text = "Present"
+            } else {
+                binding.attendanceStatusText.text = "Absent"
+            }
         }
     }
 }

@@ -19,11 +19,14 @@ import com.example.goclass.R
 import com.example.goclass.adapter.ClassListAdapter
 import com.example.goclass.databinding.FragmentStudentMainBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 
 class StudentMainFragment : Fragment() {
     private lateinit var binding: FragmentStudentMainBinding
-    private val viewModel: StudentMainViewModel by viewModel()
+    private val viewModel: StudentMainViewModel by viewModel {
+        parametersOf(requireActivity().application)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -89,7 +92,6 @@ class StudentMainFragment : Fragment() {
         // recyclerView
         binding.studentClassRecyclerView.setOnClickListener {
             val intent = Intent(view.context, ClassActivity::class.java)
-            intent.putExtra("userRole", "student")
             startActivity(intent)
         }
     }

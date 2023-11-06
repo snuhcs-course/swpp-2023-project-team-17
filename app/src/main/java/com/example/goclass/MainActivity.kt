@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.goclass.databinding.ActivityMainBinding
+import com.example.goclass.service.LocationService
 import com.example.goclass.utility.PermissionUtils
 
 class MainActivity : AppCompatActivity() {
@@ -26,16 +27,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // User role from ClassActivity back button
-        if (intent.hasExtra("userRole")) {
-            val userRole = intent.getStringExtra("userRole")
-            val sharedPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-            with(sharedPref?.edit()) {
-                this?.putString("userRole", userRole)
-                this?.apply()
-            }
-        }
-
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
@@ -50,7 +41,7 @@ class MainActivity : AppCompatActivity() {
     private fun checkLoginStatus() {
         val sharedPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         val isLoggedIn = sharedPref.getBoolean("isLoggedIn", false)
-        val userRole = sharedPref.getString("userRole", "")
+        val userRole = sharedPref.getString("userRole", "") ?: ""
 
         if (isLoggedIn) {
             when (userRole) {

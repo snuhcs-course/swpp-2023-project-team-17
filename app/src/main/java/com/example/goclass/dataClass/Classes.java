@@ -35,4 +35,7 @@ public class Classes {
     public String getClassName() {
         return className;
     }
+    public int getClassId() {
+        return classId;
+    }
 }

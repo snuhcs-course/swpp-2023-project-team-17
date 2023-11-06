@@ -1,20 +1,17 @@
 package com.example.goclass.dataClass;
-import java.util.HashMap;
-import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
 
-public class AttendanceListsResponse {
-    @SerializedName("attendanceList")
-    private List<AttendancesResponse> attendanceList;
-
+public class ClassIdResponse {
+    @SerializedName("classId")
+    int classId;
     @SerializedName("code")
     private int code;
     @SerializedName("message")
     private String message;
 
-    public List<AttendancesResponse> getAttendanceList() {
-        return attendanceList;
+    public int getClassId() {
+        return classId;
     }
 
     public int getCode() {

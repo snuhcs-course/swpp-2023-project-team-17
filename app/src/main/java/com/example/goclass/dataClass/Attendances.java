@@ -24,4 +24,8 @@ public class Attendances {
         this.attendanceDuration = attendanceDuration;
         this.classId = classId;
     }
+
+    public int getAttendanceStatus() {
+        return attendanceStatus;
+    }
 }

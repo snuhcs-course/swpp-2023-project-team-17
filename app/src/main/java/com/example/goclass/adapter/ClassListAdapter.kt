@@ -1,6 +1,5 @@
 package com.example.goclass.adapter
 
-import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
@@ -23,7 +22,12 @@ class ClassListAdapter : RecyclerView.Adapter<ClassListAdapter.ClassViewHolder>(
         parent: ViewGroup,
         viewType: Int,
     ): ClassListAdapter.ClassViewHolder {
-        val binding = ItemClassBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemClassBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false,
+            )
         return ClassViewHolder(binding)
     }
 
@@ -42,12 +46,9 @@ class ClassListAdapter : RecyclerView.Adapter<ClassListAdapter.ClassViewHolder>(
             binding.classNameTextView.text = classItem.className
             binding.classNameTextView.setOnClickListener {
                 Log.d("ClassViewHolder", "Item clicked!")
-                val context = itemView.context
-                val sharedPref = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-                val userRole = sharedPref.getString("userRole", "") ?: ""
 
                 val intent = Intent(itemView.context, ClassActivity::class.java)
-                intent.putExtra("userRole", userRole)
+                intent.putExtra("classId", classItem.classId)
                 intent.putExtra("className", classItem.className)
                 ContextCompat.startActivity(itemView.context, intent, null)
             }

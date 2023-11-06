@@ -165,7 +165,6 @@ class ProfessorMainFragment : Fragment() {
         // recyclerView
         binding.professorClassRecyclerView.setOnClickListener {
             val intent = Intent(view.context, ClassActivity::class.java)
-            intent.putExtra("userRole", "professor")
             startActivity(intent)
         }
     }
