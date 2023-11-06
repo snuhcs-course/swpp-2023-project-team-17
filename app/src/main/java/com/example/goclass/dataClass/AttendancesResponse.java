@@ -3,6 +3,8 @@ package com.example.goclass.dataClass;
 import com.google.gson.annotations.SerializedName;
 
 public class AttendancesResponse {
+    @SerializedName("attendanceId")
+    int attendanceId;
     @SerializedName("attendanceDate")
     String attendanceDate;
     @SerializedName("attendanceStatus")
@@ -20,6 +22,10 @@ public class AttendancesResponse {
     private int code;
     @SerializedName("message")
     private String message;
+
+    public int getAttendanceId() {
+        return attendanceId;
+    }
 
     public String getAttendanceDate() {
         return attendanceDate;

@@ -3,13 +3,10 @@ package com.example.goclass
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.goclass.adapter.MessageAdapter
 import com.example.goclass.dataClass.MessageDummy
 import com.example.goclass.databinding.ActivityClassBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -79,9 +76,8 @@ class ClassActivity : AppCompatActivity() {
                     startActivity(intent)
                 }
                 "professor" -> {
-                    Toast.makeText(this, "Not Implemented Yet", Toast.LENGTH_SHORT).show()
-//                    val intent = Intent(this, ProfessorAttendanceActivity::class.java)
-//                    startActivity(intent)
+                    val intent = Intent(this, ProfessorAttendanceActivity::class.java)
+                    startActivity(intent)
                 }
                 else -> {
                     Toast.makeText(this, "Invalid user role", Toast.LENGTH_SHORT).show()

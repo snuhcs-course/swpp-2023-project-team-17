@@ -1,17 +1,13 @@
 package com.example.goclass
 
-import android.annotation.SuppressLint
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.goclass.adapter.StudentAttendanceAdapter
 import com.example.goclass.databinding.ActivityStudentAttendanceBinding
-import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class StudentAttendanceActivity : AppCompatActivity() {
@@ -41,16 +37,14 @@ class StudentAttendanceActivity : AppCompatActivity() {
         }
 
         // show studentAttendanceList with dummy data
-        val studentAttendanceAdapter = StudentAttendanceAdapter()
+        val repository: Repository by inject()
+        val studentAttendanceAdapter = StudentAttendanceAdapter(repository)
         binding.studentAttendanceRecyclerView.adapter = studentAttendanceAdapter
         binding.studentAttendanceRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        lifecycleScope.launch {
-            try {
-                val studentAttendanceList = viewModel.getStudentAttendanceList(classId, userId)
-                studentAttendanceAdapter.setStudentAttendanceList(studentAttendanceList)
-            } catch (e: Exception) {
-                Log.e("studentAttendanceListError", e.message.toString())
-            }
+
+        val studentAttendanceListLiveData = viewModel.getStudentAttendanceList(classId, userId)
+        studentAttendanceListLiveData.observe(this) { studentAttendanceList ->
+            studentAttendanceAdapter.setStudentAttendanceList(studentAttendanceList)
         }
     }
 }

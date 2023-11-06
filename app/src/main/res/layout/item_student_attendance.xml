@@ -39,6 +39,7 @@
         android:textSize="20sp"
         android:layout_marginEnd="8dp"
         android:layout_gravity="center"
+        android:enabled="true"
         />
 
 

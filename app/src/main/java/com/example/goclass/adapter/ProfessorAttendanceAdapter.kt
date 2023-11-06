@@ -1,12 +1,10 @@
 package com.example.goclass.adapter
 
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.example.goclass.ClassActivity
 import com.example.goclass.ProfessorAttendanceListActivity
 import com.example.goclass.dataClass.AttendancesResponse
 import com.example.goclass.databinding.ItemProfessorAttendanceBinding

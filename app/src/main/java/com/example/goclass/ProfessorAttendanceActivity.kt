@@ -3,13 +3,10 @@ package com.example.goclass
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.goclass.adapter.ProfessorAttendanceAdapter
 import com.example.goclass.databinding.ActivityProfessorAttendanceBinding
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ProfessorAttendanceActivity : AppCompatActivity() {
@@ -36,13 +33,10 @@ class ProfessorAttendanceActivity : AppCompatActivity() {
         val professorAttendanceAdapter = ProfessorAttendanceAdapter()
         binding.professorAttendanceRecyclerView.adapter = professorAttendanceAdapter
         binding.professorAttendanceRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        lifecycleScope.launch {
-            try {
-                val professorAttendanceList = viewModel.getProfessorAttendanceList(userMap)
-                professorAttendanceAdapter.setProfessorAttendanceList(professorAttendanceList)
-            } catch (e: Exception) {
-                Log.e("professorAttendanceListError", e.message.toString())
-            }
+
+        val professorAttendanceListLiveData = viewModel.getProfessorAttendanceList(userMap)
+        professorAttendanceListLiveData.observe(this) { professorAttendanceList ->
+            professorAttendanceAdapter.setProfessorAttendanceList(professorAttendanceList)
         }
     }
 }
