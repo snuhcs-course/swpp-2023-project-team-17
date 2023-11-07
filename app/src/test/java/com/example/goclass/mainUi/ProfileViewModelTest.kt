@@ -2,10 +2,10 @@ package com.example.goclass.mainUi
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.goclass.LiveDataTestUtil.getOrAwaitValue
-import com.example.goclass.Repository.Repository
-import com.example.goclass.UI.MainUI.Profile.ProfileViewModel
-import com.example.goclass.Network.DataClass.CodeMessageResponse
-import com.example.goclass.Network.DataClass.UsersResponse
+import com.example.goclass.repository.Repository
+import com.example.goclass.ui.mainui.profile.ProfileViewModel
+import com.example.goclass.network.dataclass.CodeMessageResponse
+import com.example.goclass.network.dataclass.UsersResponse
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals

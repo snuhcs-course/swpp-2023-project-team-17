@@ -1,9 +1,9 @@
 package com.example.goclass
 
-import com.example.goclass.Network.ServiceApi
-import com.example.goclass.Network.DataClass.Classes
-import com.example.goclass.Network.DataClass.Users
-import com.example.goclass.Repository.Repository
+import com.example.goclass.network.ServiceApi
+import com.example.goclass.network.dataclass.Classes
+import com.example.goclass.network.dataclass.Users
+import com.example.goclass.repository.Repository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

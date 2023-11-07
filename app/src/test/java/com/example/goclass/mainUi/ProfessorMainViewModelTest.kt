@@ -2,11 +2,11 @@ package com.example.goclass.mainUi
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.goclass.LiveDataTestUtil.getOrAwaitValue
-import com.example.goclass.Repository.Repository
-import com.example.goclass.UI.MainUI.UserMain.ProfessorMainViewModel
-import com.example.goclass.Network.DataClass.ClassListsResponse
-import com.example.goclass.Network.DataClass.Classes
-import com.example.goclass.Network.DataClass.CodeMessageResponse
+import com.example.goclass.repository.Repository
+import com.example.goclass.ui.mainui.usermain.ProfessorMainViewModel
+import com.example.goclass.network.dataclass.ClassListsResponse
+import com.example.goclass.network.dataclass.Classes
+import com.example.goclass.network.dataclass.CodeMessageResponse
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

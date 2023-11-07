@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.goclass.UI.MainUI.Login.LoginFragment"
+        android:name="com.example.goclass.ui.mainui.login.LoginFragment"
         android:label="LoginFragment">
         <action
             android:id="@+id/action_loginFragment_to_profileFragment"
@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.goclass.UI.MainUI.Profile.ProfileFragment"
+        android:name="com.example.goclass.ui.mainui.profile.ProfileFragment"
         android:label="ProfileFragment">
         <action
             android:id="@+id/action_profileFragment_to_loginFragment"
@@ -38,7 +38,7 @@
 
     <fragment
         android:id="@+id/studentMainFragment"
-        android:name="com.example.goclass.UI.MainUI.UserMain.StudentMainFragment"
+        android:name="com.example.goclass.ui.mainui.usermain.StudentMainFragment"
         android:label="StudentMainFragment">
         <action
             android:id="@+id/action_studentMainFragment_to_profileFragment"
@@ -47,7 +47,7 @@
 
     <fragment
         android:id="@+id/professorMainFragment"
-        android:name="com.example.goclass.UI.MainUI.UserMain.ProfessorMainFragment"
+        android:name="com.example.goclass.ui.mainui.usermain.ProfessorMainFragment"
         android:label="ProfessorMainFragment">
         <action
             android:id="@+id/action_professorMainFragment_to_profileFragment"

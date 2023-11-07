@@ -22,12 +22,12 @@
         android:theme="@style/Theme.GoClass"
         tools:targetApi="31">
         <activity
-            android:name=".UI.ClassUI.ClassActivity"
+            android:name=".ui.classui.ClassActivity"
             android:exported="false"
             android:label="@string/title_activity_class"
             />
         <activity
-            android:name=".UI.MainUI.MainActivity"
+            android:name=".ui.mainui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,13 +36,13 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".UI.ClassUI.Attendances.LocationService" />
+        <service android:name=".ui.classui.attendances.LocationService" />
         <service
-            android:name=".UI.ClassUI.Attendances.AttendanceService"
+            android:name=".ui.classui.attendances.AttendanceService"
             android:enabled="true"
             android:exported="false" />
         <receiver
-            android:name=".UI.ClassUI.Attendances.AttendanceReceiver"
+            android:name=".ui.classui.attendances.AttendanceReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
