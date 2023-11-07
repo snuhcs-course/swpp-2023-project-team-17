@@ -36,7 +36,7 @@ app.post('/login/:email', (req, res) => {
 
     connection.query(sql, params, (err, result) => {
         if (err) {
-            console.error(err);
+            console.log(err);
             return res.status(500).json({
                 'code': 500,
                 'message': 'An error occurred'
@@ -56,7 +56,7 @@ app.post('/login/:email', (req, res) => {
             sql = 'INSERT INTO Users (user_email, user_name, user_type) VALUES (?, "", 0)';
             connection.query(sql, params, (err, result) => {
                 if (err) {
-                    console.error(err);
+                    console.log(err);
                     return res.status(500).json({
                         'code': 500,
                         'message': 'An error occurred'
@@ -65,13 +65,14 @@ app.post('/login/:email', (req, res) => {
 
                 sql = 'SELECT LAST_INSERT_ID() AS user_id';
                 connection.query(sql, (err, result) => {
-                    if (err) {
-                        console.error(err);
+                    if (err || result.length == 0) {
+                        console.log(err);
                         return res.status(500).json({
                             'code': 500,
                             'message': 'An error occurred'
                         });
                     }
+                    console.log(message);
 
                     return res.json({
                         'code': 200,
@@ -110,11 +111,10 @@ app.get('/users/classes', (req, res) => {
 
         if (err) {
             console.log(err);
-        } else {
+        } else if(result.length > 0) {
             resultCode = 200;
             message = 'get classes Success';
             console.log(message);
-    
             classList = result.map(classItem => ({
                 "classId": classItem.class_id,
                 "className": classItem.class_name,
@@ -125,7 +125,7 @@ app.get('/users/classes', (req, res) => {
                 "roomNumber": classItem.room_number,
             }));
         }
-
+                                
         res.json({
             'code': resultCode,
             'message': message,
@@ -152,14 +152,12 @@ app.get('/users/:id', (req, res) => {
 
         if (err) {
             console.log(err);
-        } else {
-            if(result.length > 0) {
+        } else if(result.length > 0) {
                 resultCode = 200;
                 message = 'get userName and userType Success';
                 console.log(message);
                 userName = result[0].user_name;
                 userType = result[0].user_type;
-            }
         }
 
         res.json({
@@ -226,7 +224,7 @@ app.get('users/attendance/:date', (req, res) => {
 
         if (err) {
             console.log(err);
-        } else {
+        } else if(result.length > 0) {
             resultCode = 200;
             message = 'get all attendances in specific date Success';
             console.log(message);
@@ -268,7 +266,7 @@ app.get('users/attendance', (req, res) => {
 
         if (err) {
             console.log(err);
-        } else {
+        } else if(result.length > 0) {
             resultCode = 200;
             message = 'get attendance date list Success';
             console.log(message);
@@ -332,24 +330,20 @@ app.post('/class/join/:user_id', (req, res) => {
     const params = [className, classCode, userId];
 
     connection.query(sql, params, (err, result) => {
-        let classId = -1;
+        let resultCode = 404;
+        let message = 'Error occured';
 
         if (err) {
             console.log(err);
-            return res.status(404).json({ 'code': 404, 'message': 'Error occurred' });
+        } else {
+            resultCode = 200;
+            message = 'class join Success';
+            console.log(message);
         }
 
-        sql = 'SELECT class_id FROM Class WHERE class_name = ? and class_code = ?';
-        const newParams = [className, classCode];
-
-        connection.query(sql, newParams, (err, result) => {
-            if (err) {
-                console.log(err);
-                return res.status(404).json({ 'code': 404, 'message': 'Error occurred' });
-            } else {
-                classId = result[0].class_id;
-            }
-            res.status(200).json({ 'code': 200, 'message': 'class join Success', 'clas_id':  classId});
+        res.json({
+            'code': resultCode,
+            'message': message
         });
     });
 });
@@ -374,7 +368,7 @@ app.get('/class/:id', (req, res) => {
 
         if (err) {
             console.log(err);
-        } else {
+        } else if(result.length > 0) {
             resultCode = 200;
             message = 'get specific class Success';
             console.log(message);
@@ -446,7 +440,7 @@ app.get('class/:id/attendance/:user_id', (req, res) => {
 
         if (err) {
             console.log(err);
-        } else {
+        } else if(result.length > 0) {
             resultCode = 200;
             message = 'get user attendance list Success';
             console.log(message);
@@ -485,7 +479,7 @@ app.get('/chat_channel/:class_id/:channel_type', (req, res) => {
 
         if (err) {
             console.log(err);
-        } else {
+        } else if(result.length > 0) {
             resultCode = 200;
             message = 'get chatting message list Success';
             console.log(message);
@@ -562,7 +556,7 @@ app.get('/attendance/:id', (req, res) => {
 
         if (err) {
             console.log(err);
-        } else {
+        } else if(result.length > 0) {
             resultCode = 200;
             message = 'get attendance information Success';
             console.log(message);
