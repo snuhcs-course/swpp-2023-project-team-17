@@ -1,12 +1,12 @@
-package com.example.goclass.mainUi
+package com.example.goclass.ui.mainui.usermain
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.goclass.LiveDataTestUtil.getOrAwaitValue
-import com.example.goclass.repository.Repository
-import com.example.goclass.ui.mainui.usermain.ProfessorMainViewModel
 import com.example.goclass.network.dataclass.ClassListsResponse
 import com.example.goclass.network.dataclass.Classes
 import com.example.goclass.network.dataclass.CodeMessageResponse
+import com.example.goclass.repository.ClassRepository
+import com.example.goclass.repository.UserRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -25,7 +25,8 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 class ProfessorMainViewModelTest {
     private lateinit var viewModel: ProfessorMainViewModel
-    private val mockRepository = mockk<Repository>()
+    private val mockUserRepository = mockk<UserRepository>()
+    private val mockClassRepository = mockk<ClassRepository>()
     private val testDispatcher = UnconfinedTestDispatcher()
 
     @get:Rule
@@ -34,7 +35,7 @@ class ProfessorMainViewModelTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        viewModel = ProfessorMainViewModel(mockRepository)
+        viewModel = ProfessorMainViewModel(mockUserRepository, mockClassRepository)
     }
 
     @Test
@@ -42,7 +43,7 @@ class ProfessorMainViewModelTest {
         runTest {
             val mockResponse = CodeMessageResponse(200, "Message")
 
-            coEvery { mockRepository.classCreate(any()) } returns mockResponse
+            coEvery { mockClassRepository.classCreate(any()) } returns mockResponse
 
             viewModel.createClass("TestName", "TestCode", 1, "TestTime", "TestBuilding", "TestRoom")
 
@@ -57,7 +58,7 @@ class ProfessorMainViewModelTest {
             // Given a failed response from the repository
             val mockFailureResponse = CodeMessageResponse(400, "Failed to create class") // 400 or any non-success code
 
-            coEvery { mockRepository.classCreate(any()) } returns mockFailureResponse
+            coEvery { mockClassRepository.classCreate(any()) } returns mockFailureResponse
 
             // When calling createClass
             viewModel.createClass("TestName", "TestCode", 1, "TestTime", "TestBuilding", "TestRoom")
@@ -72,7 +73,7 @@ class ProfessorMainViewModelTest {
         runTest {
             // Given that the repository throws an exception
             val exceptionMessage = "Network error"
-            coEvery { mockRepository.classCreate(any()) } throws Exception(exceptionMessage)
+            coEvery { mockClassRepository.classCreate(any()) } throws Exception(exceptionMessage)
 
             // When calling createClass
             viewModel.createClass("TestName", "TestCode", 1, "TestTime", "TestBuilding", "TestRoom")
@@ -103,7 +104,7 @@ class ProfessorMainViewModelTest {
                 )
 
             // Define the mock behavior
-            coEvery { mockRepository.userGetClassList(any()) } returns mockClassListResponse
+            coEvery { mockUserRepository.userGetClassList(any()) } returns mockClassListResponse
 
             // Invoke the function
             viewModel.getClassList(mockUserMap)

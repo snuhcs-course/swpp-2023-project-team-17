@@ -7,14 +7,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.goclass.ui.classui.ClassScheduler
-import com.example.goclass.repository.Repository
 import com.example.goclass.network.dataclass.Classes
+import com.example.goclass.repository.ClassRepository
+import com.example.goclass.repository.UserRepository
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import java.lang.Exception
 
 class StudentMainViewModel(
-    private val repository: Repository,
+    private val userRepository: UserRepository,
+    private val classRepository: ClassRepository,
     application: Application,
 ) : AndroidViewModel(application), KoinComponent {
     private val _toastMessage = MutableLiveData<String>()
@@ -35,13 +37,13 @@ class StudentMainViewModel(
             )
             try {
                 // join class
-                val response = repository.classJoin(userId, joinClass)
+                val response = classRepository.classJoin(userId, joinClass)
 
                 // schedule class attendance
                 val classId = response.classId
 
                 // get class time info
-                val classResponse = repository.classGet(classId)
+                val classResponse = classRepository.classGet(classId)
                 val classTime = classResponse.classTime
 
                 val timeElements = classTime.split(",")
@@ -93,7 +95,7 @@ class StudentMainViewModel(
     fun getClassList(user: Map<String, String>): MutableLiveData<List<Classes>> {
         viewModelScope.launch {
             try {
-                val response = repository.userGetClassList(user)
+                val response = userRepository.userGetClassList(user)
                 if (response.code == 200) {
                     classListLiveData.postValue(response.classList)
                 }

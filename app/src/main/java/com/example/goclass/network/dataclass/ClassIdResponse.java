@@ -21,4 +21,10 @@ public class ClassIdResponse {
     public String getMessage() {
         return message;
     }
+
+    public ClassIdResponse(int classId, int code, String message){
+        this.classId = classId;
+        this.code = code;
+        this.message = message;
+    }
 }

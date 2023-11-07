@@ -1,11 +1,11 @@
-package com.example.goclass.mainUi
+package com.example.goclass.ui.mainui.profile
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.goclass.LiveDataTestUtil.getOrAwaitValue
-import com.example.goclass.repository.Repository
 import com.example.goclass.ui.mainui.profile.ProfileViewModel
 import com.example.goclass.network.dataclass.CodeMessageResponse
 import com.example.goclass.network.dataclass.UsersResponse
+import com.example.goclass.repository.UserRepository
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
@@ -23,7 +23,7 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 class ProfileViewModelTest {
     private lateinit var viewModel: ProfileViewModel
-    private val mockRepository = mockk<Repository>()
+    private val mockRepository = mockk<UserRepository>()
     private val testDispatcher = UnconfinedTestDispatcher()
 
     @get:Rule

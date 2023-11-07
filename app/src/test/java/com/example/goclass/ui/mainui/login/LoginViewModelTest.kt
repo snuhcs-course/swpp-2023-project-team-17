@@ -1,10 +1,10 @@
-package com.example.goclass.mainUi
+package com.example.goclass.ui.mainui.login
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.goclass.LiveDataTestUtil.getOrAwaitValue
-import com.example.goclass.repository.Repository
 import com.example.goclass.ui.mainui.login.LoginViewModel
 import com.example.goclass.network.dataclass.UsersResponse
+import com.example.goclass.repository.UserRepository
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
@@ -21,7 +21,7 @@ import org.junit.Test
 
 class LoginViewModelTest {
     private lateinit var viewModel: LoginViewModel
-    private val mockRepository = mockk<Repository>()
+    private val mockRepository = mockk<UserRepository>()
     private val testDispatcher = UnconfinedTestDispatcher()
     val userEmail = "test@email.com"
 

@@ -1,24 +1,36 @@
-package com.example.goclass
+package com.example.goclass.repository
 
 import com.example.goclass.network.ServiceApi
-import com.example.goclass.network.dataclass.Classes
 import com.example.goclass.network.dataclass.Users
-import com.example.goclass.repository.Repository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import org.mockito.kotlin.mock
 
-class RepositoryTest {
-    private lateinit var repository: Repository
+class UserRepositoryTest {
+    private lateinit var repository: UserRepository
     private val mockServiceApi: ServiceApi = mockk()
 
     @Before
     fun setUp() {
-        repository = Repository(mockServiceApi)
+        repository = UserRepository(mockServiceApi)
     }
+
+    @Test
+    fun userLogin_call() =
+        runBlocking {
+            val userEmail = "a@snu.ac.kr"
+
+            coEvery { mockServiceApi.userLogin(userEmail) } returns mockk()
+
+            repository.userLogin(userEmail)
+
+            coVerify { mockServiceApi.userLogin(userEmail) }
+        }
 
     @Test
     fun userGet_call() =
@@ -58,29 +70,31 @@ class RepositoryTest {
         }
 
     @Test
-    fun classCreate_call() =
+    fun userGetAttendanceListByDate_call() =
         runBlocking {
-            val classes =
-                Classes("name", "code")
+            val date = "YYYY-MM-DD"
+            val userMap = mapOf("key1" to "value1", "key2" to "value2")
 
-            coEvery { mockServiceApi.classCreate(classes) } returns mockk()
+            coEvery { mockServiceApi.userGetAttendanceListByDate(date, userMap) } returns mockk()
 
-            repository.classCreate(classes)
+            repository.userGetAttendanceListByDate(date, userMap)
 
-            coVerify { mockServiceApi.classCreate(classes) }
+            coVerify { mockServiceApi.userGetAttendanceListByDate(date, userMap) }
         }
 
     @Test
-    fun classJoin_call() =
+    fun attendanceGetDateList_call() =
         runBlocking {
-            val userId = 1
-            val classes =
-                Classes("name", "code")
+            val userMap = mapOf("key1" to "value1", "key2" to "value2")
 
-            coEvery { mockServiceApi.classJoin(userId, classes) } returns mockk()
+            coEvery { mockServiceApi.attendanceGetDateList(userMap) } returns mockk()
 
-            repository.classJoin(userId, classes)
+            repository.attendanceGetDateList(userMap)
 
-            coVerify { mockServiceApi.classJoin(userId, classes) }
+            coVerify { mockServiceApi.attendanceGetDateList(userMap) }
         }
+
+    @After
+    fun tearDown() {
+    }
 }

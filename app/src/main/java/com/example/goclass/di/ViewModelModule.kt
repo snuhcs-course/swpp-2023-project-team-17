@@ -14,13 +14,13 @@ import org.koin.dsl.module
 val viewModelModule =
     module {
         viewModel {
-            ProfessorMainViewModel(get())
+            ProfessorMainViewModel(get(), get())
         }
         viewModel {
             ProfileViewModel(get())
         }
         viewModel {
-            StudentMainViewModel(get(), androidApplication())
+            StudentMainViewModel(get(), get(), androidApplication())
         }
         viewModel {
             StudentAttendanceViewModel(get())

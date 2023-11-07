@@ -4,15 +4,15 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import android.util.Log
-import com.example.goclass.repository.Repository
 import com.example.goclass.network.dataclass.Attendances
+import com.example.goclass.repository.AttendanceRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class AttendanceService : Service() {
-    private lateinit var repository: Repository
+    private lateinit var repository: AttendanceRepository
 
     override fun onBind(intent: Intent?): IBinder? {
         return null

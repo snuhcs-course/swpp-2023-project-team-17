@@ -4,13 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.goclass.repository.Repository
 import com.example.goclass.network.dataclass.Users
+import com.example.goclass.repository.UserRepository
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class ProfileViewModel(
-    private val repository: Repository,
+    private val repository: UserRepository,
 ) : ViewModel() {
     private val _toastMessage = MutableLiveData<String>()
     private val _editSuccess = MutableLiveData<Boolean>()

@@ -1,12 +1,13 @@
-package com.example.goclass.mainUi
+package com.example.goclass.ui.mainui.usermain
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.example.goclass.GoClassApplication
 import com.example.goclass.LiveDataTestUtil.getOrAwaitValue
-import com.example.goclass.repository.Repository
-import com.example.goclass.ui.mainui.usermain.StudentMainViewModel
+import com.example.goclass.network.dataclass.ClassIdResponse
 import com.example.goclass.network.dataclass.ClassListsResponse
 import com.example.goclass.network.dataclass.Classes
-import com.example.goclass.network.dataclass.CodeMessageResponse
+import com.example.goclass.repository.ClassRepository
+import com.example.goclass.repository.UserRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -25,7 +26,9 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 class StudentMainViewModelTest {
     private lateinit var viewModel: StudentMainViewModel
-    private val mockRepository = mockk<Repository>()
+    private val mockUserRepository = mockk<UserRepository>()
+    private val mockClassRepository = mockk<ClassRepository>()
+    private val mockApplication = mockk<GoClassApplication>()
     private val testDispatcher = UnconfinedTestDispatcher()
 
     @get:Rule
@@ -34,15 +37,15 @@ class StudentMainViewModelTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        viewModel = StudentMainViewModel(mockRepository)
+        viewModel = StudentMainViewModel(mockUserRepository, mockClassRepository, mockApplication)
     }
 
     @Test
     fun classJoin_success() =
         runTest {
-            val mockResponse = CodeMessageResponse(200, "Message")
+            val mockResponse = ClassIdResponse(1,200, "Message")
 
-            coEvery { mockRepository.classJoin(any(), any()) } returns mockResponse
+            coEvery { mockClassRepository.classJoin(any(), any()) } returns mockResponse
 
             viewModel.classJoin(1, "TestName", "TestCode")
 
@@ -54,9 +57,9 @@ class StudentMainViewModelTest {
     @Test
     fun classJoin_failure() =
         runTest {
-            val mockFailureResponse = CodeMessageResponse(400, "Failed to join class")
+            val mockFailureResponse = ClassIdResponse(1, 400, "Failed to join class")
 
-            coEvery { mockRepository.classJoin(any(), any()) } returns mockFailureResponse
+            coEvery { mockClassRepository.classJoin(any(), any()) } returns mockFailureResponse
 
             viewModel.classJoin(1, "TestName", "TestCode")
 
@@ -68,7 +71,7 @@ class StudentMainViewModelTest {
     fun classJoin_exception() =
         runTest {
             val exceptionMessage = "Network error"
-            coEvery { mockRepository.classJoin(any(), any()) } throws Exception(exceptionMessage)
+            coEvery { mockClassRepository.classJoin(any(), any()) } throws Exception(exceptionMessage)
 
             viewModel.classJoin(1, "TestName", "TestCode")
 
@@ -96,7 +99,7 @@ class StudentMainViewModelTest {
                     "Success",
                 )
 
-            coEvery { mockRepository.userGetClassList(any()) } returns mockClassListResponse
+            coEvery { mockUserRepository.userGetClassList(any()) } returns mockClassListResponse
 
             viewModel.getClassList(mockUserMap)
 

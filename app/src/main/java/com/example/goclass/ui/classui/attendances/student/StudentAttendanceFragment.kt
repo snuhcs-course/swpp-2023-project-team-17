@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.goclass.R
-import com.example.goclass.repository.Repository
 import com.example.goclass.databinding.FragmentStudentAttendanceBinding
+import com.example.goclass.repository.AttendanceRepository
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -48,7 +48,7 @@ class StudentAttendanceFragment : Fragment() {
         }
 
         // show studentAttendanceList with dummy data
-        val repository: Repository by inject()
+        val repository: AttendanceRepository by inject()
         val studentAttendanceAdapter = StudentAttendanceAdapter(repository)
         binding.studentAttendanceRecyclerView.adapter = studentAttendanceAdapter
         binding.studentAttendanceRecyclerView.layoutManager = LinearLayoutManager(requireContext())

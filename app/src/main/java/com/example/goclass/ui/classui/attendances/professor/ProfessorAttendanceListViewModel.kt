@@ -5,12 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.goclass.network.dataclass.AttendancesResponse
-import com.example.goclass.repository.Repository
+import com.example.goclass.repository.UserRepository
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class ProfessorAttendanceListViewModel(
-    private val repository: Repository,
+    private val repository: UserRepository,
 ) : ViewModel() {
     private var studentAttendanceListLiveData: MutableLiveData<List<AttendancesResponse>> = MutableLiveData()
 
