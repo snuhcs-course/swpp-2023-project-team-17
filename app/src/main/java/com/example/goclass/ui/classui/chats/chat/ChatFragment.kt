@@ -3,14 +3,14 @@ package com.example.goclass.ui.classui.chats.chat
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.goclass.R
-import com.example.goclass.ui.mainui.MainActivity
 import com.example.goclass.databinding.FragmentChatBinding
+import com.example.goclass.ui.mainui.MainActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ChatFragment : Fragment() {

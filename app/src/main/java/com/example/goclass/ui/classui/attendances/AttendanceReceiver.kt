@@ -17,8 +17,8 @@ class AttendanceReceiver : BroadcastReceiver() {
                 val classId = intent.getIntExtra("classId", -1)
                 val startHour = intent.getIntExtra("startHour", -1)
                 val startMinute = intent.getIntExtra("startMinute", -1)
-                val endHour = intent.getIntExtra("startHour", -1)
-                val endMinute = intent.getIntExtra("startMinute", -1)
+                val endHour = intent.getIntExtra("endHour", -1)
+                val endMinute = intent.getIntExtra("endMinute", -1)
 
                 // Create an intent to start the AttendanceService
                 val serviceIntent = Intent(context, AttendanceService::class.java)

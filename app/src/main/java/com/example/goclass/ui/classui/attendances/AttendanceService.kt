@@ -31,8 +31,8 @@ class AttendanceService : Service() {
                 val classId = intent.getIntExtra("classId", -1)
                 val startHour = intent.getIntExtra("startHour", -1)
                 val startMinute = intent.getIntExtra("startMinute", -1)
-                val endHour = intent.getIntExtra("startHour", -1)
-                val endMinute = intent.getIntExtra("startMinute", -1)
+                val endHour = intent.getIntExtra("endHour", -1)
+                val endMinute = intent.getIntExtra("endMinute", -1)
                 if (userId != -1 && classId != -1) {
                     val attendances =
                         performAttendanceCheck(userId, classId, startHour, startMinute, endHour, endMinute)

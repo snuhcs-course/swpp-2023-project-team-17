@@ -9,6 +9,7 @@ import com.example.goclass.databinding.ItemStudentAttendanceBinding
 import com.example.goclass.repository.AttendanceRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.lang.Exception
@@ -52,8 +53,10 @@ class StudentAttendanceAdapter(
             binding.attendanceDateText.text = studentAttendanceItem.attendanceDate
 
             val attendanceStatus = studentAttendanceItem.attendanceStatus
-            if (attendanceStatus == 1) {
+            if (attendanceStatus == 2) {
                 binding.attendanceStatusText.text = "Present"
+            } else if (attendanceStatus == 1) {
+                binding.attendanceStatusText.text = "Late"
             } else {
                 binding.attendanceStatusText.text = "Absent"
             }
@@ -65,17 +68,15 @@ class StudentAttendanceAdapter(
 
             binding.sendButton.setOnClickListener {
                 if (binding.sendButton.isEnabled) {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        withContext(Dispatchers.IO) {
-                            val attendanceId = studentAttendanceItem.attendanceId
-                            try {
-                                val response = repository.attendanceEdit(attendanceId)
-                                if (response.code == 200) {
-                                    binding.sendButton.isEnabled = false
-                                }
-                            } catch (e: Exception) {
-                                Log.d("attendanceSendError", e.message.toString())
+                    GlobalScope.launch(Dispatchers.IO) {
+                        val attendanceId = studentAttendanceItem.attendanceId
+                        try {
+                            val response = repository.attendanceEdit(attendanceId)
+                            if (response.code == 200) {
+                                binding.sendButton.isEnabled = false
                             }
+                        } catch (e: Exception) {
+                            Log.d("attendanceSendError", e.message.toString())
                         }
                     }
                 }

@@ -2,7 +2,6 @@ package com.example.goclass.ui.mainui.profile
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.goclass.LiveDataTestUtil.getOrAwaitValue
-import com.example.goclass.ui.mainui.profile.ProfileViewModel
 import com.example.goclass.network.dataclass.CodeMessageResponse
 import com.example.goclass.network.dataclass.UsersResponse
 import com.example.goclass.repository.UserRepository

@@ -40,8 +40,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkLoginStatus() {
         val sharedPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        //val isLoggedIn = sharedPref.getBoolean("isLoggedIn", false)
-        val isLoggedIn = true
+        val isLoggedIn = sharedPref.getBoolean("isLoggedIn", false)
         val userRole = sharedPref.getString("userRole", "") ?: ""
 
         if (isLoggedIn) {

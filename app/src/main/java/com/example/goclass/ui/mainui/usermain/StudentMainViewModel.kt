@@ -31,10 +31,11 @@ class StudentMainViewModel(
         classCode: String,
     ) {
         viewModelScope.launch {
-            val joinClass = Classes(
-                className,
-                classCode
-            )
+            val joinClass =
+                Classes(
+                    className,
+                    classCode,
+                )
             try {
                 // join class
                 val response = classRepository.classJoin(userId, joinClass)

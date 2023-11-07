@@ -28,14 +28,15 @@ class ProfessorMainViewModel(
         roomNumber: String,
     ) {
         viewModelScope.launch {
-            val newClass = Classes(
-                className,
-                classCode,
-                professorId,
-                classTime,
-                buildingNumber,
-                roomNumber
-            )
+            val newClass =
+                Classes(
+                    className,
+                    classCode,
+                    professorId,
+                    classTime,
+                    buildingNumber,
+                    roomNumber,
+                )
             try {
                 val response = classRepository.classCreate(newClass)
                 if (response.code == 200) {

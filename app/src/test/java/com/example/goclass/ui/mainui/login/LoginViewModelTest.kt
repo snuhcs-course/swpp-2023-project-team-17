@@ -2,7 +2,6 @@ package com.example.goclass.ui.mainui.login
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.goclass.LiveDataTestUtil.getOrAwaitValue
-import com.example.goclass.ui.mainui.login.LoginViewModel
 import com.example.goclass.network.dataclass.UsersResponse
 import com.example.goclass.repository.UserRepository
 import io.mockk.coEvery

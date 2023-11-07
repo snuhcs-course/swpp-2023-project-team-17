@@ -9,7 +9,6 @@ import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import org.mockito.kotlin.mock
 
 class UserRepositoryTest {
     private lateinit var repository: UserRepository
