@@ -1,0 +1,44 @@
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph_class"
+    app:startDestination="@id/chatFragment">
+
+    <fragment
+        android:id="@+id/studentAttendanceFragment"
+        android:name="com.example.goclass.ui.classui.attendances.student.StudentAttendanceFragment"
+        android:label="fragment_student_attendance" >
+        <action
+            android:id="@+id/action_studentAttendanceFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/professorAttendanceFragment"
+        android:name="com.example.goclass.ui.classui.attendances.professor.ProfessorAttendanceFragment"
+        android:label="fragment_professor_attendance" >
+        <action
+            android:id="@+id/action_professorAttendanceFragment_to_professorAttendanceListFragment"
+            app:destination="@id/professorAttendanceListFragment" />
+        <action
+            android:id="@+id/action_professorAttendanceFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/professorAttendanceListFragment"
+        android:name="com.example.goclass.ui.classui.attendances.professor.ProfessorAttendanceListFragment"
+        android:label="fragment_professor_attendance_list" >
+        <action
+            android:id="@+id/action_professorAttendanceListFragment_to_professorAttendanceFragment"
+            app:destination="@id/professorAttendanceFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.goclass.ui.classui.chats.chat.ChatFragment"
+        android:label="fragment_chat" >
+        <action
+            android:id="@+id/action_chatFragment_to_professorAttendanceFragment"
+            app:destination="@id/professorAttendanceFragment" />
+        <action
+            android:id="@+id/action_chatFragment_to_studentAttendanceFragment"
+            app:destination="@id/studentAttendanceFragment" />
+    </fragment>
+</navigation>
