@@ -43,7 +43,7 @@ class StudentMainViewModelTest {
     @Test
     fun classJoin_success() =
         runTest {
-            val mockResponse = ClassJoinResponse("classtime",200, "Message")
+            val mockResponse = ClassJoinResponse(1, "classtime",200, "Message")
 
             coEvery { mockClassRepository.classJoin(any(), any()) } returns mockResponse
 
@@ -57,7 +57,7 @@ class StudentMainViewModelTest {
     @Test
     fun classJoin_failure() =
         runTest {
-            val mockFailureResponse = ClassJoinResponse("", 400, "Failed to join class")
+            val mockFailureResponse = ClassJoinResponse(1, "", 400, "Failed to join class")
 
             coEvery { mockClassRepository.classJoin(any(), any()) } returns mockFailureResponse
 

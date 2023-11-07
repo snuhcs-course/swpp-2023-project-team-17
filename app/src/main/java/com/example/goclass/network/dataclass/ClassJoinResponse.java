@@ -24,7 +24,8 @@ public class ClassJoinResponse {
         return message;
     }
 
-    public ClassJoinResponse(String classTime, int code, String message){
+    public ClassJoinResponse(int classId, String classTime, int code, String message){
+        this.classId = classId;
         this.classTime = classTime;
         this.code = code;
         this.message = message;
