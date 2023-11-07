@@ -4,7 +4,7 @@ import com.example.goclass.network.dataclass.AttendanceDateListsResponse
 import com.example.goclass.network.dataclass.AttendanceListsResponse
 import com.example.goclass.network.dataclass.Attendances
 import com.example.goclass.network.dataclass.AttendancesResponse
-import com.example.goclass.network.dataclass.ClassIdResponse
+import com.example.goclass.network.dataclass.ClassJoinResponse
 import com.example.goclass.network.dataclass.ClassListsResponse
 import com.example.goclass.network.dataclass.Classes
 import com.example.goclass.network.dataclass.ClassesResponse
@@ -64,7 +64,7 @@ interface ServiceApi {
     suspend fun classJoin(
         @Path("user_id") userId: Int,
         @Body classes: Classes,
-    ): ClassIdResponse
+    ): ClassJoinResponse
 
     @GET("/class/{id}")
     suspend fun classGet(

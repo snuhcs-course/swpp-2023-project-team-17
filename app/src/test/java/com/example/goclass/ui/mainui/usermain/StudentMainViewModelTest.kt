@@ -3,7 +3,7 @@ package com.example.goclass.ui.mainui.usermain
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.goclass.GoClassApplication
 import com.example.goclass.LiveDataTestUtil.getOrAwaitValue
-import com.example.goclass.network.dataclass.ClassIdResponse
+import com.example.goclass.network.dataclass.ClassJoinResponse
 import com.example.goclass.network.dataclass.ClassListsResponse
 import com.example.goclass.network.dataclass.Classes
 import com.example.goclass.repository.ClassRepository
@@ -43,7 +43,7 @@ class StudentMainViewModelTest {
     @Test
     fun classJoin_success() =
         runTest {
-            val mockResponse = ClassIdResponse(1,200, "Message")
+            val mockResponse = ClassJoinResponse("classtime",200, "Message")
 
             coEvery { mockClassRepository.classJoin(any(), any()) } returns mockResponse
 
@@ -57,7 +57,7 @@ class StudentMainViewModelTest {
     @Test
     fun classJoin_failure() =
         runTest {
-            val mockFailureResponse = ClassIdResponse(1, 400, "Failed to join class")
+            val mockFailureResponse = ClassJoinResponse("", 400, "Failed to join class")
 
             coEvery { mockClassRepository.classJoin(any(), any()) } returns mockFailureResponse
 

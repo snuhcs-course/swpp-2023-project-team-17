@@ -2,17 +2,19 @@ package com.example.goclass.network.dataclass;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ClassIdResponse {
+public class ClassJoinResponse {
     @SerializedName("classId")
-    int classId;
+    private int classId;
+    @SerializedName("classTime")
+    private String classTime;
     @SerializedName("code")
     private int code;
     @SerializedName("message")
     private String message;
 
-    public int getClassId() {
-        return classId;
-    }
+    public int getClassId() { return  classId; }
+
+    public String getClassTime() { return classTime; }
 
     public int getCode() {
         return code;
@@ -22,8 +24,8 @@ public class ClassIdResponse {
         return message;
     }
 
-    public ClassIdResponse(int classId, int code, String message){
-        this.classId = classId;
+    public ClassJoinResponse(String classTime, int code, String message){
+        this.classTime = classTime;
         this.code = code;
         this.message = message;
     }

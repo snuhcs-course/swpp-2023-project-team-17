@@ -41,10 +41,7 @@ class StudentMainViewModel(
 
                 // schedule class attendance
                 val classId = response.classId
-
-                // get class time info
-                val classResponse = classRepository.classGet(classId)
-                val classTime = classResponse.classTime
+                val classTime = response.classTime
 
                 val timeElements = classTime.split(",")
 
