@@ -137,7 +137,7 @@ class ProfessorMainFragment : Fragment() {
         }
 
         // show classList with dummy data
-        val userMap = mapOf("userId" to "1", "userType" to "1")
+        val userMap = mapOf("userId" to userId.toString(), "userType" to "1")
         val classListLiveData = viewModel.getClassList(userMap)
         val classListAdapter = ClassListAdapter()
         binding.professorClassRecyclerView.adapter = classListAdapter
