@@ -1,4 +1,4 @@
-package com.example.goclass.dimodules
+package com.example.goclass.di
 
 import com.example.goclass.network.ServiceApi
 import okhttp3.OkHttpClient

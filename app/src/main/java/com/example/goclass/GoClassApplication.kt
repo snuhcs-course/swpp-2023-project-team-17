@@ -1,9 +1,9 @@
 package com.example.goclass
 
 import android.app.Application
-import com.example.goclass.dimodules.networkModule
-import com.example.goclass.dimodules.repositoryModule
-import com.example.goclass.dimodules.viewModelModule
+import com.example.goclass.di.networkModule
+import com.example.goclass.di.repositoryModule
+import com.example.goclass.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin

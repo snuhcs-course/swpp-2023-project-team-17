@@ -1,4 +1,4 @@
-package com.example.goclass.dimodules
+package com.example.goclass.di
 
 import com.example.goclass.ui.classui.attendances.professor.ProfessorAttendanceListViewModel
 import com.example.goclass.ui.classui.attendances.professor.ProfessorAttendanceViewModel
