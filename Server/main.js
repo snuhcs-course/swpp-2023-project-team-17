@@ -141,13 +141,12 @@ app.get('/users/classes', (req, res) => {
     get attendace_date list from Attendances with user_id of Users where is_sent = 1
 */
 app.get('/users/attendance', (req, res) => {
-    const userId = req.query.userId;
+    const classId = req.query.classId;
 
     const sql = 'select attendance_date from Attendances '
-                + 'where is_sent = 1 and class_id '
-                + 'in (select class_id from Classes where professor_id = ?)';
+                + 'where is_sent = 1 and class_id = ?';
 
-    const params = [userId];
+    const params = [classId];
 
     connection.query(sql, params, (err, result) => {
         let resultCode = 404;
@@ -161,7 +160,7 @@ app.get('/users/attendance', (req, res) => {
             message = 'get attendance date list Success';
             console.log(message);
             attendanceDateList = result.map(item => ({
-                "attendanceStatus": item.attendance_date
+                "attendanceDate": item.attendance_date
             }));
         } else {
             resultCode = 200;
