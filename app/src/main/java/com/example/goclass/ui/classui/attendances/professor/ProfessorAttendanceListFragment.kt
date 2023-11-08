@@ -13,6 +13,10 @@ import com.example.goclass.databinding.FragmentProfessorAttendanceListBinding
 import com.example.goclass.repository.UserRepository
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 class ProfessorAttendanceListFragment : Fragment() {
     private lateinit var binding: FragmentProfessorAttendanceListBinding
@@ -41,6 +45,7 @@ class ProfessorAttendanceListFragment : Fragment() {
         val date = attendanceSharedPref!!.getString("date", "")!!
 
         binding.className.text = className
+        binding.dateText.text = formatUtcDate(date)
 
         // Back Button
         binding.backButton.setOnClickListener {
@@ -58,5 +63,13 @@ class ProfessorAttendanceListFragment : Fragment() {
         studentAttendanceListLiveData.observe(viewLifecycleOwner) { studentAttendanceList ->
             professorAttendanceListAdapter.setStudentAttendanceList(studentAttendanceList)
         }
+    }
+
+    fun formatUtcDate(utcDate: String): String {
+        val originalFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+        originalFormat.timeZone = TimeZone.getTimeZone("UTC") // UTC 시간대 설정
+        val targetFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val date: Date = originalFormat.parse(utcDate) ?: return ""
+        return targetFormat.format(date)
     }
 }

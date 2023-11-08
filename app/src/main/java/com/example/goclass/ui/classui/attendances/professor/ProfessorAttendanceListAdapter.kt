@@ -3,7 +3,10 @@ package com.example.goclass.ui.classui.attendances.professor
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.goclass.R
 import com.example.goclass.network.dataclass.AttendancesResponse
 import com.example.goclass.databinding.ItemProfessorAttendanceListBinding
 import com.example.goclass.repository.UserRepository
@@ -67,9 +70,11 @@ class ProfessorAttendanceListAdapter(
                 }
                 1 -> {
                     binding.attendanceStatusText.text = "Late"
+                    binding.attendanceStatusText.background = ContextCompat.getDrawable(itemView.context, R.drawable.late_bg)
                 }
                 else -> {
                     binding.attendanceStatusText.text = "Absent"
+                    binding.attendanceStatusText.background = ContextCompat.getDrawable(itemView.context, R.drawable.absent_bg)
                 }
             }
         }
