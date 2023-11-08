@@ -72,7 +72,6 @@ app.post('/login/:email', (req, res) => {
                             'message': 'An error occurred'
                         });
                     }
-                    console.log(message);
 
                     return res.json({
                         'code': 200,
@@ -124,6 +123,10 @@ app.get('/users/classes', (req, res) => {
                 "buildingNumber": classItem.building_number,
                 "roomNumber": classItem.room_number,
             }));
+        } else {
+            resultCode = 200;
+            message = 'classList is empty';
+            console.log(message);
         }
                                 
         res.json({
@@ -134,7 +137,90 @@ app.get('/users/classes', (req, res) => {
     });
 });
 
+/*
+    get attendace_date list from Attendances with user_id of Users where is_sent = 1
+*/
+app.get('/users/attendance', (req, res) => {
+    const classId = req.query.classId;
 
+    const sql = 'select attendance_date from Attendances '
+                + 'where is_sent = 1 and class_id = ?';
+
+    const params = [classId];
+
+    connection.query(sql, params, (err, result) => {
+        let resultCode = 404;
+        let message = 'Error occured';
+        let attendanceDateList = [];
+
+        if (err) {
+            console.log(err);
+        } else if(result.length > 0) {
+            resultCode = 200;
+            message = 'get attendance date list Success';
+            console.log(message);
+            attendanceDateList = result.map(item => ({
+                "attendanceDate": item.attendance_date
+            }));
+        } else {
+            resultCode = 200;
+            message = 'attendanceDateList is empty';
+            console.log(message);
+        }
+
+        res.json({
+            'code': resultCode,
+            'message': message,
+            'attendanceDateList': attendanceDateList
+        });
+    });
+});
+
+/*
+    get all attendance in specific date with user_id and user_type of Users where is_sent = 1
+*/
+app.get('/users/attendance/:date', (req, res) => {
+    const attendanceDate = req.params.date;
+    const userId = req.query.userId;
+    
+    const sql = 'select * from Attendances '
+                + 'where is_sent = 1 and attendance_date = ? and class_id '
+                + 'in (select class_id from Classes where professor_id = ?)';
+
+    const params = [attendanceDate, userId];
+
+    connection.query(sql, params, (err, result) => {
+        let resultCode = 404;
+        let message = 'Error occured';
+        let attendanceList = [];
+
+        if (err) {
+            console.log(err);
+        } else if(result.length > 0) {
+            resultCode = 200;
+            message = 'get all attendances in specific date Success';
+            console.log(message);
+
+            attendanceList = result.map(item => ({
+                "attendanceId": item.attendance_id,
+                "attendanceStatus": item.attendance_status,
+                "attendanceDuration": item.attendance_duration,
+                "classId": item.class_id,
+                "studentId": item.student_id
+            }));
+        } else {
+            resultCode = 200;
+            message = 'attendanceList is empty';
+            console.log(message);
+        } 
+
+        res.json({
+            'code': resultCode,
+            'message': message,
+            'attendanceList': attendanceList
+        });
+    });
+});
 
 /*
     get user name and user type
@@ -158,6 +244,10 @@ app.get('/users/:id', (req, res) => {
                 console.log(message);
                 userName = result[0].user_name;
                 userType = result[0].user_type;
+        } else {
+            resultCode = 200;
+            message = 'There is no user corresponding to that id';
+            console.log(message);
         }
 
         res.json({
@@ -201,90 +291,7 @@ app.put('/users/:id', (req, res) => {
     });
 });
 
-/*
-    get all attendance in specific date with user_id and user_type of Users
-    User type must be professor
-*/
-app.get('users/attendance/:date', (req, res) => {
-    const attendanceDate = req.params.date;
-    const professorId = req.query.userId;
-    const userType = req.query.userType;
-    
-    const sql = 'select * from Attendances '
-                + 'where is_sent = 1 and attendance_date = ? and class_id '
-                + 'in (select class_id from Teaches where professor_id = ?)';
-
-    const params = [attendanceDate, professorId];
-
-    connection.query(sql, params, (err, result) => {
-        let resultCode = 404;
-        let message = 'Error occured';
-        let attendanceList = [];
-        if (!userType) message = 'You must be a professor' // only for professors
-
-        if (err) {
-            console.log(err);
-        } else if(result.length > 0) {
-            resultCode = 200;
-            message = 'get all attendances in specific date Success';
-            console.log(message);
-
-            attendanceList = result.map(item => ({
-                "attendanceStatus": item.attendance_status,
-                "attendanceDuration": item.attendance_duration,
-                "classId": item.class_id,
-                "student_id": item.student_id
-            }));
-        }
-
-        res.json({
-            'code': resultCode,
-            'message': message,
-            'attendanceList': attendanceList
-        });
-    });
-});
-
-/*
-    get attendace_date list from Attendances with user_id of Users
-    User type must be professor
-*/
-app.get('users/attendance', (req, res) => {
-    const professorId = req.query.userId;
-
-    const sql = 'select attendance_date from Attendances '
-                + 'where is_sent = 1 and class_id '
-                + 'in (select class_id from Teaches where professor_id = ?)';
-
-    const params = [professorId];
-
-    connection.query(sql, params, (err, result) => {
-        let resultCode = 404;
-        let message = 'Error occured';
-        let attendanceDateList = [];
-        if (!userType) message = 'You must be a professor' // only for professors
-
-        if (err) {
-            console.log(err);
-        } else if(result.length > 0) {
-            resultCode = 200;
-            message = 'get attendance date list Success';
-            console.log(message);
-            attendanceDateList = result.map(item => ({
-                "attendanceStatus": item.attendance_date
-            }));
-        }
-
-        res.json({
-            'code': resultCode,
-            'message': message,
-            'attendanceDateList': attendanceDateList
-        });
-    });
-});
-
-
-// TODO: check user_type == 1 (TBD later)
+// class create
 app.post('/class/create', (req, res) => {
     console.log(req.body);
 
@@ -294,6 +301,13 @@ app.post('/class/create', (req, res) => {
     const classTime = req.body.classTime;
     const buildingNumber = req.body.buildingNumber;
     const roomNumber = req.body.roomNumber;
+
+    if (!className || !classCode || !professorId || !classTime || !buildingNumber || !roomNumber) {
+        return res.json({
+            'code': 404,
+            'message': 'Required fields are missing'
+        });
+    }
 
     let sql = 'INSERT INTO Classes(class_name, class_code, professor_id, class_time, building_number, room_number) VALUES (?, ?, ?, ?, ?, ?)';
     const params = [className, classCode, professorId, classTime, buildingNumber, roomNumber];
@@ -312,11 +326,8 @@ app.post('/class/create', (req, res) => {
 });
 
 
-/*
-    join class and insert to Classes, Class_classroom, Teaches
-    User type must be student
-*/
-// TODO: check user_type == 1 (TBD later)
+
+// join class 
 app.post('/class/join/:user_id', (req, res) => {
     console.log(req.body);
 
@@ -324,29 +335,49 @@ app.post('/class/join/:user_id', (req, res) => {
     const classCode = req.body.classCode;
     const userId = req.params.user_id;
 
-    const sql = 'insert into Takes(class_id, student_id) ' +
-                'values((SELECT class_id FROM Classes WHERE class_name = ? and class_code = ?), ?)';
+    const findClassSql = 'SELECT class_id, class_time FROM Classes WHERE class_name = ? AND class_code = ?';
+    const findClassParams = [className, classCode];
 
-    const params = [className, classCode, userId];
-
-    connection.query(sql, params, (err, result) => {
-        let resultCode = 404;
-        let message = 'Error occured';
-
+    connection.query(findClassSql, findClassParams, (err, classResult) => {
         if (err) {
             console.log(err);
-        } else {
-            resultCode = 200;
-            message = 'class join Success';
-            console.log(message);
+            return res.json({
+                'code': 404,
+                'message': 'Already joined the class'
+            });
         }
 
-        res.json({
-            'code': resultCode,
-            'message': message
+        if (classResult.length == 0) {
+            return res.json({
+                'code': 404,
+                'message': 'Class not found'
+            });
+        }
+
+        const classId = classResult[0].class_id;
+        const classTime = classResult[0].class_time;
+        const joinClassSql = 'INSERT INTO Takes(class_id, student_id) VALUES(?, ?)';
+        const joinClassParams = [classId, userId];
+
+        connection.query(joinClassSql, joinClassParams, (err, joinResult) => {
+            if (err) {
+                console.log(err);
+                return res.json({
+                    'code': 404,
+                    'message': 'Error occured while joining class'
+                });
+            }
+
+            res.json({
+                'code': 200,
+                'message': 'Class join success',
+                'classId': classId,
+                'classTime': classTime
+            });
         });
     });
 });
+
 
 /*
     get specific class from Classes
@@ -365,6 +396,8 @@ app.get('/class/:id', (req, res) => {
         let classCode = -1;
         let professorId = -1;
         let classTime = -1;
+        let buildingNumber = -1;
+        let roomNumber = -1;
 
         if (err) {
             console.log(err);
@@ -376,8 +409,12 @@ app.get('/class/:id', (req, res) => {
             classCode = result[0].class_code;
             professorId = result[0].professor_id;
             classTime = result[0].class_time;
-            building_number = result[0].building_number;
+            buildingNumber = result[0].building_number;
             roomNumber = result[0].room_number;
+        } else {
+            resultCode = 200;
+            message = 'There is no class corresponding to that class_id';
+            console.log(message);
         }
 
         res.json({
@@ -425,7 +462,7 @@ app.delete('/class/:id', (req, res) => {
 /*
     get student’s attendance information list with class_id of Classes
 */
-app.get('class/:id/attendance/:user_id', (req, res) => {
+app.get('/class/:id/attendance/:user_id', (req, res) => {
     const userId = req.params.user_id;
     const classId = req.params.id;
 
@@ -445,11 +482,16 @@ app.get('class/:id/attendance/:user_id', (req, res) => {
             message = 'get user attendance list Success';
             console.log(message);
             attendanceList = result.map(item => ({
+                "attendanceId": item.attendance_id,
                 "attendanceStatus": item.attendance_status,
                 "attendanceDuration": item.attendance_duration,
                 "classId": item.class_id,
-                "student_id": item.student_id
+                "studentId": item.student_id
             }));
+        } else {
+            resultCode = 200;
+            message = 'attendanceList is empty';
+            console.log(message);
         }
 
         res.json({
@@ -464,13 +506,12 @@ app.get('class/:id/attendance/:user_id', (req, res) => {
 /*
     get messages list in chatting channel
 */
-app.get('/chat_channel/:class_id/:channel_type', (req, res) => {
-    const classId = req.params.class_id;
-    const channelType = req.params.channel_type;
+app.get('/chat_channel/:channel_id', (req, res) => {
+    const channelId = req.params.channel_id;
 
-    const sql = 'select * from Messages where channel_id = (select channel_id from Channels where class_id = ? and channel_type = ?)';
+    const sql = 'select * from Messages where channel_id = ?';
 
-    const params = [classId, channelType];
+    const params = [channelId];
 
     connection.query(sql, params, (err, result) => {
         let resultCode = 404;
@@ -485,11 +526,15 @@ app.get('/chat_channel/:class_id/:channel_type', (req, res) => {
             console.log(message);
             messageList = result.map(item => ({
                 "messageId": item.message_id,
+                "channelId": item.channel_id,
                 "timeStamp": item.time_stamp,
                 "senderId": item.sender_id,
-                "content": item.content,
-                "channelId": item.channel_id
+                "content": item.content
             }));
+        } else {
+            resultCode = 200;
+            message = 'messageList is empty';
+            console.log(message);
         }
 
         res.json({
@@ -503,17 +548,16 @@ app.get('/chat_channel/:class_id/:channel_type', (req, res) => {
 /*
     send new message with channel_id, content of Messages
 */
-app.post('/chat_channel/:class_id/:channel_type', (req, res) => {
+app.post('/chat_channel/:channel_id', (req, res) => {
     console.log(req.body);
 
+    const channelId = req.params.channel_id;
     const senderId = req.body.senderId;
     const content = req.body.content;
-    const classId = req.params.class_id;
-    const channelType = req.params.channel_type;
 
-    const sql = 'insert into Messages(sender_id, content, channel_id) values(?, ?, select channel_id from Channels where class_id = ? and channel_type = ?)';
+    const sql = 'insert into Messages(channel_id, sender_id, content) values(?, ?, ?)';
 
-    const params = [senderId, content, classId, channelType];
+    const params = [channelId, senderId, content];
 
     connection.query(sql, params, (err, result) => {
         let resultCode = 404;
@@ -566,11 +610,16 @@ app.get('/attendance/:id', (req, res) => {
             isSent = result[0].is_sent;
             studentId = result[0].student_id;
             classId = result[0].class_id;
+        } else {
+            resultCode = 200;
+            message = 'There is no attendance corresponding to that id';
+            console.log(message);
         }
 
         res.json({
             'code': resultCode,
             'message': message,
+            'attendanceId': attendanceId,
             'attendanceDate': attendanceDate,
             'attendanceStatus': attendanceStatus,
             'attendanceDuration': attendanceDuration,
@@ -642,7 +691,7 @@ app.delete('/attendance/:id', (req, res) => {
 /*
     add student’s attendance information with attendance_status, attendace_duration, class_id of Attendances
 */
-app.post('attendance/:user_id', (req, res) => {
+app.post('/attendance/:user_id', (req, res) => {
     console.log(req.body);
 
     const attendanceStatus = req.body.attendanceStatus;

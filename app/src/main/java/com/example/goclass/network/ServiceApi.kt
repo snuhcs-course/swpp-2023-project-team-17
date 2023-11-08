@@ -82,16 +82,14 @@ interface ServiceApi {
         @Path("user_id") userId: Int,
     ): AttendanceListsResponse
 
-    @GET("/chat_channel/{class_id}/{channel_type}")
+    @GET("/chat_channel/{channel_id}")
     suspend fun chatChannelGetList(
-        @Path("class_id") classId: Int,
-        @Path("channel_type") channelType: Int,
+        @Path("channel_id") channelId: Int,
     ): MessageListsResponse
 
-    @POST("/chat_channel/{class_id}/{channel_type}")
+    @POST("/chat_channel/{channel_id}")
     suspend fun chatChannelSend(
-        @Path("class_id") classId: Int,
-        @Path("channel_type") channelType: Int,
+        @Path("channel_id") channelId: Int,
         @Body messages: Messages,
     ): MessagesResponse
 

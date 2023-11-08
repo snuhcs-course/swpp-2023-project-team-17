@@ -4,14 +4,10 @@ import com.example.goclass.network.ServiceApi
 import com.example.goclass.network.dataclass.Messages
 
 class ChatRepository(private val serviceApi: ServiceApi) {
-    suspend fun chatChannelGetList(
-        classId: Int,
-        channelType: Int,
-    ) = serviceApi.chatChannelGetList(classId, channelType)
+    suspend fun chatChannelGetList(channelId: Int) = serviceApi.chatChannelGetList(channelId)
 
     suspend fun chatChannelSend(
-        classId: Int,
-        channelType: Int,
+        channelId: Int,
         messages: Messages,
-    ) = serviceApi.chatChannelSend(classId, channelType, messages)
+    ) = serviceApi.chatChannelSend(channelId, messages)
 }
