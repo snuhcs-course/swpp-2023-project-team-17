@@ -45,7 +45,7 @@ class ProfessorAttendanceFragment : Fragment() {
         }
 
         // show professorAttendanceList with dummy data
-        val userMap = mapOf("userId" to "1", "userType" to "1")
+        val userMap = mapOf("userId" to userId.toString(), "userType" to "1")
         val professorAttendanceAdapter = ProfessorAttendanceAdapter(this)
         binding.professorAttendanceRecyclerView.adapter = professorAttendanceAdapter
         binding.professorAttendanceRecyclerView.layoutManager = LinearLayoutManager(requireContext())
