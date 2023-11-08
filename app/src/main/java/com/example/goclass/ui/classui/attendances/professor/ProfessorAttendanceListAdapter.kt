@@ -41,11 +41,16 @@ class ProfessorAttendanceListAdapter : RecyclerView.Adapter<ProfessorAttendanceL
         RecyclerView.ViewHolder(binding.root) {
         fun bind(studentAttendanceItem: AttendancesResponse) {
             binding.studentIdText.text = studentAttendanceItem.studentId.toString()
-            val attendanceStatus = studentAttendanceItem.attendanceStatus
-            if (attendanceStatus == 1) {
-                binding.attendanceStatusText.text = "Present"
-            } else {
-                binding.attendanceStatusText.text = "Absent"
+            when (studentAttendanceItem.attendanceStatus) {
+                2 -> {
+                    binding.attendanceStatusText.text = "Present"
+                }
+                1 -> {
+                    binding.attendanceStatusText.text = "Late"
+                }
+                else -> {
+                    binding.attendanceStatusText.text = "Absent"
+                }
             }
         }
     }
