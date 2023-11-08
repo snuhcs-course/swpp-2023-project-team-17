@@ -324,29 +324,49 @@ app.post('/class/join/:user_id', (req, res) => {
     const classCode = req.body.classCode;
     const userId = req.params.user_id;
 
-    const sql = 'insert into Takes(class_id, student_id) ' +
-                'values((SELECT class_id FROM Classes WHERE class_name = ? and class_code = ?), ?)';
+    const findClassSql = 'SELECT class_id, class_time FROM Classes WHERE class_name = ? AND class_code = ?';
+    const findClassParams = [className, classCode];
 
-    const params = [className, classCode, userId];
-
-    connection.query(sql, params, (err, result) => {
-        let resultCode = 404;
-        let message = 'Error occured';
-
+    connection.query(findClassSql, findClassParams, (err, classResult) => {
         if (err) {
             console.log(err);
-        } else {
-            resultCode = 200;
-            message = 'class join Success';
-            console.log(message);
+            return res.json({
+                'code': 404,
+                'message': 'Error occured while finding class'
+            });
         }
 
-        res.json({
-            'code': resultCode,
-            'message': message
+        if (classResult.length == 0) {
+            return res.json({
+                'code': 404,
+                'message': 'Class not found'
+            });
+        }
+
+        const classId = classResult[0].class_id;
+        const classTime = classResult[0].class_time;
+        const joinClassSql = 'INSERT INTO Takes(class_id, student_id) VALUES(?, ?)';
+        const joinClassParams = [classId, userId];
+
+        connection.query(joinClassSql, joinClassParams, (err, joinResult) => {
+            if (err) {
+                console.log(err);
+                return res.json({
+                    'code': 404,
+                    'message': 'Error occured while joining class'
+                });
+            }
+
+            res.json({
+                'code': 200,
+                'message': 'Class join success',
+                'classId': classId,
+                'classTime': classTime
+            });
         });
     });
 });
+
 
 /*
     get specific class from Classes
@@ -365,6 +385,8 @@ app.get('/class/:id', (req, res) => {
         let classCode = -1;
         let professorId = -1;
         let classTime = -1;
+        let buildingNumber = -1;
+        let roomNumber = -1;
 
         if (err) {
             console.log(err);
@@ -376,7 +398,7 @@ app.get('/class/:id', (req, res) => {
             classCode = result[0].class_code;
             professorId = result[0].professor_id;
             classTime = result[0].class_time;
-            building_number = result[0].building_number;
+            buildingNumber = result[0].building_number;
             roomNumber = result[0].room_number;
         }
 
@@ -642,7 +664,7 @@ app.delete('/attendance/:id', (req, res) => {
 /*
     add student’s attendance information with attendance_status, attendace_duration, class_id of Attendances
 */
-app.post('attendance/:user_id', (req, res) => {
+app.post('/attendance/:user_id', (req, res) => {
     console.log(req.body);
 
     const attendanceStatus = req.body.attendanceStatus;
