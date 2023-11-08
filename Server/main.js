@@ -486,7 +486,7 @@ app.get('/class/:id/attendance/:user_id', (req, res) => {
                 "attendanceStatus": item.attendance_status,
                 "attendanceDuration": item.attendance_duration,
                 "classId": item.class_id,
-                "student_id": item.student_id
+                "studentId": item.student_id
             }));
         } else {
             resultCode = 200;
@@ -619,6 +619,7 @@ app.get('/attendance/:id', (req, res) => {
         res.json({
             'code': resultCode,
             'message': message,
+            'attendanceId': attendanceId,
             'attendanceDate': attendanceDate,
             'attendanceStatus': attendanceStatus,
             'attendanceDuration': attendanceDuration,
