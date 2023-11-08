@@ -8,6 +8,6 @@ class ChatRepository(private val serviceApi: ServiceApi) {
 
     suspend fun chatChannelSend(
         channelId: Int,
-        messages: Messages
+        messages: Messages,
     ) = serviceApi.chatChannelSend(channelId, messages)
 }

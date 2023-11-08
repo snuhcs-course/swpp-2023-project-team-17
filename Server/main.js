@@ -483,6 +483,7 @@ app.get('/class/:id/attendance/:user_id', (req, res) => {
             message = 'get user attendance list Success';
             console.log(message);
             attendanceList = result.map(item => ({
+                "attendanceId": item.attendance_id,
                 "attendanceStatus": item.attendance_status,
                 "attendanceDuration": item.attendance_duration,
                 "classId": item.class_id,
