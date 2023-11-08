@@ -10,6 +10,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.goclass.R
 import com.example.goclass.databinding.FragmentProfessorAttendanceListBinding
+import com.example.goclass.repository.UserRepository
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ProfessorAttendanceListFragment : Fragment() {
@@ -47,7 +49,8 @@ class ProfessorAttendanceListFragment : Fragment() {
 
         // show professorStudentAttendanceList with dummy data
         val userMap = mapOf("userId" to userId.toString(), "userType" to "1")
-        val professorAttendanceListAdapter = ProfessorAttendanceListAdapter()
+        val repository: UserRepository by inject()
+        val professorAttendanceListAdapter = ProfessorAttendanceListAdapter(repository)
         binding.professorAttendanceListRecyclerView.adapter = professorAttendanceListAdapter
         binding.professorAttendanceListRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 

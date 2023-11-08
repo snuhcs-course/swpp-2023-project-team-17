@@ -31,9 +31,6 @@ class ProfessorAttendanceFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        val userSharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val userId = userSharedPref!!.getInt("userId", -1)
-
         val classSharedPrf = activity?.getSharedPreferences("ClassPrefs", Context.MODE_PRIVATE)
         val className = classSharedPrf!!.getString("className", "")
         val classId = classSharedPrf!!.getInt("classId", -1)
