@@ -485,6 +485,7 @@ app.get('/class/:id/attendance/:user_id', (req, res) => {
                 "attendanceId": item.attendance_id,
                 "attendanceStatus": item.attendance_status,
                 "attendanceDuration": item.attendance_duration,
+                "attendanceDate": item.attendance_date,
                 "classId": item.class_id,
                 "studentId": item.student_id
             }));
