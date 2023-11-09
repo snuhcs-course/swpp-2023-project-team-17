@@ -40,11 +40,12 @@ class StudentAttendanceViewModel(
     ) {
         viewModelScope.launch {
             try {
-                val attendance = Attendances(
-                    2,
-                    60,
-                    classId,
-                )
+                val attendance =
+                    Attendances(
+                        2,
+                        60,
+                        classId,
+                    )
                 val response = attendanceRepository.attendanceAdd(userId, attendance)
                 if (response.code == 200) {
                     getStudentAttendanceList(classId, userId)
