@@ -254,7 +254,7 @@ app.get('users/attendance/:date', (req, res) => {
 app.get('users/attendance', (req, res) => {
     const professorId = req.query.userId;
 
-    const sql = 'select attendance_date from Attendances '
+    const sql = 'select distinct attendance_date from Attendances '
                 + 'where is_sent = 1 and class_id '
                 + 'in (select class_id from Teaches where professor_id = ?)';
 
