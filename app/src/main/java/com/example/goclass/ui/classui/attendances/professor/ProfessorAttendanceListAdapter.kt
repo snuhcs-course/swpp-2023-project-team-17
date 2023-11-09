@@ -5,11 +5,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.goclass.R
 import com.example.goclass.databinding.ItemProfessorAttendanceListBinding
 import com.example.goclass.network.dataclass.AttendancesResponse
-import com.example.goclass.R
 import com.example.goclass.repository.UserRepository
-import java.lang.Exception
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
