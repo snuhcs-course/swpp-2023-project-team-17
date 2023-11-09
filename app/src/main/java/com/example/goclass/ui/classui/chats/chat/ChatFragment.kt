@@ -3,6 +3,7 @@ package com.example.goclass.ui.classui.chats.chat
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,6 +38,7 @@ class ChatFragment : Fragment() {
 
         val classSharedPref = activity?.getSharedPreferences("ClassPrefs", Context.MODE_PRIVATE)
         val className = classSharedPref?.getString("className", "") ?: ""
+        Log.d("classname", "chatfrag: $className")
         binding.className.text = className
 
         // Back Button
@@ -56,5 +58,14 @@ class ChatFragment : Fragment() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val classSharedPref = activity?.getSharedPreferences("ClassPrefs", Context.MODE_PRIVATE)
+        val className = classSharedPref?.getString("className", "") ?: ""
+
+        binding.className.text = className
     }
 }

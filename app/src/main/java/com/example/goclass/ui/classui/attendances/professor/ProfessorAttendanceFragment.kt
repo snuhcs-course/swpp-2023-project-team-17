@@ -31,11 +31,9 @@ class ProfessorAttendanceFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        val userSharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val userId = userSharedPref!!.getInt("userId", -1)
-
         val classSharedPrf = activity?.getSharedPreferences("ClassPrefs", Context.MODE_PRIVATE)
         val className = classSharedPrf!!.getString("className", "")
+        val classId = classSharedPrf!!.getInt("classId", -1)
 
         binding.className.text = className
 
@@ -45,12 +43,12 @@ class ProfessorAttendanceFragment : Fragment() {
         }
 
         // show professorAttendanceList with dummy data
-        val userMap = mapOf("userId" to "1", "userType" to "1")
+        val classMap = mapOf("classId" to classId.toString(), "userType" to "1")
         val professorAttendanceAdapter = ProfessorAttendanceAdapter(this)
         binding.professorAttendanceRecyclerView.adapter = professorAttendanceAdapter
         binding.professorAttendanceRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        val professorAttendanceListLiveData = viewModel.getProfessorAttendanceList(userMap)
+        val professorAttendanceListLiveData = viewModel.getProfessorAttendanceList(classMap)
         professorAttendanceListLiveData.observe(viewLifecycleOwner) { professorAttendanceList ->
             professorAttendanceAdapter.setProfessorAttendanceList(professorAttendanceList)
         }

@@ -45,7 +45,7 @@ class ClassListAdapter : RecyclerView.Adapter<ClassListAdapter.ClassViewHolder>(
         fun bind(classItem: Classes) {
             binding.classNameTextView.text = classItem.className
             binding.classNameTextView.setOnClickListener {
-                Log.d("ClassViewHolder", "Item clicked!")
+                Log.d("classname", "adapter: ${classItem.className}")
 
                 val intent = Intent(itemView.context, ClassActivity::class.java)
                 intent.putExtra("classId", classItem.classId)

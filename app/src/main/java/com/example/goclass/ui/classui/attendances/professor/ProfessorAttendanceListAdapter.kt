@@ -1,12 +1,22 @@
 package com.example.goclass.ui.classui.attendances.professor
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.example.goclass.network.dataclass.AttendancesResponse
+import com.example.goclass.R
 import com.example.goclass.databinding.ItemProfessorAttendanceListBinding
+import com.example.goclass.network.dataclass.AttendancesResponse
+import com.example.goclass.repository.UserRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class ProfessorAttendanceListAdapter : RecyclerView.Adapter<ProfessorAttendanceListAdapter.ProfessorAttendanceListViewHolder>() {
+class ProfessorAttendanceListAdapter(
+    private val repository: UserRepository,
+) : RecyclerView.Adapter<ProfessorAttendanceListAdapter.ProfessorAttendanceListViewHolder>() {
     private var studentAttendanceList = listOf<AttendancesResponse>()
 
     fun setStudentAttendanceList(list: List<AttendancesResponse>) {
@@ -24,7 +34,7 @@ class ProfessorAttendanceListAdapter : RecyclerView.Adapter<ProfessorAttendanceL
                 parent,
                 false,
             )
-        return ProfessorAttendanceListViewHolder(binding)
+        return ProfessorAttendanceListViewHolder(binding, repository)
     }
 
     override fun onBindViewHolder(
@@ -37,15 +47,33 @@ class ProfessorAttendanceListAdapter : RecyclerView.Adapter<ProfessorAttendanceL
 
     override fun getItemCount(): Int = studentAttendanceList.size
 
-    class ProfessorAttendanceListViewHolder(var binding: ItemProfessorAttendanceListBinding) :
+    class ProfessorAttendanceListViewHolder(var binding: ItemProfessorAttendanceListBinding, val repository: UserRepository) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(studentAttendanceItem: AttendancesResponse) {
-            binding.studentIdText.text = studentAttendanceItem.studentId.toString()
-            val attendanceStatus = studentAttendanceItem.attendanceStatus
-            if (attendanceStatus == 1) {
-                binding.attendanceStatusText.text = "Present"
-            } else {
-                binding.attendanceStatusText.text = "Absent"
+            GlobalScope.launch(Dispatchers.IO) {
+                try {
+                    val response = repository.userGet(studentAttendanceItem.studentId)
+                    if (response.code == 200) {
+                        withContext(Dispatchers.Main) {
+                            binding.studentIdText.text = response.userName
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.d("userNameGetError", e.message.toString())
+                }
+            }
+            when (studentAttendanceItem.attendanceStatus) {
+                2 -> {
+                    binding.attendanceStatusText.text = "Present"
+                }
+                1 -> {
+                    binding.attendanceStatusText.text = "Late"
+                    binding.attendanceStatusText.background = ContextCompat.getDrawable(itemView.context, R.drawable.late_bg)
+                }
+                else -> {
+                    binding.attendanceStatusText.text = "Absent"
+                    binding.attendanceStatusText.background = ContextCompat.getDrawable(itemView.context, R.drawable.absent_bg)
+                }
             }
         }
     }

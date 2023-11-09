@@ -14,10 +14,10 @@ class ProfessorAttendanceViewModel(
 ) : ViewModel() {
     private var professorAttendanceListLiveDate: MutableLiveData<List<AttendancesResponse>> = MutableLiveData()
 
-    fun getProfessorAttendanceList(user: Map<String, String>): MutableLiveData<List<AttendancesResponse>> {
+    fun getProfessorAttendanceList(classMap: Map<String, String>): MutableLiveData<List<AttendancesResponse>> {
         viewModelScope.launch {
             try {
-                val response = repository.attendanceGetDateList(user)
+                val response = repository.attendanceGetDateList(classMap)
                 if (response.code == 200) {
                     professorAttendanceListLiveDate.postValue(response.attendanceDateList)
                 }

@@ -5,6 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.goclass.network.dataclass.AttendancesResponse
 import com.example.goclass.databinding.ItemProfessorAttendanceBinding
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 class ProfessorAttendanceAdapter(
     private val listener: ProfessorAttendanceFragment,
@@ -45,7 +49,12 @@ class ProfessorAttendanceAdapter(
         private val listener: ProfessorAttendanceFragment,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(professorAttendanceItem: AttendancesResponse) {
-            binding.attendanceDateText.text = professorAttendanceItem.attendanceDate
+            val originalFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+            originalFormat.timeZone = TimeZone.getTimeZone("UTC")
+            val targetFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val date: Date = originalFormat.parse(professorAttendanceItem.attendanceDate)
+
+            binding.attendanceDateText.text = targetFormat.format(date)
             binding.studentListButton.setOnClickListener {
                 listener.onItemClicked(professorAttendanceItem.attendanceDate)
             }
