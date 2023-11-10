@@ -64,4 +64,20 @@ class ProfessorMainViewModel(
         }
         return classListLiveData
     }
+
+    fun deleteClass(classId: Int, professorId: Int) {
+        viewModelScope.launch {
+            try {
+                val response = classRepository.classDelete(classId)
+                if(response.code == 200) {
+                    _toastMessage.postValue("Successfully deleted")
+                    getClassList(mapOf("userId" to professorId.toString(), "userType" to "1"))
+                } else {
+                    _toastMessage.postValue("delete Failed")
+                }
+            } catch (e: Exception) {
+                Log.d("classDeleteError", e.message.toString())
+            }
+        }
+    }
 }

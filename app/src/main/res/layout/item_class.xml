@@ -2,8 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:padding="4dp">
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/dummyButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_vertical"
+        android:background="?attr/selectableItemBackground"/>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/classNameTextView"
@@ -14,5 +21,12 @@
         android:background="@drawable/class_list_bg"
         android:fontFamily="@font/relay_noto_sans_semibold"
         android:textSize="20sp"/>
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/deleteButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@android:drawable/ic_delete"
+        android:layout_gravity="center_vertical"/>
 
 </LinearLayout>
