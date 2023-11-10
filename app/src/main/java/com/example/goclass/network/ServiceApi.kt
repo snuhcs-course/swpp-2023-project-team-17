@@ -9,6 +9,8 @@ import com.example.goclass.network.dataclass.ClassListsResponse
 import com.example.goclass.network.dataclass.Classes
 import com.example.goclass.network.dataclass.ClassesResponse
 import com.example.goclass.network.dataclass.CodeMessageResponse
+import com.example.goclass.network.dataclass.CommentListsResponse
+import com.example.goclass.network.dataclass.Comments
 import com.example.goclass.network.dataclass.MessageListsResponse
 import com.example.goclass.network.dataclass.Messages
 import com.example.goclass.network.dataclass.MessagesResponse
@@ -82,16 +84,29 @@ interface ServiceApi {
         @Path("user_id") userId: Int,
     ): AttendanceListsResponse
 
-    @GET("/chat_channel/{channel_id}")
+    @GET("/chat_channel/{class_id}")
     suspend fun chatChannelGetList(
-        @Path("channel_id") channelId: Int,
+        @Path("class_id") classId: Int,
     ): MessageListsResponse
 
-    @POST("/chat_channel/{channel_id}")
+    @POST("/chat_channel/{class_id}")
     suspend fun chatChannelSend(
-        @Path("channel_id") channelId: Int,
+        @Path("class_id") classId: Int,
         @Body messages: Messages,
-    ): MessagesResponse
+    ): CodeMessageResponse
+
+    @GET("/chat_channel/{class_id}/comment/{id}")
+    suspend fun chatCommentGetList(
+        @Path("class_id") classId: Int,
+        @Path("id") id: Int,
+    ): CommentListsResponse
+
+    @POST("/chat_channel/{class_id}/comment/{id}")
+    suspend fun chatCommentSend(
+        @Path("class_id") classId: Int,
+        @Path("id") id: Int,
+        @Body comments: Comments,
+    ): CodeMessageResponse
 
     @GET("/attendance/{id}")
     suspend fun attendanceGet(

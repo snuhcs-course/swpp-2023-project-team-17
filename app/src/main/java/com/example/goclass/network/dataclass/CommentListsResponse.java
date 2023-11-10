@@ -1,19 +1,19 @@
 package com.example.goclass.network.dataclass;
-import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
 
-public class MessageListsResponse {
-    @SerializedName("messageList")
-    private List<Messages> messageList;
+import java.util.List;
 
+public class CommentListsResponse {
+    @SerializedName("messageList")
+    private List<Comments> commentList;
     @SerializedName("code")
     private int code;
     @SerializedName("message")
     private String message;
 
-    public List<Messages> getMessageList() {
-        return messageList;
+    public List<Comments> getCommentList() {
+        return commentList;
     }
 
     public int getCode() {

@@ -2,7 +2,7 @@ package com.example.goclass.network.dataclass;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Messages {
+public class Comments {
     @SerializedName("messageId")
     int messageId = -1;
     @SerializedName("timeStamp")
@@ -13,8 +13,10 @@ public class Messages {
     String content = "";
     @SerializedName("channelId")
     int channelId = -1;
+    @SerializedName("commentId")
+    int commentId = -1;
 
-    public Messages(int messageId, String timeStamp, int senderId, String content, int channelId) {
+    public Comments(int messageId, String timeStamp, int senderId, String content, int channelId) {
         this.messageId = messageId;
         this.timeStamp = timeStamp;
         this.senderId = senderId;
@@ -22,7 +24,7 @@ public class Messages {
         this.channelId = channelId;
     }
 
-    public Messages(int senderId, String content) {
+    public Comments(int senderId, String content) {
         this.senderId = senderId;
         this.content = content;
     }
@@ -33,9 +35,5 @@ public class Messages {
 
     public int getSenderId() {
         return senderId;
-    }
-
-    public int getMessageId() {
-        return messageId;
     }
 }
