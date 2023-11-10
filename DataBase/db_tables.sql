@@ -29,20 +29,16 @@ create table Takes (
     foreign key (class_id) references Classes(class_id) ON DELETE CASCADE
 );
 
-create table Channels (
-	channel_id int not null auto_increment primary key,
-    class_id int not null,
-	foreign key (class_id) references Classes(class_id) ON DELETE CASCADE
-);
-
 
 create table Messages (
     message_id int not null auto_increment primary key,
-	channel_id int not null,
+    comment_id int default(-1),
+	class_id int not null,
     time_stamp datetime not null default now(),
     sender_id int not null,
-    content varchar(500),
-    foreign key (channel_id) references Channels(channel_id) ON DELETE CASCADE,
+    sender_name varchar(50) not null,
+    content varchar(4000),
+    foreign key (class_id) references Classes(class_id) ON DELETE CASCADE,
     foreign key (sender_id) references Users(user_id)
 );
 
@@ -55,7 +51,7 @@ create table Attendances (
 	student_id int not null,
     class_id int not null,
     foreign key (class_id) references Takes(class_id) ON DELETE CASCADE,
-	foreign key (student_id) references Users(user_id),
+	foreign key (student_id) references Takes(student_id),
 	check (attendance_status >= 0 and attendance_status <= 2)
 );
 

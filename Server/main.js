@@ -144,7 +144,8 @@ app.get('/users/attendance', (req, res) => {
     const classId = req.query.classId;
 
     const sql = 'select attendance_date from Attendances '
-                + 'where is_sent = 1 and class_id = ?';
+                + 'where is_sent = 1 and class_id = ?'
+                + 'group by attendance_date';
 
     const params = [classId];
 
@@ -181,13 +182,12 @@ app.get('/users/attendance', (req, res) => {
 */
 app.get('/users/attendance/:date', (req, res) => {
     const attendanceDate = req.params.date;
-    const userId = req.query.userId;
+    const classId = req.query.classId;
     
     const sql = 'select * from Attendances '
-                + 'where is_sent = 1 and attendance_date = ? and class_id '
-                + 'in (select class_id from Classes where professor_id = ?)';
+                + 'where is_sent = 1 and attendance_date = ? and class_id = ?';
 
-    const params = [attendanceDate, userId];
+    const params = [attendanceDate, classId];
 
     connection.query(sql, params, (err, result) => {
         let resultCode = 404;
@@ -204,7 +204,9 @@ app.get('/users/attendance/:date', (req, res) => {
             attendanceList = result.map(item => ({
                 "attendanceId": item.attendance_id,
                 "attendanceStatus": item.attendance_status,
+                "attendanceDate": item.attendance_date,
                 "attendanceDuration": item.attendance_duration,
+                "isSent": item.is_sent,
                 "classId": item.class_id,
                 "studentId": item.student_id
             }));
@@ -485,6 +487,8 @@ app.get('/class/:id/attendance/:user_id', (req, res) => {
                 "attendanceId": item.attendance_id,
                 "attendanceStatus": item.attendance_status,
                 "attendanceDuration": item.attendance_duration,
+                "attendanceDate": item.attendance_date,
+                "isSent": item.is_sent,
                 "classId": item.class_id,
                 "studentId": item.student_id
             }));
@@ -502,16 +506,93 @@ app.get('/class/:id/attendance/:user_id', (req, res) => {
     });
 });
 
+// get comment message list of the message
+app.get('/chat_channel/:class_id/comment/:id', (req, res) => {
+    console.log(req.body);
+
+    const classId = req.params.class_id;
+    const commentId = req.params.id;
+
+    const sql = 'select * from Messages where class_id = ? and comment_id = ?';
+
+    const params = [classId, commentId];
+
+    connection.query(sql, params, (err, result) => {
+        let resultCode = 404;
+        let message = 'Error occured';
+        let messageList = [];
+
+        if (err) {
+            console.log(err);
+        } else if(result.length > 0) {
+            resultCode = 200;
+            message = 'get comment message list Success';
+            console.log(message);
+            messageList = result.map(item => ({
+                "messageId": item.message_id,
+                "commentId": item.comment_id,
+                "classId": item.class_id,
+                "timeStamp": item.time_stamp,
+                "senderId": item.sender_id,
+                "senderName": item.sender_name,
+                "content": item.content
+            }));
+        } else {
+            resultCode = 200;
+            message = 'messageList is empty';
+            console.log(message);
+        }
+
+        res.json({
+            'code': resultCode,
+            'message': message,
+            'messageList': messageList
+        });
+    });
+});
+
+
+// reply comment on a message
+app.post('/chat_channel/:class_id/comment/:id', (req, res) => {
+    console.log(req.body);
+
+    const classId = req.params.class_id;
+    const commentId = req.params.id;
+    const senderId = req.body.senderId;
+    const content = req.body.content;
+
+    const sql = 'insert into Messages(class_id, comment_id, sender_id, content, sender_name) values(?, ?, ?, ?, (select user_name from Users where user_id = ?))';
+
+    const params = [classId, commentId, senderId, content, senderId];
+
+    connection.query(sql, params, (err, result) => {
+        let resultCode = 404;
+        let message = 'Error occured';
+
+        if (err) {
+            console.log(err);
+        } else {
+            resultCode = 200;
+            message = 'send new comment message Success';
+            console.log(message);
+        }
+
+        res.json({
+            'code': resultCode,
+            'message': message
+        });
+    });
+});
 
 /*
     get messages list in chatting channel
 */
-app.get('/chat_channel/:channel_id', (req, res) => {
-    const channelId = req.params.channel_id;
+app.get('/chat_channel/:class_id', (req, res) => {
+    const classId = req.params.class_id;
 
-    const sql = 'select * from Messages where channel_id = ?';
+    const sql = 'select * from Messages where class_id = ?';
 
-    const params = [channelId];
+    const params = [classId];
 
     connection.query(sql, params, (err, result) => {
         let resultCode = 404;
@@ -526,9 +607,11 @@ app.get('/chat_channel/:channel_id', (req, res) => {
             console.log(message);
             messageList = result.map(item => ({
                 "messageId": item.message_id,
-                "channelId": item.channel_id,
+                "commentId": item.comment_id,
+                "classId": item.class_id,
                 "timeStamp": item.time_stamp,
                 "senderId": item.sender_id,
+                "senderName": item.sender_name,
                 "content": item.content
             }));
         } else {
@@ -546,18 +629,18 @@ app.get('/chat_channel/:channel_id', (req, res) => {
 });
 
 /*
-    send new message with channel_id, content of Messages
+    send new message with class_id, content of Messages
 */
-app.post('/chat_channel/:channel_id', (req, res) => {
+app.post('/chat_channel/:class_id', (req, res) => {
     console.log(req.body);
 
-    const channelId = req.params.channel_id;
+    const classId = req.params.class_id;
     const senderId = req.body.senderId;
     const content = req.body.content;
 
-    const sql = 'insert into Messages(channel_id, sender_id, content) values(?, ?, ?)';
+    const sql = 'insert into Messages(class_id, sender_id, content, sender_name) values(?, ?, ?, (select user_name from Users where user_id = ?))';
 
-    const params = [channelId, senderId, content];
+    const params = [classId, senderId, content, senderId];
 
     connection.query(sql, params, (err, result) => {
         let resultCode = 404;
