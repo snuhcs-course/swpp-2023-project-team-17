@@ -38,6 +38,7 @@ class CommentAdapter(private val userId: Int) :
             fun bind(comment: Comments, userId: Int) {
                 binding.commentText.text = comment.content
                 binding.commentEditButton.visibility = if (comment.senderId == userId) View.VISIBLE else View.GONE
+                binding.nameText.text = comment.senderName
             }
         }
 }

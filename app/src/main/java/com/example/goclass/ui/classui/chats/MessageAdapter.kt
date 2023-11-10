@@ -43,6 +43,7 @@ class MessageAdapter(
         fun bind(message: Messages, userId: Int, onMessageClicked: (Messages) -> Unit) {
             binding.messageText.text = message.content
             binding.chatEditButton.visibility = if (message.senderId == userId) View.VISIBLE else View.GONE
+            binding.nameText.text = message.senderName
 
             itemView.setOnClickListener{
                 onMessageClicked(message)

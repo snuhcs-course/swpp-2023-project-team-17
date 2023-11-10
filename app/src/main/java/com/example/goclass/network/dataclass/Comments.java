@@ -15,6 +15,8 @@ public class Comments {
     int channelId = -1;
     @SerializedName("commentId")
     int commentId = -1;
+    @SerializedName("senderName")
+    String senderName = "";
 
     public Comments(int messageId, String timeStamp, int senderId, String content, int channelId) {
         this.messageId = messageId;
@@ -35,5 +37,9 @@ public class Comments {
 
     public int getSenderId() {
         return senderId;
+    }
+
+    public String getSenderName() {
+        return senderName;
     }
 }

@@ -13,6 +13,8 @@ public class Messages {
     String content = "";
     @SerializedName("channelId")
     int channelId = -1;
+    @SerializedName("senderName")
+    String senderName = "";
 
     public Messages(int messageId, String timeStamp, int senderId, String content, int channelId) {
         this.messageId = messageId;
@@ -37,5 +39,9 @@ public class Messages {
 
     public int getMessageId() {
         return messageId;
+    }
+
+    public String getSenderName() {
+        return senderName;
     }
 }
