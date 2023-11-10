@@ -139,7 +139,7 @@ class ProfessorMainFragment : Fragment() {
         // show classList with dummy data
         val userMap = mapOf("userId" to userId.toString(), "userType" to "1")
         val classListLiveData = viewModel.getClassList(userMap)
-        val classListAdapter = ClassListAdapter()
+        val classListAdapter = ClassListAdapter(viewModel, 1)
         binding.professorClassRecyclerView.adapter = classListAdapter
         binding.professorClassRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
