@@ -17,8 +17,8 @@ class UserRepository(private val serviceApi: ServiceApi) {
 
     suspend fun userGetAttendanceListByDate(
         date: String,
-        usersMap: Map<String, String>,
-    ) = serviceApi.userGetAttendanceListByDate(date, usersMap)
+        classMap: Map<String, String>,
+    ) = serviceApi.userGetAttendanceListByDate(date, classMap)
 
-    suspend fun attendanceGetDateList(usersMap: Map<String, String>) = serviceApi.attendanceGetDateList(usersMap)
+    suspend fun attendanceGetDateList(classMap: Map<String, String>) = serviceApi.attendanceGetDateList(classMap)
 }

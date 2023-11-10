@@ -2,6 +2,7 @@ package com.example.goclass.ui.classui
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -21,6 +22,7 @@ class ClassActivity : AppCompatActivity() {
         val classSharedPref = getSharedPreferences("ClassPrefs", Context.MODE_PRIVATE)
         val classId = intent.getIntExtra("classId", -1)!!
         val className = intent.getStringExtra("className")!!
+        Log.d("classname", "classact: $className")
         with(classSharedPref?.edit()) {
             this?.putInt("classId", classId)
             this?.putString("className", className)

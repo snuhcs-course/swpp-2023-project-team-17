@@ -47,12 +47,12 @@ interface ServiceApi {
     @GET("users/attendance/{date}")
     suspend fun userGetAttendanceListByDate(
         @Path("date") date: String,
-        @QueryMap users: Map<String, String>,
+        @QueryMap classes: Map<String, String>,
     ): AttendanceListsResponse
 
     @GET("users/attendance")
     suspend fun attendanceGetDateList(
-        @QueryMap users: Map<String, String>,
+        @QueryMap classMap: Map<String, String>,
     ): AttendanceDateListsResponse
 
     @POST("/class/create")

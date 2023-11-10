@@ -23,7 +23,7 @@ val viewModelModule =
             StudentMainViewModel(get(), get(), androidApplication())
         }
         viewModel {
-            StudentAttendanceViewModel(get())
+            StudentAttendanceViewModel(get(), get())
         }
         viewModel {
             ProfessorAttendanceViewModel(get())
