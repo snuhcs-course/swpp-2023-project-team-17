@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.goclass.R
 import com.example.goclass.databinding.FragmentLoginBinding
+import com.example.goclass.ui.mainui.login.utils.StatusCheckUtils
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -85,17 +86,17 @@ class LoginFragment : Fragment() {
 
         // Login Button
         binding.loginButton.setOnClickListener {
-            signInWithGoogle()
+            if (!StatusCheckUtils.isNetworkConnected(requireContext())) {
+                StatusCheckUtils.showNetworkErrorSnackBar(binding.root)
+            } else {
+                StatusCheckUtils.showLoggingInSnackBar(binding.root)
+                signInWithGoogle()
+            }
         }
     }
 
     private fun signInWithGoogle() {
         val signInIntent = googleSignInClient.signInIntent
-        if (!isNetworkConnected()) {
-            val networkErrorSnackBar = Snackbar.make(binding.root, "No Network Connection", Snackbar.LENGTH_SHORT)
-            networkErrorSnackBar.setBackgroundTint(Color.parseColor("#FF515C"))
-            networkErrorSnackBar.show()
-        }
         signINLauncher.launch(signInIntent)
     }
 
@@ -105,22 +106,11 @@ class LoginFragment : Fragment() {
             .addOnCompleteListener(requireActivity()) { task ->
                 if (task.isSuccessful) {
                     viewModel.userLogin(account.email!!)
+                    StatusCheckUtils.showLoginSuccessSnackBar(binding.root)
                 } else {
+                    StatusCheckUtils.showLoginFailedSnackBar(binding.root)
                 }
             }
-    }
-
-    private fun isNetworkConnected(): Boolean {
-        val connectivityManager = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-        if (capabilities != null) {
-            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
-                return true
-            }
-        }
-        return false
     }
 
     override fun onDestroyView() {
