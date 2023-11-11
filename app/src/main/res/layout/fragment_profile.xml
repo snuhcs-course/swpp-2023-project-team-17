@@ -7,7 +7,6 @@
 
     <TextView
         android:id="@+id/name"
-        style="@style/SmallFont"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -15,19 +14,22 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="100dp"
         android:gravity="top"
+        android:fontFamily="@font/relay_noto_sans_bold"
         android:text="Name"
+        android:textSize="16sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/nameEditText"
-        style="@style/SmallFont"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginTop="16dp"
+        android:fontFamily="@font/relay_noto_sans_semibold"
         android:hint="Enter Name"
+        android:textSize="16sp"
         android:inputType="text"
         android:background="@drawable/edit_text_bg"
         android:padding="16dp"
@@ -43,9 +45,10 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
-        style="@style/SmallFont"
         android:gravity="top"
+        android:fontFamily="@font/relay_noto_sans_bold"
         android:text="Role"
+        android:textSize="16sp"
         app:layout_constraintTop_toBottomOf="@+id/nameEditText"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -86,31 +89,6 @@
         app:layout_constraintStart_toEndOf="@+id/professorRadioButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/role" />
-
-    <TextView
-        android:id="@+id/errorNameView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Enter your name"
-        android:textColor="@android:color/holo_red_dark"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameEditText"
-        android:layout_marginTop="8dp"/>
-
-    <TextView
-        android:id="@+id/errorTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Select your role"
-        android:textColor="@android:color/holo_red_dark"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/professorRadioButton"
-        android:layout_marginTop="8dp"/>
-
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/logoutButton"

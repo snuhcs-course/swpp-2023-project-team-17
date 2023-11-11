@@ -3,6 +3,7 @@ package com.example.goclass.ui.mainui.profile
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,8 @@ import androidx.navigation.fragment.findNavController
 import com.example.goclass.R
 import com.example.goclass.databinding.FragmentProfileBinding
 import com.example.goclass.ui.mainui.profile.utils.RadioButtonsUtils
+import com.example.goclass.ui.mainui.profile.utils.SharedPrefsUtils
+import com.example.goclass.ui.mainui.profile.utils.SnackBarUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -36,7 +39,6 @@ class ProfileFragment : Fragment() {
         return binding.root
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
@@ -46,35 +48,31 @@ class ProfileFragment : Fragment() {
             savedInstanceState,
         )
 
-        val sharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val storedUserName = sharedPref?.getString("userName", "") ?: ""
-        val storedUserRole = sharedPref?.getString("userRole", "") ?: ""
+        val storedUserName = SharedPrefsUtils.get(requireContext(), "userName", "") as String
+        val storedUserRole = SharedPrefsUtils.get(requireContext(), "userRole", "") as String
 
         if (storedUserName.isNotEmpty()) {
             binding.nameEditText.setText(storedUserName)
         } else {
-            val userId = sharedPref?.getInt("userId", -1) ?: -1
+            val userId = SharedPrefsUtils.get(requireContext(), "userId", -1) as Int
             viewModel.userGet(userId)
+            Log.d("profileid", userId.toString())
             viewModel.userName.observe(
                 viewLifecycleOwner,
                 Observer { receivedUserName ->
                     binding.nameEditText.setText(receivedUserName)
-                    saveToSharedPref("userName", receivedUserName)
+                    SharedPrefsUtils.save(requireContext(),"userName", receivedUserName)
                 },
             )
         }
 
         RadioButtonsUtils.restoreRadioButtonState(binding, storedUserRole)
 
-        viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
-            Toast.makeText(requireActivity().applicationContext, message, Toast.LENGTH_SHORT).show()
-        }
-
         viewModel.editSuccess.observe(viewLifecycleOwner) { isSuccess ->
             if (isSuccess) {
                 val selectedRole = RadioButtonsUtils.getSelectedRole(binding)
                 selectedRole?.let {
-                    saveToSharedPref("userRole", it)
+                    SharedPrefsUtils.save(requireContext(),"userRole", it)
                     when (it) {
                         "student" -> {
                             findNavController().navigate(R.id.action_profileFragment_to_studentMainFragment)
@@ -101,18 +99,14 @@ class ProfileFragment : Fragment() {
 
         // Logout Button
         binding.logoutButton.setOnClickListener {
-            sharedPref ?: return@setOnClickListener
-            saveToSharedPref("isLoggedIn", false)
-            saveToSharedPref("userRole", "")
-            saveToSharedPref("userName", "")
-            saveToSharedPref("userId", -1)
+            SharedPrefsUtils.clear(requireContext())
             findNavController().navigate(R.id.action_profileFragment_to_loginFragment)
         }
 
         // Confirm Button
         binding.confirmButton.setOnClickListener {
             val selectedRole = RadioButtonsUtils.getSelectedRole(binding)
-            val userId = sharedPref?.getInt("userId", -1) ?: -1
+            val userId = SharedPrefsUtils.get(requireContext(), "userId", -1) as Int
             val userType =
                 when (selectedRole) {
                     "student" -> 0
@@ -122,12 +116,11 @@ class ProfileFragment : Fragment() {
             val userName = binding.nameEditText.text.toString()
 
             if (userType == null) {
-                binding.errorTextView.visibility = View.VISIBLE
+                SnackBarUtils.showSnackBar(binding.root, "Please select your role.")
             } else if (userName == "") {
-                binding.errorNameView.visibility = View.VISIBLE
+                SnackBarUtils.showSnackBar(binding.root, "Please enter your name.")
             } else {
-                binding.errorNameView.visibility = View.GONE
-                binding.errorTextView.visibility = View.GONE
+                SharedPrefsUtils.save(requireContext(), "userName", userName)
                 viewModel.userEdit(userId, userType, userName)
             }
         }
@@ -138,24 +131,6 @@ class ProfileFragment : Fragment() {
             val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             imm?.hideSoftInputFromWindow(view.windowToken, 0)
             false
-        }
-    }
-
-    private fun saveToSharedPref(
-        key: String,
-        value: Any?,
-    ) {
-        val sharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE) ?: return
-        with(sharedPref.edit()) {
-            when (value) {
-                is String -> putString(key, value)
-                is Int -> putInt(key, value)
-                is Boolean -> putBoolean(key, value)
-                is Float -> putFloat(key, value)
-                is Long -> putLong(key, value)
-                else -> throw IllegalArgumentException("Not a valid type to save in Shared Preferences")
-            }
-            apply()
         }
     }
 }

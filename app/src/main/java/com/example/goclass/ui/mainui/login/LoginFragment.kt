@@ -77,6 +77,7 @@ class LoginFragment : Fragment() {
                 val sharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
                 with(sharedPref!!.edit()) {
                     putBoolean("isLoggedIn", true)
+                    Log.d("idcheck", userId.toString())
                     putInt("userId", userId)
                     apply()
                 }
