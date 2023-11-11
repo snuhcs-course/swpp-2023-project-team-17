@@ -2,6 +2,7 @@ package com.example.goclass.ui.mainui.login
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
@@ -10,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.goclass.R
@@ -89,6 +91,11 @@ class LoginFragment : Fragment() {
 
     private fun signInWithGoogle() {
         val signInIntent = googleSignInClient.signInIntent
+        if (!isNetworkConnected()) {
+            val networkErrorSnackBar = Snackbar.make(binding.root, "No Network Connection", Snackbar.LENGTH_SHORT)
+            networkErrorSnackBar.setBackgroundTint(Color.parseColor("#FF515C"))
+            networkErrorSnackBar.show()
+        }
         signINLauncher.launch(signInIntent)
     }
 
@@ -99,11 +106,6 @@ class LoginFragment : Fragment() {
                 if (task.isSuccessful) {
                     viewModel.userLogin(account.email!!)
                 } else {
-                    if (!isNetworkConnected()) {
-                        Snackbar.make(binding.root, "No Network Connection", Snackbar.LENGTH_SHORT).show()
-                    } else {
-                        Snackbar.make(binding.root, "Authentication Failed", Snackbar.LENGTH_SHORT).show()
-                    }
                 }
             }
     }
