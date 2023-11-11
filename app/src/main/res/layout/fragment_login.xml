@@ -8,7 +8,7 @@
         android:id="@+id/loginButton"
         android:layout_width="258dp"
         android:layout_height="60dp"
-        android:background="@drawable/loginbtn_google"
+        android:background="@drawable/login_btn_bg"
         android:layout_marginTop="100dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
