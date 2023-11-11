@@ -1,6 +1,7 @@
 package com.example.goclass.ui.mainui.profile
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -56,7 +58,6 @@ class ProfileFragment : Fragment() {
         } else {
             val userId = SharedPrefsUtils.get(requireContext(), "userId", -1) as Int
             viewModel.userGet(userId)
-            Log.d("profileid", userId.toString())
             viewModel.userName.observe(
                 viewLifecycleOwner,
                 Observer { receivedUserName ->
@@ -99,8 +100,24 @@ class ProfileFragment : Fragment() {
 
         // Logout Button
         binding.logoutButton.setOnClickListener {
-            SharedPrefsUtils.clear(requireContext())
-            findNavController().navigate(R.id.action_profileFragment_to_loginFragment)
+            val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_logout, null)
+            val alertDialog = AlertDialog.Builder(requireContext())
+                .setView(dialogView)
+                .create()
+
+            alertDialog.window?.setBackgroundDrawableResource(R.drawable.dialog_bg)
+
+            dialogView.findViewById<AppCompatButton>(R.id.yesButton).setOnClickListener {
+                SharedPrefsUtils.clear(requireContext())
+                findNavController().navigate(R.id.action_profileFragment_to_loginFragment)
+                alertDialog.dismiss()
+            }
+
+            dialogView.findViewById<AppCompatButton>(R.id.noButton).setOnClickListener {
+                alertDialog.dismiss()
+            }
+
+            alertDialog.show()
         }
 
         // Confirm Button
