@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.goclass.R
 import com.example.goclass.databinding.FragmentProfileBinding
+import com.example.goclass.ui.mainui.profile.utils.RadioButtonsUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -46,14 +47,14 @@ class ProfileFragment : Fragment() {
         )
 
         val sharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-
         val storedUserName = sharedPref?.getString("userName", "") ?: ""
-        if (storedUserName != "") {
+        val storedUserRole = sharedPref?.getString("userRole", "") ?: ""
+
+        if (storedUserName.isNotEmpty()) {
             binding.nameEditText.setText(storedUserName)
         } else {
             val userId = sharedPref?.getInt("userId", -1) ?: -1
             viewModel.userGet(userId)
-
             viewModel.userName.observe(
                 viewLifecycleOwner,
                 Observer { receivedUserName ->
@@ -63,33 +64,17 @@ class ProfileFragment : Fragment() {
             )
         }
 
-        binding = FragmentProfileBinding.bind(view)
+        RadioButtonsUtils.restoreRadioButtonState(binding, storedUserRole)
+
         viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
             Toast.makeText(requireActivity().applicationContext, message, Toast.LENGTH_SHORT).show()
         }
 
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            if (isLoading) {
-                binding.progressBar.visibility = View.VISIBLE
-            } else {
-                binding.progressBar.visibility = View.GONE
-            }
-        }
-
         viewModel.editSuccess.observe(viewLifecycleOwner) { isSuccess ->
             if (isSuccess) {
-                val selectedRole =
-                    when (binding.roleRadioGroup.checkedRadioButtonId) {
-                        R.id.studentRadioButton -> "student"
-                        R.id.professorRadioButton -> "professor"
-                        else -> null
-                    }
-                saveToSharedPref("userName", binding.nameEditText.text.toString())
-
+                val selectedRole = RadioButtonsUtils.getSelectedRole(binding)
                 selectedRole?.let {
-                    val sharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
                     saveToSharedPref("userRole", it)
-
                     when (it) {
                         "student" -> {
                             findNavController().navigate(R.id.action_profileFragment_to_studentMainFragment)
@@ -99,6 +84,18 @@ class ProfileFragment : Fragment() {
                         }
                     }
                 }
+            }
+        }
+
+        binding.professorRadioButton.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                binding.studentRadioButton.isChecked = false
+            }
+        }
+
+        binding.studentRadioButton.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                binding.professorRadioButton.isChecked = false
             }
         }
 
@@ -114,11 +111,12 @@ class ProfileFragment : Fragment() {
 
         // Confirm Button
         binding.confirmButton.setOnClickListener {
+            val selectedRole = RadioButtonsUtils.getSelectedRole(binding)
             val userId = sharedPref?.getInt("userId", -1) ?: -1
             val userType =
-                when (binding.roleRadioGroup.checkedRadioButtonId) {
-                    R.id.studentRadioButton -> 0
-                    R.id.professorRadioButton -> 1
+                when (selectedRole) {
+                    "student" -> 0
+                    "professor" -> 1
                     else -> null
                 }
             val userName = binding.nameEditText.text.toString()
@@ -134,18 +132,6 @@ class ProfileFragment : Fragment() {
             }
         }
 
-        // Remember whether user is a student or a professor
-        when (sharedPref?.getString("userRole", "") ?: "") {
-            "student" -> {
-                binding.studentRadioButton.isChecked = true
-            }
-            "professor" -> {
-                binding.professorRadioButton.isChecked = true
-            }
-            else -> {
-                // Do Nothing
-            }
-        }
 
         // Keyboard down when you touch other space in screen
         binding.root.setOnTouchListener { _, _ ->
