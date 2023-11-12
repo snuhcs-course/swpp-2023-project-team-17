@@ -23,6 +23,11 @@ public class Comments {
         this.content = content;
     }
 
+    public Comments(String content, int messageId) {
+        this.messageId = messageId;
+        this.content = content;
+    }
+
     public String getContent() {
         return content;
     }

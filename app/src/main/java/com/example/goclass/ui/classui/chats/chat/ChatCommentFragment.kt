@@ -43,17 +43,21 @@ class ChatCommentFragment : Fragment() {
 
         binding.chatMessage.text = content
 
+        // Back Button
         binding.backButton.setOnClickListener {
             findNavController().navigate(ChatCommentFragmentDirections.actionChatCommentFragmentToChatFragment())
         }
 
+        // Chat Send Button
         binding.commentSendButton.setOnClickListener {
             viewModel.chatCommentSend(classId, messageId, userId, binding.commentText.text.toString())
             binding.commentText.setText("")
         }
 
         val commentListLiveData = viewModel.chatCommentGetList(classId, messageId)
-        val commentAdapter = CommentAdapter(userId)
+        val commentAdapter = CommentAdapter(requireContext(), userId) { classId, content, commentId, messageId ->
+            viewModel.chatCommentEdit(classId, content, commentId, messageId)
+        }
         binding.commentRecyclerView.adapter = commentAdapter
         binding.commentRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         commentListLiveData.observe(viewLifecycleOwner) {commentList ->

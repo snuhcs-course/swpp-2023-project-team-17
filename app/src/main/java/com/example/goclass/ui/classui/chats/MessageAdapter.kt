@@ -2,28 +2,23 @@ package com.example.goclass.ui.classui.chats
 
 import android.app.Dialog
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
 import android.widget.EditText
-import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
-import com.example.goclass.network.dataclass.MessageDummy
 import com.example.goclass.databinding.ItemMessageBinding
-import com.example.goclass.network.dataclass.Classes
 import com.example.goclass.network.dataclass.Messages
 import com.example.goclass.R
-import kotlinx.coroutines.launch
 
 class MessageAdapter(
     private val context: Context,
     private val userId: Int,
     private val onMessageClicked: (Messages) -> Unit,
     private val onMessageEdit: (Int, String, Int) -> Unit
-) :
+):
     RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {
     private var messageList = listOf<Messages>()
 
