@@ -5,26 +5,18 @@ import com.google.gson.annotations.SerializedName;
 public class Comments {
     @SerializedName("messageId")
     int messageId = -1;
+    @SerializedName("classId")
+    int classId = -1;
     @SerializedName("timeStamp")
     String timeStamp = "";
     @SerializedName("senderId")
     int senderId = -1;
     @SerializedName("content")
     String content = "";
-    @SerializedName("channelId")
-    int channelId = -1;
     @SerializedName("commentId")
     int commentId = -1;
     @SerializedName("senderName")
     String senderName = "";
-
-    public Comments(int messageId, String timeStamp, int senderId, String content, int channelId) {
-        this.messageId = messageId;
-        this.timeStamp = timeStamp;
-        this.senderId = senderId;
-        this.content = content;
-        this.channelId = channelId;
-    }
 
     public Comments(int senderId, String content) {
         this.senderId = senderId;
@@ -41,5 +33,21 @@ public class Comments {
 
     public String getSenderName() {
         return senderName;
+    }
+
+    public int getMessageId() {
+        return messageId;
+    }
+
+    public int getClassId() {
+        return classId;
+    }
+
+    public String getTimeStamp() {
+        return timeStamp;
+    }
+
+    public int getCommentId() {
+        return commentId;
     }
 }

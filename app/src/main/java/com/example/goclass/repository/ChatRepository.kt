@@ -13,6 +13,11 @@ class ChatRepository(private val serviceApi: ServiceApi) {
         messages: Messages,
     ) = serviceApi.chatChannelSend(classId, messages)
 
+    suspend fun chatChannelEdit(
+        classId: Int,
+        messages: Messages,
+    ) = serviceApi.chatChannelEdit(classId, messages)
+
     suspend fun chatCommentGetList(
         classId: Int,
         id: Int,
@@ -23,4 +28,10 @@ class ChatRepository(private val serviceApi: ServiceApi) {
         id: Int,
         comments: Comments,
     ) = serviceApi.chatCommentSend(classId, id, comments)
+
+    suspend fun chatCommentEdit(
+        classId: Int,
+        id: Int,
+        comments: Comments,
+    ) = serviceApi.chatCommentEdit(classId, id, comments)
 }

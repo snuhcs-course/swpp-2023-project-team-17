@@ -65,19 +65,23 @@ class ChatFragment : Fragment() {
             }
         }
 
+        // Chat Send Button
         binding.chatSendButton.setOnClickListener {
             viewModel.chatChannelSend(classId, userId, binding.chatText.text.toString())
             binding.chatText.setText("")
         }
 
         val messageListLiveData = viewModel.chatChannelGetList(classId)
-        val messageAdapter = MessageAdapter(userId) {message ->
+        val messageAdapter = MessageAdapter(requireContext(), userId, {message ->
             val action = ChatFragmentDirections.actionChatFragmentToChatCommentFragment(
                 messageId = message.messageId,
                 content = message.content,
             )
             findNavController().navigate(action)
-        }
+        },
+        { classId, content, messageId ->
+            viewModel.chatChannelEdit(classId, content, messageId)
+        })
         binding.chatRecyclerView.adapter = messageAdapter
         binding.chatRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         messageListLiveData.observe(viewLifecycleOwner) {messageList ->

@@ -50,4 +50,24 @@ class ChatViewModel(
         }
         return messageListLiveData
     }
+
+    fun chatChannelEdit(
+        classId: Int,
+        content: String,
+        messageId: Int,
+    ) {
+        val editMessages = Messages(content, messageId)
+        viewModelScope.launch {
+            try {
+                val response = repository.chatChannelEdit(classId, editMessages)
+                if(response.code == 200) {
+                    chatChannelGetList(classId)
+                } else {
+                    //toast message
+                }
+            } catch (e:Exception) {
+                Log.d("chatEditError", e.message.toString())
+            }
+        }
+    }
 }

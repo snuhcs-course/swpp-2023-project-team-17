@@ -95,6 +95,12 @@ interface ServiceApi {
         @Body messages: Messages,
     ): CodeMessageResponse
 
+    @PUT("/chat_channel/{class_id}")
+    suspend fun chatChannelEdit(
+        @Path("class_id") classId: Int,
+        @Body messages: Messages,
+    ): CodeMessageResponse
+
     @GET("/chat_channel/{class_id}/comment/{id}")
     suspend fun chatCommentGetList(
         @Path("class_id") classId: Int,
@@ -103,6 +109,13 @@ interface ServiceApi {
 
     @POST("/chat_channel/{class_id}/comment/{id}")
     suspend fun chatCommentSend(
+        @Path("class_id") classId: Int,
+        @Path("id") id: Int,
+        @Body comments: Comments,
+    ): CodeMessageResponse
+
+    @PUT("/chat_channel/{class_id}/comment/{id}")
+    suspend fun chatCommentEdit(
         @Path("class_id") classId: Int,
         @Path("id") id: Int,
         @Body comments: Comments,
