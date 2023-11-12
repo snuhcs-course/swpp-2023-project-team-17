@@ -179,13 +179,13 @@
 
     <TextView
         android:id="@+id/classTime"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="10dp"
+        android:layout_margin="20dp"
         android:text="Class Time"
         style="@style/SmallFont"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/classNameEdittext" />
 
     <TextView
