@@ -5,6 +5,7 @@ import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,10 +21,12 @@ import com.example.goclass.ui.classui.ClassActivity
 import com.example.goclass.R
 import com.example.goclass.databinding.FragmentProfessorMainBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.example.goclass.ui.mainui.usermain.ClassListAdapter
 
 class ProfessorMainFragment : Fragment() {
     private lateinit var binding: FragmentProfessorMainBinding
     private val viewModel: ProfessorMainViewModel by viewModel()
+    private lateinit var classListAdapter: ClassListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,6 +37,9 @@ class ProfessorMainFragment : Fragment() {
 
         val sharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         val userId = sharedPref!!.getInt("userId", -1)
+        classListAdapter = ClassListAdapter(viewModel, 1)
+        binding.professorClassRecyclerView.adapter = classListAdapter
+        binding.professorClassRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
             Toast.makeText(requireActivity().applicationContext, message, Toast.LENGTH_SHORT).show()
@@ -139,9 +145,6 @@ class ProfessorMainFragment : Fragment() {
         // show classList with dummy data
         val userMap = mapOf("userId" to userId.toString(), "userType" to "1")
         val classListLiveData = viewModel.getClassList(userMap)
-        val classListAdapter = ClassListAdapter(viewModel, 1)
-        binding.professorClassRecyclerView.adapter = classListAdapter
-        binding.professorClassRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         classListLiveData.observe(viewLifecycleOwner) { classList ->
             classListAdapter.setClassList(classList)
@@ -165,6 +168,12 @@ class ProfessorMainFragment : Fragment() {
         binding.professorClassRecyclerView.setOnClickListener {
             val intent = Intent(view.context, ClassActivity::class.java)
             startActivity(intent)
+        }
+
+        // hide delete button
+        binding.root.setOnTouchListener { _, _ ->
+            classListAdapter.hideAllDeleteButtons()
+            true
         }
     }
 
