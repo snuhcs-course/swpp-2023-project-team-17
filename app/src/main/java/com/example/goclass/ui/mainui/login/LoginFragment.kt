@@ -82,6 +82,9 @@ class LoginFragment : Fragment() {
                 }
                 findNavController().navigate(R.id.action_loginFragment_to_profileFragment)
             }
+            else {
+                StatusCheckUtils.showLoginFailedSnackBar(binding.root)
+            }
         }
 
         // Login Button
@@ -104,6 +107,7 @@ class LoginFragment : Fragment() {
         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
         FirebaseAuth.getInstance().signInWithCredential(credential)
             .addOnCompleteListener(requireActivity()) { task ->
+                Log.d("loginaa", task.isSuccessful.toString())
                 if (task.isSuccessful) {
                     viewModel.userLogin(account.email!!)
                     StatusCheckUtils.showLoginSuccessSnackBar(binding.root)

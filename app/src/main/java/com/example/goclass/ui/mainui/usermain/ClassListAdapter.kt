@@ -58,8 +58,14 @@ class ClassListAdapter(
                 intent.putExtra("className", classItem.className)
                 ContextCompat.startActivity(itemView.context, intent, null)
             }
-            binding.deleteButton.visibility = if (userType == 1) View.VISIBLE else View.GONE
-            binding.dummyButton.visibility = if (userType == 1) View.VISIBLE else View.GONE
+            binding.deleteButton.visibility = View.GONE
+
+            binding.classNameTextView.setOnLongClickListener {
+                if (userType == 1) {
+                    binding.deleteButton.visibility = View.VISIBLE
+                }
+                true
+            }
 
             binding.deleteButton.setOnClickListener {
                 viewModel.deleteClass(classItem.classId, classItem.professorId)

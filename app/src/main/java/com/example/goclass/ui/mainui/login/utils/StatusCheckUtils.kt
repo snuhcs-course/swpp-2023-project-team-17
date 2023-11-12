@@ -35,7 +35,7 @@ object StatusCheckUtils {
     }
 
     fun showLoginFailedSnackBar(view: View) {
-        Snackbar.make(view, "Login Failed", Snackbar.LENGTH_SHORT)
+        Snackbar.make(view, "Login Failed: Server error", Snackbar.LENGTH_SHORT)
             .setBackgroundTint(Color.parseColor("#FF515C"))
             .show()
     }
