@@ -48,7 +48,7 @@ class StudentAttendanceFragment : Fragment() {
         }
 
         binding.button.setOnClickListener {
-            viewModel.attendanceAdd(classId, userId)
+            viewModel.addAttendance(classId, userId)
         }
 
         // show studentAttendanceList with dummy data

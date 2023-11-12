@@ -23,6 +23,20 @@ public class AttendancesResponse {
     @SerializedName("message")
     private String message;
 
+    public AttendancesResponse(int attendanceId, int attendanceStatus, String attendanceDate, int attendanceDuration, int isSent, int studentId, int classId) {
+        this.attendanceId = attendanceId;
+        this.attendanceStatus = attendanceStatus;
+        this.attendanceDate = attendanceDate;
+        this.attendanceDuration = attendanceDuration;
+        this.isSent = isSent;
+        this.studentId = studentId;
+        this.classId = classId;
+    }
+
+    public AttendancesResponse(String attendanceDate) {
+        this.attendanceDate = attendanceDate;
+    }
+
     public int getAttendanceId() {
         return attendanceId;
     }
