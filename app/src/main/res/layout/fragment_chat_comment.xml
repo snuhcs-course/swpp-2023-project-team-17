@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    tools:context=".ui.classui.chats.chat.ChatFragment">
+    tools:context=".ui.classui.chats.chat.ChatCommentFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -25,36 +24,19 @@
             android:src="@drawable/back"
             android:contentDescription="To back page button"
             android:layout_gravity="start"/>
-
-        <TextView
-            android:id="@+id/className"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="className"
-            style="@style/SmallFont"
-            android:layout_gravity="center" />
-
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/attendanceButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@color/white"
-            android:src="@drawable/baseline_calendar_month_24"
-            android:contentDescription="To attendance page button"
-            android:layout_gravity="end" />
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/chatRecyclerView"
+        android:id="@+id/commentRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/chatMessage" />
 
     <RelativeLayout
-        android:id="@+id/chatui"
+        android:id="@+id/commentui"
         android:layout_width="360dp"
         android:layout_height="60dp"
         android:layout_alignParentLeft="true"
@@ -68,7 +50,7 @@
         >
 
         <EditText
-            android:id="@+id/chatText"
+            android:id="@+id/commentText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -77,7 +59,7 @@
             android:hint="write your messages" />
 
         <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/chatSendButton"
+            android:id="@+id/commentSendButton"
             android:layout_width="27dp"
             android:layout_height="25dp"
             android:layout_alignParentLeft="true"
@@ -87,5 +69,17 @@
             android:background="#929292"
             android:src="@android:drawable/ic_menu_send" />
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/chatMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:textSize="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

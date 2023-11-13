@@ -40,5 +40,24 @@
         <action
             android:id="@+id/action_chatFragment_to_studentAttendanceFragment"
             app:destination="@id/studentAttendanceFragment" />
+        <action
+            android:id="@+id/action_chatFragment_to_chatCommentFragment"
+            app:destination="@id/chatCommentFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/chatCommentFragment"
+        android:name="com.example.goclass.ui.classui.chats.chat.ChatCommentFragment"
+        android:label="fragment_chat_comment" >
+        <argument
+            android:name="messageId"
+            app:argType="integer" />
+        <argument
+            android:name="content"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_chatCommentFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
     </fragment>
 </navigation>
