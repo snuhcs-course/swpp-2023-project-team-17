@@ -12,6 +12,12 @@ public class AttendanceListsResponse {
     @SerializedName("message")
     private String message;
 
+    public AttendanceListsResponse(List<AttendancesResponse> attendanceList, int code, String message) {
+        this.attendanceList = attendanceList;
+        this.code = code;
+        this.message = message;
+    }
+
     public List<AttendancesResponse> getAttendanceList() {
         return attendanceList;
     }

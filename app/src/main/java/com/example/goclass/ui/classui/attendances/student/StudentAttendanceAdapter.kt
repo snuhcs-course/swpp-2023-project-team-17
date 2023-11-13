@@ -9,7 +9,6 @@ import com.example.goclass.R
 import com.example.goclass.network.dataclass.AttendancesResponse
 import com.example.goclass.databinding.ItemStudentAttendanceBinding
 import com.example.goclass.repository.AttendanceRepository
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

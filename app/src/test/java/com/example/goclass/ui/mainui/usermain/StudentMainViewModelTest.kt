@@ -82,8 +82,8 @@ class StudentMainViewModelTest {
     @Test
     fun getClassList_success() =
         runTest {
-            val mockUserMap = mapOf("userId" to "1", "userType" to "0")
-            val mockClassListResponse =
+            val userMap = mapOf("userId" to "1", "userType" to "0")
+            val mockClassListsResponse =
                 ClassListsResponse(
                     listOf(
                         Classes(
@@ -99,9 +99,9 @@ class StudentMainViewModelTest {
                     "Success",
                 )
 
-            coEvery { mockUserRepository.userGetClassList(any()) } returns mockClassListResponse
+            coEvery { mockUserRepository.userGetClassList(any()) } returns mockClassListsResponse
 
-            viewModel.getClassList(mockUserMap)
+            viewModel.getClassList(userMap)
 
             val liveDataValue = viewModel.classListLiveData.getOrAwaitValue()
             assertEquals(1, liveDataValue.size)
