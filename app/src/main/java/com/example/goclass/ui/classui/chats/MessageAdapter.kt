@@ -17,8 +17,8 @@ class MessageAdapter(
     private val context: Context,
     private val userId: Int,
     private val onMessageClicked: (Messages) -> Unit,
-    private val onMessageEdit: (Int, String, Int) -> Unit
-):
+    private val onMessageEdit: (Int, String, Int) -> Unit,
+) :
     RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {
     private var messageList = listOf<Messages>()
 
@@ -26,6 +26,7 @@ class MessageAdapter(
         messageList = list
         notifyDataSetChanged()
     }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -46,14 +47,17 @@ class MessageAdapter(
 
     override fun getItemCount(): Int = messageList.size
 
-    class MessageViewHolder(var binding: ItemMessageBinding, var context: Context) :
+    class MessageViewHolder(
+        var binding: ItemMessageBinding,
+        var context: Context,
+    ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(message: Messages, userId: Int, onMessageClicked: (Messages) -> Unit, onMessageEdit: (Int, String, Int) -> Unit) {
             binding.messageText.text = message.content
             binding.chatEditButton.visibility = if (message.senderId == userId) View.VISIBLE else View.GONE
             binding.nameText.text = message.senderName
 
-            itemView.setOnClickListener{
+            itemView.setOnClickListener {
                 onMessageClicked(message)
             }
 

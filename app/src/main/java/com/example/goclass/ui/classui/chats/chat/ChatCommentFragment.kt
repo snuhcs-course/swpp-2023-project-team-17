@@ -9,26 +9,24 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.goclass.R
-import com.example.goclass.databinding.FragmentChatBinding
 import com.example.goclass.databinding.FragmentChatCommentBinding
-import com.example.goclass.databinding.ItemCommentBinding
-import com.example.goclass.ui.classui.chats.MessageAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
 
 class ChatCommentFragment : Fragment() {
     private lateinit var binding: FragmentChatCommentBinding
     private val viewModel: ChatCommentViewModel by viewModel()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         binding = FragmentChatCommentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         val args: ChatCommentFragmentArgs by navArgs()

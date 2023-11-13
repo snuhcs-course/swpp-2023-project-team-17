@@ -13,7 +13,6 @@ import com.example.goclass.network.dataclass.CommentListsResponse
 import com.example.goclass.network.dataclass.Comments
 import com.example.goclass.network.dataclass.MessageListsResponse
 import com.example.goclass.network.dataclass.Messages
-import com.example.goclass.network.dataclass.MessagesResponse
 import com.example.goclass.network.dataclass.Users
 import com.example.goclass.network.dataclass.UsersResponse
 import retrofit2.http.Body
