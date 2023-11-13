@@ -86,7 +86,7 @@ class ProfessorMainViewModelTest {
     @Test
     fun getClassList_success() =
         runTest {
-            val mockUserMap = mapOf("userId" to "1", "userType" to "1")
+            val userMap = mapOf("userId" to "1", "userType" to "1")
             val mockClassListResponse =
                 ClassListsResponse(
                     listOf(
@@ -107,7 +107,7 @@ class ProfessorMainViewModelTest {
             coEvery { mockUserRepository.userGetClassList(any()) } returns mockClassListResponse
 
             // Invoke the function
-            viewModel.getClassList(mockUserMap)
+            viewModel.getClassList(userMap)
 
             // Check if the LiveData has been updated
             val liveDataValue = viewModel.classListLiveData.getOrAwaitValue()

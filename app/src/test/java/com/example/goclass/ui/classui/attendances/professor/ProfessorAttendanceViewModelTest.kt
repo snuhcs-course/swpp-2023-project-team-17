@@ -35,7 +35,7 @@ class ProfessorAttendanceViewModelTest {
     @Test
     fun getProfessorAttendanceList_success() =
         runTest {
-            val mockClassMap = mapOf("classId" to "1", "userType" to "1")
+            val classMap = mapOf("classId" to "1", "userType" to "1")
             val mockAttendanceDateListsResponse =
                 AttendanceDateListsResponse(
                     listOf(
@@ -51,7 +51,7 @@ class ProfessorAttendanceViewModelTest {
             coEvery { mockRepository.attendanceGetDateList(any()) } returns mockAttendanceDateListsResponse
 
             // Invoke the function
-            viewModel.getProfessorAttendanceList(mockClassMap)
+            viewModel.getProfessorAttendanceList(classMap)
 
             // Check if the LiveData has been updated
             val liveDataValue = viewModel.professorAttendanceListLiveData.getOrAwaitValue()
