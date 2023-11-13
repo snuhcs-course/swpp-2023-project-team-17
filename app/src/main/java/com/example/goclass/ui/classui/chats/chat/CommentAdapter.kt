@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.goclass.R
 import com.example.goclass.databinding.ItemCommentBinding
 import com.example.goclass.network.dataclass.Comments
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class CommentAdapter(
     private val context: Context,
@@ -51,6 +53,17 @@ class CommentAdapter(
             binding.commentText.text = comment.content
             binding.commentEditButton.visibility = if (comment.senderId == userId) View.VISIBLE else View.GONE
             binding.nameText.text = comment.senderName
+
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+            val outputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+            try {
+                val parsedDate = inputFormat.parse(comment.timeStamp)
+                val formattedDate = outputFormat.format(parsedDate)
+                binding.timeStampText.text = formattedDate
+            } catch (e: Exception) {
+                e.printStackTrace()
+                binding.timeStampText.text = comment.timeStamp
+            }
 
             // Chat Edit Button
             binding.commentEditButton.setOnClickListener {
