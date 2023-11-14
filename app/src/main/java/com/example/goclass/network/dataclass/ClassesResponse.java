@@ -14,24 +14,24 @@ public class ClassesResponse {
     @SerializedName("classTime")
     String classTime;
     @SerializedName("classTime")
-    int buildingNumber;
+    String buildingNumber;
     @SerializedName("classTime")
-    int roomNumber;
+    String roomNumber;
 
     @SerializedName("code")
     private int code;
     @SerializedName("message")
     private String message;
 
-    public ClassesResponse(int code, String message, String className, String classCode, int professorId, String classTime, int buildingNumber, int roomNumber) {
-        this.code = code;
-        this.message = message;
+    public ClassesResponse(String className, String classCode, int professorId, String classTime, String buildingNumber, String roomNumber, int code, String message) {
         this.className = className;
         this.classCode = classCode;
         this.professorId = professorId;
         this.classTime = classTime;
         this.buildingNumber = buildingNumber;
         this.roomNumber = roomNumber;
+        this.code = code;
+        this.message = message;
     }
 
     public int getClassId() {
@@ -54,11 +54,11 @@ public class ClassesResponse {
         return classTime;
     }
 
-    public int getBuildingNumber() {
+    public String getBuildingNumber() {
         return buildingNumber;
     }
 
-    public int getRoomNumber() {
+    public String getRoomNumber() {
         return roomNumber;
     }
     public int getCode() {

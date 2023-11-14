@@ -1,5 +1,6 @@
 package com.example.goclass.repository
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.goclass.network.ServiceApi
 import com.example.goclass.network.dataclass.Attendances
 import com.example.goclass.network.dataclass.AttendancesResponse
@@ -8,19 +9,31 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import junit.framework.TestCase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
+@ExperimentalCoroutinesApi
 class AttendanceRepositoryTest {
     private lateinit var repository: AttendanceRepository
     private val mockServiceApi: ServiceApi = mockk()
     private val attendanceId = 1
+    private val testDispatcher = UnconfinedTestDispatcher()
+
+    @get:Rule
+    val instantExecutorRule = InstantTaskExecutorRule()
 
     @Before
     fun setUp() {
+        Dispatchers.setMain(testDispatcher)
         repository = AttendanceRepository(mockServiceApi)
     }
 
@@ -141,5 +154,6 @@ class AttendanceRepositoryTest {
 
     @After
     fun tearDown() {
+        Dispatchers.resetMain()
     }
 }

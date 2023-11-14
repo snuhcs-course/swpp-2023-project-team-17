@@ -9,11 +9,7 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.goclass.R
-import com.example.goclass.databinding.FragmentChatBinding
 import com.example.goclass.databinding.FragmentChatCommentBinding
-import com.example.goclass.databinding.ItemCommentBinding
-import com.example.goclass.ui.classui.chats.MessageAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
