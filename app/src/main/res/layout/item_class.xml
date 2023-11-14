@@ -19,7 +19,7 @@
         android:id="@+id/deleteButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:background="@color/white"
+        android:background="@null"
         android:layout_gravity="end|center_vertical"
         android:src="@android:drawable/ic_delete" />
 
