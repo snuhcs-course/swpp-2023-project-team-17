@@ -513,7 +513,7 @@ app.get('/chat_channel/:class_id/comment/:id', (req, res) => {
     const classId = req.params.class_id;
     const commentId = req.params.id;
 
-    const sql = 'select * from Messages where class_id = ? and comment_id = ?';
+    const sql = 'select * from Messages where class_id = ? and comment_id = ? order by time_stamp';
 
     const params = [classId, commentId];
 
@@ -584,13 +584,43 @@ app.post('/chat_channel/:class_id/comment/:id', (req, res) => {
     });
 });
 
+// update comment on a message
+app.put('/chat_channel/:class_id/comment/:id', (req, res) => {
+    console.log(req.body);
+
+    const messageId = req.body.messageId;
+    const content = req.body.content;
+
+    const sql = 'update Messages set content = ? where message_id = ?';
+
+    const params = [content, messageId];
+
+    connection.query(sql, params, (err, result) => {
+        let resultCode = 404;
+        let message = 'Error occured';
+
+        if (err) {
+            console.log(err);
+        } else {
+            resultCode = 200;
+            message = 'update message content Success';
+            console.log(message);
+        }
+
+        res.json({
+            'code': resultCode,
+            'message': message
+        });
+    });
+});
+
 /*
     get messages list in chatting channel
 */
 app.get('/chat_channel/:class_id', (req, res) => {
     const classId = req.params.class_id;
 
-    const sql = 'select * from Messages where class_id = ?';
+    const sql = 'select * from Messages where class_id = ? order by time_stamp';
 
     const params = [classId];
 
@@ -651,6 +681,36 @@ app.post('/chat_channel/:class_id', (req, res) => {
         } else {
             resultCode = 200;
             message = 'send new message Success';
+            console.log(message);
+        }
+
+        res.json({
+            'code': resultCode,
+            'message': message
+        });
+    });
+});
+
+// modify content of message
+app.put('/chat_channel/:class_id', (req, res) => {
+    console.log(req.body);
+
+    const messageId = req.body.messageId;
+    const content = req.body.content;
+
+    const sql = 'update Messages set content = ? where message_id = ?';
+
+    const params = [content, messageId];
+
+    connection.query(sql, params, (err, result) => {
+        let resultCode = 404;
+        let message = 'Error occured';
+
+        if (err) {
+            console.log(err);
+        } else {
+            resultCode = 200;
+            message = 'update message content Success';
             console.log(message);
         }
 
