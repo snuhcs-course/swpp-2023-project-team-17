@@ -5,7 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.icu.util.Calendar
-import com.example.goclass.ui.classui.attendances.AttendanceReceiver
+import com.example.goclass.ui.classui.attendances.reciever.AttendanceReceiver
 
 class ClassScheduler {
     fun scheduleClass(

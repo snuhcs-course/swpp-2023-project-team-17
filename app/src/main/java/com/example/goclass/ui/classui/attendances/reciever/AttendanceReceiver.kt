@@ -1,8 +1,9 @@
-package com.example.goclass.ui.classui.attendances
+package com.example.goclass.ui.classui.attendances.reciever
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.example.goclass.ui.classui.attendances.service.AttendanceService
 
 class AttendanceReceiver : BroadcastReceiver() {
     override fun onReceive(

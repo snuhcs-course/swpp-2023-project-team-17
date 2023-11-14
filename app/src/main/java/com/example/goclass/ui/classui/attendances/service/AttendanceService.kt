@@ -1,18 +1,47 @@
-package com.example.goclass.ui.classui.attendances
+package com.example.goclass.ui.classui.attendances.service
 
 import android.app.Service
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.os.IBinder
 import android.util.Log
 import com.example.goclass.network.dataclass.Attendances
 import com.example.goclass.repository.AttendanceRepository
+import com.example.goclass.ui.classui.attendances.callback.BleScanCallback
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class AttendanceService : Service() {
+class AttendanceService : Service(), BleScanCallback {
     private lateinit var repository: AttendanceRepository
+
+    private lateinit var bleScanningService: BleScanningService
+    private var isDeviceFound = false
+
+    override fun onCreate() {
+        super.onCreate()
+
+        bleScanningService = BleScanningService()
+        bleScanningService.setBleScanCallback(this)
+
+        // Start the BleScanningService
+        val serviceIntent = Intent(this, BleScanningService::class.java)
+        startService(serviceIntent)
+
+        // Bind to the BleScanningService
+        val bindIntent = Intent(this, BleScanningService::class.java)
+        bindService(bindIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        // Unbind from the BleScanningService
+        unbindService(serviceConnection)
+    }
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -112,5 +141,33 @@ class AttendanceService : Service() {
                 Log.e("AttendanceSaveError", e.message.toString())
             }
         }
+    }
+
+    override fun onDeviceFound() {
+        // Handle the device found event
+        isDeviceFound = true
+        // Perform actions based on device found
+        Log.i(TAG, "Device found!")
+    }
+
+    override fun onScanFailed(errorCode: Int) {
+        // Handle the scan failure event
+        isDeviceFound = false
+        // Perform actions based on scan failure
+        Log.e(TAG, "Scan failed with error code: $errorCode")
+    }
+
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            // Called when the connection is established
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            // Called when the connection is unexpectedly disconnected
+        }
+    }
+
+    companion object {
+        private const val TAG = "AttendanceService"
     }
 }
