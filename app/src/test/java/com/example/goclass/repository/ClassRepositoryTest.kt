@@ -1,5 +1,6 @@
 package com.example.goclass.repository
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.goclass.network.ServiceApi
 import com.example.goclass.network.dataclass.AttendanceListsResponse
 import com.example.goclass.network.dataclass.AttendancesResponse
@@ -11,18 +12,30 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import junit.framework.TestCase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
+@ExperimentalCoroutinesApi
 class ClassRepositoryTest {
     private lateinit var repository: ClassRepository
     private val mockServiceApi: ServiceApi = mockk()
+    private val testDispatcher = UnconfinedTestDispatcher()
+
+    @get:Rule
+    val instantExecutorRule = InstantTaskExecutorRule()
 
     @Before
     fun setUp() {
+        Dispatchers.setMain(testDispatcher)
         repository = ClassRepository(mockServiceApi)
     }
 
@@ -110,14 +123,14 @@ class ClassRepositoryTest {
             val classId = 1
             val mockClassesResponse =
                 ClassesResponse(
-                    200,
-                    "Success",
                     "TestName",
                     "TestCode",
                     1,
                     "TestTime",
-                    1,
-                    1,
+                    "TestBuildingNumber",
+                    "TestRoomNumber",
+                    200,
+                    "Success",
                 )
 
             coEvery { mockServiceApi.classGet(classId) } returns mockClassesResponse
@@ -200,5 +213,6 @@ class ClassRepositoryTest {
 
     @After
     fun tearDown() {
+        Dispatchers.resetMain()
     }
 }

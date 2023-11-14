@@ -10,6 +10,7 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -19,6 +20,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+@ExperimentalCoroutinesApi
 class StudentAttendanceViewModelTest {
     private lateinit var viewModel: StudentAttendanceViewModel
     private val mockClassRepository = mockk<ClassRepository>()

@@ -32,7 +32,7 @@ create table Takes (
 
 create table Messages (
     message_id int not null auto_increment primary key,
-    comment_id int default(-1),
+    comment_id int default -1,
 	class_id int not null,
     time_stamp datetime not null default now(),
     sender_id int not null,
@@ -44,7 +44,7 @@ create table Messages (
 
 create table Attendances (
 	attendance_id int not null auto_increment primary key,
-    attendance_date date not null default (current_date()),
+    attendance_date date not null default current_date(),
     attendance_status int(1),
     attendance_duration int(10),
     is_sent tinyint(1) not null default 0,
