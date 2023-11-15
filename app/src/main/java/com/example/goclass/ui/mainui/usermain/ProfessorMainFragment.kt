@@ -18,6 +18,7 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -126,7 +127,7 @@ class ProfessorMainFragment : Fragment() {
         val classTimes = mutableListOf<String>()
 
         for (i in 0 until container.childCount) {
-            val layout = container.getChildAt(i) as LinearLayout
+            val layout = container.getChildAt(i) as ConstraintLayout
             val dayDropdown = layout.findViewWithTag<Spinner>("dayDropdown")
             val startTimeButton = layout.findViewWithTag<Button>("startTimeButton")
             val endTimeButton = layout.findViewWithTag<Button>("endTimeButton")

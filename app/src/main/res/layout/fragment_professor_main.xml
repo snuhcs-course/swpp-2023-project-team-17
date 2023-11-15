@@ -5,13 +5,19 @@
     android:layout_height="match_parent"
     android:background="#EEEEEE">
 
-    <androidx.appcompat.widget.AppCompatImageButton
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/profileButton"
-        android:src="@drawable/user"
-        android:layout_width="wrap_content"
+        android:layout_width="70dp"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:layout_marginTop="20dp"
         android:background="#EEEEEE"
+        android:drawableTop="@drawable/user"
+        android:fontFamily="@font/relay_noto_sans_medium"
+        android:text="Profile"
+        android:textSize="10sp"
+        android:textAllCaps="false"
+        android:stateListAnimator="@null"
+        android:elevation="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
