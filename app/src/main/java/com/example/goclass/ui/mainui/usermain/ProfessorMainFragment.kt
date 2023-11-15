@@ -5,14 +5,20 @@ import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.LinearLayout
+import android.widget.Spinner
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,10 +26,13 @@ import com.example.goclass.ui.classui.ClassActivity
 import com.example.goclass.R
 import com.example.goclass.databinding.FragmentProfessorMainBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.example.goclass.ui.mainui.usermain.ClassListAdapter
+import com.example.goclass.ui.mainui.usermain.utils.TimeSelectionLayout
 
 class ProfessorMainFragment : Fragment() {
     private lateinit var binding: FragmentProfessorMainBinding
     private val viewModel: ProfessorMainViewModel by viewModel()
+    private lateinit var classListAdapter: ClassListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,6 +43,9 @@ class ProfessorMainFragment : Fragment() {
 
         val sharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         val userId = sharedPref!!.getInt("userId", -1)
+        classListAdapter = ClassListAdapter(viewModel, 1)
+        binding.professorClassRecyclerView.adapter = classListAdapter
+        binding.professorClassRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
             Toast.makeText(requireActivity().applicationContext, message, Toast.LENGTH_SHORT).show()
@@ -45,92 +57,32 @@ class ProfessorMainFragment : Fragment() {
             dialog.setContentView(R.layout.dialog_create)
             dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_bg)
 
-            val editCode = dialog.findViewById<EditText>(R.id.codeEdittext)
             val editClassName = dialog.findViewById<EditText>(R.id.classNameEdittext)
-            val editClassTime = dialog.findViewById<EditText>(R.id.classTimeEdittext)
+            val timeSelectionContainer = dialog.findViewById<LinearLayout>(R.id.timeSelectionContainer)
+            val addTimeButton = dialog.findViewById<ImageButton>(R.id.addTimeButton)
             val editBuildingNumber = dialog.findViewById<EditText>(R.id.buildingNumberEdittext)
             val editRoomNumber = dialog.findViewById<EditText>(R.id.roomNumberEditText)
+            val editCode = dialog.findViewById<EditText>(R.id.codeEdittext)
             val createButtonDialog = dialog.findViewById<Button>(R.id.createButton)
-            val startTimeButton = dialog.findViewById<Button>(R.id.startTimeButton)
-            val endTimeButton = dialog.findViewById<Button>(R.id.endTimeButton)
-            val mondayCheckbox = dialog.findViewById<CheckBox>(R.id.mondayCheckbox)
-            val tuesdayCheckbox = dialog.findViewById<CheckBox>(R.id.tuesdayCheckbox)
-            val wednesdayCheckbox = dialog.findViewById<CheckBox>(R.id.wednesdayCheckbox)
-            val thursdayCheckbox = dialog.findViewById<CheckBox>(R.id.thursdayCheckbox)
-            val fridayCheckbox = dialog.findViewById<CheckBox>(R.id.fridayCheckbox)
 
-            startTimeButton.setOnClickListener {
-                val timeSetListener =
-                    TimePickerDialog.OnTimeSetListener {
-                            _,
-                            hourOfDay,
-                            minute, ->
-                        startTimeButton.text = String.format("%02d:%02d", hourOfDay, minute)
-                    }
+            // Initial TimeSelectionLayout
+            val initialTimeSelectionLayout = TimeSelectionLayout.create(dialog.context, false)
+            timeSelectionContainer.addView(initialTimeSelectionLayout)
 
-                val timePickerDialog =
-                    TimePickerDialog(
-                        requireContext(),
-                        android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
-                        timeSetListener,
-                        12,
-                        0,
-                        true,
-                    )
-
-                timePickerDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-                timePickerDialog.show()
+            // Add TimeSelectionLayout Button
+            addTimeButton.setOnClickListener {
+                val newTimeSelectionLayout = TimeSelectionLayout.create(dialog.context)
+                timeSelectionContainer.addView(newTimeSelectionLayout)
             }
-
-            endTimeButton.setOnClickListener {
-                val timeSetListener =
-                    TimePickerDialog.OnTimeSetListener {
-                            _,
-                            hourOfDay,
-                            minute, ->
-                        endTimeButton.text = String.format("%02d:%02d", hourOfDay, minute)
-                    }
-
-                val timePickerDialog =
-                    TimePickerDialog(
-                        requireContext(),
-                        android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
-                        timeSetListener,
-                        12,
-                        0,
-                        true,
-                    )
-
-                timePickerDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-                timePickerDialog.show()
-            }
-
 
             createButtonDialog.setOnClickListener {
-                val enteredCode = editCode.text.toString()
                 val enteredClassName = editClassName.text.toString()
-                val classTime = "${startTimeButton.text}-${endTimeButton.text}"
-                val combinedClassTime =
-                    generateClassTimeString(
-                        classTime,
-                        mondayCheckbox,
-                        tuesdayCheckbox,
-                        wednesdayCheckbox,
-                        thursdayCheckbox,
-                        fridayCheckbox,
-                    )
-                val enteredClassTime = editClassTime.text.toString()
-                val finalClassTime =
-                    if (enteredClassTime.isNotEmpty()) {
-                        "$combinedClassTime, $enteredClassTime"
-                    } else {
-                        combinedClassTime
-                    }
+                val enteredClassTime = generateClassTimeString(timeSelectionContainer)
                 val enteredBuildingNumber = editBuildingNumber.text.toString()
                 val enteredRoomNumber = editRoomNumber.text.toString()
+                val enteredCode = editCode.text.toString()
 
-                viewModel.createClass(enteredClassName, enteredCode, userId, finalClassTime, enteredBuildingNumber, enteredRoomNumber)
-
+                viewModel.createClass(enteredClassName, enteredCode, userId, enteredClassTime, enteredBuildingNumber, enteredRoomNumber)
                 dialog.dismiss()
             }
             dialog.show()
@@ -139,9 +91,6 @@ class ProfessorMainFragment : Fragment() {
         // show classList with dummy data
         val userMap = mapOf("userId" to userId.toString(), "userType" to "1")
         val classListLiveData = viewModel.getClassList(userMap)
-        val classListAdapter = ClassListAdapter(viewModel, 1)
-        binding.professorClassRecyclerView.adapter = classListAdapter
-        binding.professorClassRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         classListLiveData.observe(viewLifecycleOwner) { classList ->
             classListAdapter.setClassList(classList)
@@ -166,34 +115,30 @@ class ProfessorMainFragment : Fragment() {
             val intent = Intent(view.context, ClassActivity::class.java)
             startActivity(intent)
         }
+
+        // hide delete button
+        binding.root.setOnTouchListener { _, _ ->
+            classListAdapter.hideAllDeleteButtons()
+            true
+        }
     }
 
-    private fun generateClassTimeString(
-        classTime: String,
-        mondayCheckbox: CheckBox,
-        tuesdayCheckbox: CheckBox,
-        wednesdayCheckbox: CheckBox,
-        thursdayCheckbox: CheckBox,
-        fridayCheckbox: CheckBox,
-    ): String {
-        val selectedDays = mutableListOf<String>()
+    private fun generateClassTimeString(container: LinearLayout):String {
+        val classTimes = mutableListOf<String>()
 
-        if (mondayCheckbox.isChecked) {
-            selectedDays.add("Mon $classTime")
-        }
-        if (tuesdayCheckbox.isChecked) {
-            selectedDays.add("Tue $classTime")
-        }
-        if (wednesdayCheckbox.isChecked) {
-            selectedDays.add("Wed $classTime")
-        }
-        if (thursdayCheckbox.isChecked) {
-            selectedDays.add("Thu $classTime")
-        }
-        if (fridayCheckbox.isChecked) {
-            selectedDays.add("Fri $classTime")
+        for (i in 0 until container.childCount) {
+            val layout = container.getChildAt(i) as ConstraintLayout
+            val dayDropdown = layout.findViewWithTag<Spinner>("dayDropdown")
+            val startTimeButton = layout.findViewWithTag<Button>("startTimeButton")
+            val endTimeButton = layout.findViewWithTag<Button>("endTimeButton")
+
+            val day = dayDropdown.selectedItem as String
+            val startTime = startTimeButton.text.toString()
+            val endTime = endTimeButton.text.toString()
+
+            classTimes.add("$day $startTime-$endTime")
         }
 
-        return selectedDays.joinToString(", ")
+        return classTimes.joinToString(", ")
     }
 }
