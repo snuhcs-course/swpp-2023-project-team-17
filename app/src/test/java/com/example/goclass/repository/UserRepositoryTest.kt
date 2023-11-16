@@ -159,6 +159,7 @@ class UserRepositoryTest {
                 ClassListsResponse(
                     listOf(
                         ClassesResponse(
+                            1,
                             "TestName",
                             "TestCode",
                             1,

@@ -12,6 +12,7 @@ import com.example.goclass.repository.UserRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import junit.framework.TestCase
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -84,17 +85,20 @@ class StudentMainViewModelTest {
     fun getClassList_success() =
         runTest {
             val userMap = mapOf("userId" to "1", "userType" to "0")
+            val classesResponse =
+                ClassesResponse(
+                    1,
+                    "TestName",
+                    "TestCode",
+                    1,
+                    "TestTime",
+                    "TestBuilding",
+                    "TestRoom",
+                )
             val mockClassListsResponse =
                 ClassListsResponse(
                     listOf(
-                        ClassesResponse(
-                            "TestName",
-                            "TestCode",
-                            1,
-                            "TestTime",
-                            "TestBuilding",
-                            "TestRoom",
-                        ),
+                        classesResponse,
                     ),
                     200,
                     "Success",
@@ -106,7 +110,7 @@ class StudentMainViewModelTest {
 
             val liveDataValue = viewModel.classListLiveData.getOrAwaitValue()
             assertEquals(1, liveDataValue.size)
-            assertEquals("TestName", liveDataValue[0].className)
+            assertEquals(classesResponse, liveDataValue[0])
         }
 
     @After

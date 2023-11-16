@@ -172,6 +172,7 @@ class ServiceApiTest {
                 ClassListsResponse(
                     listOf(
                         ClassesResponse(
+                            1,
                             "TestName",
                             "TestCode",
                             1,
@@ -197,8 +198,10 @@ class ServiceApiTest {
 
             // Then
             // Compare the expected and actual responses directly
+            TestCase.assertEquals(expectedResponse.classList.size, actualResponse.classList.size)
             TestCase.assertEquals(expectedResponse.code, actualResponse.code)
             TestCase.assertEquals(expectedResponse.message, actualResponse.message)
+            TestCase.assertEquals(expectedResponse.classList[0].classId, actualResponse.classList[0].classId)
             TestCase.assertEquals(expectedResponse.classList[0].className, actualResponse.classList[0].className)
             TestCase.assertEquals(expectedResponse.classList[0].classCode, actualResponse.classList[0].classCode)
             TestCase.assertEquals(expectedResponse.classList[0].professorId, actualResponse.classList[0].professorId)
@@ -243,6 +246,7 @@ class ServiceApiTest {
 
             // Then
             // Compare the expected and actual responses directly
+            TestCase.assertEquals(expectedResponse.attendanceList.size, actualResponse.attendanceList.size)
             TestCase.assertEquals(expectedResponse.code, actualResponse.code)
             TestCase.assertEquals(expectedResponse.message, actualResponse.message)
             TestCase.assertEquals(expectedResponse.attendanceList[0].attendanceId, actualResponse.attendanceList[0].attendanceId)
@@ -454,6 +458,7 @@ class ServiceApiTest {
 
             // Then
             // Compare the expected and actual responses directly
+            TestCase.assertEquals(expectedResponse.attendanceList.size, actualResponse.attendanceList.size)
             TestCase.assertEquals(expectedResponse.code, actualResponse.code)
             TestCase.assertEquals(expectedResponse.message, actualResponse.message)
             TestCase.assertEquals(expectedResponse.attendanceList[0].attendanceId, actualResponse.attendanceList[0].attendanceId)
@@ -501,6 +506,7 @@ class ServiceApiTest {
 
             // Then
             // Compare the expected and actual responses directly
+            TestCase.assertEquals(expectedResponse.messageList.size, actualResponse.messageList.size)
             TestCase.assertEquals(expectedResponse.code, actualResponse.code)
             TestCase.assertEquals(expectedResponse.message, actualResponse.message)
             TestCase.assertEquals(expectedResponse.messageList[0].messageId, actualResponse.messageList[0].messageId)
@@ -607,6 +613,7 @@ class ServiceApiTest {
 
             // Then
             // Compare the expected and actual responses directly
+            TestCase.assertEquals(expectedResponse.commentList.size, actualResponse.commentList.size)
             TestCase.assertEquals(expectedResponse.code, actualResponse.code)
             TestCase.assertEquals(expectedResponse.message, actualResponse.message)
             TestCase.assertEquals(expectedResponse.commentList[0].messageId, actualResponse.commentList[0].messageId)

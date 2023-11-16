@@ -88,24 +88,27 @@ class ProfessorMainViewModelTest {
     fun getClassList_success() =
         runTest {
             val userMap = mapOf("userId" to "1", "userType" to "1")
-            val mockClassListResponse =
+            val classesResponse =
+                ClassesResponse(
+                    1,
+                    "TestName",
+                    "TestCode",
+                    1,
+                    "TestTime",
+                    "TestBuilding",
+                    "TestRoom",
+                )
+            val mockClassListsResponse =
                 ClassListsResponse(
                     listOf(
-                        ClassesResponse(
-                            "TestName",
-                            "TestCode",
-                            1,
-                            "TestTime",
-                            "TestBuilding",
-                            "TestRoom",
-                        ),
+                        classesResponse,
                     ),
                     200,
                     "Success",
                 )
 
             // Define the mock behavior
-            coEvery { mockUserRepository.userGetClassList(any()) } returns mockClassListResponse
+            coEvery { mockUserRepository.userGetClassList(any()) } returns mockClassListsResponse
 
             // Invoke the function
             viewModel.getClassList(userMap)
@@ -113,7 +116,7 @@ class ProfessorMainViewModelTest {
             // Check if the LiveData has been updated
             val liveDataValue = viewModel.classListLiveData.getOrAwaitValue()
             assertEquals(1, liveDataValue.size)
-            assertEquals("TestName", liveDataValue[0].className)
+            assertEquals(classesResponse, liveDataValue[0])
         }
 
     @After

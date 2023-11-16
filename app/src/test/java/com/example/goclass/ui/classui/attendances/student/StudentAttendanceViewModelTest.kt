@@ -41,18 +41,20 @@ class StudentAttendanceViewModelTest {
         runTest {
             val mockClassId = 1
             val mockUserId = 1
+            val attendancesResponse =
+                AttendancesResponse(
+                    1234,
+                    0,
+                    "attendanceDate",
+                    0,
+                    0,
+                    1,
+                    1,
+                )
             val mockAttendanceListsResponse =
                 AttendanceListsResponse(
                     listOf(
-                        AttendancesResponse(
-                            1234,
-                            0,
-                            "attendanceDate",
-                            0,
-                            0,
-                            1,
-                            1,
-                        )
+                        attendancesResponse,
                     ),
                     200,
                     "Success",
@@ -67,7 +69,7 @@ class StudentAttendanceViewModelTest {
             // Check if the LiveData has been updated
             val liveDataValue = viewModel.studentAttendanceListLiveData.getOrAwaitValue()
             TestCase.assertEquals(1, liveDataValue.size)
-            TestCase.assertEquals(1234, liveDataValue[0].attendanceId)
+            TestCase.assertEquals(attendancesResponse, liveDataValue[0])
         }
 
     @After

@@ -5,8 +5,6 @@ import com.google.gson.annotations.SerializedName;
 public class Messages {
     @SerializedName("messageId")
     int messageId = -1;
-    @SerializedName("classId")
-    int classId = -1;
     @SerializedName("senderId")
     int senderId = -1;
     @SerializedName("content")
@@ -20,17 +18,5 @@ public class Messages {
     public Messages(String content, int messageId) {
         this.content = content;
         this.messageId = messageId;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public int getMessageId() {
-        return messageId;
-    }
-
-    public int getClassId() {
-        return classId;
     }
 }

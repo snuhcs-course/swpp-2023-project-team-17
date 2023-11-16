@@ -34,7 +34,8 @@ public class ClassesResponse {
         this.message = message;
     }
 
-    public ClassesResponse(String className, String classCode, int professorId, String classTime, String buildingNumber, String roomNumber) {
+    public ClassesResponse(int classId, String className, String classCode, int professorId, String classTime, String buildingNumber, String roomNumber) {
+        this.classId = classId;
         this.className = className;
         this.classCode = classCode;
         this.professorId = professorId;
@@ -70,6 +71,7 @@ public class ClassesResponse {
     public String getRoomNumber() {
         return roomNumber;
     }
+
     public int getCode() {
         return code;
     }
