@@ -3,7 +3,6 @@ package com.example.goclass.repository
 import com.example.goclass.network.ServiceApi
 import com.example.goclass.network.dataclass.Comments
 import com.example.goclass.network.dataclass.Messages
-import java.net.IDN
 
 class ChatRepository(private val serviceApi: ServiceApi) {
     suspend fun chatChannelGetList(classId: Int) = serviceApi.chatChannelGetList(classId)
