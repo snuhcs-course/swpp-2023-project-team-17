@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.goclass.LiveDataTestUtil.getOrAwaitValue
 import com.example.goclass.network.dataclass.ClassListsResponse
 import com.example.goclass.network.dataclass.Classes
+import com.example.goclass.network.dataclass.ClassesResponse
 import com.example.goclass.network.dataclass.CodeMessageResponse
 import com.example.goclass.repository.ClassRepository
 import com.example.goclass.repository.UserRepository
@@ -90,7 +91,7 @@ class ProfessorMainViewModelTest {
             val mockClassListResponse =
                 ClassListsResponse(
                     listOf(
-                        Classes(
+                        ClassesResponse(
                             "TestName",
                             "TestCode",
                             1,

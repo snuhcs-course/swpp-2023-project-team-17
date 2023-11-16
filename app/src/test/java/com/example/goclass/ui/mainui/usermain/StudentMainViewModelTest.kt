@@ -6,6 +6,7 @@ import com.example.goclass.LiveDataTestUtil.getOrAwaitValue
 import com.example.goclass.network.dataclass.ClassJoinResponse
 import com.example.goclass.network.dataclass.ClassListsResponse
 import com.example.goclass.network.dataclass.Classes
+import com.example.goclass.network.dataclass.ClassesResponse
 import com.example.goclass.repository.ClassRepository
 import com.example.goclass.repository.UserRepository
 import io.mockk.coEvery
@@ -86,7 +87,7 @@ class StudentMainViewModelTest {
             val mockClassListsResponse =
                 ClassListsResponse(
                     listOf(
-                        Classes(
+                        ClassesResponse(
                             "TestName",
                             "TestCode",
                             1,

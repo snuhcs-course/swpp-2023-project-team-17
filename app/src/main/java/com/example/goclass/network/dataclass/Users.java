@@ -19,17 +19,6 @@ public class Users {
         this.userType = userType;
     }
 
-    public Users(String userEmail, String userName, int userType) {
-        this.userEmail = userEmail;
-        this.userName = userName;
-        this.userType = userType;
-    }
-
-    public Users(int userId, int userType) {
-        this.userId = userId;
-        this.userType = userType;
-    }
-
     public Users(int userType, String userName) {
         this.userName = userName;
         this.userType = userType;

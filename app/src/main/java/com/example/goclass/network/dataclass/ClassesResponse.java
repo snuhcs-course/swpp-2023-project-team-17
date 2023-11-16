@@ -34,6 +34,15 @@ public class ClassesResponse {
         this.message = message;
     }
 
+    public ClassesResponse(String className, String classCode, int professorId, String classTime, String buildingNumber, String roomNumber) {
+        this.className = className;
+        this.classCode = classCode;
+        this.professorId = professorId;
+        this.classTime = classTime;
+        this.buildingNumber = buildingNumber;
+        this.roomNumber = roomNumber;
+    }
+
     public int getClassId() {
         return classId;
     }

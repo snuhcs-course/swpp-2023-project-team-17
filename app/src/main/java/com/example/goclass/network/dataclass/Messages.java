@@ -7,14 +7,10 @@ public class Messages {
     int messageId = -1;
     @SerializedName("classId")
     int classId = -1;
-    @SerializedName("timeStamp")
-    String timeStamp = "";
     @SerializedName("senderId")
     int senderId = -1;
     @SerializedName("content")
     String content = "";
-    @SerializedName("senderName")
-    String senderName = "";
 
     public Messages(int senderId, String content) {
         this.senderId = senderId;
@@ -30,23 +26,11 @@ public class Messages {
         return content;
     }
 
-    public int getSenderId() {
-        return senderId;
-    }
-
     public int getMessageId() {
         return messageId;
     }
 
-    public String getSenderName() {
-        return senderName;
-    }
-
     public int getClassId() {
         return classId;
-    }
-
-    public String getTimeStamp() {
-        return timeStamp;
     }
 }

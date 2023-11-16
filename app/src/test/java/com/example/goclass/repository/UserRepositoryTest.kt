@@ -7,6 +7,7 @@ import com.example.goclass.network.dataclass.AttendanceListsResponse
 import com.example.goclass.network.dataclass.AttendancesResponse
 import com.example.goclass.network.dataclass.ClassListsResponse
 import com.example.goclass.network.dataclass.Classes
+import com.example.goclass.network.dataclass.ClassesResponse
 import com.example.goclass.network.dataclass.CodeMessageResponse
 import com.example.goclass.network.dataclass.Users
 import com.example.goclass.network.dataclass.UsersResponse
@@ -157,7 +158,7 @@ class UserRepositoryTest {
             val mockClassListsResponse =
                 ClassListsResponse(
                     listOf(
-                        Classes(
+                        ClassesResponse(
                             "TestName",
                             "TestCode",
                             1,

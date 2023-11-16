@@ -2,8 +2,6 @@ package com.example.goclass.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.goclass.network.ServiceApi
-import com.example.goclass.network.dataclass.AttendancesResponse
-import com.example.goclass.network.dataclass.ClassesResponse
 import com.example.goclass.network.dataclass.CodeMessageResponse
 import com.example.goclass.network.dataclass.CommentListsResponse
 import com.example.goclass.network.dataclass.Comments

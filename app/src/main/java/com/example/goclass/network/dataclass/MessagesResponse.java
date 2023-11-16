@@ -34,18 +34,6 @@ public class MessagesResponse {
         this.content = content;
     }
 
-    public MessagesResponse(int messageId, int commentId, int classId, String timeStamp, int senderId, String senderName, String content, int code, String message) {
-        this.messageId = messageId;
-        this.commentId = commentId;
-        this.classId = classId;
-        this.timeStamp = timeStamp;
-        this.senderId = senderId;
-        this.senderName = senderName;
-        this.content = content;
-        this.code = code;
-        this.message = message;
-    }
-
     public int getMessageId() {
         return messageId;
     }
@@ -72,10 +60,6 @@ public class MessagesResponse {
 
     public String getContent() {
         return content;
-    }
-
-    public int getChannelId() {
-        return channelId;
     }
 
     public int getCode() {

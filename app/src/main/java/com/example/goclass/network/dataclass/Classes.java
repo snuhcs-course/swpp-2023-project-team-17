@@ -38,8 +38,4 @@ public class Classes {
     public int getClassId() {
         return classId;
     }
-
-    public int getProfessorId() {
-        return professorId;
-    }
 }

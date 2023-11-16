@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.goclass.network.dataclass.Classes
+import com.example.goclass.network.dataclass.ClassesResponse
 import com.example.goclass.repository.ClassRepository
 import com.example.goclass.repository.UserRepository
 import kotlinx.coroutines.launch
@@ -17,7 +18,7 @@ class ProfessorMainViewModel(
 ) : ViewModel() {
     private val _toastMessage = MutableLiveData<String>()
     val toastMessage: LiveData<String> get() = _toastMessage
-    val classListLiveData: MutableLiveData<List<Classes>> = MutableLiveData()
+    val classListLiveData: MutableLiveData<List<ClassesResponse>> = MutableLiveData()
 
     fun createClass(
         className: String,
@@ -51,7 +52,7 @@ class ProfessorMainViewModel(
         }
     }
 
-    fun getClassList(user: Map<String, String>): MutableLiveData<List<Classes>> {
+    fun getClassList(user: Map<String, String>): MutableLiveData<List<ClassesResponse>> {
         viewModelScope.launch {
             try {
                 val response = userRepository.userGetClassList(user)
