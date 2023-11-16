@@ -12,15 +12,15 @@ import java.lang.Exception
 class ProfessorAttendanceListViewModel(
     private val repository: UserRepository,
 ) : ViewModel() {
-    private var studentAttendanceListLiveData: MutableLiveData<List<AttendancesResponse>> = MutableLiveData()
+    val studentAttendanceListLiveData: MutableLiveData<List<AttendancesResponse>> = MutableLiveData()
 
     fun getStudentAttendanceList(
         date: String,
-        classes: Map<String, String>,
+        classMap: Map<String, String>,
     ): MutableLiveData<List<AttendancesResponse>> {
         viewModelScope.launch {
             try {
-                val response = repository.userGetAttendanceListByDate(date, classes)
+                val response = repository.userGetAttendanceListByDate(date, classMap)
                 if (response.code == 200) {
                     studentAttendanceListLiveData.postValue(response.attendanceList)
                 }

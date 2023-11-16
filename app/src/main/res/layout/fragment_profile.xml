@@ -3,139 +3,128 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
-
-    <EditText
-        android:id="@+id/nameEditText"
-        style="@style/SmallFont"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="140dp"
-        android:layout_marginEnd="20dp"
-        android:hint="Enter Name"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <RadioGroup
-        android:id="@+id/roleRadioGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/errorNameView">
-
-        <RadioButton
-            android:id="@+id/professorRadioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Professor" />
-
-        <RadioButton
-            android:id="@+id/studentRadioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Student" />
-
-    </RadioGroup>
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/errorNameView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Enter your name"
-        android:textColor="@android:color/holo_red_dark"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameEditText"
-        android:layout_marginTop="8dp"/>
-
-    <TextView
-        android:id="@+id/errorTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Select your role"
-        android:textColor="@android:color/holo_red_dark"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/roleRadioGroup"
-        android:layout_marginTop="8dp"/>
-
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/logoutButton"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:text="Logout"
-        style="@style/SmallFont"
-        android:textColor="#616161"
-        android:clipToOutline="true"
-        android:background="@drawable/pflogoutbtn_bg"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginBottom="32dp" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/confirmButton"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="4dp"
-        android:background="@color/white"
-        android:fontFamily="@font/relay_noto_sans_medium"
-        android:stateListAnimator="@null"
-        android:text="Confirm"
-        android:textAllCaps="false"
-        android:textColor="@color/blue"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    android:background="#EEEEEE">
 
     <TextView
         android:id="@+id/name"
-        style="@style/SmallFont"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="100dp"
         android:gravity="top"
+        android:fontFamily="@font/relay_noto_sans_bold"
         android:text="Name"
-        app:layout_constraintBottom_toTopOf="@id/nameEditText"
+        android:textSize="16sp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/nameEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/relay_noto_sans_semibold"
+        android:hint="Enter Name"
+        android:textSize="16sp"
+        android:inputType="text"
+        android:background="@drawable/edit_text_bg"
+        android:padding="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/name" />
 
     <TextView
         android:id="@+id/role"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginBottom="24dp"
-        style="@style/SmallFont"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
         android:gravity="top"
+        android:fontFamily="@font/relay_noto_sans_bold"
         android:text="Role"
-        app:layout_constraintBottom_toTopOf="@id/roleRadioGroup"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@+id/nameEditText"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <RadioButton
+        android:id="@+id/professorRadioButton"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="5dp"
+        android:fontFamily="@font/relay_noto_sans_semibold"
+        android:text="Professor"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:background="@drawable/radio_button_selector"
+        android:button="@null"
+        android:textColor="@color/radio_button_text_color_selector"
+        android:padding="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/studentRadioButton"
+        app:layout_constraintTop_toBottomOf="@+id/role" />
+
+    <RadioButton
+        android:id="@+id/studentRadioButton"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="20dp"
+        android:fontFamily="@font/relay_noto_sans_semibold"
+        android:text="Student"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:background="@drawable/radio_button_selector"
+        android:button="@null"
+        android:textColor="@color/radio_button_text_color_selector"
+        android:padding="16dp"
+        app:layout_constraintStart_toEndOf="@+id/professorRadioButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/role" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/logoutButton"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="32dp"
+        android:fontFamily="@font/relay_noto_sans_medium"
+        android:text="Log Out"
+        android:textColor="#F70000"
+        android:textSize="16sp"
+        android:clipToOutline="true"
+        android:textAllCaps="false"
+        android:background="@drawable/white_btn_bg"
+        android:stateListAnimator="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/confirmButton"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/black_btn_bg"
+        android:fontFamily="@font/relay_noto_sans_semibold"
+        android:text="Confirm"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:stateListAnimator="@null"
+        app:layout_constraintBottom_toTopOf="@id/logoutButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

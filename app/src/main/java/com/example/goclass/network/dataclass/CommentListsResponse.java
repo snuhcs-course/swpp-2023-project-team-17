@@ -6,13 +6,19 @@ import java.util.List;
 
 public class CommentListsResponse {
     @SerializedName("messageList")
-    private List<Comments> commentList;
+    private List<CommentsResponse> commentList;
     @SerializedName("code")
     private int code;
     @SerializedName("message")
     private String message;
 
-    public List<Comments> getCommentList() {
+    public CommentListsResponse(List<CommentsResponse> commentList, int code, String message) {
+        this.commentList = commentList;
+        this.code = code;
+        this.message = message;
+    }
+
+    public List<CommentsResponse> getCommentList() {
         return commentList;
     }
 

@@ -12,10 +12,10 @@ import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class StudentAttendanceViewModel(
-    private val repository: ClassRepository,
+    private val classRepository: ClassRepository,
     private val attendanceRepository: AttendanceRepository,
 ) : ViewModel() {
-    private var studentAttendanceListLiveData: MutableLiveData<List<AttendancesResponse>> = MutableLiveData()
+    val studentAttendanceListLiveData: MutableLiveData<List<AttendancesResponse>> = MutableLiveData()
 
     fun getStudentAttendanceList(
         classId: Int,
@@ -23,7 +23,7 @@ class StudentAttendanceViewModel(
     ): MutableLiveData<List<AttendancesResponse>> {
         viewModelScope.launch {
             try {
-                val response = repository.classGetAttendanceListByUserId(classId, userId)
+                val response = classRepository.classGetAttendanceListByUserId(classId, userId)
                 if (response.code == 200) {
                     studentAttendanceListLiveData.postValue(response.attendanceList)
                 }
@@ -34,7 +34,7 @@ class StudentAttendanceViewModel(
         return studentAttendanceListLiveData
     }
 
-    fun attendanceAdd(
+    fun addAttendance(
         classId: Int,
         userId: Int,
     ) {

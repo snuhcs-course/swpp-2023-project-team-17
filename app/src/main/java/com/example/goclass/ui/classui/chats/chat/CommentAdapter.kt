@@ -11,7 +11,7 @@ import android.widget.EditText
 import androidx.recyclerview.widget.RecyclerView
 import com.example.goclass.R
 import com.example.goclass.databinding.ItemCommentBinding
-import com.example.goclass.network.dataclass.Comments
+import com.example.goclass.network.dataclass.CommentsResponse
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
@@ -22,9 +22,9 @@ class CommentAdapter(
     private val onCommentEdit: (Int, String, Int, Int) -> Unit
 ):
     RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() {
-    private var commentList = listOf<Comments>()
+    private var commentList = listOf<CommentsResponse>()
 
-    fun setCommentList(list: List<Comments>) {
+    fun setCommentList(list: List<CommentsResponse>) {
         commentList = list
         notifyDataSetChanged()
     }
@@ -50,7 +50,7 @@ class CommentAdapter(
 
     class CommentViewHolder(var binding: ItemCommentBinding, var context: Context) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(comment: Comments, userId: Int, onCommentEdit: (Int, String, Int, Int) -> Unit) {
+        fun bind(comment: CommentsResponse, userId: Int, onCommentEdit: (Int, String, Int, Int) -> Unit) {
             binding.commentText.text = comment.content
             binding.commentEditButton.visibility = if (comment.senderId == userId) View.VISIBLE else View.GONE
             binding.nameText.text = comment.senderName

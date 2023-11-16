@@ -10,19 +10,18 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.recyclerview.widget.RecyclerView
 import com.example.goclass.databinding.ItemMessageBinding
-import com.example.goclass.network.dataclass.Messages
 import com.example.goclass.R
+import com.example.goclass.network.dataclass.MessagesResponse
 
 class MessageAdapter(
     private val context: Context,
     private val userId: Int,
-    private val onMessageClicked: (Messages) -> Unit,
-    private val onMessageEdit: (Int, String, Int) -> Unit,
-) :
-    RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {
-    private var messageList = listOf<Messages>()
+    private val onMessageClicked: (MessagesResponse) -> Unit,
+    private val onMessageEdit: (Int, String, Int) -> Unit
+): RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {
+    private var messageList = listOf<MessagesResponse>()
 
-    fun setMessageList(list: List<Messages>) {
+    fun setMessageList(list: List<MessagesResponse>) {
         messageList = list
         notifyDataSetChanged()
     }
@@ -52,7 +51,7 @@ class MessageAdapter(
         var context: Context,
     ) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(message: Messages, userId: Int, onMessageClicked: (Messages) -> Unit, onMessageEdit: (Int, String, Int) -> Unit) {
+        fun bind(message: MessagesResponse, userId: Int, onMessageClicked: (MessagesResponse) -> Unit, onMessageEdit: (Int, String, Int) -> Unit) {
             binding.messageText.text = message.content
             binding.chatEditButton.visibility = if (message.senderId == userId) View.VISIBLE else View.GONE
             binding.nameText.text = message.senderName

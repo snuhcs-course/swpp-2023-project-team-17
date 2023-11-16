@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- When selected -->
+    <item android:state_checked="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#000000" /> <!-- 검은색 -->
+            <corners android:radius="20dp" />
+        </shape>
+    </item>
+    <!-- Default -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#FFFFFF" /> <!-- 흰색 -->
+            <corners android:radius="20dp" />
+        </shape>
+    </item>
+</selector>
