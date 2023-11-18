@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.example.goclass.ui.classui.attendances.service.AttendanceService
-import com.example.goclass.ui.classui.attendances.service.BleAdvertService
 
 class AttendanceReceiver : BroadcastReceiver() {
     override fun onReceive(

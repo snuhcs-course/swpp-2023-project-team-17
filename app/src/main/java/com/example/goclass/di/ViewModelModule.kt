@@ -14,7 +14,7 @@ import org.koin.dsl.module
 val viewModelModule =
     module {
         viewModel {
-            ProfessorMainViewModel(get(), get())
+            ProfessorMainViewModel(get(), get(), androidApplication())
         }
         viewModel {
             ProfileViewModel(get())
