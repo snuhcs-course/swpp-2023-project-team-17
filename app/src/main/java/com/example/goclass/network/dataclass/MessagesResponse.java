@@ -34,8 +34,9 @@ public class MessagesResponse {
         this.content = content;
     }
 
-    public MessagesResponse(int classId, String senderName, String content) {
+    public MessagesResponse(int classId, int commentId, String senderName, String content) {
         this.classId = classId;
+        this.commentId = commentId;
         this.senderName = senderName;
         this.content = content;
     }

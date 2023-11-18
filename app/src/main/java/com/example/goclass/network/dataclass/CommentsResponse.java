@@ -28,6 +28,13 @@ public class CommentsResponse {
         this.content = content;
     }
 
+    public CommentsResponse(int classId, int commentId, String senderName, String content) {
+        this.classId = classId;
+        this.commentId = commentId;
+        this.senderName = senderName;
+        this.content = content;
+    }
+
     public String getContent() {
         return content;
     }

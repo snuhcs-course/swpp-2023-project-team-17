@@ -2,6 +2,7 @@ package com.example.goclass.ui.classui.chats.chat
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,11 +11,17 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.goclass.databinding.FragmentChatCommentBinding
+import com.example.goclass.network.dataclass.CommentsResponse
+import io.socket.client.IO
+import io.socket.client.Socket
+import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ChatCommentFragment : Fragment() {
     private lateinit var binding: FragmentChatCommentBinding
     private val viewModel: ChatCommentViewModel by viewModel()
+    private lateinit var socket: Socket
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -35,6 +42,7 @@ class ChatCommentFragment : Fragment() {
 
         val userSharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         val userId = userSharedPref!!.getInt("userId", -1)
+        val userName = userSharedPref?.getString("userName", "") ?: ""
 
         val classSharedPref = activity?.getSharedPreferences("ClassPrefs", Context.MODE_PRIVATE)
         val classId = classSharedPref!!.getInt("classId", -1)
@@ -46,13 +54,51 @@ class ChatCommentFragment : Fragment() {
             findNavController().navigate(ChatCommentFragmentDirections.actionChatCommentFragmentToChatFragment())
         }
 
+        val commentListLiveData = viewModel.chatCommentGetList(classId, messageId)
+
+        // Socket.io settings
+        socket = IO.socket("http://ec2-43-202-167-120.ap-northeast-2.compute.amazonaws.com:3000")
+        socket?.connect()
+
+        // join chat room
+        val joinData = JSONObject().apply {
+            put("class_id", classId)
+            put("comment_id", messageId)
+        }
+        socket?.emit("joinRoom", joinData)
+
+        // 'chat' Event
+        socket?.on("chat") { args ->
+            activity?.runOnUiThread {
+                val data = args[0] as JSONObject
+                val id = data.getInt("class_id")
+                val commentId = data.getInt("comment_id")
+                val senderName = data.getString("sender_name")
+                val content = data.getString("msg")
+                val messageResp = CommentsResponse(id, commentId, senderName, content)
+
+                val updatedMessageList = commentListLiveData.value?.toMutableList() ?: mutableListOf()
+                updatedMessageList.add(messageResp)
+                commentListLiveData.postValue(updatedMessageList)
+
+                binding.commentRecyclerView.scrollToPosition(updatedMessageList.size - 1)
+            }
+        }
+
         // Chat Send Button
         binding.commentSendButton.setOnClickListener {
-            viewModel.chatCommentSend(classId, messageId, userId, binding.commentText.text.toString())
+            val comment = binding.commentText.text.toString()
+            val sendData = JSONObject().apply {
+                put("msg", comment)
+                put("class_id", classId)
+                put("sender_name", userName)
+                put("comment_id", messageId)
+            }
+            viewModel.chatCommentSend(classId, messageId, userId, comment)
+            socket?.emit("chat", sendData)
             binding.commentText.setText("")
         }
 
-        val commentListLiveData = viewModel.chatCommentGetList(classId, messageId)
         val commentAdapter = CommentAdapter(requireContext(), userId) { classId, content, commentId, messageId ->
             viewModel.chatCommentEdit(classId, content, commentId, messageId)
         }
@@ -61,5 +107,16 @@ class ChatCommentFragment : Fragment() {
         commentListLiveData.observe(viewLifecycleOwner) {commentList ->
             commentAdapter.setCommentList(commentList)
         }
+        binding.commentRecyclerView.scrollToPosition(commentAdapter.itemCount - 1)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        socket?.disconnect()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        socket?.disconnect()
     }
 }

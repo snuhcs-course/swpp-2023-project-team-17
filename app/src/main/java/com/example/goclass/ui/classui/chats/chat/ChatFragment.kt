@@ -73,50 +73,32 @@ class ChatFragment : Fragment() {
         }
 
         val messageListLiveData = viewModel.chatChannelGetList(classId)
-        val messageAdapter = MessageAdapter(requireContext(), userId, {message ->
-            val action = ChatFragmentDirections.actionChatFragmentToChatCommentFragment(
-                messageId = message.messageId,
-                content = message.content,
-            )
-            findNavController().navigate(action)
-        },
-            { classId, content, messageId ->
-                viewModel.chatChannelEdit(classId, content, messageId)
-            })
-        binding.chatRecyclerView.adapter = messageAdapter
-        binding.chatRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        messageListLiveData.observe(viewLifecycleOwner) {messageList ->
-            messageAdapter.setMessageList(messageList)
-        }
-        binding.chatRecyclerView.scrollToPosition(messageAdapter.itemCount - 1)
 
         // Socket.io settings
-        try {
-            socket = IO.socket("http://ec2-43-202-167-120.ap-northeast-2.compute.amazonaws.com:3000")
-            socket.connect()
+        socket = IO.socket("http://ec2-43-202-167-120.ap-northeast-2.compute.amazonaws.com:3000")
+        socket?.connect()
 
-            // join chat room
-            val joinData = JSONObject().apply {
-                put("class_id", classId)
+        // join chat room
+        val joinData = JSONObject().apply {
+            put("class_id", classId)
+            put("comment_id", -1)
+        }
+        socket?.emit("joinRoom", joinData)
+
+        // 'chat' Event
+        socket?.on("chat") { args ->
+            activity?.runOnUiThread {
+                val data = args[0] as JSONObject
+                val id = data.getInt("class_id")
+                val commentId = data.getInt("comment_id")
+                val senderName = data.getString("sender_name")
+                val content = data.getString("msg")
+                val messageResp = MessagesResponse(id, commentId, senderName, content)
+                val updatedMessageList = messageListLiveData.value?.toMutableList() ?: mutableListOf()
+                updatedMessageList.add(messageResp)
+                messageListLiveData.postValue(updatedMessageList)
+                binding.chatRecyclerView.scrollToPosition(updatedMessageList.size - 1)
             }
-            socket.emit("joinRoom", joinData)
-            // 'chat' Event
-            socket.on("chat") { args ->
-                activity?.runOnUiThread {
-                    val data = args[0] as JSONObject
-                    val content = data.getString("msg")
-                    val senderName = data.getString("sender_name")
-                    val messageResp = MessagesResponse(classId, senderName, content)
-
-                    val updatedMessageList = messageListLiveData.value?.toMutableList() ?: mutableListOf()
-                    updatedMessageList.add(messageResp)
-                    messageListLiveData.postValue(updatedMessageList)
-
-                    binding.chatRecyclerView.scrollToPosition(updatedMessageList.size - 1)
-                }
-            }
-        } catch (e: Exception) {
-            Log.d("socket Error", e.message.toString());
         }
 
         // Chat Send Button
@@ -126,15 +108,28 @@ class ChatFragment : Fragment() {
                 put("msg", message)
                 put("class_id", classId)
                 put("sender_name", userName)
+                put("comment_id", -1)
             }
             viewModel.chatChannelSend(classId, userId, message)
-            try {
-                socket.emit("chat", sendData)
-            } catch (e: Exception) {
-                Log.d("socket Error", e.message.toString());
-            }
+            socket?.emit("chat", sendData)
             binding.chatText.setText("")
         }
+
+        val messageAdapter = MessageAdapter(requireContext(), userId, {message ->
+            val action = ChatFragmentDirections.actionChatFragmentToChatCommentFragment(
+                messageId = message.messageId,
+                content = message.content,
+            )
+            findNavController().navigate(action)
+        }, { classId, content, messageId ->
+            viewModel.chatChannelEdit(classId, content, messageId)
+        })
+        binding.chatRecyclerView.adapter = messageAdapter
+        binding.chatRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        messageListLiveData.observe(viewLifecycleOwner) {messageList ->
+            messageAdapter.setMessageList(messageList)
+        }
+        binding.chatRecyclerView.scrollToPosition(messageAdapter.itemCount - 1)
     }
 
     override fun onResume() {
@@ -162,8 +157,13 @@ class ChatFragment : Fragment() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        socket?.disconnect()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
-        socket.disconnect()
+        socket?.disconnect()
     }
 }
