@@ -1,9 +1,11 @@
 package com.example.goclass.ui.classui.attendances.service
 
 import android.app.Service
+import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.ServiceConnection
 import android.os.IBinder
 import android.util.Log
@@ -18,28 +20,40 @@ import kotlinx.coroutines.launch
 class AttendanceService : Service(), BleScanCallback {
     private lateinit var repository: AttendanceRepository
 
-    private lateinit var bleScanningService: BleScanningService
-    private var isDeviceFound = false
+    private lateinit var bleScanService: BleScanService
+    private var classEnd = false
+
+    private var attendanceStatus = 0
+    private var userId = -1
+    private var classId = -1
+
+    private var scanCount: Int = 0
+
+    private val bleScanResultReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == BleScanService.ACTION_BLE_SCAN_RESULT) {
+                scanCount = intent.getIntExtra(BleScanService.EXTRA_SCAN_COUNT, 0)
+                Log.i(TAG, "Received scanCount: $scanCount")
+                //performAttendanceCheck(scanCount)
+            }
+        }
+    }
 
     override fun onCreate() {
         super.onCreate()
-
-        bleScanningService = BleScanningService()
-        bleScanningService.setBleScanCallback(this)
-
-        // Start the BleScanningService
-        val serviceIntent = Intent(this, BleScanningService::class.java)
-        startService(serviceIntent)
-
-        // Bind to the BleScanningService
-        val bindIntent = Intent(this, BleScanningService::class.java)
-        bindService(bindIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+        // Register the BroadcastReceiver to receive scan results
+        val filter = IntentFilter(BleScanService.ACTION_BLE_SCAN_RESULT)
+        registerReceiver(bleScanResultReceiver, filter)
     }
 
     override fun onDestroy() {
+        performAttendanceCheck()
         super.onDestroy()
 
-        // Unbind from the BleScanningService
+        // Unregister the BroadcastReceiver
+        unregisterReceiver(bleScanResultReceiver)
+
+        // Unbind from the BleScanService
         unbindService(serviceConnection)
     }
 
@@ -56,15 +70,15 @@ class AttendanceService : Service(), BleScanCallback {
             val action = intent.action
 
             if (action == "ATTENDANCE_CHECK_ACTION") {
-                val userId = intent.getIntExtra("userId", -1)
-                val classId = intent.getIntExtra("classId", -1)
+                userId = intent.getIntExtra("userId", -1)
+                classId = intent.getIntExtra("classId", -1)
                 val startHour = intent.getIntExtra("startHour", -1)
                 val startMinute = intent.getIntExtra("startMinute", -1)
                 val endHour = intent.getIntExtra("endHour", -1)
                 val endMinute = intent.getIntExtra("endMinute", -1)
                 if (userId != -1 && classId != -1) {
-                    val attendances =
-                        performAttendanceCheck(userId, classId, startHour, startMinute, endHour, endMinute)
+                    val durationMillis = (endHour*60 + endMinute) - (startHour*60 + startMinute)
+                    startBleScanning(durationMillis);
                 } else {
                     Log.d("Error", "Invalid userId or classId")
                 }
@@ -74,46 +88,51 @@ class AttendanceService : Service(), BleScanCallback {
         return START_STICKY
     }
 
-    private fun performAttendanceCheck(
-        userId: Int,
-        classId: Int,
-        startHour: Int,
-        startMinute: Int,
-        endHour: Int,
-        endMinute: Int,
-    ) {
-        var attendanceStatus = 0
-        var attendanceDuration = 0
+    private fun startBleScanning(durationMillis: Int) {
+        bleScanService = BleScanService()
+        bleScanService.setBleScanCallback(this)
 
-        val classDuration = (endHour * 60 + endMinute) - (startHour * 60 + startMinute)
+        // Start the BleScanService
+        val serviceIntent = Intent(this, BleScanService::class.java)
+        serviceIntent.putExtra(BleScanService.EXTRA_DURATION_MILLIS, durationMillis)
+        startService(serviceIntent)
 
-        // TODO: implement attendance check logic (while (class-time has not ended) {})
-        if (inClass()) {
-            // initial in_class check
-        }
-        GlobalScope.launch(Dispatchers.IO) {
-            delay(60000) // 60 seconds
-            if (inClass()) {
-                attendanceDuration += 1 // add 1 minute ie. 60 sec delayed
-            }
-        }
+        // Bind to the BleScanService
+        val bindIntent = Intent(this, BleScanService::class.java)
+        bindService(bindIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+    }
 
-        // TODO: professor should set this
-        val minPresentDuration = classDuration * 0.85
-        val minLateDuration = classDuration * 0.6
+    private fun performAttendanceCheck() {
+        var attendanceDuration = scanCount
 
-        // determine attendanceStatus
-        if (attendanceDuration >= minPresentDuration) {
-            attendanceStatus = 2
-        } else if (attendanceDuration >= minLateDuration) {
-            attendanceStatus = 1
-        }
+        // val classDuration = (endHour * 60 + endMinute) - (startHour * 60 + startMinute)
+
+//        if (inClass()) {
+//            // initial in_class check
+//        }
+//        GlobalScope.launch(Dispatchers.IO) {
+//            delay(60000) // 60 seconds
+//            if (inClass()) {
+//                attendanceDuration += 1 // add 1 minute ie. 60 sec delayed
+//            }
+//        }
+
+//        val minPresentDuration = classDuration * 0.85
+//        val minLateDuration = classDuration * 0.6
+//
+//        // determine attendanceStatus
+//        if (attendanceDuration >= minPresentDuration) {
+//            attendanceStatus = 2
+//        } else if (attendanceDuration >= minLateDuration) {
+//            attendanceStatus = 1
+//        }
 
         // save attendance to DB
-        GlobalScope.launch(Dispatchers.IO) {
-            delay(60000) // 60 seconds
-            saveAttendance(attendanceStatus, attendanceDuration, userId, classId)
-        }
+//        GlobalScope.launch(Dispatchers.IO) {
+//            delay(60000) // 60 seconds
+//            saveAttendance(attendanceStatus, attendanceDuration, userId, classId)
+//        }
+        saveAttendance(attendanceStatus, attendanceDuration, userId, classId)
     }
 
     private fun inClass(): Boolean {
@@ -143,18 +162,30 @@ class AttendanceService : Service(), BleScanCallback {
         }
     }
 
-    override fun onDeviceFound() {
+    override fun onDeviceFound(scanCount: Int) {
         // Handle the device found event
-        isDeviceFound = true
-        // Perform actions based on device found
-        Log.i(TAG, "Device found!")
+        //isDeviceFound = true
+        if (scanCount <= 10) {
+            attendanceStatus = 2 // present
+        } else if (scanCount <= 30) {
+            attendanceStatus = 1 // late
+        } else {
+            attendanceStatus = 0 // absent
+        }
+        Log.i(TAG, "Device found: $attendanceStatus")
     }
 
     override fun onScanFailed(errorCode: Int) {
         // Handle the scan failure event
-        isDeviceFound = false
+        //isDeviceFound = false
         // Perform actions based on scan failure
         Log.e(TAG, "Scan failed with error code: $errorCode")
+    }
+
+    override fun onScanFinish() {
+        classEnd = true
+        stopSelf() // stop AttendanceCheckService on callback
+        Log.e(TAG, "Scan finished; class ended: $classEnd")
     }
 
     private val serviceConnection = object : ServiceConnection {
@@ -169,5 +200,7 @@ class AttendanceService : Service(), BleScanCallback {
 
     companion object {
         private const val TAG = "AttendanceService"
+//        const val EXTRA_CLASS_DURATION_MILLIS = "extra_duration_millis"
+//        private const val DEFAULT_CLASS_DURATION_MILLIS = 6300000L // 105 minutes
     }
 }

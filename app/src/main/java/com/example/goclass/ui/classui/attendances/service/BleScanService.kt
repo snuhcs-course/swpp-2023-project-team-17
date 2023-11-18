@@ -10,26 +10,38 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.ParcelUuid
 import android.util.Log
-import androidx.core.app.ActivityCompat
 import com.example.goclass.ui.classui.attendances.callback.BleScanCallback
 
-class BleScanningService : Service() {
+class BleScanService : Service() {
 
     private var bleScanCallback: BleScanCallback? = null
     private var bluetoothLeScanner: BluetoothLeScanner? = null
+    private var scanIntervalHandler: Handler? = null
+    private var scanCount = 0
+    private var successfulScanCount = 0
+
+    private val handler = Handler()
 
     override fun onCreate() {
         super.onCreate()
         initializeBluetooth()
-        startScanning()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        val durationMillis = intent?.getLongExtra(EXTRA_DURATION_MILLIS, DEFAULT_DURATION_MILLIS)
+            ?: DEFAULT_DURATION_MILLIS
+
+        // Schedule a task to stop the service after the designated duration
+        handler.postDelayed({
+            stopSelf() // This will stop the service after the duration
+        }, durationMillis)
+
+        startScanningWithInterval()
         return START_STICKY
     }
 
     override fun onDestroy() {
-        stopScanning()
+        sendSuccessfulScanCount()
         super.onDestroy()
     }
 
@@ -58,7 +70,8 @@ class BleScanningService : Service() {
             result?.device?.let {
                 Log.i(TAG, "Device found: ${it.address}")
                 if (isTargetDevice(result)) {
-                    bleScanCallback?.onDeviceFound()
+                    bleScanCallback?.onDeviceFound(scanCount)
+                    successfulScanCount++
                 }
             }
         }
@@ -71,9 +84,49 @@ class BleScanningService : Service() {
     }
 
     private fun isTargetDevice(result: ScanResult): Boolean {
-        // For example, check if the device advertises a specific service UUID
         val targetServiceUuid = ParcelUuid.fromString("Your Target Service UUID")
         return result.scanRecord?.serviceUuids?.contains(targetServiceUuid) == true
+    }
+
+    private fun startScanningWithInterval() {
+        // Initial scan
+        startScanning()
+
+        // Schedule periodic scans with a 1-minute interval
+        scanIntervalHandler = Handler()
+        scanIntervalHandler?.postDelayed({
+            stopScanning()
+            startScanningWithInterval()
+        }, SCAN_INTERVAL_MILLIS)
+    }
+
+    private fun stopScanning() {
+        if (checkSelfPermission(Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    Activity#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for Activity#requestPermissions for more details.
+            return
+        }
+        bluetoothLeScanner?.stopScan(scanCallback)
+
+//        // Pass scanCount to AttendanceService using Intent
+//        val intent = Intent(ACTION_BLE_SCAN_RESULT)
+//        intent.putExtra(EXTRA_SCAN_COUNT, scanCount)
+//        sendBroadcast(intent)
+
+        scanCount++
+    }
+
+    private fun sendSuccessfulScanCount() {
+        // Pass scanCount to AttendanceService using Intent
+        val intent = Intent(ACTION_BLE_SCAN_RESULT)
+        intent.putExtra(EXTRA_SCAN_COUNT, successfulScanCount)
+        sendBroadcast(intent)
+        bleScanCallback?.onScanFinish()
     }
 
     private fun startScanning() {
@@ -87,35 +140,24 @@ class BleScanningService : Service() {
             .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
             .build()
 
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.BLUETOOTH_SCAN
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // Permission is not granted; TODO: show a notification
+        if (checkSelfPermission(Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling Activity#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for Activity#requestPermissions for more details.
             return
         }
         bluetoothLeScanner?.startScan(scanFilters, scanSettings, scanCallback)
-
-        // Stop scanning after a certain period (e.g., 10 seconds)
-        Handler().postDelayed({
-            stopScanning()
-        }, 10000)
-    }
-
-    private fun stopScanning() {
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.BLUETOOTH_SCAN
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // Permission is not granted; TODO: show a notification
-            return
-        }
-        bluetoothLeScanner?.stopScan(scanCallback)
     }
 
     companion object {
+        const val ACTION_BLE_SCAN_RESULT = "com.example.yourapp.BLE_SCAN_RESULT"
+        const val EXTRA_SCAN_COUNT = "extra_scan_count"
         private const val TAG = "BleScanningService"
+        const val EXTRA_DURATION_MILLIS = "extra_duration_millis"
+        private const val DEFAULT_DURATION_MILLIS = 6300000L // 105 minutes (1hr 45min)
+        private const val SCAN_INTERVAL_MILLIS = 60000L // 1 minute
     }
 }
