@@ -29,20 +29,23 @@ server.listen(port, () => {
 // chat with socket
 io.on('connection', function (socket) {
     socket.on('joinRoom', function (data) {
-        socket.join(data.class_id);
+        socket.join(`${data.class_id}_${data.comment_id}_${socket.userid}`);
+        console.log(`joinRoom: ${data.class_id}_${data.comment_id}`);
     });
 
     socket.on('chat', function (data) {
-        console.log('Message from %s in room %s: %s', socket.name, data.class_id, data.msg);
+        console.log('Message in room %s: %s', `${data.class_id}_${data.comment_id}_${socket.userid}`, data.msg);
         const msg = {
             from: {
                 name: socket.name,
                 userid: socket.userid
             },
-            msg: data.msg,
-            sender_name: data.sender_name
+            class_id: data.class_id,
+            comment_id: data.comment_id,
+            sender_name: data.sender_name,
+            msg: data.msg
         };
-        io.to(data.class_id).emit('chat', msg);
+        io.to(`${data.class_id}_${data.comment_id}_${socket.userid}`).emit('chat', msg);
     });
 
     socket.on('forceDisconnect', function () {
@@ -50,7 +53,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on('disconnect', function () {
-        console.log('user disconnected: ' + socket.name);
+        console.log(`user disconnected: ${socket.userid}`);
     });
 });
 
