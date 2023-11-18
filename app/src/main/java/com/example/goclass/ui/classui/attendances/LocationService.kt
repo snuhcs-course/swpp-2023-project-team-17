@@ -14,7 +14,6 @@ import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import com.example.goclass.GoClassApplication
 import com.example.goclass.R
 import com.example.goclass.ui.mainui.MainActivity
 
@@ -105,20 +104,22 @@ class LocationService : Service() {
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
             } else {
                 PendingIntent.FLAG_UPDATE_CURRENT
-        }
-        val pendingIntent = PendingIntent.getActivity(
-            this,
-            0,
-            notificationIntent,
-            pendingIntentFlags,
-        )
+            }
+        val pendingIntent =
+            PendingIntent.getActivity(
+                this,
+                0,
+                notificationIntent,
+                pendingIntentFlags,
+            )
 
-        val notification = NotificationCompat.Builder(this, getString(R.string.channel_id))
-            .setContentTitle("위치 추적 중")
-            .setContentText("백그라운드에서 위치를 추적 중입니다.")
-            .setContentIntent(pendingIntent)
-            .setSmallIcon(R.drawable.baseline_location_on_24)
-            .build()
+        val notification =
+            NotificationCompat.Builder(this, getString(R.string.channel_id))
+                .setContentTitle("위치 추적 중")
+                .setContentText("백그라운드에서 위치를 추적 중입니다.")
+                .setContentIntent(pendingIntent)
+                .setSmallIcon(R.drawable.baseline_location_on_24)
+                .build()
 
         Log.d("notificationl", "create notification")
 
