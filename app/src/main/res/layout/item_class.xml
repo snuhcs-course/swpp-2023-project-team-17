@@ -1,18 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:padding="4dp">
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/classNameTextView"
-        android:layout_width="280dp"
+        android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:clipToOutline="true"
-        android:text="Class Name"
-        android:background="@drawable/class_list_bg"
+        android:background="@drawable/white_btn_bg"
         android:fontFamily="@font/relay_noto_sans_semibold"
-        android:textSize="20sp"/>
+        android:stateListAnimator="@null"
+        android:text="Class Name"
+        android:textSize="20sp" />
 
-</LinearLayout>
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/deleteButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@null"
+        android:layout_gravity="end|center_vertical"
+        android:src="@drawable/delete_btn" />
+
+</FrameLayout>

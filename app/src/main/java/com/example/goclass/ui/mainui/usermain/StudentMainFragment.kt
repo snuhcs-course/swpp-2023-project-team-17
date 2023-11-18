@@ -26,6 +26,7 @@ class StudentMainFragment : Fragment() {
     private val viewModel: StudentMainViewModel by viewModel {
         parametersOf(requireActivity().application)
     }
+    private val professorMainViewModel: ProfessorMainViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,7 +67,7 @@ class StudentMainFragment : Fragment() {
         // show classList with dummy data
         val userMap = mapOf("userId" to userId.toString(), "userType" to "0")
         val classListLiveData = viewModel.getClassList(userMap)
-        val classListAdapter = ClassListAdapter()
+        val classListAdapter = ClassListAdapter(professorMainViewModel, 0)
         binding.studentClassRecyclerView.adapter = classListAdapter
         binding.studentClassRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 

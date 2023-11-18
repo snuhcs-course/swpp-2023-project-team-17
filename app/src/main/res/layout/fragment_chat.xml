@@ -44,16 +44,48 @@
             android:layout_gravity="end" />
     </androidx.appcompat.widget.Toolbar>
 
-    <TextView
-        android:id="@+id/hintText"
-        android:layout_width="wrap_content"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chatRecyclerView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Chat Room"
-        app:layout_constraintStart_toStartOf="parent"
+        android:scrollbars="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+    <RelativeLayout
+        android:id="@+id/chatui"
+        android:layout_width="360dp"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="680dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:textSize="40sp"
-        android:layout_gravity="center" />
+        android:clipToOutline="true"
+        android:background="@drawable/chatbox_bg"
+        >
+
+        <EditText
+            android:id="@+id/chatText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="center_vertical"
+            android:inputType="text"
+            android:hint="write your messages" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/chatSendButton"
+            android:layout_width="27dp"
+            android:layout_height="25dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="312dp"
+            android:layout_marginTop="21dp"
+            android:background="#929292"
+            android:src="@android:drawable/ic_menu_send" />
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

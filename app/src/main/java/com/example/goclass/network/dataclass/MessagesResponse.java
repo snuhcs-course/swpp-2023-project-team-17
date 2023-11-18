@@ -5,10 +5,16 @@ import com.google.gson.annotations.SerializedName;
 public class MessagesResponse {
     @SerializedName("messageId")
     int messageId;
+    @SerializedName("commentId")
+    int commentId;
+    @SerializedName("classId")
+    int classId;
     @SerializedName("timeStamp")
     String timeStamp;
     @SerializedName("senderId")
     int senderId;
+    @SerializedName("senderName")
+    String senderName;
     @SerializedName("content")
     String content;
     @SerializedName("channelId")
@@ -18,8 +24,38 @@ public class MessagesResponse {
     @SerializedName("message")
     private String message;
 
+    public MessagesResponse(int messageId, int commentId, int classId, String timeStamp, int senderId, String senderName, String content) {
+        this.messageId = messageId;
+        this.commentId = commentId;
+        this.classId = classId;
+        this.timeStamp = timeStamp;
+        this.senderId = senderId;
+        this.senderName = senderName;
+        this.content = content;
+    }
+
+    public MessagesResponse(int messageId, int commentId, int classId, String timeStamp, int senderId, String senderName, String content, int code, String message) {
+        this.messageId = messageId;
+        this.commentId = commentId;
+        this.classId = classId;
+        this.timeStamp = timeStamp;
+        this.senderId = senderId;
+        this.senderName = senderName;
+        this.content = content;
+        this.code = code;
+        this.message = message;
+    }
+
     public int getMessageId() {
         return messageId;
+    }
+
+    public int getCommentId() {
+        return commentId;
+    }
+
+    public int getClassId() {
+        return classId;
     }
 
     public String getTimeStamp() {
@@ -28,6 +64,10 @@ public class MessagesResponse {
 
     public int getSenderId() {
         return senderId;
+    }
+
+    public String getSenderName() {
+        return senderName;
     }
 
     public String getContent() {
