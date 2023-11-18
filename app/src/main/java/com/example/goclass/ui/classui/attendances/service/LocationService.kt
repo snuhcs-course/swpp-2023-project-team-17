@@ -1,4 +1,4 @@
-package com.example.goclass.ui.classui.attendances
+package com.example.goclass.ui.classui.attendances.service
 
 import android.Manifest
 import android.app.PendingIntent

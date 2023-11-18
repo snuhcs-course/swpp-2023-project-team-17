@@ -9,7 +9,8 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.goclass.R
 import com.example.goclass.databinding.ActivityMainBinding
-import com.example.goclass.ui.classui.attendances.LocationService
+import com.example.goclass.ui.classui.attendances.service.LocationService
+import com.example.goclass.utility.PermissionUtils
 
 class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
