@@ -3,7 +3,6 @@ package com.example.goclass.ui.classui.chats.chat
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -152,6 +151,12 @@ class ChatFragment : Fragment() {
         }
         if (newClassId != -1 && newClassId != classId) {
             classId = newClassId
+
+            val joinData = JSONObject().apply {
+                put("class_id", classId)
+                put("comment_id", -1)
+            }
+            socket?.emit("joinRoom", joinData)
 
             viewModel.chatChannelGetList(classId).observe(viewLifecycleOwner) { messageList ->
                 (binding.chatRecyclerView.adapter as? MessageAdapter)?.setMessageList(messageList)

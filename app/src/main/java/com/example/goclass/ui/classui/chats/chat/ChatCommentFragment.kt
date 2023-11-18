@@ -12,6 +12,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.goclass.databinding.FragmentChatCommentBinding
 import com.example.goclass.network.dataclass.CommentsResponse
+import com.example.goclass.ui.classui.chats.MessageAdapter
 import io.socket.client.IO
 import io.socket.client.Socket
 import org.json.JSONObject
@@ -23,6 +24,10 @@ import java.util.Locale
 class ChatCommentFragment : Fragment() {
     private lateinit var binding: FragmentChatCommentBinding
     private val viewModel: ChatCommentViewModel by viewModel()
+
+    private var userId: Int = -1
+    private var classId: Int = -1
+    private var messageId: Int = -1
     private lateinit var socket: Socket
 
     override fun onCreateView(
@@ -40,15 +45,15 @@ class ChatCommentFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val args: ChatCommentFragmentArgs by navArgs()
-        val messageId = args.messageId
+        messageId = args.messageId
         val content = args.content
 
         val userSharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val userId = userSharedPref!!.getInt("userId", -1)
+        userId = userSharedPref!!.getInt("userId", -1)
         val userName = userSharedPref?.getString("userName", "") ?: ""
 
         val classSharedPref = activity?.getSharedPreferences("ClassPrefs", Context.MODE_PRIVATE)
-        val classId = classSharedPref!!.getInt("classId", -1)
+        classId = classSharedPref!!.getInt("classId", -1)
 
         binding.chatMessage.text = content
 
@@ -113,6 +118,33 @@ class ChatCommentFragment : Fragment() {
             commentAdapter.setCommentList(commentList)
         }
         binding.commentRecyclerView.scrollToPosition(commentAdapter.itemCount - 1)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val classSharedPref = activity?.getSharedPreferences("ClassPrefs", Context.MODE_PRIVATE)
+        val newClassId = classSharedPref?.getInt("classId", -1) ?: -1
+
+        val userSharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val newUserId = userSharedPref?.getInt("userId", -1) ?: -1
+
+        if (newUserId != -1 && newUserId != userId) {
+            userId = newUserId
+        }
+        if (newClassId != -1 && newClassId != classId) {
+            classId = newClassId
+
+            val joinData = JSONObject().apply {
+                put("class_id", classId)
+                put("comment_id", messageId)
+            }
+            socket?.emit("joinRoom", joinData)
+
+            viewModel.chatCommentGetList(classId, messageId).observe(viewLifecycleOwner) { commentList ->
+                (binding.commentRecyclerView.adapter as? CommentAdapter)?.setCommentList(commentList)
+            }
+        }
     }
 
     override fun onPause() {
