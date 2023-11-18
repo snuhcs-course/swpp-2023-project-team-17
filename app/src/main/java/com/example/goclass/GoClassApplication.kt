@@ -30,7 +30,7 @@ class GoClassApplication : Application() {
                 NotificationChannel(
                     channelId,
                     name,
-                    importance
+                    importance,
                 ).apply {
                     description = descriptionText
                 }
