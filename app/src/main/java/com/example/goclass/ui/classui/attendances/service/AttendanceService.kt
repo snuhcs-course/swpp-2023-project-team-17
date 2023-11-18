@@ -95,6 +95,7 @@ class AttendanceService : Service(), BleScanCallback {
         // Start the BleScanService
         val serviceIntent = Intent(this, BleScanService::class.java)
         serviceIntent.putExtra(BleScanService.EXTRA_DURATION_MILLIS, durationMillis)
+        serviceIntent.putExtra("classId", classId)
         startService(serviceIntent)
 
         // Bind to the BleScanService

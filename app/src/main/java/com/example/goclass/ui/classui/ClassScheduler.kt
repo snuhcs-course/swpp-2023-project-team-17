@@ -17,6 +17,7 @@ class ClassScheduler {
         startMinute: Int,
         endHour: Int,
         endMinute: Int,
+        userType: Int,
     ) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, AttendanceReceiver::class.java)
@@ -28,6 +29,7 @@ class ClassScheduler {
         intent.putExtra("startMinute", startMinute)
         intent.putExtra("endHour", endHour)
         intent.putExtra("endMinute", endMinute)
+        intent.putExtra("userType", userType)
 
         val pendingIntent = PendingIntent.getBroadcast(context, uniqueRequestId(userId, classId), intent, PendingIntent.FLAG_UPDATE_CURRENT)
 

@@ -11,6 +11,7 @@ import android.os.IBinder
 import android.os.ParcelUuid
 import android.util.Log
 import com.example.goclass.ui.classui.attendances.callback.BleScanCallback
+import com.example.goclass.utility.Constants
 
 class BleScanService : Service() {
 
@@ -19,6 +20,7 @@ class BleScanService : Service() {
     private var scanIntervalHandler: Handler? = null
     private var scanCount = 0
     private var successfulScanCount = 0
+    private var classId = -1
 
     private val handler = Handler()
 
@@ -30,6 +32,7 @@ class BleScanService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val durationMillis = intent?.getLongExtra(EXTRA_DURATION_MILLIS, DEFAULT_DURATION_MILLIS)
             ?: DEFAULT_DURATION_MILLIS
+        classId = intent?.getIntExtra("classId", -1)?: -1
 
         // Schedule a task to stop the service after the designated duration
         handler.postDelayed({
@@ -84,7 +87,9 @@ class BleScanService : Service() {
     }
 
     private fun isTargetDevice(result: ScanResult): Boolean {
-        val targetServiceUuid = ParcelUuid.fromString("Your Target Service UUID")
+        val formattedClassId = classId.toString().padStart(6, '0')
+        val targetUuid = formattedClassId + Constants.UUID_STRING
+        val targetServiceUuid = ParcelUuid.fromString(targetUuid)
         return result.scanRecord?.serviceUuids?.contains(targetServiceUuid) == true
     }
 
@@ -130,9 +135,12 @@ class BleScanService : Service() {
     }
 
     private fun startScanning() {
+        val formattedClassId = classId.toString().padStart(6, '0')
+        val targetUuid = formattedClassId + Constants.UUID_STRING
+
         val scanFilters: List<ScanFilter> = listOf(
             ScanFilter.Builder()
-                .setDeviceAddress("TargetDeviceAddress")
+                .setDeviceAddress(targetUuid)
                 .build()
         )
 
