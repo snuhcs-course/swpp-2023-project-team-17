@@ -320,9 +320,12 @@ app.post('/class/create', (req, res) => {
             return res.status(500).json({ 'code': 500, 'message': 'Error occurred' });
         }
 
+        const classId = result.insertId;
+
         res.json({
             'code': 200,
-            'message': "create class success"
+            'message': "create class success",
+            'class_id': classId
         });
     });
 });
