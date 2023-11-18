@@ -34,16 +34,10 @@ public class MessagesResponse {
         this.content = content;
     }
 
-    public MessagesResponse(int messageId, int commentId, int classId, String timeStamp, int senderId, String senderName, String content, int code, String message) {
-        this.messageId = messageId;
-        this.commentId = commentId;
+    public MessagesResponse(int classId, String senderName, String content) {
         this.classId = classId;
-        this.timeStamp = timeStamp;
-        this.senderId = senderId;
         this.senderName = senderName;
         this.content = content;
-        this.code = code;
-        this.message = message;
     }
 
     public int getMessageId() {

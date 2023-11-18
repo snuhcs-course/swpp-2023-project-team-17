@@ -1,27 +1,57 @@
+const port = 3000;
+const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const express = require('express');
-const bodyParser = require('body-parser');
 const app = express();
-const port = 3000;
-
-app.set("port", port);
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
-
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
-
-app.listen(port, () => {
-    console.log('Server Runnning...');
-});
-
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
 const connection = mysql.createConnection({
     host: "team17-database.cqeij4pxj0w8.ap-northeast-2.rds.amazonaws.com",
     user: "admin",
     database: "team17_database",
     password: "admin1234",
     port: 3306
+});
+
+app.set("port", port);
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.get('/', (req, res) => {
+    res.send('Hello World!');
+});
+
+server.listen(port, () => {
+    console.log('Server Running...');
+});
+
+
+// chat with socket
+io.on('connection', function (socket) {
+    socket.on('joinRoom', function (data) {
+        socket.join(data.class_id);
+    });
+
+    socket.on('chat', function (data) {
+        console.log('Message from %s in room %s: %s', socket.name, data.class_id, data.msg);
+        const msg = {
+            from: {
+                name: socket.name,
+                userid: socket.userid
+            },
+            msg: data.msg,
+            sender_name: data.sender_name
+        };
+        io.to(data.class_id).emit('chat', msg);
+    });
+
+    socket.on('forceDisconnect', function () {
+        socket.disconnect();
+    });
+
+    socket.on('disconnect', function () {
+        console.log('user disconnected: ' + socket.name);
+    });
 });
 
 
@@ -48,7 +78,7 @@ app.post('/login/:email', (req, res) => {
                 'code': 200,
                 'message': 'Login success',
                 'userEmail': userEmail,
-                'userId': result[0].user_id, 
+                'userId': result[0].user_id,
                 'userName': result[0].user_name,
                 'userType': result[0].user_type
             });
@@ -95,7 +125,7 @@ app.get('/users/classes', (req, res) => {
     const userType = req.query.userType;
 
     var sql = 'select * from Classes ';
-    if(userType == 0 || userType == '0') {
+    if (userType == 0 || userType == '0') {
         sql += 'where class_id in (select class_id from Takes where student_id = ?)';
     } else {
         sql += 'where professor_id = ?';
@@ -110,7 +140,7 @@ app.get('/users/classes', (req, res) => {
 
         if (err) {
             console.log(err);
-        } else if(result.length > 0) {
+        } else if (result.length > 0) {
             resultCode = 200;
             message = 'get classes Success';
             console.log(message);
@@ -128,7 +158,7 @@ app.get('/users/classes', (req, res) => {
             message = 'classList is empty';
             console.log(message);
         }
-                                
+
         res.json({
             'code': resultCode,
             'message': message,
@@ -144,8 +174,8 @@ app.get('/users/attendance', (req, res) => {
     const classId = req.query.classId;
 
     const sql = 'select attendance_date from Attendances '
-                + 'where is_sent = 1 and class_id = ?'
-                + 'group by attendance_date';
+        + 'where is_sent = 1 and class_id = ?'
+        + 'group by attendance_date';
 
     const params = [classId];
 
@@ -156,7 +186,7 @@ app.get('/users/attendance', (req, res) => {
 
         if (err) {
             console.log(err);
-        } else if(result.length > 0) {
+        } else if (result.length > 0) {
             resultCode = 200;
             message = 'get attendance date list Success';
             console.log(message);
@@ -183,9 +213,9 @@ app.get('/users/attendance', (req, res) => {
 app.get('/users/attendance/:date', (req, res) => {
     const attendanceDate = req.params.date;
     const classId = req.query.classId;
-    
+
     const sql = 'select * from Attendances '
-                + 'where is_sent = 1 and attendance_date = ? and class_id = ?';
+        + 'where is_sent = 1 and attendance_date = ? and class_id = ?';
 
     const params = [attendanceDate, classId];
 
@@ -196,7 +226,7 @@ app.get('/users/attendance/:date', (req, res) => {
 
         if (err) {
             console.log(err);
-        } else if(result.length > 0) {
+        } else if (result.length > 0) {
             resultCode = 200;
             message = 'get all attendances in specific date Success';
             console.log(message);
@@ -214,7 +244,7 @@ app.get('/users/attendance/:date', (req, res) => {
             resultCode = 200;
             message = 'attendanceList is empty';
             console.log(message);
-        } 
+        }
 
         res.json({
             'code': resultCode,
@@ -240,12 +270,12 @@ app.get('/users/:id', (req, res) => {
 
         if (err) {
             console.log(err);
-        } else if(result.length > 0) {
-                resultCode = 200;
-                message = 'get userName and userType Success';
-                console.log(message);
-                userName = result[0].user_name;
-                userType = result[0].user_type;
+        } else if (result.length > 0) {
+            resultCode = 200;
+            message = 'get userName and userType Success';
+            console.log(message);
+            userName = result[0].user_name;
+            userType = result[0].user_type;
         } else {
             resultCode = 200;
             message = 'There is no user corresponding to that id';
@@ -283,7 +313,7 @@ app.put('/users/:id', (req, res) => {
         } else {
             resultCode = 200;
             message = 'update userName, userType Success';
-            console.log(message);  
+            console.log(message);
         }
 
         res.json({
@@ -403,7 +433,7 @@ app.get('/class/:id', (req, res) => {
 
         if (err) {
             console.log(err);
-        } else if(result.length > 0) {
+        } else if (result.length > 0) {
             resultCode = 200;
             message = 'get specific class Success';
             console.log(message);
@@ -479,7 +509,7 @@ app.get('/class/:id/attendance/:user_id', (req, res) => {
 
         if (err) {
             console.log(err);
-        } else if(result.length > 0) {
+        } else if (result.length > 0) {
             resultCode = 200;
             message = 'get user attendance list Success';
             console.log(message);
@@ -524,7 +554,7 @@ app.get('/chat_channel/:class_id/comment/:id', (req, res) => {
 
         if (err) {
             console.log(err);
-        } else if(result.length > 0) {
+        } else if (result.length > 0) {
             resultCode = 200;
             message = 'get comment message list Success';
             console.log(message);
@@ -631,7 +661,7 @@ app.get('/chat_channel/:class_id', (req, res) => {
 
         if (err) {
             console.log(err);
-        } else if(result.length > 0) {
+        } else if (result.length > 0) {
             resultCode = 200;
             message = 'get chatting message list Success';
             console.log(message);
@@ -743,7 +773,7 @@ app.get('/attendance/:id', (req, res) => {
 
         if (err) {
             console.log(err);
-        } else if(result.length > 0) {
+        } else if (result.length > 0) {
             resultCode = 200;
             message = 'get attendance information Success';
             console.log(message);
@@ -843,7 +873,7 @@ app.post('/attendance/:user_id', (req, res) => {
     const classId = req.body.classId;
 
     const sql = 'insert into Attendances(attendance_status, attendance_duration, student_id, class_id) '
-              + 'values(?, ?, ?, ?)';
+        + 'values(?, ?, ?, ?)';
 
     const params = [attendanceStatus, attendanceDuration, userId, classId];
 

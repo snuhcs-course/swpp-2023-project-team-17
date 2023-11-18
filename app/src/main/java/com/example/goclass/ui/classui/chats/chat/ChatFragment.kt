@@ -3,6 +3,7 @@ package com.example.goclass.ui.classui.chats.chat
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +12,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.goclass.R
 import com.example.goclass.databinding.FragmentChatBinding
+import com.example.goclass.network.dataclass.MessagesResponse
 import com.example.goclass.ui.classui.chats.MessageAdapter
 import com.example.goclass.ui.mainui.MainActivity
+import io.socket.client.IO
+import io.socket.client.Socket
+import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ChatFragment : Fragment() {
@@ -21,6 +26,7 @@ class ChatFragment : Fragment() {
 
     private var userId: Int = -1
     private var classId: Int = -1
+    private lateinit var socket: Socket
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,6 +45,7 @@ class ChatFragment : Fragment() {
 
         val userSharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         val userRole = userSharedPref?.getString("userRole", "") ?: ""
+        val userName = userSharedPref?.getString("userName", "") ?: ""
         userId = userSharedPref!!.getInt("userId", -1)
 
         val classSharedPref = activity?.getSharedPreferences("ClassPrefs", Context.MODE_PRIVATE)
@@ -65,12 +72,6 @@ class ChatFragment : Fragment() {
             }
         }
 
-        // Chat Send Button
-        binding.chatSendButton.setOnClickListener {
-            viewModel.chatChannelSend(classId, userId, binding.chatText.text.toString())
-            binding.chatText.setText("")
-        }
-
         val messageListLiveData = viewModel.chatChannelGetList(classId)
         val messageAdapter = MessageAdapter(requireContext(), userId, {message ->
             val action = ChatFragmentDirections.actionChatFragmentToChatCommentFragment(
@@ -79,13 +80,60 @@ class ChatFragment : Fragment() {
             )
             findNavController().navigate(action)
         },
-        { classId, content, messageId ->
-            viewModel.chatChannelEdit(classId, content, messageId)
-        })
+            { classId, content, messageId ->
+                viewModel.chatChannelEdit(classId, content, messageId)
+            })
         binding.chatRecyclerView.adapter = messageAdapter
         binding.chatRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         messageListLiveData.observe(viewLifecycleOwner) {messageList ->
             messageAdapter.setMessageList(messageList)
+        }
+        binding.chatRecyclerView.scrollToPosition(messageAdapter.itemCount - 1)
+
+        // Socket.io settings
+        try {
+            socket = IO.socket("http://ec2-43-202-167-120.ap-northeast-2.compute.amazonaws.com:3000")
+            socket.connect()
+
+            // join chat room
+            val joinData = JSONObject().apply {
+                put("class_id", classId)
+            }
+            socket.emit("joinRoom", joinData)
+            // 'chat' Event
+            socket.on("chat") { args ->
+                activity?.runOnUiThread {
+                    val data = args[0] as JSONObject
+                    val content = data.getString("msg")
+                    val senderName = data.getString("sender_name")
+                    val messageResp = MessagesResponse(classId, senderName, content)
+
+                    val updatedMessageList = messageListLiveData.value?.toMutableList() ?: mutableListOf()
+                    updatedMessageList.add(messageResp)
+                    messageListLiveData.postValue(updatedMessageList)
+
+                    binding.chatRecyclerView.scrollToPosition(updatedMessageList.size - 1)
+                }
+            }
+        } catch (e: Exception) {
+            Log.d("socket Error", e.message.toString());
+        }
+
+        // Chat Send Button
+        binding.chatSendButton.setOnClickListener {
+            val message = binding.chatText.text.toString()
+            val sendData = JSONObject().apply {
+                put("msg", message)
+                put("class_id", classId)
+                put("sender_name", userName)
+            }
+            viewModel.chatChannelSend(classId, userId, message)
+            try {
+                socket.emit("chat", sendData)
+            } catch (e: Exception) {
+                Log.d("socket Error", e.message.toString());
+            }
+            binding.chatText.setText("")
         }
     }
 
@@ -112,5 +160,10 @@ class ChatFragment : Fragment() {
         if (newClassName.isNotEmpty()) {
             binding.className.text = newClassName
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        socket.disconnect()
     }
 }
