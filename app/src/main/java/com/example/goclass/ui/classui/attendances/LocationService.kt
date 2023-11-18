@@ -74,8 +74,7 @@ class LocationService : Service() {
             // Permission is not granted; TODO: show a notification
             return START_NOT_STICKY
         }
-
-        createNotification()
+        startForegroundNotification()
 
         // Permission is granted
         locationManager.requestLocationUpdates(
@@ -96,9 +95,10 @@ class LocationService : Service() {
         super.onDestroy()
         // Stop location updates when the service is destroyed
         locationManager.removeUpdates(locationListener)
+        stopForeground(Service.STOP_FOREGROUND_REMOVE)
     }
 
-    private fun createNotification() {
+    private fun startForegroundNotification() {
         val notificationIntent = Intent(this, MainActivity::class.java)
         val pendingIntentFlags =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -120,7 +120,7 @@ class LocationService : Service() {
             .setSmallIcon(R.drawable.baseline_location_on_24)
             .build()
 
-        Log.d("notification", "create notification")
+        Log.d("notificationl", "create notification")
 
         startForeground(1, notification)
     }
