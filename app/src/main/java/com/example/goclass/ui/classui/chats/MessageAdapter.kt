@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.goclass.databinding.ItemMessageBinding
 import com.example.goclass.R
 import com.example.goclass.network.dataclass.MessagesResponse
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class MessageAdapter(
     private val context: Context,
@@ -58,6 +60,17 @@ class MessageAdapter(
 
             itemView.setOnClickListener {
                 onMessageClicked(message)
+            }
+
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+            val outputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+            try {
+                val parsedDate = inputFormat.parse(message.timeStamp)
+                val formattedDate = outputFormat.format(parsedDate)
+                binding.timeStampText.text = formattedDate
+            } catch (e: Exception) {
+                e.printStackTrace()
+                binding.timeStampText.text = message.timeStamp
             }
 
             // Chat Edit Button

@@ -43,7 +43,8 @@ io.on('connection', function (socket) {
             class_id: data.class_id,
             comment_id: data.comment_id,
             sender_name: data.sender_name,
-            msg: data.msg
+            msg: data.msg,
+            time_stamp: data.time_stamp
         };
         io.to(`${data.class_id}_${data.comment_id}_${socket.userid}`).emit('chat', msg);
     });

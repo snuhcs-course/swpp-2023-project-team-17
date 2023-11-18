@@ -16,6 +16,9 @@ import io.socket.client.IO
 import io.socket.client.Socket
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class ChatCommentFragment : Fragment() {
     private lateinit var binding: FragmentChatCommentBinding
@@ -75,7 +78,8 @@ class ChatCommentFragment : Fragment() {
                 val commentId = data.getInt("comment_id")
                 val senderName = data.getString("sender_name")
                 val content = data.getString("msg")
-                val messageResp = CommentsResponse(id, commentId, senderName, content)
+                val timeStamp = data.getString("time_stamp")
+                val messageResp = CommentsResponse(id, commentId, senderName, content, timeStamp)
 
                 val updatedMessageList = commentListLiveData.value?.toMutableList() ?: mutableListOf()
                 updatedMessageList.add(messageResp)
@@ -93,6 +97,7 @@ class ChatCommentFragment : Fragment() {
                 put("class_id", classId)
                 put("sender_name", userName)
                 put("comment_id", messageId)
+                put("time_stamp", getCurrentTime())
             }
             viewModel.chatCommentSend(classId, messageId, userId, comment)
             socket?.emit("chat", sendData)
@@ -118,5 +123,11 @@ class ChatCommentFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         socket?.disconnect()
+    }
+
+    fun getCurrentTime(): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+        val currentTime = Date()
+        return dateFormat.format(currentTime)
     }
 }
