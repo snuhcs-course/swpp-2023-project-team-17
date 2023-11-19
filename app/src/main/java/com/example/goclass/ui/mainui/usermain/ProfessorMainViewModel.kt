@@ -100,6 +100,7 @@ class ProfessorMainViewModel(
                 }
             } catch (e: Exception) {
                 _toastMessage.postValue("Error: ${e.message}")
+                Log.d("createclass", "${e.message}")
             }
         }
     }

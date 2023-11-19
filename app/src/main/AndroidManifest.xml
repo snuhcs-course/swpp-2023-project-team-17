@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
@@ -47,6 +48,12 @@
             android:name=".ui.classui.attendances.service.AttendanceService"
             android:enabled="true"
             android:exported="false" />
+        <service android:name=".ui.classui.attendances.service.BleAdvertService"
+            android:enabled="true"
+            android:exported="false" />
+        <service android:name=".ui.classui.attendances.service.BleScanService"
+            android:enabled="true"
+            android:exported="false"/>
         <receiver
             android:name=".ui.classui.attendances.reciever.AttendanceReceiver"
             android:enabled="true"

@@ -41,6 +41,7 @@ class AttendanceService : Service(), BleScanCallback {
 
     override fun onCreate() {
         super.onCreate()
+        Log.i(TAG, "AttendanceService 생성됨")
         // Register the BroadcastReceiver to receive scan results
         val filter = IntentFilter(BleScanService.ACTION_BLE_SCAN_RESULT)
         registerReceiver(bleScanResultReceiver, filter)
@@ -66,6 +67,7 @@ class AttendanceService : Service(), BleScanCallback {
         flags: Int,
         startId: Int,
     ): Int {
+        Log.i(TAG, "AttendanceService 시작됨, Intent action: ${intent?.action}")
         if (intent != null) {
             val action = intent.action
 

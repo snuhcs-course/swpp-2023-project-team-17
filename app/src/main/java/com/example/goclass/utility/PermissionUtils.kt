@@ -27,19 +27,19 @@ class PermissionUtils(private val context: Context) {
     }
 
     fun requestBluetoothPermissions(activity: Activity, requestCode: Int): Boolean {
-        val bluetoothPermission = Manifest.permission.BLUETOOTH
-
-        // Check bluetooth permission; if not granted, request permission
-        if (ContextCompat.checkSelfPermission(activity, bluetoothPermission) == PackageManager.PERMISSION_GRANTED) {
-            return true
+        // Android 12 (API 레벨 31) 이상의 경우 BLUETOOTH_CONNECT 권한을 체크
+        val bluetoothPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            Manifest.permission.BLUETOOTH_CONNECT
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                ActivityCompat.requestPermissions(activity, arrayOf(bluetoothPermission), requestCode)
-                return false
-            } else {
-                // For devices below Android 6.0, Bluetooth permission is granted at installation time
-                return true
-            }
+            // 이전 버전의 경우 기본 BLUETOOTH 권한 사용
+            Manifest.permission.BLUETOOTH
         }
+
+        if (ContextCompat.checkSelfPermission(activity, bluetoothPermission) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity, arrayOf(bluetoothPermission), requestCode)
+            return false
+        }
+
+        return true
     }
 }

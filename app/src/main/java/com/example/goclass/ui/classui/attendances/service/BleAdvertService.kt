@@ -1,4 +1,5 @@
-// BleAdvertService.kt
+package com.example.goclass.ui.classui.attendances.service
+
 import android.Manifest
 import android.app.Service
 import android.bluetooth.BluetoothAdapter
@@ -15,6 +16,8 @@ import android.util.Log
 import androidx.core.app.ActivityCompat
 import com.example.goclass.ui.classui.attendances.service.BleScanService
 import com.example.goclass.utility.Constants
+import java.lang.NumberFormatException
+import java.util.UUID
 
 class BleAdvertService : Service() {
 
@@ -23,8 +26,6 @@ class BleAdvertService : Service() {
 
     private var classId = -1
     private var durationMillis = 6300000L // default: 105 min
-
-    private var uuid = Constants.UUID_STRING
 
     private lateinit var advertiseData: AdvertiseData
 //    = AdvertiseData.Builder()
@@ -36,7 +37,7 @@ class BleAdvertService : Service() {
         .setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY)
         .setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_HIGH)
         .setConnectable(false)
-        .setTimeout(0) // Advertise indefinitely (or set a specific duration)
+        //.setTimeout(0) // Advertise indefinitely (or set a specific duration)
         .build()
 
     private val advertiseCallback = object : AdvertiseCallback() {
@@ -53,11 +54,17 @@ class BleAdvertService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        Log.i(TAG, "BleAdvertService가 생성됨")
         initializeBluetooth()
-        startAdvertising()
+
+        if (!bluetoothAdapter!!.isMultipleAdvertisementSupported) {
+            Log.e(TAG, "이 기기는 블루투스 LE 광고를 지원하지 않습니다.")
+            stopSelf()
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.i(TAG, "BleAdvertService 시작됨, Intent action: ${intent?.action}")
         if (intent != null) {
             val action = intent.action
 
@@ -69,11 +76,25 @@ class BleAdvertService : Service() {
                 val endMinute = intent.getIntExtra("endMinute", -1)
                 if (classId != -1) {
                     durationMillis = ((endHour*60 + endMinute) - (startHour*60 + startMinute)).toLong()
-                    val formattedClassId = classId.toString().padStart(6, '0')
-                    advertiseData = AdvertiseData.Builder()
-                        .setIncludeDeviceName(true)
-                        .addServiceUuid(ParcelUuid.fromString(formattedClassId + uuid))
-                        .build()
+                    val formattedClassId = classId.toString().padEnd(2,'0')
+                    Log.d(TAG, "$formattedClassId")
+                    val formattedUuid = "$formattedClassId-0000-1000-8000-00805f9b34fb"
+                    val sampleUuid = UUID.randomUUID().toString()
+                    try {
+                        val parcelUuid = ParcelUuid.fromString(formattedUuid)
+                        advertiseData = AdvertiseData.Builder()
+                            .setIncludeDeviceName(true)
+                            .addServiceUuid(parcelUuid)
+                            .build()
+
+                        Log.d(TAG, "AdvertiseSettings: $advertiseSettings")
+                        Log.d(TAG, "AdvertiseData: $advertiseData")
+
+                        startAdvertising()
+                    } catch (e: NumberFormatException) {
+                        Log.e("BleAdvertService", "Invalid UUID format: $formattedUuid", e)
+                        stopSelf()
+                    }
                 } else {
                     Log.d("Error", "Invalid userId or classId")
                     stopSelf()
@@ -100,22 +121,30 @@ class BleAdvertService : Service() {
         if (bluetoothAdapter == null || !bluetoothAdapter!!.isEnabled) {
             Log.e(TAG, "Bluetooth is not enabled")
             stopSelf()
+        } else {
+            Log.d(TAG, "블루투스 어댑터 준비 완료")
         }
     }
 
     private fun startAdvertising() {
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.BLUETOOTH_ADVERTISE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+        Log.d(TAG, "startAdvertising 호출됨")
+//        if (ActivityCompat.checkSelfPermission(
+//                this,
+//                Manifest.permission.BLUETOOTH_ADVERTISE
+//            ) != PackageManager.PERMISSION_GRANTED
+//        ) {
+//            // TODO: Consider calling
+//            //    ActivityCompat#requestPermissions
+//            // here to request the missing permissions, and then overriding
+//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//            //                                          int[] grantResults)
+//            // to handle the case where the user grants the permission. See the documentation
+//            // for ActivityCompat#requestPermissions for more details.
+//            return
+//        }
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADVERTISE) != PackageManager.PERMISSION_GRANTED
+            || ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+            Log.e(TAG, "필요한 블루투스 광고 권한이 없습니다.")
             return
         }
         bluetoothAdapter?.bluetoothLeAdvertiser?.startAdvertising(
