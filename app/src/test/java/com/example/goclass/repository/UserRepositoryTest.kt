@@ -6,7 +6,6 @@ import com.example.goclass.network.dataclass.AttendanceDateListsResponse
 import com.example.goclass.network.dataclass.AttendanceListsResponse
 import com.example.goclass.network.dataclass.AttendancesResponse
 import com.example.goclass.network.dataclass.ClassListsResponse
-import com.example.goclass.network.dataclass.Classes
 import com.example.goclass.network.dataclass.ClassesResponse
 import com.example.goclass.network.dataclass.CodeMessageResponse
 import com.example.goclass.network.dataclass.Users
@@ -55,7 +54,7 @@ class UserRepositoryTest {
         }
 
     @Test
-    fun userLogin_success() =
+    fun userLogin_test() =
         runTest {
             val userEmail = "a@snu.ac.kr"
             val mockUsersResponse =
@@ -88,7 +87,7 @@ class UserRepositoryTest {
         }
 
     @Test
-    fun userGet_success() =
+    fun userGet_test() =
         runTest {
             val userId = 1
             val mockUsersResponse =
@@ -122,7 +121,7 @@ class UserRepositoryTest {
         }
 
     @Test
-    fun userEdit_success() =
+    fun userEdit_test() =
         runTest {
             val userId = 1
             val user = Users(0, "name")
@@ -152,7 +151,7 @@ class UserRepositoryTest {
         }
 
     @Test
-    fun userGetClassList_success() =
+    fun userGetClassList_test() =
         runTest {
             val userMap = mapOf("key1" to "value1", "key2" to "value2")
             val mockClassListsResponse =
@@ -193,7 +192,7 @@ class UserRepositoryTest {
         }
 
     @Test
-    fun userGetAttendanceListByDate_success() =
+    fun userGetAttendanceListByDate_test() =
         runTest {
             val date = "YYYY-MM-DD"
             val userMap = mapOf("key1" to "value1", "key2" to "value2")
@@ -234,7 +233,7 @@ class UserRepositoryTest {
         }
 
     @Test
-    fun attendanceGetDateList_success() =
+    fun attendanceGetDateList_test() =
         runTest {
             val classMap = mapOf("key1" to "value1", "key2" to "value2")
             val mockAttendanceDateListsResponse =

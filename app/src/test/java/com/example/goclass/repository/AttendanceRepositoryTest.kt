@@ -48,7 +48,7 @@ class AttendanceRepositoryTest {
         }
 
     @Test
-    fun attendanceGet_success() =
+    fun attendanceGet_test() =
         runTest {
             val mockAttendanceResponse =
                 AttendancesResponse(
@@ -79,7 +79,7 @@ class AttendanceRepositoryTest {
         }
 
     @Test
-    fun attendanceEdit_success() =
+    fun attendanceEdit_test() =
         runTest {
             val mockCodeMessageResponse =
                 CodeMessageResponse(
@@ -105,7 +105,7 @@ class AttendanceRepositoryTest {
         }
 
     @Test
-    fun attendanceDelete_success() =
+    fun attendanceDelete_test() =
         runTest {
             val mockCodeMessageResponse =
                 CodeMessageResponse(
@@ -134,7 +134,7 @@ class AttendanceRepositoryTest {
         }
 
     @Test
-    fun attendanceAdd_success() =
+    fun attendanceAdd_test() =
         runTest {
             val userId = 1
             val attendance = Attendances(1, 1, 1)

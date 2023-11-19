@@ -63,7 +63,7 @@ class ServiceApiTest {
     }
 
     @Test
-    fun userLogin_success() =
+    fun userLogin_test() =
         runTest {
             // Given
             val email = "test@example.com"
@@ -99,7 +99,7 @@ class ServiceApiTest {
         }
 
     @Test
-    fun userGet_success() =
+    fun userGet_test() =
         runTest {
             // Given
             val userId = 1234
@@ -135,7 +135,7 @@ class ServiceApiTest {
         }
 
     @Test
-    fun userEdit_success() =
+    fun userEdit_test() =
         runTest {
             // Given
             val userId = 1234
@@ -164,7 +164,7 @@ class ServiceApiTest {
         }
 
     @Test
-    fun userGetClassList_success() =
+    fun userGetClassList_test() =
         runTest {
             // Given
             val users = mapOf("userId" to "1", "userType" to "0")
@@ -211,7 +211,7 @@ class ServiceApiTest {
         }
 
     @Test
-    fun userGetAttendanceListByDate_success() =
+    fun userGetAttendanceListByDate_test() =
         runTest {
             // Given
             val date = "2023-11-16"
@@ -259,7 +259,7 @@ class ServiceApiTest {
         }
 
     @Test
-    fun attendanceGetDateList_success() =
+    fun attendanceGetDateList_test() =
         runTest {
             // Given
             val classMap = mapOf("classId" to "1", "userType" to "1")
@@ -294,7 +294,7 @@ class ServiceApiTest {
         }
 
     @Test
-    fun classCreate_success() =
+    fun classCreate_test() =
         runTest {
             // Given
             val classes = Classes("TestName", "1234", 1, "TestTime", "TestBuildingNumber", "TestRoomNumber")
@@ -322,7 +322,7 @@ class ServiceApiTest {
         }
 
     @Test
-    fun classJoin_success() =
+    fun classJoin_test() =
         runTest {
             // Given
             val userId = 1
@@ -355,7 +355,7 @@ class ServiceApiTest {
         }
 
     @Test
-    fun classGet_success() =
+    fun classGet_test() =
         runTest {
             // Given
             val classId = 1
@@ -395,7 +395,7 @@ class ServiceApiTest {
         }
 
     @Test
-    fun classDelete_success() =
+    fun classDelete_test() =
         runTest {
             // Given
             val classId = 1
@@ -423,7 +423,7 @@ class ServiceApiTest {
         }
 
     @Test
-    fun classGetAttendanceListByUserId_success() =
+    fun classGetAttendanceListByUserId_test() =
         runTest {
             // Given
             val classId = 1
@@ -471,7 +471,7 @@ class ServiceApiTest {
 
         }
     @Test
-    fun chatChannelGetList_success() =
+    fun chatChannelGetList_test() =
         runTest {
             // Given
             val classId = 1234
@@ -519,7 +519,7 @@ class ServiceApiTest {
         }
 
     @Test
-    fun chatChannelSend_success() =
+    fun chatChannelSend_test() =
         runTest {
             // Given
             val classId = 1234
@@ -548,7 +548,7 @@ class ServiceApiTest {
         }
 
     @Test
-    fun chatChannelEdit_success() =
+    fun chatChannelEdit_test() =
         runTest {
             // Given
             val classId = 1234
@@ -577,7 +577,7 @@ class ServiceApiTest {
         }
 
     @Test
-    fun chatCommentGetList_success() =
+    fun chatCommentGetList_test() =
         runTest {
             // Given
             val classId = 1234
@@ -626,7 +626,7 @@ class ServiceApiTest {
         }
 
     @Test
-    fun chatCommentSend_success() =
+    fun chatCommentSend_test() =
         runTest {
             // Given
             val classId = 1234
@@ -658,7 +658,7 @@ class ServiceApiTest {
         }
 
     @Test
-    fun chatCommentEdit_success() =
+    fun chatCommentEdit_test() =
         runTest {
             // Given
             val classId = 1234
@@ -690,7 +690,7 @@ class ServiceApiTest {
         }
 
     @Test
-    fun attendanceGet_success() =
+    fun attendanceGet_test() =
         runTest {
             // Given
             val attendanceId = 1234
@@ -732,7 +732,7 @@ class ServiceApiTest {
         }
 
     @Test
-    fun attendanceEdit_success() =
+    fun attendanceEdit_test() =
         runTest {
             // Given
             val attendanceId = 1234
@@ -760,7 +760,7 @@ class ServiceApiTest {
         }
 
     @Test
-    fun attendanceDelete_success() =
+    fun attendanceDelete_test() =
         runTest {
             // Given
             val attendanceId = 1234
@@ -788,7 +788,7 @@ class ServiceApiTest {
         }
 
     @Test
-    fun attendanceAdd_success() =
+    fun attendanceAdd_test() =
         runTest {
             // Given
             val attendanceId = 1234

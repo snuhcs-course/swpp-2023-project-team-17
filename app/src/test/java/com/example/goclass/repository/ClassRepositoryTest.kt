@@ -53,7 +53,7 @@ class ClassRepositoryTest {
         }
 
     @Test
-    fun classCreate_success() =
+    fun classCreate_test() =
         runTest {
             val classes =
                 Classes("name", "code")
@@ -85,7 +85,7 @@ class ClassRepositoryTest {
         }
 
     @Test
-    fun classJoin_success() =
+    fun classJoin_test() =
         runTest {
             val userId = 1
             val classes =
@@ -118,7 +118,7 @@ class ClassRepositoryTest {
         }
 
     @Test
-    fun classGet_success() =
+    fun classGet_test() =
         runTest {
             val classId = 1
             val mockClassesResponse =
@@ -153,7 +153,7 @@ class ClassRepositoryTest {
         }
 
     @Test
-    fun classDelete_success() =
+    fun classDelete_test() =
         runTest {
             val classId = 1
             val mockCodeMessageResponse =
@@ -183,7 +183,7 @@ class ClassRepositoryTest {
         }
 
     @Test
-    fun classGetAttendanceListByUserId_success() =
+    fun classGetAttendanceListByUserId_test() =
         runTest {
             val classId = 1
             val userId = 1

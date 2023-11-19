@@ -52,7 +52,7 @@ class ChatRepositoryTest {
         }
 
     @Test
-    fun chatChannelGetList_success() =
+    fun chatChannelGetList_test() =
         runTest {
             val classId = 1
             val mockMessageListsResponse =
@@ -92,7 +92,7 @@ class ChatRepositoryTest {
         }
 
     @Test
-    fun chatChannelSend_success() =
+    fun chatChannelSend_test() =
         runTest {
             val classId = 1
             val messages = Messages(1, "TestMsg")
@@ -122,7 +122,7 @@ class ChatRepositoryTest {
         }
 
     @Test
-    fun chatChannelEdit_success() =
+    fun chatChannelEdit_test() =
         runTest {
             val classId = 1
             val messages = Messages(1, "TestMsg")
@@ -152,7 +152,7 @@ class ChatRepositoryTest {
         }
 
     @Test
-    fun chatCommentGetList_success() =
+    fun chatCommentGetList_test() =
         runTest {
             val classId = 1
             val id = 1
@@ -196,7 +196,7 @@ class ChatRepositoryTest {
         }
 
     @Test
-    fun chatCommentSend_success() =
+    fun chatCommentSend_test() =
         runTest {
             val classId = 1
             val userId = 1
@@ -232,7 +232,7 @@ class ChatRepositoryTest {
         }
 
     @Test
-    fun chatCommentEdit_success() =
+    fun chatCommentEdit_test() =
         runTest {
             val classId = 1
             val userId = 1
