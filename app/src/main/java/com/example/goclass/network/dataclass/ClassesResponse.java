@@ -13,9 +13,9 @@ public class ClassesResponse {
     int professorId;
     @SerializedName("classTime")
     String classTime;
-    @SerializedName("classTime")
+    @SerializedName("buildingNumber")
     String buildingNumber;
-    @SerializedName("classTime")
+    @SerializedName("roomNumber")
     String roomNumber;
 
     @SerializedName("code")
