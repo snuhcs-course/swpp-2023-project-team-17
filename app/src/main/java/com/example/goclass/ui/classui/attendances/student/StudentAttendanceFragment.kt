@@ -47,6 +47,10 @@ class StudentAttendanceFragment : Fragment() {
             findNavController().navigate(R.id.action_studentAttendanceFragment_to_chatFragment)
         }
 
+        binding.button.setOnClickListener {
+            viewModel.addAttendance(classId, userId)
+        }
+
         // show studentAttendanceList with dummy data
         val repository: AttendanceRepository by inject()
         val studentAttendanceAdapter = StudentAttendanceAdapter(repository)

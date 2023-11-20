@@ -1,18 +1,24 @@
 package com.example.goclass.ui.mainui.profile
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.goclass.R
 import com.example.goclass.databinding.FragmentProfileBinding
+import com.example.goclass.ui.mainui.profile.utils.RadioButtonsUtils
+import com.example.goclass.ui.mainui.profile.utils.SharedPrefsUtils
+import com.example.goclass.ui.mainui.profile.utils.SnackBarUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -35,7 +41,6 @@ class ProfileFragment : Fragment() {
         return binding.root
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
@@ -45,51 +50,30 @@ class ProfileFragment : Fragment() {
             savedInstanceState,
         )
 
-        val sharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val storedUserName = SharedPrefsUtils.get(requireContext(), "userName", "") as String
+        val storedUserRole = SharedPrefsUtils.get(requireContext(), "userRole", "") as String
 
-        val storedUserName = sharedPref?.getString("userName", "") ?: ""
-        if (storedUserName != "") {
+        if (storedUserName.isNotEmpty()) {
             binding.nameEditText.setText(storedUserName)
         } else {
-            val userId = sharedPref?.getInt("userId", -1) ?: -1
+            val userId = SharedPrefsUtils.get(requireContext(), "userId", -1) as Int
             viewModel.userGet(userId)
-
             viewModel.userName.observe(
                 viewLifecycleOwner,
                 Observer { receivedUserName ->
                     binding.nameEditText.setText(receivedUserName)
-                    saveToSharedPref("userName", receivedUserName)
+                    SharedPrefsUtils.save(requireContext(),"userName", receivedUserName)
                 },
             )
         }
 
-        binding = FragmentProfileBinding.bind(view)
-        viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
-            Toast.makeText(requireActivity().applicationContext, message, Toast.LENGTH_SHORT).show()
-        }
-
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            if (isLoading) {
-                binding.progressBar.visibility = View.VISIBLE
-            } else {
-                binding.progressBar.visibility = View.GONE
-            }
-        }
+        RadioButtonsUtils.restoreRadioButtonState(binding, storedUserRole)
 
         viewModel.editSuccess.observe(viewLifecycleOwner) { isSuccess ->
             if (isSuccess) {
-                val selectedRole =
-                    when (binding.roleRadioGroup.checkedRadioButtonId) {
-                        R.id.studentRadioButton -> "student"
-                        R.id.professorRadioButton -> "professor"
-                        else -> null
-                    }
-                saveToSharedPref("userName", binding.nameEditText.text.toString())
-
+                val selectedRole = RadioButtonsUtils.getSelectedRole(binding)
                 selectedRole?.let {
-                    val sharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-                    saveToSharedPref("userRole", it)
-
+                    SharedPrefsUtils.save(requireContext(),"userRole", it)
                     when (it) {
                         "student" -> {
                             findNavController().navigate(R.id.action_profileFragment_to_studentMainFragment)
@@ -102,74 +86,68 @@ class ProfileFragment : Fragment() {
             }
         }
 
+        binding.professorRadioButton.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                binding.studentRadioButton.isChecked = false
+            }
+        }
+
+        binding.studentRadioButton.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                binding.professorRadioButton.isChecked = false
+            }
+        }
+
         // Logout Button
         binding.logoutButton.setOnClickListener {
-            sharedPref ?: return@setOnClickListener
-            saveToSharedPref("isLoggedIn", false)
-            saveToSharedPref("userRole", "")
-            saveToSharedPref("userName", "")
-            saveToSharedPref("userId", -1)
-            findNavController().navigate(R.id.action_profileFragment_to_loginFragment)
+            val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_logout, null)
+            val alertDialog = AlertDialog.Builder(requireContext())
+                .setView(dialogView)
+                .create()
+
+            alertDialog.window?.setBackgroundDrawableResource(R.drawable.dialog_bg)
+
+            dialogView.findViewById<AppCompatButton>(R.id.yesButton).setOnClickListener {
+                SharedPrefsUtils.clear(requireContext())
+                findNavController().navigate(R.id.action_profileFragment_to_loginFragment)
+                alertDialog.dismiss()
+            }
+
+            dialogView.findViewById<AppCompatButton>(R.id.noButton).setOnClickListener {
+                alertDialog.dismiss()
+            }
+
+            alertDialog.show()
         }
 
         // Confirm Button
         binding.confirmButton.setOnClickListener {
-            val userId = sharedPref?.getInt("userId", -1) ?: -1
+            val selectedRole = RadioButtonsUtils.getSelectedRole(binding)
+            val userId = SharedPrefsUtils.get(requireContext(), "userId", -1) as Int
             val userType =
-                when (binding.roleRadioGroup.checkedRadioButtonId) {
-                    R.id.studentRadioButton -> 0
-                    R.id.professorRadioButton -> 1
+                when (selectedRole) {
+                    "student" -> 0
+                    "professor" -> 1
                     else -> null
                 }
             val userName = binding.nameEditText.text.toString()
 
             if (userType == null) {
-                binding.errorTextView.visibility = View.VISIBLE
+                SnackBarUtils.showSnackBar(binding.root, "Please select your role.")
             } else if (userName == "") {
-                binding.errorNameView.visibility = View.VISIBLE
+                SnackBarUtils.showSnackBar(binding.root, "Please enter your name.")
             } else {
-                binding.errorNameView.visibility = View.GONE
-                binding.errorTextView.visibility = View.GONE
+                SharedPrefsUtils.save(requireContext(), "userName", userName)
                 viewModel.userEdit(userId, userType, userName)
             }
         }
 
-        // Remember whether user is a student or a professor
-        when (sharedPref?.getString("userRole", "") ?: "") {
-            "student" -> {
-                binding.studentRadioButton.isChecked = true
-            }
-            "professor" -> {
-                binding.professorRadioButton.isChecked = true
-            }
-            else -> {
-                // Do Nothing
-            }
-        }
 
         // Keyboard down when you touch other space in screen
         binding.root.setOnTouchListener { _, _ ->
             val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             imm?.hideSoftInputFromWindow(view.windowToken, 0)
             false
-        }
-    }
-
-    private fun saveToSharedPref(
-        key: String,
-        value: Any?,
-    ) {
-        val sharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE) ?: return
-        with(sharedPref.edit()) {
-            when (value) {
-                is String -> putString(key, value)
-                is Int -> putInt(key, value)
-                is Boolean -> putBoolean(key, value)
-                is Float -> putFloat(key, value)
-                is Long -> putLong(key, value)
-                else -> throw IllegalArgumentException("Not a valid type to save in Shared Preferences")
-            }
-            apply()
         }
     }
 }

@@ -5,14 +5,20 @@ import com.google.gson.annotations.SerializedName;
 
 public class MessageListsResponse {
     @SerializedName("messageList")
-    private List<Messages> messageList;
+    private List<MessagesResponse> messageList;
 
     @SerializedName("code")
     private int code;
     @SerializedName("message")
     private String message;
 
-    public List<Messages> getMessageId() {
+    public MessageListsResponse(List<MessagesResponse> messageList, int code, String message) {
+        this.messageList = messageList;
+        this.code = code;
+        this.message = message;
+    }
+
+    public List<MessagesResponse> getMessageList() {
         return messageList;
     }
 

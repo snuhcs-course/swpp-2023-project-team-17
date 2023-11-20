@@ -5,7 +5,7 @@ import com.example.goclass.GoClassApplication
 import com.example.goclass.LiveDataTestUtil.getOrAwaitValue
 import com.example.goclass.network.dataclass.ClassJoinResponse
 import com.example.goclass.network.dataclass.ClassListsResponse
-import com.example.goclass.network.dataclass.Classes
+import com.example.goclass.network.dataclass.ClassesResponse
 import com.example.goclass.repository.ClassRepository
 import com.example.goclass.repository.UserRepository
 import io.mockk.coEvery
@@ -82,30 +82,33 @@ class StudentMainViewModelTest {
     @Test
     fun getClassList_success() =
         runTest {
-            val mockUserMap = mapOf("userId" to "1", "userType" to "0")
-            val mockClassListResponse =
+            val userMap = mapOf("userId" to "1", "userType" to "0")
+            val classesResponse =
+                ClassesResponse(
+                    1,
+                    "TestName",
+                    "TestCode",
+                    1,
+                    "TestTime",
+                    "TestBuilding",
+                    "TestRoom",
+                )
+            val mockClassListsResponse =
                 ClassListsResponse(
                     listOf(
-                        Classes(
-                            "TestName",
-                            "TestCode",
-                            1,
-                            "TestTime",
-                            "TestBuilding",
-                            "TestRoom",
-                        ),
+                        classesResponse,
                     ),
                     200,
                     "Success",
                 )
 
-            coEvery { mockUserRepository.userGetClassList(any()) } returns mockClassListResponse
+            coEvery { mockUserRepository.userGetClassList(any()) } returns mockClassListsResponse
 
-            viewModel.getClassList(mockUserMap)
+            viewModel.getClassList(userMap)
 
             val liveDataValue = viewModel.classListLiveData.getOrAwaitValue()
             assertEquals(1, liveDataValue.size)
-            assertEquals("TestName", liveDataValue[0].className)
+            assertEquals(classesResponse, liveDataValue[0])
         }
 
     @After

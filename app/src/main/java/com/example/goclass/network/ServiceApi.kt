@@ -4,14 +4,16 @@ import com.example.goclass.network.dataclass.AttendanceDateListsResponse
 import com.example.goclass.network.dataclass.AttendanceListsResponse
 import com.example.goclass.network.dataclass.Attendances
 import com.example.goclass.network.dataclass.AttendancesResponse
+import com.example.goclass.network.dataclass.ClassCreateResponse
 import com.example.goclass.network.dataclass.ClassJoinResponse
 import com.example.goclass.network.dataclass.ClassListsResponse
 import com.example.goclass.network.dataclass.Classes
 import com.example.goclass.network.dataclass.ClassesResponse
 import com.example.goclass.network.dataclass.CodeMessageResponse
+import com.example.goclass.network.dataclass.CommentListsResponse
+import com.example.goclass.network.dataclass.Comments
 import com.example.goclass.network.dataclass.MessageListsResponse
 import com.example.goclass.network.dataclass.Messages
-import com.example.goclass.network.dataclass.MessagesResponse
 import com.example.goclass.network.dataclass.Users
 import com.example.goclass.network.dataclass.UsersResponse
 import retrofit2.http.Body
@@ -47,18 +49,18 @@ interface ServiceApi {
     @GET("users/attendance/{date}")
     suspend fun userGetAttendanceListByDate(
         @Path("date") date: String,
-        @QueryMap users: Map<String, String>,
+        @QueryMap classes: Map<String, String>,
     ): AttendanceListsResponse
 
     @GET("users/attendance")
     suspend fun attendanceGetDateList(
-        @QueryMap users: Map<String, String>,
+        @QueryMap classMap: Map<String, String>,
     ): AttendanceDateListsResponse
 
     @POST("/class/create")
     suspend fun classCreate(
         @Body classes: Classes,
-    ): CodeMessageResponse
+    ): ClassCreateResponse
 
     @POST("/class/join/{user_id}")
     suspend fun classJoin(
@@ -82,16 +84,42 @@ interface ServiceApi {
         @Path("user_id") userId: Int,
     ): AttendanceListsResponse
 
-    @GET("/chat_channel/{channel_id}")
+    @GET("/chat_channel/{class_id}")
     suspend fun chatChannelGetList(
-        @Path("channel_id") channelId: Int,
+        @Path("class_id") classId: Int,
     ): MessageListsResponse
 
-    @POST("/chat_channel/{channel_id}")
+    @POST("/chat_channel/{class_id}")
     suspend fun chatChannelSend(
-        @Path("channel_id") channelId: Int,
+        @Path("class_id") classId: Int,
         @Body messages: Messages,
-    ): MessagesResponse
+    ): CodeMessageResponse
+
+    @PUT("/chat_channel/{class_id}")
+    suspend fun chatChannelEdit(
+        @Path("class_id") classId: Int,
+        @Body messages: Messages,
+    ): CodeMessageResponse
+
+    @GET("/chat_channel/{class_id}/comment/{id}")
+    suspend fun chatCommentGetList(
+        @Path("class_id") classId: Int,
+        @Path("id") id: Int,
+    ): CommentListsResponse
+
+    @POST("/chat_channel/{class_id}/comment/{id}")
+    suspend fun chatCommentSend(
+        @Path("class_id") classId: Int,
+        @Path("id") id: Int,
+        @Body comments: Comments,
+    ): CodeMessageResponse
+
+    @PUT("/chat_channel/{class_id}/comment/{id}")
+    suspend fun chatCommentEdit(
+        @Path("class_id") classId: Int,
+        @Path("id") id: Int,
+        @Body comments: Comments,
+    ): CodeMessageResponse
 
     @GET("/attendance/{id}")
     suspend fun attendanceGet(
