@@ -1,6 +1,8 @@
 package com.example.goclass.ui.mainui.usermain
 
+import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.viewModelScope
 import com.example.goclass.LiveDataTestUtil.getOrAwaitValue
 import com.example.goclass.network.dataclass.ClassListsResponse
 import com.example.goclass.network.dataclass.Classes
@@ -14,6 +16,7 @@ import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -42,8 +45,27 @@ class ProfessorMainViewModelTest {
     @Test
     fun createClass_success() =
         runTest {
+            val classesResponse =
+                ClassesResponse(
+                    1,
+                    "TestName",
+                    "TestCode",
+                    1,
+                    "TestTime",
+                    "TestBuilding",
+                    "TestRoom",
+                )
+            val mockClassListsResponse =
+                ClassListsResponse(
+                    listOf(
+                        classesResponse,
+                    ),
+                    200,
+                    "Success",
+                )
             val mockResponse = CodeMessageResponse(200, "Message")
 
+            coEvery { mockUserRepository.userGetClassList(any()) } returns mockClassListsResponse
             coEvery { mockClassRepository.classCreate(any()) } returns mockResponse
 
             viewModel.createClass("TestName", "TestCode", 1, "TestTime", "TestBuilding", "TestRoom")
@@ -117,6 +139,92 @@ class ProfessorMainViewModelTest {
             val liveDataValue = viewModel.classListLiveData.getOrAwaitValue()
             assertEquals(1, liveDataValue.size)
             assertEquals(classesResponse, liveDataValue[0])
+        }
+
+    @Test
+    fun getClassList_exception() =
+        runTest {
+            val userMap = mapOf("userId" to "1", "userType" to "1")
+            val exceptionMessage = "Network error"
+
+            // Define the mock behavior
+            coEvery { mockUserRepository.userGetClassList(any()) } throws Exception(exceptionMessage)
+
+            // Invoke the function
+            viewModel.getClassList(userMap)
+
+            val toastValue = viewModel.toastMessage.getOrAwaitValue()
+            assertEquals("Error: $exceptionMessage", toastValue)
+        }
+
+    @Test
+    fun deleteClass_success() =
+        runTest {
+            val classId = 123
+            val professorId = 12
+            val classesResponse =
+                ClassesResponse(
+                    1,
+                    "TestName",
+                    "TestCode",
+                    1,
+                    "TestTime",
+                    "TestBuilding",
+                    "TestRoom",
+                )
+            val mockClassListsResponse =
+                ClassListsResponse(
+                    listOf(
+                        classesResponse,
+                    ),
+                    200,
+                    "Success",
+                )
+            val mockSuccessResponse =
+                CodeMessageResponse(
+                    200,
+                    "Success",
+                )
+            coEvery { mockUserRepository.userGetClassList(any()) } returns mockClassListsResponse
+            coEvery { mockClassRepository.classDelete(any()) } returns mockSuccessResponse
+
+            viewModel.deleteClass(classId, professorId)
+
+            val toastValue = viewModel.toastMessage.getOrAwaitValue()
+            assertEquals("Successfully deleted", toastValue)
+        }
+
+    @Test
+    fun deleteClass_failure() =
+        runTest {
+            val classId = 123
+            val professorId = 12
+            val mockFailureResponse =
+                CodeMessageResponse(
+                    400,
+                    "Failure",
+                )
+            coEvery { mockClassRepository.classDelete(any()) } returns mockFailureResponse
+
+            viewModel.deleteClass(classId, professorId)
+
+            val toastValue = viewModel.toastMessage.getOrAwaitValue()
+            assertEquals("delete Failed", toastValue)
+        }
+
+    @Test
+    fun deleteClass_exception() =
+        runTest {
+            val classId = 123
+            val professorId = 12
+            val exceptionMessage = "Network error"
+
+            coEvery { mockClassRepository.classDelete(any()) } throws Exception(exceptionMessage)
+
+            viewModel.deleteClass(classId, professorId)
+
+            val toastValue = viewModel.toastMessage.getOrAwaitValue()
+            assertEquals("Error: $exceptionMessage", toastValue)
         }
 
     @After

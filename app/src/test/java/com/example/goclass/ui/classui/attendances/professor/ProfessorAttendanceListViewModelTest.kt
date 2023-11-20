@@ -70,6 +70,20 @@ class ProfessorAttendanceListViewModelTest {
             assertEquals(attendancesResponse, liveDataValue[0])
         }
 
+    @Test
+    fun getStudentAttendanceList_exception() =
+        runTest {
+            val date = "YYYY-MM-DD"
+            val classMap = mapOf("classId" to "1", "userType" to "1")
+            val exceptionMessage = "Network error"
+            coEvery { mockRepository.userGetAttendanceListByDate(date, any()) } throws Exception(exceptionMessage)
+
+            viewModel.getStudentAttendanceList(date, classMap)
+
+            val toastValue = viewModel.toastMessage.getOrAwaitValue()
+            assertEquals("Error: $exceptionMessage", toastValue)
+        }
+
     @After
     fun tearDown() {
         Dispatchers.resetMain()

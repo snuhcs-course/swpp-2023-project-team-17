@@ -232,6 +232,39 @@ class ChatViewModelTest {
             TestCase.assertEquals(messagesResponse, liveDataValue[0])
         }
 
+    @Test
+    fun chatChannelGetList_failure() =
+        runTest {
+            val classId = 1
+            val mockMessageListsResponse =
+                MessageListsResponse(
+                    listOf(),
+                    400,
+                    "Failure",
+                )
+
+            coEvery { mockChatRepository.chatChannelGetList(classId) } returns mockMessageListsResponse
+
+            viewModel.chatChannelGetList(classId)
+
+            val toastValue = viewModel.toastMessage.getOrAwaitValue()
+            TestCase.assertEquals("Failure", toastValue)
+        }
+
+    @Test
+    fun chatChannelGetList_exception() =
+        runTest {
+            val classId = 1
+            val exceptionMessage = "Network error"
+
+            coEvery { mockChatRepository.chatChannelGetList(classId) } throws Exception(exceptionMessage)
+
+            viewModel.chatChannelGetList(classId)
+
+            val toastValue = viewModel.toastMessage.getOrAwaitValue()
+            TestCase.assertEquals("Error: $exceptionMessage", toastValue)
+        }
+
     @After
     fun tearDown() {
         Dispatchers.resetMain()

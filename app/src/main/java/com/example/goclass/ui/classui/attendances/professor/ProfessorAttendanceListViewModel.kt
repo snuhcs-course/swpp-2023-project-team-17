@@ -1,6 +1,7 @@
 package com.example.goclass.ui.classui.attendances.professor
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,6 +14,8 @@ class ProfessorAttendanceListViewModel(
     private val repository: UserRepository,
 ) : ViewModel() {
     val studentAttendanceListLiveData: MutableLiveData<List<AttendancesResponse>> = MutableLiveData()
+    val _toastMessage = MutableLiveData<String>()
+    val toastMessage: LiveData<String> get() = _toastMessage
 
     fun getStudentAttendanceList(
         date: String,
@@ -26,6 +29,7 @@ class ProfessorAttendanceListViewModel(
                 }
             } catch (e: Exception) {
                 Log.d("professorStudentAttendanceListError", e.message.toString())
+                _toastMessage.postValue("Error: ${e.message}")
             }
         }
         return studentAttendanceListLiveData
