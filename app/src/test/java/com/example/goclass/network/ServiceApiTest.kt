@@ -302,7 +302,7 @@ class ServiceApiTest {
                     listOf(
                         AttendancesResponse(
                             "attendanceDate",
-                        )
+                        ),
                     ),
                     200,
                     "Success",
@@ -556,7 +556,7 @@ class ServiceApiTest {
                             1,
                             "TestName",
                             "TestContent",
-                        )
+                        ),
                     ),
                     200,
                     "Success",
@@ -669,7 +669,7 @@ class ServiceApiTest {
                             1,
                             "TestName",
                             "TestContent",
-                        )
+                        ),
                     ),
                     200,
                     "Success",

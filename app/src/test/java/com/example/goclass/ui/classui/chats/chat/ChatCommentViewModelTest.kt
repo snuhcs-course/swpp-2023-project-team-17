@@ -268,7 +268,6 @@ class ChatCommentViewModelTest {
 
             coEvery { mockChatRepository.chatCommentGetList(any(), any()) } throws Exception(exceptionMessage)
 
-
             viewModel.chatCommentGetList(classId, commentId)
 
             val toastValue = viewModel.toastMessage.getOrAwaitValue()
