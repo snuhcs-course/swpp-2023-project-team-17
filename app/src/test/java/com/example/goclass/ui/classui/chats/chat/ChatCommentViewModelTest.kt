@@ -5,7 +5,6 @@ import com.example.goclass.LiveDataTestUtil.getOrAwaitValue
 import com.example.goclass.network.dataclass.CodeMessageResponse
 import com.example.goclass.network.dataclass.CommentListsResponse
 import com.example.goclass.network.dataclass.CommentsResponse
-import com.example.goclass.network.dataclass.MessageListsResponse
 import com.example.goclass.repository.ChatRepository
 import io.mockk.coEvery
 import io.mockk.mockk

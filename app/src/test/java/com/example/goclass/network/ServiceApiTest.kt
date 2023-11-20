@@ -52,14 +52,16 @@ class ServiceApiTest {
         mockWebServer = MockWebServer()
 
         // Initialize Moshi to parse JSON responses
-        val moshi = Moshi.Builder()
-            .build()
+        val moshi =
+            Moshi.Builder()
+                .build()
 
-        apiService = Retrofit.Builder()
-            .baseUrl(mockWebServer.url("/"))
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .build()
-            .create(ServiceApi::class.java)
+        apiService =
+            Retrofit.Builder()
+                .baseUrl(mockWebServer.url("/"))
+                .addConverterFactory(MoshiConverterFactory.create(moshi))
+                .build()
+                .create(ServiceApi::class.java)
     }
 
     @Test
@@ -76,9 +78,12 @@ class ServiceApiTest {
                     200,
                     "Success",
                 )
+
             // Convert the expected response to JSON using Moshi
-            val jsonAdapter: JsonAdapter<UsersResponse> = Moshi.Builder().build()
-                .adapter(UsersResponse::class.java)
+            val jsonAdapter: JsonAdapter<UsersResponse> =
+                Moshi.Builder()
+                    .build()
+                    .adapter(UsersResponse::class.java)
 
             val expectedResponseBody = jsonAdapter.toJson(expectedResponse)
 
@@ -113,8 +118,10 @@ class ServiceApiTest {
                     "Success",
                 )
             // Convert the expected response to JSON using Moshi
-            val jsonAdapter: JsonAdapter<UsersResponse> = Moshi.Builder().build()
-                .adapter(UsersResponse::class.java)
+            val jsonAdapter: JsonAdapter<UsersResponse> =
+                Moshi.Builder()
+                    .build()
+                    .adapter(UsersResponse::class.java)
 
             val expectedResponseBody = jsonAdapter.toJson(expectedResponse)
 
@@ -146,8 +153,10 @@ class ServiceApiTest {
                     "Success",
                 )
             // Convert the expected response to JSON using Moshi
-            val jsonAdapter: JsonAdapter<CodeMessageResponse> = Moshi.Builder().build()
-                .adapter(CodeMessageResponse::class.java)
+            val jsonAdapter: JsonAdapter<CodeMessageResponse> =
+                Moshi.Builder()
+                    .build()
+                    .adapter(CodeMessageResponse::class.java)
 
             val expectedResponseBody = jsonAdapter.toJson(expectedResponse)
 
@@ -185,8 +194,10 @@ class ServiceApiTest {
                     "Success",
                 )
             // Convert the expected response to JSON using Moshi
-            val jsonAdapter: JsonAdapter<ClassListsResponse> = Moshi.Builder().build()
-                .adapter(ClassListsResponse::class.java)
+            val jsonAdapter: JsonAdapter<ClassListsResponse> =
+                Moshi.Builder()
+                    .build()
+                    .adapter(ClassListsResponse::class.java)
 
             val expectedResponseBody = jsonAdapter.toJson(expectedResponse)
 
@@ -227,14 +238,16 @@ class ServiceApiTest {
                             0,
                             1,
                             1,
-                        )
+                        ),
                     ),
                     200,
                     "Success",
                 )
             // Convert the expected response to JSON using Moshi
-            val jsonAdapter: JsonAdapter<AttendanceListsResponse> = Moshi.Builder().build()
-                .adapter(AttendanceListsResponse::class.java)
+            val jsonAdapter: JsonAdapter<AttendanceListsResponse> =
+                Moshi.Builder()
+                    .build()
+                    .adapter(AttendanceListsResponse::class.java)
 
             val expectedResponseBody = jsonAdapter.toJson(expectedResponse)
 
@@ -249,13 +262,20 @@ class ServiceApiTest {
             TestCase.assertEquals(expectedResponse.attendanceList.size, actualResponse.attendanceList.size)
             TestCase.assertEquals(expectedResponse.code, actualResponse.code)
             TestCase.assertEquals(expectedResponse.message, actualResponse.message)
-            TestCase.assertEquals(expectedResponse.attendanceList[0].attendanceId, actualResponse.attendanceList[0].attendanceId)
-            TestCase.assertEquals(expectedResponse.attendanceList[0].attendanceStatus, actualResponse.attendanceList[0].attendanceStatus)
-            TestCase.assertEquals(expectedResponse.attendanceList[0].attendanceDate, actualResponse.attendanceList[0].attendanceDate)
-            TestCase.assertEquals(expectedResponse.attendanceList[0].attendanceDuration, actualResponse.attendanceList[0].attendanceDuration)
-            TestCase.assertEquals(expectedResponse.attendanceList[0].isSent, actualResponse.attendanceList[0].isSent)
-            TestCase.assertEquals(expectedResponse.attendanceList[0].studentId, actualResponse.attendanceList[0].studentId)
-            TestCase.assertEquals(expectedResponse.attendanceList[0].classId, actualResponse.attendanceList[0].classId)
+            TestCase.assertEquals(expectedResponse.attendanceList[0].attendanceId,
+                actualResponse.attendanceList[0].attendanceId)
+            TestCase.assertEquals(expectedResponse.attendanceList[0].attendanceStatus,
+                actualResponse.attendanceList[0].attendanceStatus)
+            TestCase.assertEquals(expectedResponse.attendanceList[0].attendanceDate,
+                actualResponse.attendanceList[0].attendanceDate)
+            TestCase.assertEquals(expectedResponse.attendanceList[0].attendanceDuration,
+                actualResponse.attendanceList[0].attendanceDuration)
+            TestCase.assertEquals(expectedResponse.attendanceList[0].isSent,
+                actualResponse.attendanceList[0].isSent)
+            TestCase.assertEquals(expectedResponse.attendanceList[0].studentId,
+                actualResponse.attendanceList[0].studentId)
+            TestCase.assertEquals(expectedResponse.attendanceList[0].classId,
+                actualResponse.attendanceList[0].classId)
         }
 
     @Test
@@ -275,8 +295,10 @@ class ServiceApiTest {
                 )
 
             // Convert the expected response to JSON using Moshi
-            val jsonAdapter: JsonAdapter<AttendanceDateListsResponse> = Moshi.Builder().build()
-                .adapter(AttendanceDateListsResponse::class.java)
+            val jsonAdapter: JsonAdapter<AttendanceDateListsResponse> =
+                Moshi.Builder()
+                    .build()
+                    .adapter(AttendanceDateListsResponse::class.java)
 
             val expectedResponseBody = jsonAdapter.toJson(expectedResponse)
 
@@ -290,7 +312,8 @@ class ServiceApiTest {
             // Compare the expected and actual responses directly
             TestCase.assertEquals(expectedResponse.code, actualResponse.code)
             TestCase.assertEquals(expectedResponse.message, actualResponse.message)
-            TestCase.assertEquals(expectedResponse.attendanceDateList[0].attendanceDate, actualResponse.attendanceDateList[0].attendanceDate)
+            TestCase.assertEquals(expectedResponse.attendanceDateList[0].attendanceDate,
+                actualResponse.attendanceDateList[0].attendanceDate)
         }
 
     @Test
@@ -304,8 +327,10 @@ class ServiceApiTest {
                     "Success",
                 )
             // Convert the expected response to JSON using Moshi
-            val jsonAdapter: JsonAdapter<CodeMessageResponse> = Moshi.Builder().build()
-                .adapter(CodeMessageResponse::class.java)
+            val jsonAdapter: JsonAdapter<CodeMessageResponse> =
+                Moshi.Builder()
+                    .build()
+                    .adapter(CodeMessageResponse::class.java)
 
             val expectedResponseBody = jsonAdapter.toJson(expectedResponse)
 
@@ -335,8 +360,10 @@ class ServiceApiTest {
                     "Success",
                 )
             // Convert the expected response to JSON using Moshi
-            val jsonAdapter: JsonAdapter<ClassJoinResponse> = Moshi.Builder().build()
-                .adapter(ClassJoinResponse::class.java)
+            val jsonAdapter: JsonAdapter<ClassJoinResponse> =
+                Moshi.Builder()
+                    .build()
+                    .adapter(ClassJoinResponse::class.java)
 
             val expectedResponseBody = jsonAdapter.toJson(expectedResponse)
 
@@ -368,11 +395,13 @@ class ServiceApiTest {
                     "TestBuilding",
                     "TestRoom",
                     200,
-                    "Success"
+                    "Success",
                 )
             // Convert the expected response to JSON using Moshi
-            val jsonAdapter: JsonAdapter<ClassesResponse> = Moshi.Builder().build()
-                .adapter(ClassesResponse::class.java)
+            val jsonAdapter: JsonAdapter<ClassesResponse> =
+                Moshi.Builder()
+                    .build()
+                    .adapter(ClassesResponse::class.java)
 
             val expectedResponseBody = jsonAdapter.toJson(expectedResponse)
 
@@ -405,8 +434,10 @@ class ServiceApiTest {
                     "Success",
                 )
             // Convert the expected response to JSON using Moshi
-            val jsonAdapter: JsonAdapter<CodeMessageResponse> = Moshi.Builder().build()
-                .adapter(CodeMessageResponse::class.java)
+            val jsonAdapter: JsonAdapter<CodeMessageResponse> =
+                Moshi.Builder()
+                    .build()
+                    .adapter(CodeMessageResponse::class.java)
 
             val expectedResponseBody = jsonAdapter.toJson(expectedResponse)
 
@@ -439,14 +470,16 @@ class ServiceApiTest {
                             0,
                             1,
                             1,
-                        )
+                        ),
                     ),
                     200,
                     "Success",
                 )
             // Convert the expected response to JSON using Moshi
-            val jsonAdapter: JsonAdapter<AttendanceListsResponse> = Moshi.Builder().build()
-                .adapter(AttendanceListsResponse::class.java)
+            val jsonAdapter: JsonAdapter<AttendanceListsResponse> =
+                Moshi.Builder()
+                    .build()
+                    .adapter(AttendanceListsResponse::class.java)
 
             val expectedResponseBody = jsonAdapter.toJson(expectedResponse)
 
@@ -461,15 +494,22 @@ class ServiceApiTest {
             TestCase.assertEquals(expectedResponse.attendanceList.size, actualResponse.attendanceList.size)
             TestCase.assertEquals(expectedResponse.code, actualResponse.code)
             TestCase.assertEquals(expectedResponse.message, actualResponse.message)
-            TestCase.assertEquals(expectedResponse.attendanceList[0].attendanceId, actualResponse.attendanceList[0].attendanceId)
-            TestCase.assertEquals(expectedResponse.attendanceList[0].attendanceStatus, actualResponse.attendanceList[0].attendanceStatus)
-            TestCase.assertEquals(expectedResponse.attendanceList[0].attendanceDate, actualResponse.attendanceList[0].attendanceDate)
-            TestCase.assertEquals(expectedResponse.attendanceList[0].attendanceDuration, actualResponse.attendanceList[0].attendanceDuration)
-            TestCase.assertEquals(expectedResponse.attendanceList[0].isSent, actualResponse.attendanceList[0].isSent)
-            TestCase.assertEquals(expectedResponse.attendanceList[0].studentId, actualResponse.attendanceList[0].studentId)
-            TestCase.assertEquals(expectedResponse.attendanceList[0].classId, actualResponse.attendanceList[0].classId)
-
+            TestCase.assertEquals(expectedResponse.attendanceList[0].attendanceId,
+                actualResponse.attendanceList[0].attendanceId)
+            TestCase.assertEquals(expectedResponse.attendanceList[0].attendanceStatus,
+                actualResponse.attendanceList[0].attendanceStatus)
+            TestCase.assertEquals(expectedResponse.attendanceList[0].attendanceDate,
+                actualResponse.attendanceList[0].attendanceDate)
+            TestCase.assertEquals(expectedResponse.attendanceList[0].attendanceDuration,
+                actualResponse.attendanceList[0].attendanceDuration)
+            TestCase.assertEquals(expectedResponse.attendanceList[0].isSent,
+                actualResponse.attendanceList[0].isSent)
+            TestCase.assertEquals(expectedResponse.attendanceList[0].studentId,
+                actualResponse.attendanceList[0].studentId)
+            TestCase.assertEquals(expectedResponse.attendanceList[0].classId,
+                actualResponse.attendanceList[0].classId)
         }
+
     @Test
     fun chatChannelGetList_test() =
         runTest {
@@ -493,8 +533,10 @@ class ServiceApiTest {
                 )
 
             // Convert the expected response to JSON using Moshi
-            val jsonAdapter: JsonAdapter<MessageListsResponse> = Moshi.Builder().build()
-                .adapter(MessageListsResponse::class.java)
+            val jsonAdapter: JsonAdapter<MessageListsResponse> =
+                Moshi.Builder()
+                    .build()
+                    .adapter(MessageListsResponse::class.java)
 
             val expectedResponseBody = jsonAdapter.toJson(expectedResponse)
 
@@ -530,8 +572,10 @@ class ServiceApiTest {
                     "Success",
                 )
             // Convert the expected response to JSON using Moshi
-            val jsonAdapter: JsonAdapter<CodeMessageResponse> = Moshi.Builder().build()
-                .adapter(CodeMessageResponse::class.java)
+            val jsonAdapter: JsonAdapter<CodeMessageResponse> =
+                Moshi.Builder()
+                    .build()
+                    .adapter(CodeMessageResponse::class.java)
 
             val expectedResponseBody = jsonAdapter.toJson(expectedResponse)
 
@@ -559,8 +603,10 @@ class ServiceApiTest {
                     "Success",
                 )
             // Convert the expected response to JSON using Moshi
-            val jsonAdapter: JsonAdapter<CodeMessageResponse> = Moshi.Builder().build()
-                .adapter(CodeMessageResponse::class.java)
+            val jsonAdapter: JsonAdapter<CodeMessageResponse> =
+                Moshi.Builder()
+                    .build()
+                    .adapter(CodeMessageResponse::class.java)
 
             val expectedResponseBody = jsonAdapter.toJson(expectedResponse)
 
@@ -600,8 +646,10 @@ class ServiceApiTest {
                 )
 
             // Convert the expected response to JSON using Moshi
-            val jsonAdapter: JsonAdapter<CommentListsResponse> = Moshi.Builder().build()
-                .adapter(CommentListsResponse::class.java)
+            val jsonAdapter: JsonAdapter<CommentListsResponse> =
+                Moshi.Builder()
+                    .build()
+                    .adapter(CommentListsResponse::class.java)
 
             val expectedResponseBody = jsonAdapter.toJson(expectedResponse)
 
@@ -640,8 +688,10 @@ class ServiceApiTest {
                     "Success",
                 )
             // Convert the expected response to JSON using Moshi
-            val jsonAdapter: JsonAdapter<CodeMessageResponse> = Moshi.Builder().build()
-                .adapter(CodeMessageResponse::class.java)
+            val jsonAdapter: JsonAdapter<CodeMessageResponse> =
+                Moshi.Builder()
+                    .build()
+                    .adapter(CodeMessageResponse::class.java)
 
             val expectedResponseBody = jsonAdapter.toJson(expectedResponse)
 
@@ -672,8 +722,10 @@ class ServiceApiTest {
                     "Success",
                 )
             // Convert the expected response to JSON using Moshi
-            val jsonAdapter: JsonAdapter<CodeMessageResponse> = Moshi.Builder().build()
-                .adapter(CodeMessageResponse::class.java)
+            val jsonAdapter: JsonAdapter<CodeMessageResponse> =
+                Moshi.Builder()
+                    .build()
+                    .adapter(CodeMessageResponse::class.java)
 
             val expectedResponseBody = jsonAdapter.toJson(expectedResponse)
 
@@ -707,8 +759,10 @@ class ServiceApiTest {
                     "Success",
                 )
             // Convert the expected response to JSON using Moshi
-            val jsonAdapter: JsonAdapter<AttendancesResponse> = Moshi.Builder().build()
-                .adapter(AttendancesResponse::class.java)
+            val jsonAdapter: JsonAdapter<AttendancesResponse> =
+                Moshi.Builder()
+                    .build()
+                    .adapter(AttendancesResponse::class.java)
 
             val expectedResponseBody = jsonAdapter.toJson(expectedResponse)
 
@@ -742,8 +796,10 @@ class ServiceApiTest {
                     "Success",
                 )
             // Convert the expected response to JSON using Moshi
-            val jsonAdapter: JsonAdapter<CodeMessageResponse> = Moshi.Builder().build()
-                .adapter(CodeMessageResponse::class.java)
+            val jsonAdapter: JsonAdapter<CodeMessageResponse> =
+                Moshi.Builder()
+                    .build()
+                    .adapter(CodeMessageResponse::class.java)
 
             val expectedResponseBody = jsonAdapter.toJson(expectedResponse)
 
@@ -770,8 +826,10 @@ class ServiceApiTest {
                     "Success",
                 )
             // Convert the expected response to JSON using Moshi
-            val jsonAdapter: JsonAdapter<CodeMessageResponse> = Moshi.Builder().build()
-                .adapter(CodeMessageResponse::class.java)
+            val jsonAdapter: JsonAdapter<CodeMessageResponse> =
+                Moshi.Builder()
+                    .build()
+                    .adapter(CodeMessageResponse::class.java)
 
             val expectedResponseBody = jsonAdapter.toJson(expectedResponse)
 
@@ -799,8 +857,10 @@ class ServiceApiTest {
                     "Success",
                 )
             // Convert the expected response to JSON using Moshi
-            val jsonAdapter: JsonAdapter<CodeMessageResponse> = Moshi.Builder().build()
-                .adapter(CodeMessageResponse::class.java)
+            val jsonAdapter: JsonAdapter<CodeMessageResponse> =
+                Moshi.Builder()
+                    .build()
+                    .adapter(CodeMessageResponse::class.java)
 
             val expectedResponseBody = jsonAdapter.toJson(expectedResponse)
 
