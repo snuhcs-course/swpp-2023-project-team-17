@@ -4,6 +4,7 @@ import com.example.goclass.network.dataclass.AttendanceDateListsResponse
 import com.example.goclass.network.dataclass.AttendanceListsResponse
 import com.example.goclass.network.dataclass.Attendances
 import com.example.goclass.network.dataclass.AttendancesResponse
+import com.example.goclass.network.dataclass.ClassCreateResponse
 import com.example.goclass.network.dataclass.ClassJoinResponse
 import com.example.goclass.network.dataclass.ClassListsResponse
 import com.example.goclass.network.dataclass.Classes
@@ -59,7 +60,7 @@ interface ServiceApi {
     @POST("/class/create")
     suspend fun classCreate(
         @Body classes: Classes,
-    ): CodeMessageResponse
+    ): ClassCreateResponse
 
     @POST("/class/join/{user_id}")
     suspend fun classJoin(

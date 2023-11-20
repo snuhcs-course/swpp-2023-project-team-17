@@ -40,6 +40,7 @@ class StudentMainViewModel(
             try {
                 // join class
                 val response = classRepository.classJoin(userId, joinClass)
+                val userType = 0
 
                 // schedule class attendance
                 val classId = response.classId
@@ -76,6 +77,7 @@ class StudentMainViewModel(
                         startMinute,
                         endHour,
                         endMinute,
+                        userType,
                     )
                 }
 

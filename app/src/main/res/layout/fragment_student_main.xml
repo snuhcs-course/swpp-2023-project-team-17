@@ -4,40 +4,66 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="#EEEEEE">
 
-    <androidx.appcompat.widget.AppCompatImageButton
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/profileButton"
-        android:src="@drawable/user"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="@color/white"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="#EEEEEE"
+        android:drawableTop="@drawable/user"
+        android:fontFamily="@font/relay_noto_sans_medium"
+        android:text="Profile"
+        android:textSize="10sp"
+        android:textAllCaps="false"
+        android:stateListAnimator="@null"
+        android:elevation="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/classListTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="40dp"
+        android:fontFamily="@font/relay_noto_sans_bold"
+        android:text="Class List"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileButton" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/joinButton"
-        android:layout_width="280dp"
+        android:layout_width="0dp"
         android:layout_height="70dp"
-        android:layout_marginTop="100dp"
-        android:background="@drawable/class_bg"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="40dp"
+        android:background="@drawable/black_btn_bg"
         android:clipToOutline="true"
-        android:text="Join Class"
-        android:textColor="@color/blue"
-        android:textSize="25sp"
+        android:fontFamily="@font/relay_noto_sans_bold"
+        android:text="Join New Class"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textAllCaps="false"
+        android:stateListAnimator="@null"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/studentClassRecyclerView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
         android:clipToPadding="false"
         android:scrollbars="vertical"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/joinButton" />
+        app:layout_constraintTop_toBottomOf="@+id/classListTextView"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,8 +1,8 @@
 package com.example.goclass.ui.classui.attendances.student
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.goclass.R
