@@ -12,20 +12,22 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.goclass.databinding.ItemMessageBinding
 import com.example.goclass.R
 import com.example.goclass.network.dataclass.MessagesResponse
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class MessageAdapter(
     private val context: Context,
     private val userId: Int,
     private val onMessageClicked: (MessagesResponse) -> Unit,
     private val onMessageEdit: (Int, String, Int) -> Unit
-):
-    RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {
+): RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {
     private var messageList = listOf<MessagesResponse>()
 
     fun setMessageList(list: List<MessagesResponse>) {
         messageList = list
         notifyDataSetChanged()
     }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -46,15 +48,29 @@ class MessageAdapter(
 
     override fun getItemCount(): Int = messageList.size
 
-    class MessageViewHolder(var binding: ItemMessageBinding, var context: Context) :
+    class MessageViewHolder(
+        var binding: ItemMessageBinding,
+        var context: Context,
+    ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(message: MessagesResponse, userId: Int, onMessageClicked: (MessagesResponse) -> Unit, onMessageEdit: (Int, String, Int) -> Unit) {
             binding.messageText.text = message.content
             binding.chatEditButton.visibility = if (message.senderId == userId) View.VISIBLE else View.GONE
             binding.nameText.text = message.senderName
 
-            itemView.setOnClickListener{
+            itemView.setOnClickListener {
                 onMessageClicked(message)
+            }
+
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+            val outputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+            try {
+                val parsedDate = inputFormat.parse(message.timeStamp)
+                val formattedDate = outputFormat.format(parsedDate)
+                binding.timeStampText.text = formattedDate
+            } catch (e: Exception) {
+                e.printStackTrace()
+                binding.timeStampText.text = message.timeStamp
             }
 
             // Chat Edit Button

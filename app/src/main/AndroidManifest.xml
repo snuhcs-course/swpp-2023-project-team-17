@@ -2,12 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
         tools:ignore="CoarseFineLocation" />
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".GoClassApplication"
@@ -36,13 +42,13 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".ui.classui.attendances.LocationService" />
+        <service android:name=".ui.classui.attendances.service.LocationService" />
         <service
-            android:name=".ui.classui.attendances.AttendanceService"
+            android:name=".ui.classui.attendances.service.AttendanceService"
             android:enabled="true"
             android:exported="false" />
         <receiver
-            android:name=".ui.classui.attendances.AttendanceReceiver"
+            android:name=".ui.classui.attendances.reciever.AttendanceReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
