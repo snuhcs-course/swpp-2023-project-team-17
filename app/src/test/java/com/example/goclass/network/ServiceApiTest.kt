@@ -262,20 +262,34 @@ class ServiceApiTest {
             TestCase.assertEquals(expectedResponse.attendanceList.size, actualResponse.attendanceList.size)
             TestCase.assertEquals(expectedResponse.code, actualResponse.code)
             TestCase.assertEquals(expectedResponse.message, actualResponse.message)
-            TestCase.assertEquals(expectedResponse.attendanceList[0].attendanceId,
-                actualResponse.attendanceList[0].attendanceId)
-            TestCase.assertEquals(expectedResponse.attendanceList[0].attendanceStatus,
-                actualResponse.attendanceList[0].attendanceStatus)
-            TestCase.assertEquals(expectedResponse.attendanceList[0].attendanceDate,
-                actualResponse.attendanceList[0].attendanceDate)
-            TestCase.assertEquals(expectedResponse.attendanceList[0].attendanceDuration,
-                actualResponse.attendanceList[0].attendanceDuration)
-            TestCase.assertEquals(expectedResponse.attendanceList[0].isSent,
-                actualResponse.attendanceList[0].isSent)
-            TestCase.assertEquals(expectedResponse.attendanceList[0].studentId,
-                actualResponse.attendanceList[0].studentId)
-            TestCase.assertEquals(expectedResponse.attendanceList[0].classId,
-                actualResponse.attendanceList[0].classId)
+            TestCase.assertEquals(
+                expectedResponse.attendanceList[0].attendanceId,
+                actualResponse.attendanceList[0].attendanceId,
+            )
+            TestCase.assertEquals(
+                expectedResponse.attendanceList[0].attendanceStatus,
+                actualResponse.attendanceList[0].attendanceStatus,
+            )
+            TestCase.assertEquals(
+                expectedResponse.attendanceList[0].attendanceDate,
+                actualResponse.attendanceList[0].attendanceDate,
+            )
+            TestCase.assertEquals(
+                expectedResponse.attendanceList[0].attendanceDuration,
+                actualResponse.attendanceList[0].attendanceDuration,
+            )
+            TestCase.assertEquals(
+                expectedResponse.attendanceList[0].isSent,
+                actualResponse.attendanceList[0].isSent,
+            )
+            TestCase.assertEquals(
+                expectedResponse.attendanceList[0].studentId,
+                actualResponse.attendanceList[0].studentId,
+            )
+            TestCase.assertEquals(
+                expectedResponse.attendanceList[0].classId,
+                actualResponse.attendanceList[0].classId,
+            )
         }
 
     @Test
@@ -312,8 +326,10 @@ class ServiceApiTest {
             // Compare the expected and actual responses directly
             TestCase.assertEquals(expectedResponse.code, actualResponse.code)
             TestCase.assertEquals(expectedResponse.message, actualResponse.message)
-            TestCase.assertEquals(expectedResponse.attendanceDateList[0].attendanceDate,
-                actualResponse.attendanceDateList[0].attendanceDate)
+            TestCase.assertEquals(
+                expectedResponse.attendanceDateList[0].attendanceDate,
+                actualResponse.attendanceDateList[0].attendanceDate,
+            )
         }
 
     @Test
@@ -494,20 +510,34 @@ class ServiceApiTest {
             TestCase.assertEquals(expectedResponse.attendanceList.size, actualResponse.attendanceList.size)
             TestCase.assertEquals(expectedResponse.code, actualResponse.code)
             TestCase.assertEquals(expectedResponse.message, actualResponse.message)
-            TestCase.assertEquals(expectedResponse.attendanceList[0].attendanceId,
-                actualResponse.attendanceList[0].attendanceId)
-            TestCase.assertEquals(expectedResponse.attendanceList[0].attendanceStatus,
-                actualResponse.attendanceList[0].attendanceStatus)
-            TestCase.assertEquals(expectedResponse.attendanceList[0].attendanceDate,
-                actualResponse.attendanceList[0].attendanceDate)
-            TestCase.assertEquals(expectedResponse.attendanceList[0].attendanceDuration,
-                actualResponse.attendanceList[0].attendanceDuration)
-            TestCase.assertEquals(expectedResponse.attendanceList[0].isSent,
-                actualResponse.attendanceList[0].isSent)
-            TestCase.assertEquals(expectedResponse.attendanceList[0].studentId,
-                actualResponse.attendanceList[0].studentId)
-            TestCase.assertEquals(expectedResponse.attendanceList[0].classId,
-                actualResponse.attendanceList[0].classId)
+            TestCase.assertEquals(
+                expectedResponse.attendanceList[0].attendanceId,
+                actualResponse.attendanceList[0].attendanceId,
+            )
+            TestCase.assertEquals(
+                expectedResponse.attendanceList[0].attendanceStatus,
+                actualResponse.attendanceList[0].attendanceStatus,
+            )
+            TestCase.assertEquals(
+                expectedResponse.attendanceList[0].attendanceDate,
+                actualResponse.attendanceList[0].attendanceDate,
+            )
+            TestCase.assertEquals(
+                expectedResponse.attendanceList[0].attendanceDuration,
+                actualResponse.attendanceList[0].attendanceDuration,
+            )
+            TestCase.assertEquals(
+                expectedResponse.attendanceList[0].isSent,
+                actualResponse.attendanceList[0].isSent,
+            )
+            TestCase.assertEquals(
+                expectedResponse.attendanceList[0].studentId,
+                actualResponse.attendanceList[0].studentId,
+            )
+            TestCase.assertEquals(
+                expectedResponse.attendanceList[0].classId,
+                actualResponse.attendanceList[0].classId,
+            )
         }
 
     @Test
