@@ -14,18 +14,18 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.goclass.R
-import com.example.goclass.ui.classui.ClassActivity
-import com.example.goclass.network.dataclass.Classes
 import com.example.goclass.databinding.ItemClassBinding
+import com.example.goclass.network.dataclass.ClassesResponse
+import com.example.goclass.ui.classui.ClassActivity
 
 class ClassListAdapter(
     private val viewModel: ProfessorMainViewModel,
     private val userType: Int,
 ) : RecyclerView.Adapter<ClassListAdapter.ClassViewHolder>() {
-    private var classList = listOf<Classes>()
+    private var classList = listOf<ClassesResponse>()
     private var expandedPosition = -1
 
-    fun setClassList(list: List<Classes>) {
+    fun setClassList(list: List<ClassesResponse>) {
         classList = list
         notifyDataSetChanged()
     }
@@ -69,7 +69,7 @@ class ClassListAdapter(
         private val userType: Int,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(
-            classItem: Classes,
+            classItem: ClassesResponse,
             isExpanded: Boolean,
             onExpandChange: (Int) -> Unit,
         ) {

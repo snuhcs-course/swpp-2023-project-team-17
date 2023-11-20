@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.goclass.LiveDataTestUtil.getOrAwaitValue
 import com.example.goclass.network.dataclass.AttendanceListsResponse
 import com.example.goclass.network.dataclass.AttendancesResponse
+import com.example.goclass.network.dataclass.CodeMessageResponse
 import com.example.goclass.repository.AttendanceRepository
 import com.example.goclass.repository.ClassRepository
 import io.mockk.coEvery
@@ -39,35 +40,128 @@ class StudentAttendanceViewModelTest {
     @Test
     fun getStudentAttendanceList_success() =
         runTest {
-            val mockClassId = 1
-            val mockUserId = 1
+            val classId = 1
+            val userId = 1
+            val attendancesResponse =
+                AttendancesResponse(
+                    1234,
+                    0,
+                    "attendanceDate",
+                    0,
+                    0,
+                    1,
+                    1,
+                )
             val mockAttendanceListsResponse =
                 AttendanceListsResponse(
                     listOf(
-                        AttendancesResponse(
-                            1234,
-                            0,
-                            "attendanceDate",
-                            0,
-                            0,
-                            1,
-                            1,
-                        )
+                        attendancesResponse,
                     ),
                     200,
                     "Success",
                 )
 
             // Define the mock behavior
-            coEvery { mockClassRepository.classGetAttendanceListByUserId(mockClassId, mockUserId) } returns mockAttendanceListsResponse
+            coEvery { mockClassRepository.classGetAttendanceListByUserId(classId, userId) } returns mockAttendanceListsResponse
 
             // Invoke the function
-            viewModel.getStudentAttendanceList(mockClassId, mockUserId)
+            viewModel.getStudentAttendanceList(classId, userId)
 
             // Check if the LiveData has been updated
             val liveDataValue = viewModel.studentAttendanceListLiveData.getOrAwaitValue()
             TestCase.assertEquals(1, liveDataValue.size)
-            TestCase.assertEquals(1234, liveDataValue[0].attendanceId)
+            TestCase.assertEquals(attendancesResponse, liveDataValue[0])
+        }
+
+    @Test
+    fun getStudentAttendanceList_exception() =
+        runTest {
+            val classId = 1
+            val userId = 1
+            val exceptionMessage = "Network error"
+            coEvery { mockClassRepository.classGetAttendanceListByUserId(classId, userId) } throws Exception(exceptionMessage)
+
+            viewModel.getStudentAttendanceList(classId, userId)
+
+            val toastValue = viewModel.toastMessage.getOrAwaitValue()
+            TestCase.assertEquals("Error: $exceptionMessage", toastValue)
+        }
+
+    @Test
+    fun addAttendance_success() =
+        runTest {
+            val classId = 1
+            val userId = 1
+            val attendancesResponse =
+                AttendancesResponse(
+                    1234,
+                    0,
+                    "attendanceDate",
+                    0,
+                    0,
+                    1,
+                    1,
+                )
+            val mockAttendanceListsResponse =
+                AttendanceListsResponse(
+                    listOf(
+                        attendancesResponse,
+                    ),
+                    200,
+                    "Success",
+                )
+
+            val mockCodeMessageResponse =
+                CodeMessageResponse(
+                    200,
+                    "Success",
+                )
+            // Define the mock behavior
+            coEvery { mockClassRepository.classGetAttendanceListByUserId(classId, userId) } returns mockAttendanceListsResponse
+            coEvery { mockAttendanceRepository.attendanceAdd(any(), any()) } returns mockCodeMessageResponse
+
+            // Invoke the function
+            viewModel.addAttendance(classId, userId)
+
+            val toastValue = viewModel.toastMessage.getOrAwaitValue()
+            TestCase.assertEquals("Successfully added", toastValue)
+        }
+
+    @Test
+    fun addAttendance_failure() =
+        runTest {
+            val classId = 1
+            val userId = 1
+            val mockCodeMessageResponse =
+                CodeMessageResponse(
+                    400,
+                    "Failure",
+                )
+            // Define the mock behavior
+            coEvery { mockAttendanceRepository.attendanceAdd(any(), any()) } returns mockCodeMessageResponse
+
+            // Invoke the function
+            viewModel.addAttendance(classId, userId)
+
+            val toastValue = viewModel.toastMessage.getOrAwaitValue()
+            TestCase.assertEquals("Failed to add", toastValue)
+        }
+
+    @Test
+    fun addAttendance_exception() =
+        runTest {
+            val classId = 1
+            val userId = 1
+            val exceptionMessage = "Network error"
+
+            // Define the mock behavior
+            coEvery { mockAttendanceRepository.attendanceAdd(any(), any()) } throws Exception(exceptionMessage)
+
+            // Invoke the function
+            viewModel.addAttendance(classId, userId)
+
+            val toastValue = viewModel.toastMessage.getOrAwaitValue()
+            TestCase.assertEquals("Error: $exceptionMessage", toastValue)
         }
 
     @After

@@ -17,12 +17,6 @@ public class MessagesResponse {
     String senderName;
     @SerializedName("content")
     String content;
-    @SerializedName("channelId")
-    int channelId;
-    @SerializedName("code")
-    private int code;
-    @SerializedName("message")
-    private String message;
 
     public MessagesResponse(int messageId, int commentId, int classId, String timeStamp, int senderId, String senderName, String content) {
         this.messageId = messageId;
@@ -68,17 +62,5 @@ public class MessagesResponse {
 
     public String getContent() {
         return content;
-    }
-
-    public int getChannelId() {
-        return channelId;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public String getMessage() {
-        return message;
     }
 }

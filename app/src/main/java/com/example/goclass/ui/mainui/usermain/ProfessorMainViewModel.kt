@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.goclass.network.dataclass.Classes
+import com.example.goclass.network.dataclass.ClassesResponse
 import com.example.goclass.repository.ClassRepository
 import com.example.goclass.repository.UserRepository
 import com.example.goclass.ui.classui.ClassScheduler
@@ -22,7 +23,7 @@ class ProfessorMainViewModel(
 ) : AndroidViewModel(application), KoinComponent {
     private val _toastMessage = MutableLiveData<String>()
     val toastMessage: LiveData<String> get() = _toastMessage
-    val classListLiveData: MutableLiveData<List<Classes>> = MutableLiveData()
+    val classListLiveData: MutableLiveData<List<ClassesResponse>> = MutableLiveData()
 
     private val classScheduler = ClassScheduler()
 
@@ -104,7 +105,7 @@ class ProfessorMainViewModel(
         }
     }
 
-    fun getClassList(user: Map<String, String>): MutableLiveData<List<Classes>> {
+    fun getClassList(user: Map<String, String>): MutableLiveData<List<ClassesResponse>> {
         viewModelScope.launch {
             try {
                 val response = userRepository.userGetClassList(user)
@@ -113,6 +114,7 @@ class ProfessorMainViewModel(
                 }
             } catch (e: Exception) {
                 Log.d("classListError", e.message.toString())
+                _toastMessage.postValue("Error: ${e.message}")
             }
         }
         return classListLiveData
@@ -130,6 +132,7 @@ class ProfessorMainViewModel(
                 }
             } catch (e: Exception) {
                 Log.d("classDeleteError", e.message.toString())
+                _toastMessage.postValue("Error: ${e.message}")
             }
         }
     }

@@ -1,15 +1,12 @@
 package com.example.goclass.ui.classui.chats.chat
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.MutableLiveData
 import com.example.goclass.LiveDataTestUtil.getOrAwaitValue
 import com.example.goclass.network.dataclass.CodeMessageResponse
 import com.example.goclass.network.dataclass.MessageListsResponse
-import com.example.goclass.network.dataclass.Messages
 import com.example.goclass.network.dataclass.MessagesResponse
 import com.example.goclass.repository.ChatRepository
 import io.mockk.coEvery
-import io.mockk.impl.recording.JvmAutoHinter.Companion.exceptionMessage
 import io.mockk.mockk
 import junit.framework.TestCase
 import kotlinx.coroutines.Dispatchers
@@ -22,9 +19,6 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.kotlin.any
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 
 @ExperimentalCoroutinesApi
 class ChatViewModelTest {
@@ -236,6 +230,39 @@ class ChatViewModelTest {
             val liveDataValue = viewModel.messageListLiveData.getOrAwaitValue()
             TestCase.assertEquals(1, liveDataValue.size)
             TestCase.assertEquals(messagesResponse, liveDataValue[0])
+        }
+
+    @Test
+    fun chatChannelGetList_failure() =
+        runTest {
+            val classId = 1
+            val mockMessageListsResponse =
+                MessageListsResponse(
+                    listOf(),
+                    400,
+                    "Failure",
+                )
+
+            coEvery { mockChatRepository.chatChannelGetList(classId) } returns mockMessageListsResponse
+
+            viewModel.chatChannelGetList(classId)
+
+            val toastValue = viewModel.toastMessage.getOrAwaitValue()
+            TestCase.assertEquals("Failure", toastValue)
+        }
+
+    @Test
+    fun chatChannelGetList_exception() =
+        runTest {
+            val classId = 1
+            val exceptionMessage = "Network error"
+
+            coEvery { mockChatRepository.chatChannelGetList(classId) } throws Exception(exceptionMessage)
+
+            viewModel.chatChannelGetList(classId)
+
+            val toastValue = viewModel.toastMessage.getOrAwaitValue()
+            TestCase.assertEquals("Error: $exceptionMessage", toastValue)
         }
 
     @After
