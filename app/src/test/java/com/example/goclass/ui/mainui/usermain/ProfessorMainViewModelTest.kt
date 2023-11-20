@@ -1,7 +1,9 @@
 package com.example.goclass.ui.mainui.usermain
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.example.goclass.GoClassApplication
 import com.example.goclass.LiveDataTestUtil.getOrAwaitValue
+import com.example.goclass.network.dataclass.ClassCreateResponse
 import com.example.goclass.network.dataclass.ClassListsResponse
 import com.example.goclass.network.dataclass.ClassesResponse
 import com.example.goclass.network.dataclass.CodeMessageResponse
@@ -27,6 +29,7 @@ class ProfessorMainViewModelTest {
     private lateinit var viewModel: ProfessorMainViewModel
     private val mockUserRepository = mockk<UserRepository>()
     private val mockClassRepository = mockk<ClassRepository>()
+    private val mockApplication = mockk<GoClassApplication>()
     private val testDispatcher = UnconfinedTestDispatcher()
 
     @get:Rule
@@ -35,7 +38,7 @@ class ProfessorMainViewModelTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        viewModel = ProfessorMainViewModel(mockUserRepository, mockClassRepository)
+        viewModel = ProfessorMainViewModel(mockUserRepository, mockClassRepository, mockApplication)
     }
 
     @Test
@@ -59,10 +62,15 @@ class ProfessorMainViewModelTest {
                     200,
                     "Success",
                 )
-            val mockResponse = CodeMessageResponse(200, "Message")
+            val mockSuccessResponse =
+                ClassCreateResponse(
+                    1,
+                    200,
+                    "Success",
+                )
 
             coEvery { mockUserRepository.userGetClassList(any()) } returns mockClassListsResponse
-            coEvery { mockClassRepository.classCreate(any()) } returns mockResponse
+            coEvery { mockClassRepository.classCreate(any()) } returns mockSuccessResponse
 
             viewModel.createClass("TestName", "TestCode", 1, "TestTime", "TestBuilding", "TestRoom")
 
@@ -75,7 +83,12 @@ class ProfessorMainViewModelTest {
     fun createClass_failure() =
         runTest {
             // Given a failed response from the repository
-            val mockFailureResponse = CodeMessageResponse(400, "Failed to create class") // 400 or any non-success code
+            val mockFailureResponse =
+                ClassCreateResponse(
+                    1,
+                    400,
+                    "Failure",
+                )
 
             coEvery { mockClassRepository.classCreate(any()) } returns mockFailureResponse
 

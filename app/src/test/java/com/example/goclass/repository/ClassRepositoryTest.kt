@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.goclass.network.ServiceApi
 import com.example.goclass.network.dataclass.AttendanceListsResponse
 import com.example.goclass.network.dataclass.AttendancesResponse
+import com.example.goclass.network.dataclass.ClassCreateResponse
 import com.example.goclass.network.dataclass.ClassJoinResponse
 import com.example.goclass.network.dataclass.Classes
 import com.example.goclass.network.dataclass.ClassesResponse
@@ -57,17 +58,17 @@ class ClassRepositoryTest {
         runTest {
             val classes =
                 Classes("name", "code")
-            val mockCodeMessageResponse =
-                CodeMessageResponse(
+            val mockClassCreateResponse =
+                ClassCreateResponse(
+                    1,
                     200,
                     "Success",
                 )
 
-            coEvery { mockServiceApi.classCreate(classes) } returns mockCodeMessageResponse
-
+            coEvery { mockServiceApi.classCreate(classes) } returns mockClassCreateResponse
             val actualResponse = repository.classCreate(classes)
 
-            TestCase.assertEquals(mockCodeMessageResponse, actualResponse)
+            TestCase.assertEquals(mockClassCreateResponse, actualResponse)
         }
 
     @Test

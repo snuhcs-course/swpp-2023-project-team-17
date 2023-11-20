@@ -5,6 +5,7 @@ import android.animation.PropertyValuesHolder
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,9 +14,9 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.goclass.R
-import com.example.goclass.ui.classui.ClassActivity
 import com.example.goclass.databinding.ItemClassBinding
 import com.example.goclass.network.dataclass.ClassesResponse
+import com.example.goclass.ui.classui.ClassActivity
 
 class ClassListAdapter(
     private val viewModel: ProfessorMainViewModel,

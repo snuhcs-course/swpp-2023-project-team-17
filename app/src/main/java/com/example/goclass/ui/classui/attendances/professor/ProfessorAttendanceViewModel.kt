@@ -8,13 +8,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.goclass.network.dataclass.AttendancesResponse
 import com.example.goclass.repository.UserRepository
 import kotlinx.coroutines.launch
-import java.lang.Exception
 
 class ProfessorAttendanceViewModel(
     private val repository: UserRepository,
 ) : ViewModel() {
     val professorAttendanceListLiveData: MutableLiveData<List<AttendancesResponse>> = MutableLiveData()
-    val _toastMessage = MutableLiveData<String>()
+    private val _toastMessage = MutableLiveData<String>()
     val toastMessage: LiveData<String> get() = _toastMessage
 
     fun getProfessorAttendanceList(classMap: Map<String, String>): MutableLiveData<List<AttendancesResponse>> {
