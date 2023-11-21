@@ -122,6 +122,7 @@ app.post('/login/:email', (req, res) => {
     });
 });
 
+
 /*
     get all user's classes with user_type of Users
 */
@@ -659,7 +660,7 @@ app.put('/chat_channel/:class_id/comment/:id', (req, res) => {
 app.get('/chat_channel/:class_id', (req, res) => {
     const classId = req.params.class_id;
 
-    const sql = 'select * from Messages where class_id = ? order by time_stamp';
+    const sql = 'select * from Messages where class_id = ? and comment_id = -1 order by time_stamp';
 
     const params = [classId];
 
