@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.icu.util.Calendar
+import android.os.Build
 import android.util.Log
 import com.example.goclass.ui.classui.attendances.reciever.AttendanceReceiver
 
@@ -57,12 +58,28 @@ class ClassScheduler {
         }
 
         // Schedule the alarm to repeat weekly
-        alarmManager.setRepeating(
-            AlarmManager.RTC_WAKEUP,
-            alarmTime.timeInMillis,
-            AlarmManager.INTERVAL_DAY * 7,
-            pendingIntent,
-        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !alarmManager.canScheduleExactAlarms()) {
+            // 권한 요청을 위한 인텐트 생성 및 전송 필요 (Activity에서 처리)
+            // 예를 들어, 권한 요청 인텐트를 Broadcast로 보내고, Activity에서 이를 받아 처리
+            val permissionIntent = Intent("com.example.goclass.REQUEST_EXACT_ALARM")
+            context.sendBroadcast(permissionIntent)
+        } else {
+            Log.d("classScheduler", "setexact call")
+            // 정확한 알람 설정
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    alarmTime.timeInMillis,
+                    pendingIntent
+                )
+            } else {
+                alarmManager.setExact(
+                    AlarmManager.RTC_WAKEUP,
+                    alarmTime.timeInMillis,
+                    pendingIntent
+                )
+            }
+        }
 
         Log.d("classScheduler", "알람 설정됨: $dayOfWeek, $startHour:$startMinute")
     }

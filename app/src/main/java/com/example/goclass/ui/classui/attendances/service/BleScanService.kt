@@ -89,7 +89,8 @@ class BleScanService : Service() {
     private fun isTargetDevice(result: ScanResult): Boolean {
         val formattedClassId = classId.toString().padStart(6, '0')
         val targetUuid = formattedClassId + Constants.UUID_STRING
-        val targetServiceUuid = ParcelUuid.fromString(targetUuid)
+        val beaconId = "2cdbdd00-13ee-11e4-9b6c-0002a5d5c518"
+        val targetServiceUuid = ParcelUuid.fromString(beaconId)
         return result.scanRecord?.serviceUuids?.contains(targetServiceUuid) == true
     }
 
@@ -136,11 +137,13 @@ class BleScanService : Service() {
 
     private fun startScanning() {
         val formattedClassId = classId.toString().padStart(6, '0')
-        val targetUuid = formattedClassId + Constants.UUID_STRING
+
+        val beaconId = "2cdbdd00-13ee-11e4-9b6c-0002a5d5c518"
+        val targetUuid = ParcelUuid.fromString(beaconId)
 
         val scanFilters: List<ScanFilter> = listOf(
             ScanFilter.Builder()
-                .setDeviceAddress(targetUuid)
+                .setServiceUuid(targetUuid)
                 .build()
         )
 

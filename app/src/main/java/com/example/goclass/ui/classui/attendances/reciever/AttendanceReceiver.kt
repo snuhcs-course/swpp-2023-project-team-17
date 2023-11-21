@@ -13,7 +13,6 @@ class AttendanceReceiver : BroadcastReceiver() {
         intent: Intent,
     ) {
         Log.d("atreceiver", "called")
-        Log.d("actioncheck", "${intent.action}")
         if (intent != null) {
             val action = intent.action
             if (action == "ATTENDANCE_ALARM_ACTION") {

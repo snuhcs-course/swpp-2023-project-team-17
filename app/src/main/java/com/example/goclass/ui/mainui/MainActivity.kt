@@ -1,7 +1,9 @@
 package com.example.goclass.ui.mainui
 
+import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -20,11 +22,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val permissionUtils = PermissionUtils(this)
+        permissionUtils.requestBluetoothPermissions()
+        permissionUtils.requestLocationPermissions()
 
-        // start tracking location (gps) if permission granted
-        while (!permissionUtils.requestLocationPermissions()) Thread.sleep(100)
         //startLocationService()
-        while (!permissionUtils.requestBluetoothPermissions(this, BLUETOOTH_REQUEST_CODE)) Thread.sleep(100)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -73,6 +74,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val BLUETOOTH_REQUEST_CODE = 100 // 블루투스 권한 요청 코드
+        private const val BLUETOOTH_REQUEST_CODE = 101 // 블루투스 권한 요청 코드
     }
 }
