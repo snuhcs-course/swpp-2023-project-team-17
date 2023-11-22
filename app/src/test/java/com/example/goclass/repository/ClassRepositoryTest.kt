@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.goclass.network.ServiceApi
 import com.example.goclass.network.dataclass.AttendanceListsResponse
 import com.example.goclass.network.dataclass.AttendancesResponse
+import com.example.goclass.network.dataclass.ClassCreateResponse
 import com.example.goclass.network.dataclass.ClassJoinResponse
 import com.example.goclass.network.dataclass.Classes
 import com.example.goclass.network.dataclass.ClassesResponse
@@ -53,21 +54,21 @@ class ClassRepositoryTest {
         }
 
     @Test
-    fun classCreate_success() =
+    fun classCreate_test() =
         runTest {
             val classes =
                 Classes("name", "code")
-            val mockCodeMessageResponse =
-                CodeMessageResponse(
+            val mockClassCreateResponse =
+                ClassCreateResponse(
+                    1,
                     200,
                     "Success",
                 )
 
-            coEvery { mockServiceApi.classCreate(classes) } returns mockCodeMessageResponse
-
+            coEvery { mockServiceApi.classCreate(classes) } returns mockClassCreateResponse
             val actualResponse = repository.classCreate(classes)
 
-            TestCase.assertEquals(mockCodeMessageResponse, actualResponse)
+            TestCase.assertEquals(mockClassCreateResponse, actualResponse)
         }
 
     @Test
@@ -85,7 +86,7 @@ class ClassRepositoryTest {
         }
 
     @Test
-    fun classJoin_success() =
+    fun classJoin_test() =
         runTest {
             val userId = 1
             val classes =
@@ -118,7 +119,7 @@ class ClassRepositoryTest {
         }
 
     @Test
-    fun classGet_success() =
+    fun classGet_test() =
         runTest {
             val classId = 1
             val mockClassesResponse =
@@ -153,7 +154,7 @@ class ClassRepositoryTest {
         }
 
     @Test
-    fun classDelete_success() =
+    fun classDelete_test() =
         runTest {
             val classId = 1
             val mockCodeMessageResponse =
@@ -183,7 +184,7 @@ class ClassRepositoryTest {
         }
 
     @Test
-    fun classGetAttendanceListByUserId_success() =
+    fun classGetAttendanceListByUserId_test() =
         runTest {
             val classId = 1
             val userId = 1

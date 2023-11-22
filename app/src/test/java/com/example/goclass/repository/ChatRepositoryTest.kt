@@ -2,8 +2,6 @@ package com.example.goclass.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.goclass.network.ServiceApi
-import com.example.goclass.network.dataclass.AttendancesResponse
-import com.example.goclass.network.dataclass.ClassesResponse
 import com.example.goclass.network.dataclass.CodeMessageResponse
 import com.example.goclass.network.dataclass.CommentListsResponse
 import com.example.goclass.network.dataclass.Comments
@@ -54,7 +52,7 @@ class ChatRepositoryTest {
         }
 
     @Test
-    fun chatChannelGetList_success() =
+    fun chatChannelGetList_test() =
         runTest {
             val classId = 1
             val mockMessageListsResponse =
@@ -94,7 +92,7 @@ class ChatRepositoryTest {
         }
 
     @Test
-    fun chatChannelSend_success() =
+    fun chatChannelSend_test() =
         runTest {
             val classId = 1
             val messages = Messages(1, "TestMsg")
@@ -124,7 +122,7 @@ class ChatRepositoryTest {
         }
 
     @Test
-    fun chatChannelEdit_success() =
+    fun chatChannelEdit_test() =
         runTest {
             val classId = 1
             val messages = Messages(1, "TestMsg")
@@ -154,7 +152,7 @@ class ChatRepositoryTest {
         }
 
     @Test
-    fun chatCommentGetList_success() =
+    fun chatCommentGetList_test() =
         runTest {
             val classId = 1
             val id = 1
@@ -198,7 +196,7 @@ class ChatRepositoryTest {
         }
 
     @Test
-    fun chatCommentSend_success() =
+    fun chatCommentSend_test() =
         runTest {
             val classId = 1
             val userId = 1
@@ -234,7 +232,7 @@ class ChatRepositoryTest {
         }
 
     @Test
-    fun chatCommentEdit_success() =
+    fun chatCommentEdit_test() =
         runTest {
             val classId = 1
             val userId = 1

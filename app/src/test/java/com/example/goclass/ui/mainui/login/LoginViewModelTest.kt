@@ -22,7 +22,7 @@ class LoginViewModelTest {
     private lateinit var viewModel: LoginViewModel
     private val mockRepository = mockk<UserRepository>()
     private val testDispatcher = UnconfinedTestDispatcher()
-    val userEmail = "test@email.com"
+    private val userEmail = "test@email.com"
 
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
