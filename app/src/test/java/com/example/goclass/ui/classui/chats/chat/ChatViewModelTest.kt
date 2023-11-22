@@ -6,6 +6,7 @@ import com.example.goclass.network.dataclass.CodeMessageResponse
 import com.example.goclass.network.dataclass.MessageListsResponse
 import com.example.goclass.network.dataclass.MessagesResponse
 import com.example.goclass.repository.ChatRepository
+import com.example.goclass.ui.classui.chats.ChatViewModel
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase

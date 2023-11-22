@@ -1,4 +1,4 @@
-package com.example.goclass.ui.classui.chats.chat
+package com.example.goclass.ui.classui.chats
 
 import android.content.Context
 import android.content.Intent
@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.goclass.R
 import com.example.goclass.databinding.FragmentChatBinding
 import com.example.goclass.network.dataclass.MessagesResponse
-import com.example.goclass.ui.classui.chats.MessageAdapter
 import com.example.goclass.ui.mainui.MainActivity
 import io.socket.client.IO
 import io.socket.client.Socket
@@ -25,10 +24,10 @@ import java.util.Locale
 class ChatFragment : Fragment() {
     private lateinit var binding: FragmentChatBinding
     private val viewModel: ChatViewModel by viewModel()
-
-    private var userId: Int = -1
-    private var classId: Int = -1
     private lateinit var socket: Socket
+    private lateinit var userName: String
+    private lateinit var userRole: String
+    private var userId: Int = -1
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,15 +45,9 @@ class ChatFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val userSharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val userRole = userSharedPref?.getString("userRole", "") ?: ""
-        val userName = userSharedPref?.getString("userName", "") ?: ""
-        userId = userSharedPref!!.getInt("userId", -1)
-
-        val classSharedPref = activity?.getSharedPreferences("ClassPrefs", Context.MODE_PRIVATE)
-        classId = classSharedPref!!.getInt("classId", -1)
-        val className = classSharedPref?.getString("className", "") ?: ""
-
-        binding.className.text = className
+        userName = userSharedPref?.getString("userName", "") ?: ""
+        userRole = userSharedPref?.getString("userRole", "") ?: ""
+        userId = userSharedPref?.getInt("userId", -1) ?: -1
 
         // Back Button
         binding.backButton.setOnClickListener {
@@ -74,11 +67,18 @@ class ChatFragment : Fragment() {
             }
         }
 
-        val messageListLiveData = viewModel.chatChannelGetList(classId)
-
         // Socket.io settings
-        socket = IO.socket("http://ec2-43-202-167-120.ap-northeast-2.compute.amazonaws.com:3000")
+        socket = IO.socket(getString(R.string.base_url))
         socket?.connect()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val classSharedPref = activity?.getSharedPreferences("ClassPrefs", Context.MODE_PRIVATE)
+        val className = classSharedPref?.getString("className", "") ?: ""
+        val classId = classSharedPref?.getInt("classId", -1) ?: -1
+        val messageListLiveData = viewModel.chatChannelGetList(classId)
 
         // join chat room
         val joinData = JSONObject().apply {
@@ -134,37 +134,7 @@ class ChatFragment : Fragment() {
             messageAdapter.setMessageList(messageList)
         }
         binding.chatRecyclerView.scrollToPosition(messageAdapter.itemCount - 1)
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        val classSharedPref = activity?.getSharedPreferences("ClassPrefs", Context.MODE_PRIVATE)
-        val newClassName = classSharedPref?.getString("className", "") ?: ""
-        val newClassId = classSharedPref?.getInt("classId", -1) ?: -1
-
-        val userSharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val newUserId = userSharedPref?.getInt("userId", -1) ?: -1
-
-        if (newUserId != -1 && newUserId != userId) {
-            userId = newUserId
-        }
-        if (newClassId != -1 && newClassId != classId) {
-            classId = newClassId
-
-            val joinData = JSONObject().apply {
-                put("class_id", classId)
-                put("comment_id", -1)
-            }
-            socket?.emit("joinRoom", joinData)
-
-            viewModel.chatChannelGetList(classId).observe(viewLifecycleOwner) { messageList ->
-                (binding.chatRecyclerView.adapter as? MessageAdapter)?.setMessageList(messageList)
-            }
-        }
-        if (newClassName.isNotEmpty()) {
-            binding.className.text = newClassName
-        }
+        binding.className.text = className
     }
 
     override fun onPause() {

@@ -101,4 +101,5 @@
     <string name="channel_id">go_class_background</string>
     <string name="channel_name">Go class</string>
     <string name="channel_description">notification for running background</string>
+    <string name="base_url">http://ec2-43-202-167-120.ap-northeast-2.compute.amazonaws.com:3000</string>
 </resources>

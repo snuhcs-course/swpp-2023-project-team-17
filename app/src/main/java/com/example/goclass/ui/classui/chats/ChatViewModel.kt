@@ -1,4 +1,4 @@
-package com.example.goclass.ui.classui.chats.chat
+package com.example.goclass.ui.classui.chats
 
 import android.util.Log
 import androidx.lifecycle.LiveData
