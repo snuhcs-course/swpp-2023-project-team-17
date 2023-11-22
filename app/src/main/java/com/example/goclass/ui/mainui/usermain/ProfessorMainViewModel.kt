@@ -21,8 +21,8 @@ class ProfessorMainViewModel(
     private val classRepository: ClassRepository,
     application: Application,
 ) : AndroidViewModel(application), KoinComponent {
-    private val _toastMessage = MutableLiveData<String>()
-    val toastMessage: LiveData<String> get() = _toastMessage
+    private val _snackbarMessage = MutableLiveData<String>()
+    val snackbarMessage: LiveData<String> get() = _snackbarMessage
     val classListLiveData: MutableLiveData<List<ClassesResponse>> = MutableLiveData()
 
     private val classScheduler = ClassScheduler()
@@ -94,13 +94,13 @@ class ProfessorMainViewModel(
                 }
 
                 if (response.code == 200) {
-                    _toastMessage.postValue("Successfully created!")
+                    _snackbarMessage.postValue("Successfully created!")
                     getClassList(mapOf("userId" to professorId.toString(), "userType" to "1"))
                 } else {
-                    _toastMessage.postValue("create failed")
+                    _snackbarMessage.postValue("create failed")
                 }
             } catch (e: Exception) {
-                _toastMessage.postValue("Error: ${e.message}")
+                _snackbarMessage.postValue("Error: ${e.message}")
             }
         }
     }
@@ -125,10 +125,10 @@ class ProfessorMainViewModel(
             try {
                 val response = classRepository.classDelete(classId)
                 if(response.code == 200) {
-                    _toastMessage.postValue("Successfully deleted")
+                    _snackbarMessage.postValue("Successfully deleted")
                     getClassList(mapOf("userId" to professorId.toString(), "userType" to "1"))
                 } else {
-                    _toastMessage.postValue("delete Failed")
+                    _snackbarMessage.postValue("delete Failed")
                 }
             } catch (e: Exception) {
                 Log.d("classDeleteError", e.message.toString())
