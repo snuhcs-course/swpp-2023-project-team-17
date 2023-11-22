@@ -4,10 +4,9 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.goclass.LiveDataTestUtil.getOrAwaitValue
 import com.example.goclass.network.dataclass.CodeMessageResponse
 import com.example.goclass.network.dataclass.CommentListsResponse
-import com.example.goclass.network.dataclass.Comments
 import com.example.goclass.network.dataclass.CommentsResponse
-import com.example.goclass.network.dataclass.MessageListsResponse
 import com.example.goclass.repository.ChatRepository
+import com.example.goclass.ui.classui.chats.ChatCommentViewModel
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase
@@ -209,7 +208,7 @@ class ChatCommentViewModelTest {
         }
 
     @Test
-    fun chatCommentGetList() =
+    fun chatCommentGetList_success() =
         runTest {
             val classId = 1
             val commentId = 1
@@ -239,6 +238,41 @@ class ChatCommentViewModelTest {
             val liveDataValue = viewModel.commentListLiveData.getOrAwaitValue()
             TestCase.assertEquals(1, liveDataValue.size)
             TestCase.assertEquals(commentsResponse, liveDataValue[0])
+        }
+
+    @Test
+    fun chatCommentGetList_failure() =
+        runTest {
+            val classId = 1
+            val commentId = 1
+            val mockCommentListsResponse =
+                CommentListsResponse(
+                    listOf(),
+                    400,
+                    "Failure",
+                )
+
+            coEvery { mockChatRepository.chatCommentGetList(any(), any()) } returns mockCommentListsResponse
+
+            viewModel.chatCommentGetList(classId, commentId)
+
+            val toastValue = viewModel.toastMessage.getOrAwaitValue()
+            TestCase.assertEquals("Failure", toastValue)
+        }
+
+    @Test
+    fun chatCommentGetList_exception() =
+        runTest {
+            val classId = 1
+            val commentId = 1
+            val exceptionMessage = "Network error"
+
+            coEvery { mockChatRepository.chatCommentGetList(any(), any()) } throws Exception(exceptionMessage)
+
+            viewModel.chatCommentGetList(classId, commentId)
+
+            val toastValue = viewModel.toastMessage.getOrAwaitValue()
+            TestCase.assertEquals("Error: $exceptionMessage", toastValue)
         }
 
     @After

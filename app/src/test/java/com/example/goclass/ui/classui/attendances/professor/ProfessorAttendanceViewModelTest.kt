@@ -38,12 +38,14 @@ class ProfessorAttendanceViewModelTest {
     fun getProfessorAttendanceList_success() =
         runTest {
             val classMap = mapOf("classId" to "1", "userType" to "1")
+            val attendancesResponse =
+                AttendancesResponse(
+                    "attendanceDate",
+                )
             val mockAttendanceDateListsResponse =
                 AttendanceDateListsResponse(
                     listOf(
-                        AttendancesResponse(
-                            "attendanceDate",
-                        )
+                        attendancesResponse,
                     ),
                     200,
                     "Success",
@@ -58,7 +60,20 @@ class ProfessorAttendanceViewModelTest {
             // Check if the LiveData has been updated
             val liveDataValue = viewModel.professorAttendanceListLiveData.getOrAwaitValue()
             assertEquals(1, liveDataValue.size)
-            assertEquals("attendanceDate", liveDataValue[0].attendanceDate)
+            assertEquals(attendancesResponse, liveDataValue[0])
+        }
+
+    @Test
+    fun getProfessorAttendanceList_exception() =
+        runTest {
+            val classMap = mapOf("classId" to "1", "userType" to "1")
+            val exceptionMessage = "Network error"
+            coEvery { mockRepository.attendanceGetDateList(any()) } throws Exception(exceptionMessage)
+
+            viewModel.getProfessorAttendanceList(classMap)
+
+            val toastValue = viewModel.toastMessage.getOrAwaitValue()
+            assertEquals("Error: $exceptionMessage", toastValue)
         }
 
     @After

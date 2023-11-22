@@ -31,15 +31,4 @@ public class Classes {
         this.className = className;
         this.classCode = classCode;
     }
-
-    public String getClassName() {
-        return className;
-    }
-    public int getClassId() {
-        return classId;
-    }
-
-    public int getProfessorId() {
-        return professorId;
-    }
 }

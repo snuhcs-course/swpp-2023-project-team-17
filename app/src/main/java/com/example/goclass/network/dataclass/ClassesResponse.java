@@ -13,9 +13,9 @@ public class ClassesResponse {
     int professorId;
     @SerializedName("classTime")
     String classTime;
-    @SerializedName("classTime")
+    @SerializedName("buildingNumber")
     String buildingNumber;
-    @SerializedName("classTime")
+    @SerializedName("roomNumber")
     String roomNumber;
 
     @SerializedName("code")
@@ -32,6 +32,16 @@ public class ClassesResponse {
         this.roomNumber = roomNumber;
         this.code = code;
         this.message = message;
+    }
+
+    public ClassesResponse(int classId, String className, String classCode, int professorId, String classTime, String buildingNumber, String roomNumber) {
+        this.classId = classId;
+        this.className = className;
+        this.classCode = classCode;
+        this.professorId = professorId;
+        this.classTime = classTime;
+        this.buildingNumber = buildingNumber;
+        this.roomNumber = roomNumber;
     }
 
     public int getClassId() {
@@ -61,6 +71,7 @@ public class ClassesResponse {
     public String getRoomNumber() {
         return roomNumber;
     }
+
     public int getCode() {
         return code;
     }

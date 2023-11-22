@@ -98,4 +98,8 @@
     <string name="default_web_client_id">698235838882-dvm2dbvnt8v1sri4iu7dtas8mmmi5or0.apps.googleusercontent.com</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="channel_id">go_class_background</string>
+    <string name="channel_name">Go class</string>
+    <string name="channel_description">notification for running background</string>
+    <string name="base_url">http://ec2-43-202-167-120.ap-northeast-2.compute.amazonaws.com:3000</string>
 </resources>

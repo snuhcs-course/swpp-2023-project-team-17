@@ -3,8 +3,8 @@ package com.example.goclass.di
 import com.example.goclass.ui.classui.attendances.professor.ProfessorAttendanceListViewModel
 import com.example.goclass.ui.classui.attendances.professor.ProfessorAttendanceViewModel
 import com.example.goclass.ui.classui.attendances.student.StudentAttendanceViewModel
-import com.example.goclass.ui.classui.chats.chat.ChatCommentViewModel
-import com.example.goclass.ui.classui.chats.chat.ChatViewModel
+import com.example.goclass.ui.classui.chats.ChatCommentViewModel
+import com.example.goclass.ui.classui.chats.ChatViewModel
 import com.example.goclass.ui.mainui.login.LoginViewModel
 import com.example.goclass.ui.mainui.profile.ProfileViewModel
 import com.example.goclass.ui.mainui.usermain.ProfessorMainViewModel
@@ -16,7 +16,7 @@ import org.koin.dsl.module
 val viewModelModule =
     module {
         viewModel {
-            ProfessorMainViewModel(get(), get())
+            ProfessorMainViewModel(get(), get(), androidApplication())
         }
         viewModel {
             ProfileViewModel(get())
