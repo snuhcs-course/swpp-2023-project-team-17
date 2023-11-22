@@ -12,11 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="vertical"
-        android:paddingTop="70dp"
-        android:paddingBottom="60dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -81,7 +79,7 @@
             android:hint="Write your messages"
             android:fontFamily="@font/relay_noto_sans_medium"
             android:textSize="16sp"
-            android:textColor="#858585" />
+            android:textColor="#777777" />
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/chatSendButton"
@@ -94,6 +92,5 @@
             android:background="#FFFFFF"
             android:src="@drawable/send" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
