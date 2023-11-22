@@ -114,7 +114,7 @@ class ProfessorMainViewModel(
                 }
             } catch (e: Exception) {
                 Log.d("classListError", e.message.toString())
-                _toastMessage.postValue("Error: ${e.message}")
+                _snackbarMessage.postValue("Error: ${e.message}")
             }
         }
         return classListLiveData
@@ -132,7 +132,7 @@ class ProfessorMainViewModel(
                 }
             } catch (e: Exception) {
                 Log.d("classDeleteError", e.message.toString())
-                _toastMessage.postValue("Error: ${e.message}")
+                _snackbarMessage.postValue("Error: ${e.message}")
             }
         }
     }
