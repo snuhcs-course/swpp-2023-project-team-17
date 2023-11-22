@@ -13,8 +13,7 @@
             />
         <path
             android:pathData="M0 0H360V70H0V0Z"
-            android:strokeWidth="2"
-            android:strokeColor="#D8D8D8"
-            />
+            android:fillColor="#FFFFFF"
+        />
     </group>
 </vector>
