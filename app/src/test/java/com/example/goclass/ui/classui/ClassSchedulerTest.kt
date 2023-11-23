@@ -11,7 +11,7 @@ class ClassSchedulerTest {
         classScheduler = ClassScheduler()
     }
     @Test
-    fun testUniqueRequestId() {
+    fun uniqueRequestId_test() {
         val userId1 = 1
         val classId1 = 2
         val result1 = classScheduler.uniqueRequestId(userId1, classId1)

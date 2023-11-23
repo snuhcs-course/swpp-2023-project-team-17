@@ -8,8 +8,10 @@ import com.example.goclass.network.dataclass.ClassListsResponse
 import com.example.goclass.network.dataclass.ClassesResponse
 import com.example.goclass.repository.ClassRepository
 import com.example.goclass.repository.UserRepository
+import com.example.goclass.ui.classui.ClassScheduler
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
@@ -22,6 +24,9 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.kotlin.any
 
 @ExperimentalCoroutinesApi
 class StudentMainViewModelTest {
@@ -29,6 +34,7 @@ class StudentMainViewModelTest {
     private val mockUserRepository = mockk<UserRepository>()
     private val mockClassRepository = mockk<ClassRepository>()
     private val mockApplication = mockk<GoClassApplication>()
+    private val mockClassScheduler = mockk<ClassScheduler>()
     private val testDispatcher = UnconfinedTestDispatcher()
 
     @get:Rule
@@ -47,7 +53,7 @@ class StudentMainViewModelTest {
 
             coEvery { mockClassRepository.classJoin(any(), any()) } returns mockResponse
 
-            viewModel.classJoin(1, "TestName", "TestCode")
+            viewModel.classJoin(1, "TestName", "TestCode", mockClassScheduler)
 
             val toastValue = viewModel.toastMessage.getOrAwaitValue()
             assertEquals("Successfully joined!", toastValue)
@@ -61,7 +67,7 @@ class StudentMainViewModelTest {
 
             coEvery { mockClassRepository.classJoin(any(), any()) } returns mockFailureResponse
 
-            viewModel.classJoin(1, "TestName", "TestCode")
+            viewModel.classJoin(1, "TestName", "TestCode", mockClassScheduler)
 
             val toastValue = viewModel.toastMessage.getOrAwaitValue()
             assertEquals("join failed", toastValue)
@@ -73,7 +79,7 @@ class StudentMainViewModelTest {
             val exceptionMessage = "Network error"
             coEvery { mockClassRepository.classJoin(any(), any()) } throws Exception(exceptionMessage)
 
-            viewModel.classJoin(1, "TestName", "TestCode")
+            viewModel.classJoin(1, "TestName", "TestCode", mockClassScheduler)
 
             val toastValue = viewModel.toastMessage.getOrAwaitValue()
             assertEquals("Error: $exceptionMessage", toastValue)
@@ -82,13 +88,25 @@ class StudentMainViewModelTest {
     @Test
     fun classJoin_success_time_match() =
         runTest {
-            //val classTime = "1 15:30-16:45"
-            val classTime = ""
+            val classTime = "1 15:30-16:45"
             val mockResponse = ClassJoinResponse(1, classTime, 200, "Message")
 
             coEvery { mockClassRepository.classJoin(any(), any()) } returns mockResponse
+            every {
+                mockClassScheduler.scheduleClass(
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                )
+            } returns Unit
 
-            viewModel.classJoin(1, "TestName", "TestCode")
+            viewModel.classJoin(1, "TestName", "TestCode", mockClassScheduler)
 
             val toastValue = viewModel.toastMessage.getOrAwaitValue()
             assertEquals("Successfully joined!", toastValue)

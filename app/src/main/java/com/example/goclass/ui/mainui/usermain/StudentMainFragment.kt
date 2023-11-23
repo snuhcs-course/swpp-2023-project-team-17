@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.goclass.ui.classui.ClassActivity
 import com.example.goclass.R
 import com.example.goclass.databinding.FragmentStudentMainBinding
+import com.example.goclass.ui.classui.ClassScheduler
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -56,7 +57,7 @@ class StudentMainFragment : Fragment() {
                 val enteredCode = editCode.text.toString()
                 val enteredName = editName.text.toString()
 
-                viewModel.classJoin(userId, enteredName, enteredCode)
+                viewModel.classJoin(userId, enteredName, enteredCode, ClassScheduler())
 
                 dialog.dismiss()
             }

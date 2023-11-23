@@ -24,12 +24,11 @@ class StudentMainViewModel(
     val toastMessage: LiveData<String> get() = _toastMessage
     val classListLiveData: MutableLiveData<List<ClassesResponse>> = MutableLiveData()
 
-    private val classScheduler = ClassScheduler()
-
     fun classJoin(
         userId: Int,
         className: String,
         classCode: String,
+        classScheduler: ClassScheduler,
     ) {
         viewModelScope.launch {
             val joinClass =

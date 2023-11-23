@@ -24,8 +24,6 @@ class ProfessorMainViewModel(
     val toastMessage: LiveData<String> get() = _toastMessage
     val classListLiveData: MutableLiveData<List<ClassesResponse>> = MutableLiveData()
 
-    private val classScheduler = ClassScheduler()
-
     fun createClass(
         className: String,
         classCode: String,
@@ -33,6 +31,7 @@ class ProfessorMainViewModel(
         classTime: String,
         buildingNumber: String,
         roomNumber: String,
+        classScheduler: ClassScheduler,
     ) {
         viewModelScope.launch {
             val newClass =
