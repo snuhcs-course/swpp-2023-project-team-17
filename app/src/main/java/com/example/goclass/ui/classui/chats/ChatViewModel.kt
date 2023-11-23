@@ -18,11 +18,11 @@ class ChatViewModel(
     private val _toastMessage = MutableLiveData<String>()
     private val _sendSuccess = MutableLiveData<Boolean>()
     private val _editSuccess = MutableLiveData<Boolean>()
-
+    
     private val toastMessage: LiveData<String> get() = _toastMessage
     private val sendSuccess: LiveData<Boolean> get() = _sendSuccess
     private val editSuccess: LiveData<Boolean> get() = _editSuccess
-
+  
     fun chatChannelSend(
         classId: Int,
         senderId: Int,

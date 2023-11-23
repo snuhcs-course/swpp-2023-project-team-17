@@ -23,9 +23,9 @@ class ProfessorMainViewModel(
 ) : AndroidViewModel(application), KoinComponent {
     private val _toastMessage = MutableLiveData<String>()
     private val _snackbarMessage = MutableLiveData<String>()
-    private val snackbarMessage: LiveData<String> get() = _snackbarMessage
     private val classListLiveData: MutableLiveData<List<ClassesResponse>> = MutableLiveData()
     private val toastMessage: LiveData<String> get() = _toastMessage
+    private val snackbarMessage: LiveData<String> get() = _snackbarMessage
 
     fun createClass(
         className: String,
