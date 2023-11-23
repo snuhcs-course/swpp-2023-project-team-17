@@ -43,7 +43,7 @@ class StudentMainViewModelTest {
     @Test
     fun classJoin_success() =
         runTest {
-            val mockResponse = ClassJoinResponse(1, "classtime", 200, "Message")
+            val mockResponse = ClassJoinResponse(1, "TestTime", 200, "Message")
 
             coEvery { mockClassRepository.classJoin(any(), any()) } returns mockResponse
 
@@ -57,7 +57,7 @@ class StudentMainViewModelTest {
     @Test
     fun classJoin_failure() =
         runTest {
-            val mockFailureResponse = ClassJoinResponse(1, "", 400, "Failed to join class")
+            val mockFailureResponse = ClassJoinResponse(1, "TestTime", 400, "Failed to join class")
 
             coEvery { mockClassRepository.classJoin(any(), any()) } returns mockFailureResponse
 
@@ -77,6 +77,22 @@ class StudentMainViewModelTest {
 
             val toastValue = viewModel.toastMessage.getOrAwaitValue()
             assertEquals("Error: $exceptionMessage", toastValue)
+        }
+
+    @Test
+    fun classJoin_success_time_match() =
+        runTest {
+            //val classTime = "1 15:30-16:45"
+            val classTime = ""
+            val mockResponse = ClassJoinResponse(1, classTime, 200, "Message")
+
+            coEvery { mockClassRepository.classJoin(any(), any()) } returns mockResponse
+
+            viewModel.classJoin(1, "TestName", "TestCode")
+
+            val toastValue = viewModel.toastMessage.getOrAwaitValue()
+            assertEquals("Successfully joined!", toastValue)
+            coVerify { viewModel.getClassList(mapOf("userId" to "1", "userType" to "0")) }
         }
 
     @Test

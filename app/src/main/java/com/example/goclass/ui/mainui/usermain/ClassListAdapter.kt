@@ -43,6 +43,7 @@ class ClassListAdapter(
         return ClassViewHolder(binding, viewModel, userType)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onBindViewHolder(
         holder: ClassViewHolder,
         position: Int,
