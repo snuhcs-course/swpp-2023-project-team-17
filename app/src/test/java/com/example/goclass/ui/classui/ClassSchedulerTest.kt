@@ -6,10 +6,12 @@ import org.junit.Test
 
 class ClassSchedulerTest {
     private lateinit var classScheduler: ClassScheduler
+
     @Before
     fun setUp() {
         classScheduler = ClassScheduler()
     }
+
     @Test
     fun uniqueRequestId_test() {
         val userId1 = 1
@@ -21,6 +23,5 @@ class ClassSchedulerTest {
         val classId2 = 4
         val result2 = classScheduler.uniqueRequestId(userId2, classId2)
         assertEquals(userId2.hashCode() * 31 + classId2.hashCode(), result2)
-
     }
 }

@@ -14,7 +14,6 @@ import com.example.goclass.R
 import com.example.goclass.databinding.ItemCommentBinding
 import com.example.goclass.network.dataclass.CommentsResponse
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 
 class CommentAdapter(

@@ -1,11 +1,11 @@
 package com.example.goclass.ui.classui.attendances.professor
 
 import android.annotation.SuppressLint
-import android.view.ViewGroup
 import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.goclass.network.dataclass.AttendancesResponse
 import com.example.goclass.databinding.ItemProfessorAttendanceBinding
+import com.example.goclass.network.dataclass.AttendancesResponse
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

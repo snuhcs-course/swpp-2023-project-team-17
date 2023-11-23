@@ -65,7 +65,7 @@ class ProfessorMainViewModelTest {
 
             viewModel.createClass("TestName", "TestCode", 1, "TestTime", "TestBuilding", "TestRoom", mockClassScheduler)
 
-            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
+            val toastValue = viewModel.accessSnackbarMessage().getOrAwaitValue()
             assertEquals("Successfully created!", toastValue)
             coVerify { viewModel.getClassList(mapOf("userId" to "1", "userType" to "1")) }
         }
@@ -87,7 +87,7 @@ class ProfessorMainViewModelTest {
             viewModel.createClass("TestName", "TestCode", 1, "TestTime", "TestBuilding", "TestRoom", mockClassScheduler)
 
             // Then we expect a failure message in the toastMessage LiveData
-            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
+            val toastValue = viewModel.accessSnackbarMessage().getOrAwaitValue()
             assertEquals("create failed", toastValue) // Adjust this expected value as per your ViewModel's logic
         }
 
@@ -102,7 +102,7 @@ class ProfessorMainViewModelTest {
             viewModel.createClass("TestName", "TestCode", 1, "TestTime", "TestBuilding", "TestRoom", mockClassScheduler)
 
             // Then we expect an error message in the toastMessage LiveData
-            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
+            val toastValue = viewModel.accessSnackbarMessage().getOrAwaitValue()
             assertEquals("Error: $exceptionMessage", toastValue)
         }
 
@@ -141,7 +141,7 @@ class ProfessorMainViewModelTest {
 
             viewModel.createClass("TestName", "TestCode", 1, classTime, "TestBuilding", "TestRoom", mockClassScheduler)
 
-            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
+            val toastValue = viewModel.accessSnackbarMessage().getOrAwaitValue()
             assertEquals("Successfully created!", toastValue)
             coVerify { viewModel.getClassList(mapOf("userId" to "1", "userType" to "1")) }
         }
@@ -193,7 +193,7 @@ class ProfessorMainViewModelTest {
             // Invoke the function
             viewModel.getClassList(userMap)
 
-            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
+            val toastValue = viewModel.accessSnackbarMessage().getOrAwaitValue()
             assertEquals("Error: $exceptionMessage", toastValue)
         }
 
@@ -230,7 +230,7 @@ class ProfessorMainViewModelTest {
 
             viewModel.deleteClass(classId, professorId)
 
-            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
+            val toastValue = viewModel.accessSnackbarMessage().getOrAwaitValue()
             assertEquals("Successfully deleted", toastValue)
         }
 
@@ -248,7 +248,7 @@ class ProfessorMainViewModelTest {
 
             viewModel.deleteClass(classId, professorId)
 
-            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
+            val toastValue = viewModel.accessSnackbarMessage().getOrAwaitValue()
             assertEquals("delete Failed", toastValue)
         }
 
@@ -263,7 +263,7 @@ class ProfessorMainViewModelTest {
 
             viewModel.deleteClass(classId, professorId)
 
-            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
+            val toastValue = viewModel.accessSnackbarMessage().getOrAwaitValue()
             assertEquals("Error: $exceptionMessage", toastValue)
         }
 

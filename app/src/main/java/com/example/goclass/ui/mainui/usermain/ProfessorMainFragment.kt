@@ -85,7 +85,15 @@ class ProfessorMainFragment : Fragment() {
                 val enteredRoomNumber = editRoomNumber.text.toString()
                 val enteredCode = editCode.text.toString()
 
-                viewModel.createClass(enteredClassName, enteredCode, userId, enteredClassTime, enteredBuildingNumber, enteredRoomNumber, ClassScheduler())
+                viewModel.createClass(
+                    enteredClassName,
+                    enteredCode,
+                    userId,
+                    enteredClassTime,
+                    enteredBuildingNumber,
+                    enteredRoomNumber,
+                    ClassScheduler(),
+                )
                 dialog.dismiss()
             }
             dialog.show()

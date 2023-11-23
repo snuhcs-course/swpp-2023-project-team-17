@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.goclass.network.dataclass.MessagesResponse
 import com.example.goclass.network.dataclass.Users
 import com.example.goclass.repository.UserRepository
 import kotlinx.coroutines.launch

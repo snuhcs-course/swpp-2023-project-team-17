@@ -10,11 +10,10 @@ import android.view.Window
 import android.widget.Button
 import android.widget.EditText
 import androidx.recyclerview.widget.RecyclerView
-import com.example.goclass.databinding.ItemMessageBinding
 import com.example.goclass.R
+import com.example.goclass.databinding.ItemMessageBinding
 import com.example.goclass.network.dataclass.MessagesResponse
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 
 class MessageAdapter(

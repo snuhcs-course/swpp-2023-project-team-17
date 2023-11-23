@@ -1,14 +1,14 @@
 package com.example.goclass.ui.classui.attendances.student
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.goclass.R
-import com.example.goclass.network.dataclass.AttendancesResponse
 import com.example.goclass.databinding.ItemStudentAttendanceBinding
+import com.example.goclass.network.dataclass.AttendancesResponse
 import com.example.goclass.repository.AttendanceRepository
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers

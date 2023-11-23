@@ -3,7 +3,6 @@ package com.example.goclass.utility
 import android.Manifest
 import android.app.Activity
 import android.content.pm.PackageManager
-import android.os.Build
 import androidx.core.content.ContextCompat
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -16,7 +15,6 @@ import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
 class PermissionUtilsTest {
-
     private lateinit var bluetoothPermission: String
     private lateinit var permissionUtils: PermissionUtils
     private val context: Activity = mockk()

@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.goclass.network.dataclass.AttendancesResponse
 import com.example.goclass.network.dataclass.Comments
 import com.example.goclass.network.dataclass.CommentsResponse
 import com.example.goclass.repository.ChatRepository
@@ -14,7 +13,7 @@ import kotlinx.coroutines.launch
 class ChatCommentViewModel(
     private val repository: ChatRepository
 ) : ViewModel() {
-    private val commentListLiveData : MutableLiveData<List<CommentsResponse>> = MutableLiveData()
+    private val commentListLiveData: MutableLiveData<List<CommentsResponse>> = MutableLiveData()
     private val _toastMessage = MutableLiveData<String>()
     private val _sendSuccess = MutableLiveData<Boolean>()
     private val _editSuccess = MutableLiveData<Boolean>()
