@@ -15,9 +15,9 @@ class StudentAttendanceViewModel(
     private val classRepository: ClassRepository,
     private val attendanceRepository: AttendanceRepository,
 ) : ViewModel() {
-    val studentAttendanceListLiveData: MutableLiveData<List<AttendancesResponse>> = MutableLiveData()
+    private val studentAttendanceListLiveData: MutableLiveData<List<AttendancesResponse>> = MutableLiveData()
     private val _toastMessage = MutableLiveData<String>()
-    val toastMessage: LiveData<String> get() = _toastMessage
+    private val toastMessage: LiveData<String> get() = _toastMessage
 
     fun getStudentAttendanceList(
         classId: Int,
@@ -61,5 +61,13 @@ class StudentAttendanceViewModel(
                 _toastMessage.postValue("Error: ${e.message}")
             }
         }
+    }
+
+    fun accessStudentAttendanceListLiveData(): MutableLiveData<List<AttendancesResponse>> {
+        return studentAttendanceListLiveData
+    }
+
+    fun accessToastMessage(): LiveData<String> {
+        return toastMessage
     }
 }

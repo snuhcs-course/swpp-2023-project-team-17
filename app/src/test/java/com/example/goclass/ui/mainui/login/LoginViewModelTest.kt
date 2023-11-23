@@ -52,7 +52,7 @@ class LoginViewModelTest {
 
             viewModel.userLogin(userEmail)
 
-            val userId = viewModel.userId.getOrAwaitValue()
+            val userId = viewModel.accessUserId().getOrAwaitValue()
             assertEquals(1, userId)
         }
 
@@ -65,7 +65,7 @@ class LoginViewModelTest {
 
             viewModel.userLogin(userEmail)
 
-            val userId = viewModel.userId.getOrAwaitValue()
+            val userId = viewModel.accessUserId().getOrAwaitValue()
             assertNull(userId)
         }
 
@@ -78,7 +78,7 @@ class LoginViewModelTest {
 
             viewModel.userLogin(userEmail)
 
-            val userIdValue = viewModel.userId.getOrAwaitValue()
+            val userIdValue = viewModel.accessUserId().getOrAwaitValue()
             assertNull(userIdValue)
         }
 

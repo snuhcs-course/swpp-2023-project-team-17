@@ -58,7 +58,7 @@ class ProfessorAttendanceViewModelTest {
             viewModel.getProfessorAttendanceList(classMap)
 
             // Check if the LiveData has been updated
-            val liveDataValue = viewModel.professorAttendanceListLiveData.getOrAwaitValue()
+            val liveDataValue = viewModel.accessProfessorAttendanceListLiveData().getOrAwaitValue()
             assertEquals(1, liveDataValue.size)
             assertEquals(attendancesResponse, liveDataValue[0])
         }
@@ -72,7 +72,7 @@ class ProfessorAttendanceViewModelTest {
 
             viewModel.getProfessorAttendanceList(classMap)
 
-            val toastValue = viewModel.toastMessage.getOrAwaitValue()
+            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
             assertEquals("Error: $exceptionMessage", toastValue)
         }
 

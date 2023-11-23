@@ -48,7 +48,7 @@ class ProfessorMainFragment : Fragment() {
         binding.professorClassRecyclerView.adapter = classListAdapter
         binding.professorClassRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
+        viewModel.accessToastMessage().observe(viewLifecycleOwner) { message ->
             Toast.makeText(requireActivity().applicationContext, message, Toast.LENGTH_SHORT).show()
         }
 

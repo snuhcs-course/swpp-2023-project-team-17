@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.goclass.network.dataclass.MessagesResponse
 import com.example.goclass.network.dataclass.Users
 import com.example.goclass.repository.UserRepository
 import kotlinx.coroutines.launch
@@ -15,10 +16,10 @@ class ProfileViewModel(
     private val _toastMessage = MutableLiveData<String>()
     private val _editSuccess = MutableLiveData<Boolean>()
 
-    val toastMessage: LiveData<String> get() = _toastMessage
-    val editSuccess: LiveData<Boolean> get() = _editSuccess
-    val isLoading = MutableLiveData<Boolean>()
-    val userName: MutableLiveData<String> = MutableLiveData()
+    private val toastMessage: LiveData<String> get() = _toastMessage
+    private val editSuccess: LiveData<Boolean> get() = _editSuccess
+    private val isLoading: MutableLiveData<Boolean> = MutableLiveData()
+    private val userName: MutableLiveData<String> = MutableLiveData()
 
     fun userEdit(
         userId: Int,
@@ -49,7 +50,23 @@ class ProfileViewModel(
     fun userGet(userId: Int) {
         viewModelScope.launch {
             val result = repository.userGet(userId)
-            userName.postValue(result?.userName ?: "")
+            userName.postValue(result.userName ?: "")
         }
+    }
+
+    fun accessToastMessage(): LiveData<String> {
+        return toastMessage
+    }
+
+    fun accessEditSuccess(): LiveData<Boolean> {
+        return editSuccess
+    }
+
+    fun accessIsLoading(): MutableLiveData<Boolean> {
+        return isLoading
+    }
+
+    fun accessUserName(): MutableLiveData<String> {
+        return userName
     }
 }

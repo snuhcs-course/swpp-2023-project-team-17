@@ -38,7 +38,7 @@ class StudentMainFragment : Fragment() {
         val sharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         val userId = sharedPref!!.getInt("userId", -1)
 
-        viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
+        viewModel.accessToastMessage().observe(viewLifecycleOwner) { message ->
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
         }
 

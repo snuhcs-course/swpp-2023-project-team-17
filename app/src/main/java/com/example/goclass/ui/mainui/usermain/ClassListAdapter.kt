@@ -69,6 +69,7 @@ class ClassListAdapter(
         private val viewModel: ProfessorMainViewModel,
         private val userType: Int,
     ) : RecyclerView.ViewHolder(binding.root) {
+        @SuppressLint("SetTextI18n")
         fun bind(
             classItem: ClassesResponse,
             isExpanded: Boolean,

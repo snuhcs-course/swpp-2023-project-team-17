@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.goclass.network.dataclass.AttendancesResponse
 import com.example.goclass.network.dataclass.Classes
 import com.example.goclass.network.dataclass.ClassesResponse
 import com.example.goclass.repository.ClassRepository
@@ -21,8 +22,9 @@ class ProfessorMainViewModel(
     application: Application,
 ) : AndroidViewModel(application), KoinComponent {
     private val _toastMessage = MutableLiveData<String>()
-    val toastMessage: LiveData<String> get() = _toastMessage
-    val classListLiveData: MutableLiveData<List<ClassesResponse>> = MutableLiveData()
+
+    private val classListLiveData: MutableLiveData<List<ClassesResponse>> = MutableLiveData()
+    private val toastMessage: LiveData<String> get() = _toastMessage
 
     fun createClass(
         className: String,
@@ -133,5 +135,13 @@ class ProfessorMainViewModel(
                 _toastMessage.postValue("Error: ${e.message}")
             }
         }
+    }
+
+    fun accessClassListLiveData(): MutableLiveData<List<ClassesResponse>> {
+        return classListLiveData
+    }
+
+    fun accessToastMessage(): LiveData<String> {
+        return toastMessage
     }
 }

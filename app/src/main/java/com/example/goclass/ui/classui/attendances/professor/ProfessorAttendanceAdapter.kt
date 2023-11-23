@@ -1,5 +1,6 @@
 package com.example.goclass.ui.classui.attendances.professor
 
+import android.annotation.SuppressLint
 import android.view.ViewGroup
 import android.view.LayoutInflater
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +17,7 @@ class ProfessorAttendanceAdapter(
     RecyclerView.Adapter<ProfessorAttendanceAdapter.ProfessorAttendanceViewHolder>() {
     private var professorAttendanceList = listOf<AttendancesResponse>()
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setProfessorAttendanceList(list: List<AttendancesResponse>) {
         professorAttendanceList = list
         notifyDataSetChanged()
@@ -25,7 +27,7 @@ class ProfessorAttendanceAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): ProfessorAttendanceViewHolder {
-        var binding =
+        val binding =
             ItemProfessorAttendanceBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
@@ -52,7 +54,7 @@ class ProfessorAttendanceAdapter(
             val originalFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
             originalFormat.timeZone = TimeZone.getTimeZone("UTC")
             val targetFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val date: Date = originalFormat.parse(professorAttendanceItem.attendanceDate)
+            val date: Date? = originalFormat.parse(professorAttendanceItem.attendanceDate)
 
             binding.attendanceDateText.text = targetFormat.format(date)
             binding.studentListButton.setOnClickListener {

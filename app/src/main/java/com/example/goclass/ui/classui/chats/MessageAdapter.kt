@@ -1,5 +1,6 @@
 package com.example.goclass.ui.classui.chats
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import com.example.goclass.databinding.ItemMessageBinding
 import com.example.goclass.R
 import com.example.goclass.network.dataclass.MessagesResponse
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 class MessageAdapter(
@@ -23,6 +25,7 @@ class MessageAdapter(
 ): RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {
     private var messageList = listOf<MessagesResponse>()
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setMessageList(list: List<MessagesResponse>) {
         messageList = list
         notifyDataSetChanged()
@@ -32,7 +35,7 @@ class MessageAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): MessageViewHolder {
-        var binding =
+        val binding =
             ItemMessageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MessageViewHolder(binding, context)
     }
@@ -66,7 +69,7 @@ class MessageAdapter(
             val outputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
             try {
                 val parsedDate = inputFormat.parse(message.timeStamp)
-                val formattedDate = outputFormat.format(parsedDate)
+                val formattedDate = parsedDate?.let { outputFormat.format(it) }
                 binding.timeStampText.text = formattedDate
             } catch (e: Exception) {
                 e.printStackTrace()

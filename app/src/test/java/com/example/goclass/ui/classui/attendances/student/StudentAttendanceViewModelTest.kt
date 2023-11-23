@@ -68,7 +68,7 @@ class StudentAttendanceViewModelTest {
             viewModel.getStudentAttendanceList(classId, userId)
 
             // Check if the LiveData has been updated
-            val liveDataValue = viewModel.studentAttendanceListLiveData.getOrAwaitValue()
+            val liveDataValue = viewModel.accessStudentAttendanceListLiveData().getOrAwaitValue()
             TestCase.assertEquals(1, liveDataValue.size)
             TestCase.assertEquals(attendancesResponse, liveDataValue[0])
         }
@@ -83,7 +83,7 @@ class StudentAttendanceViewModelTest {
 
             viewModel.getStudentAttendanceList(classId, userId)
 
-            val toastValue = viewModel.toastMessage.getOrAwaitValue()
+            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
             TestCase.assertEquals("Error: $exceptionMessage", toastValue)
         }
 
@@ -123,7 +123,7 @@ class StudentAttendanceViewModelTest {
             // Invoke the function
             viewModel.addAttendance(classId, userId)
 
-            val toastValue = viewModel.toastMessage.getOrAwaitValue()
+            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
             TestCase.assertEquals("Successfully added", toastValue)
         }
 
@@ -143,7 +143,7 @@ class StudentAttendanceViewModelTest {
             // Invoke the function
             viewModel.addAttendance(classId, userId)
 
-            val toastValue = viewModel.toastMessage.getOrAwaitValue()
+            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
             TestCase.assertEquals("Failed to add", toastValue)
         }
 
@@ -160,7 +160,7 @@ class StudentAttendanceViewModelTest {
             // Invoke the function
             viewModel.addAttendance(classId, userId)
 
-            val toastValue = viewModel.toastMessage.getOrAwaitValue()
+            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
             TestCase.assertEquals("Error: $exceptionMessage", toastValue)
         }
 

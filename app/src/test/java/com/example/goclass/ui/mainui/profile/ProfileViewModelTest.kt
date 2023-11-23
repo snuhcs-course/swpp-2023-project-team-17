@@ -43,9 +43,9 @@ class ProfileViewModelTest {
 
             viewModel.userEdit(1, 0, "TestName")
 
-            val toastValue = viewModel.toastMessage.getOrAwaitValue()
-            val editSuccess = viewModel.editSuccess.getOrAwaitValue()
-            val isLoading = viewModel.isLoading.getOrAwaitValue()
+            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
+            val editSuccess = viewModel.accessEditSuccess().getOrAwaitValue()
+            val isLoading = viewModel.accessIsLoading().getOrAwaitValue()
             assertEquals("Success", toastValue)
             assertEquals(true, editSuccess)
             assertEquals(false, isLoading)
@@ -60,9 +60,9 @@ class ProfileViewModelTest {
 
             viewModel.userEdit(1, 0, "TestName")
 
-            val toastValue = viewModel.toastMessage.getOrAwaitValue()
-            val editSuccess = viewModel.editSuccess.getOrAwaitValue()
-            val isLoading = viewModel.isLoading.getOrAwaitValue()
+            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
+            val editSuccess = viewModel.accessEditSuccess().getOrAwaitValue()
+            val isLoading = viewModel.accessIsLoading().getOrAwaitValue()
             assertEquals("Failure", toastValue)
             assertEquals(false, editSuccess)
             assertEquals(false, isLoading)
@@ -76,9 +76,9 @@ class ProfileViewModelTest {
 
             viewModel.userEdit(1, 0, "TestName")
 
-            val toastValue = viewModel.toastMessage.getOrAwaitValue()
-            val editSuccess = viewModel.editSuccess.getOrAwaitValue()
-            val isLoading = viewModel.isLoading.getOrAwaitValue()
+            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
+            val editSuccess = viewModel.accessEditSuccess().getOrAwaitValue()
+            val isLoading = viewModel.accessIsLoading().getOrAwaitValue()
             assertEquals("Error: $exceptionMessage", toastValue)
             assertEquals(false, editSuccess)
             assertEquals(false, isLoading)
@@ -93,7 +93,7 @@ class ProfileViewModelTest {
 
             viewModel.userGet(1)
 
-            val userName = viewModel.userName.getOrAwaitValue()
+            val userName = viewModel.accessUserName().getOrAwaitValue()
             assertEquals(mockUserResponse.userName, userName)
         }
 
