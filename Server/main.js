@@ -15,6 +15,7 @@ const connection = mysql.createConnection({
 
 app.set("port", port);
 app.use(bodyParser.json());
+app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
@@ -120,6 +121,7 @@ app.post('/login/:email', (req, res) => {
         }
     });
 });
+
 
 /*
     get all user's classes with user_type of Users
@@ -354,13 +356,14 @@ app.post('/class/create', (req, res) => {
             return res.status(500).json({ 'code': 500, 'message': 'Error occurred' });
         }
 
-        const classId = result.insertId;
+        const insertedClassId = result.insertId;
 
         res.json({
             'code': 200,
-            'message': "create class success",
-            'class_id': classId
+            'message': "Create class success",
+            'classId': insertedClassId
         });
+        console.log(insertedClassId);
     });
 });
 
@@ -657,7 +660,7 @@ app.put('/chat_channel/:class_id/comment/:id', (req, res) => {
 app.get('/chat_channel/:class_id', (req, res) => {
     const classId = req.params.class_id;
 
-    const sql = 'select * from Messages where class_id = ? order by time_stamp';
+    const sql = 'select * from Messages where class_id = ? and comment_id = -1 order by time_stamp';
 
     const params = [classId];
 

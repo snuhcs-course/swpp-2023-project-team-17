@@ -32,7 +32,7 @@
     </fragment>
     <fragment
         android:id="@+id/chatFragment"
-        android:name="com.example.goclass.ui.classui.chats.chat.ChatFragment"
+        android:name="com.example.goclass.ui.classui.chats.ChatFragment"
         android:label="fragment_chat" >
         <action
             android:id="@+id/action_chatFragment_to_professorAttendanceFragment"
@@ -48,7 +48,7 @@
 
     <fragment
         android:id="@+id/chatCommentFragment"
-        android:name="com.example.goclass.ui.classui.chats.chat.ChatCommentFragment"
+        android:name="com.example.goclass.ui.classui.chats.ChatCommentFragment"
         android:label="fragment_chat_comment" >
         <argument
             android:name="messageId"

@@ -1,4 +1,4 @@
-package com.example.goclass.ui.classui.chats.chat
+package com.example.goclass.ui.classui.chats
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -16,7 +16,6 @@ import com.example.goclass.network.dataclass.CommentsResponse
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import java.util.TimeZone
 
 class CommentAdapter(
     private val context: Context,

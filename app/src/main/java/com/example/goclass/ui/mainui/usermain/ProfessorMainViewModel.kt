@@ -22,7 +22,8 @@ class ProfessorMainViewModel(
     application: Application,
 ) : AndroidViewModel(application), KoinComponent {
     private val _toastMessage = MutableLiveData<String>()
-
+    private val _snackbarMessage = MutableLiveData<String>()
+    private val snackbarMessage: LiveData<String> get() = _snackbarMessage
     private val classListLiveData: MutableLiveData<List<ClassesResponse>> = MutableLiveData()
     private val toastMessage: LiveData<String> get() = _toastMessage
 
@@ -94,13 +95,13 @@ class ProfessorMainViewModel(
                 }
 
                 if (response.code == 200) {
-                    _toastMessage.postValue("Successfully created!")
+                    _snackbarMessage.postValue("Successfully created!")
                     getClassList(mapOf("userId" to professorId.toString(), "userType" to "1"))
                 } else {
-                    _toastMessage.postValue("create failed")
+                    _snackbarMessage.postValue("create failed")
                 }
             } catch (e: Exception) {
-                _toastMessage.postValue("Error: ${e.message}")
+                _snackbarMessage.postValue("Error: ${e.message}")
             }
         }
     }
@@ -114,7 +115,7 @@ class ProfessorMainViewModel(
                 }
             } catch (e: Exception) {
                 Log.d("classListError", e.message.toString())
-                _toastMessage.postValue("Error: ${e.message}")
+                _snackbarMessage.postValue("Error: ${e.message}")
             }
         }
         return classListLiveData
@@ -125,16 +126,20 @@ class ProfessorMainViewModel(
             try {
                 val response = classRepository.classDelete(classId)
                 if(response.code == 200) {
-                    _toastMessage.postValue("Successfully deleted")
+                    _snackbarMessage.postValue("Successfully deleted")
                     getClassList(mapOf("userId" to professorId.toString(), "userType" to "1"))
                 } else {
-                    _toastMessage.postValue("delete Failed")
+                    _snackbarMessage.postValue("delete Failed")
                 }
             } catch (e: Exception) {
                 Log.d("classDeleteError", e.message.toString())
-                _toastMessage.postValue("Error: ${e.message}")
+                _snackbarMessage.postValue("Error: ${e.message}")
             }
         }
+    }
+
+    fun accessSnackbarMessage(): LiveData<String> {
+        return snackbarMessage
     }
 
     fun accessClassListLiveData(): MutableLiveData<List<ClassesResponse>> {

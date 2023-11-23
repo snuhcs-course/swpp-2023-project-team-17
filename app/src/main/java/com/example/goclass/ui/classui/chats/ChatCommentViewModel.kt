@@ -1,20 +1,20 @@
-package com.example.goclass.ui.classui.chats.chat
+package com.example.goclass.ui.classui.chats
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.goclass.network.dataclass.AttendancesResponse
+import com.example.goclass.network.dataclass.Comments
 import com.example.goclass.network.dataclass.CommentsResponse
-import com.example.goclass.network.dataclass.Messages
-import com.example.goclass.network.dataclass.MessagesResponse
 import com.example.goclass.repository.ChatRepository
 import kotlinx.coroutines.launch
 
-class ChatViewModel(
-    private val repository: ChatRepository,
+class ChatCommentViewModel(
+    private val repository: ChatRepository
 ) : ViewModel() {
-    private val messageListLiveData : MutableLiveData<List<MessagesResponse>> = MutableLiveData()
+    private val commentListLiveData : MutableLiveData<List<CommentsResponse>> = MutableLiveData()
     private val _toastMessage = MutableLiveData<String>()
     private val _sendSuccess = MutableLiveData<Boolean>()
     private val _editSuccess = MutableLiveData<Boolean>()
@@ -23,78 +23,81 @@ class ChatViewModel(
     private val sendSuccess: LiveData<Boolean> get() = _sendSuccess
     private val editSuccess: LiveData<Boolean> get() = _editSuccess
 
-    fun chatChannelSend(
+    fun chatCommentSend(
         classId: Int,
-        senderId: Int,
+        id: Int,
+        userId: Int,
         content: String,
     ) {
-        val sendMessages = Messages(senderId, content)
+        val sendComments = Comments(userId, content)
         viewModelScope.launch {
             try {
-                val response = repository.chatChannelSend(classId, sendMessages)
-                if(response.code == 200) {
-                    chatChannelGetList(classId)
+                val response = repository.chatCommentSend(classId, id, sendComments)
+                if(response.code == 200){
+                    chatCommentGetList(classId, id)
                     _toastMessage.postValue("Success")
                     _sendSuccess.postValue(true)
                 } else {
                     _toastMessage.postValue("Failure")
                     _sendSuccess.postValue(false)
                 }
-            } catch (e:Exception) {
-                Log.d("chatSendError", e.message.toString())
+            } catch (e: Exception) {
+                Log.d("commentSendError", e.message.toString())
                 _toastMessage.postValue("Error: ${e.message}")
                 _sendSuccess.postValue(false)
             }
         }
     }
 
-    fun chatChannelEdit(
+    fun chatCommentEdit(
         classId: Int,
         content: String,
+        commentId: Int,
         messageId: Int,
     ) {
-        val editMessages = Messages(content, messageId)
+        val comments = Comments(content, messageId)
         viewModelScope.launch {
             try {
-                val response = repository.chatChannelEdit(classId, editMessages)
-                if(response.code == 200) {
-                    chatChannelGetList(classId)
+                val response = repository.chatCommentEdit(classId, commentId, comments)
+                if(response.code == 200){
+                    chatCommentGetList(classId, commentId)
                     _toastMessage.postValue("Success")
                     _editSuccess.postValue(true)
                 } else {
                     _toastMessage.postValue("Failure")
                     _editSuccess.postValue(false)
                 }
-            } catch (e:Exception) {
-                Log.d("chatEditError", e.message.toString())
+            } catch (e: Exception) {
+                Log.d("commentEditError", e.message.toString())
                 _toastMessage.postValue("Error: ${e.message}")
                 _editSuccess.postValue(false)
             }
         }
     }
 
-    fun chatChannelGetList(
+    fun chatCommentGetList(
         classId: Int,
-    ): MutableLiveData<List<MessagesResponse>> {
+        commentId: Int,
+    ): MutableLiveData<List<CommentsResponse>> {
         viewModelScope.launch {
             try {
-                val response = repository.chatChannelGetList(classId)
+                val response = repository.chatCommentGetList(classId, commentId)
                 if(response.code == 200){
-                    messageListLiveData.postValue(response.messageList)
+                    commentListLiveData.postValue(response.commentList)
                     _toastMessage.postValue("Success")
                 } else {
                     _toastMessage.postValue("Failure")
                 }
             } catch (e:Exception) {
-                Log.d("chatListGetError", e.message.toString())
+                Log.d("commentListGetError", e.message.toString())
                 _toastMessage.postValue("Error: ${e.message}")
             }
         }
-        return messageListLiveData
+        return commentListLiveData
     }
 
-    fun accessMessageListLiveData(): MutableLiveData<List<MessagesResponse>> {
-        return messageListLiveData
+    fun accessCommentListLiveData(): MutableLiveData<List<CommentsResponse>> {
+        return commentListLiveData
     }
 
     fun accessToastMessage(): LiveData<String> {

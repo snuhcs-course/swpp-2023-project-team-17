@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -29,6 +30,7 @@ import com.example.goclass.ui.classui.ClassScheduler
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.example.goclass.ui.mainui.usermain.ClassListAdapter
 import com.example.goclass.ui.mainui.usermain.utils.TimeSelectionLayout
+import com.google.android.material.snackbar.Snackbar
 
 class ProfessorMainFragment : Fragment() {
     private lateinit var binding: FragmentProfessorMainBinding
@@ -48,8 +50,8 @@ class ProfessorMainFragment : Fragment() {
         binding.professorClassRecyclerView.adapter = classListAdapter
         binding.professorClassRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        viewModel.accessToastMessage().observe(viewLifecycleOwner) { message ->
-            Toast.makeText(requireActivity().applicationContext, message, Toast.LENGTH_SHORT).show()
+        viewModel.accessSnackbarMessage().observe(viewLifecycleOwner) { message ->
+            Snackbar.make(binding.root, message, Toast.LENGTH_SHORT).show()
         }
 
         binding.createButton.setOnClickListener {
