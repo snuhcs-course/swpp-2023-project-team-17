@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.goclass.network.dataclass.Classes
 import com.example.goclass.network.dataclass.ClassesResponse
@@ -22,10 +21,8 @@ class ProfessorMainViewModel(
     application: Application,
 ) : AndroidViewModel(application), KoinComponent {
     private val _snackbarMessage = MutableLiveData<String>()
-    val snackbarMessage: LiveData<String> get() = _snackbarMessage
-    val classListLiveData: MutableLiveData<List<ClassesResponse>> = MutableLiveData()
-
-    private val classScheduler = ClassScheduler()
+    private val classListLiveData: MutableLiveData<List<ClassesResponse>> = MutableLiveData()
+    private val snackbarMessage: LiveData<String> get() = _snackbarMessage
 
     fun createClass(
         className: String,
@@ -34,6 +31,7 @@ class ProfessorMainViewModel(
         classTime: String,
         buildingNumber: String,
         roomNumber: String,
+        classScheduler: ClassScheduler,
     ) {
         viewModelScope.launch {
             val newClass =
@@ -135,5 +133,13 @@ class ProfessorMainViewModel(
                 _snackbarMessage.postValue("Error: ${e.message}")
             }
         }
+    }
+
+    fun accessSnackbarMessage(): LiveData<String> {
+        return snackbarMessage
+    }
+
+    fun accessClassListLiveData(): MutableLiveData<List<ClassesResponse>> {
+        return classListLiveData
     }
 }

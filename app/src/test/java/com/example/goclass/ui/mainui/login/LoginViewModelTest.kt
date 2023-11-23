@@ -9,6 +9,7 @@ import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -18,6 +19,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+@ExperimentalCoroutinesApi
 class LoginViewModelTest {
     private lateinit var viewModel: LoginViewModel
     private val mockRepository = mockk<UserRepository>()
@@ -50,7 +52,7 @@ class LoginViewModelTest {
 
             viewModel.userLogin(userEmail)
 
-            val userId = viewModel.userId.getOrAwaitValue()
+            val userId = viewModel.accessUserId().getOrAwaitValue()
             assertEquals(1, userId)
         }
 
@@ -63,7 +65,7 @@ class LoginViewModelTest {
 
             viewModel.userLogin(userEmail)
 
-            val userId = viewModel.userId.getOrAwaitValue()
+            val userId = viewModel.accessUserId().getOrAwaitValue()
             assertNull(userId)
         }
 
@@ -76,7 +78,7 @@ class LoginViewModelTest {
 
             viewModel.userLogin(userEmail)
 
-            val userIdValue = viewModel.userId.getOrAwaitValue()
+            val userIdValue = viewModel.accessUserId().getOrAwaitValue()
             assertNull(userIdValue)
         }
 

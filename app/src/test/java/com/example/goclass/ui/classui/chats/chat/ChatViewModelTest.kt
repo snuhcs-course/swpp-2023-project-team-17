@@ -58,8 +58,8 @@ class ChatViewModelTest {
 
             viewModel.chatChannelSend(classId, senderId, content)
 
-            val toastValue = viewModel.toastMessage.getOrAwaitValue()
-            val sendSuccess = viewModel.sendSuccess.getOrAwaitValue()
+            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
+            val sendSuccess = viewModel.accessSendSuccess().getOrAwaitValue()
             TestCase.assertEquals("Success", toastValue)
             TestCase.assertEquals(true, sendSuccess)
         }
@@ -87,8 +87,8 @@ class ChatViewModelTest {
 
             viewModel.chatChannelSend(classId, senderId, content)
 
-            val toastValue = viewModel.toastMessage.getOrAwaitValue()
-            val sendSuccess = viewModel.sendSuccess.getOrAwaitValue()
+            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
+            val sendSuccess = viewModel.accessSendSuccess().getOrAwaitValue()
             TestCase.assertEquals("Failure", toastValue)
             TestCase.assertEquals(false, sendSuccess)
         }
@@ -112,8 +112,8 @@ class ChatViewModelTest {
 
             viewModel.chatChannelSend(classId, senderId, content)
 
-            val toastValue = viewModel.toastMessage.getOrAwaitValue()
-            val sendSuccess = viewModel.sendSuccess.getOrAwaitValue()
+            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
+            val sendSuccess = viewModel.accessSendSuccess().getOrAwaitValue()
             TestCase.assertEquals("Error: $exceptionMessage", toastValue)
             TestCase.assertEquals(false, sendSuccess)
         }
@@ -141,8 +141,8 @@ class ChatViewModelTest {
 
             viewModel.chatChannelEdit(classId, content, messageId)
 
-            val toastValue = viewModel.toastMessage.getOrAwaitValue()
-            val editSuccess = viewModel.editSuccess.getOrAwaitValue()
+            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
+            val editSuccess = viewModel.accessEditSuccess().getOrAwaitValue()
             TestCase.assertEquals("Success", toastValue)
             TestCase.assertEquals(true, editSuccess)
         }
@@ -170,8 +170,8 @@ class ChatViewModelTest {
 
             viewModel.chatChannelEdit(classId, content, messageId)
 
-            val toastValue = viewModel.toastMessage.getOrAwaitValue()
-            val editSuccess = viewModel.editSuccess.getOrAwaitValue()
+            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
+            val editSuccess = viewModel.accessEditSuccess().getOrAwaitValue()
             TestCase.assertEquals("Failure", toastValue)
             TestCase.assertEquals(false, editSuccess)
         }
@@ -195,8 +195,8 @@ class ChatViewModelTest {
 
             viewModel.chatChannelEdit(classId, content, messageId)
 
-            val toastValue = viewModel.toastMessage.getOrAwaitValue()
-            val editSuccess = viewModel.editSuccess.getOrAwaitValue()
+            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
+            val editSuccess = viewModel.accessEditSuccess().getOrAwaitValue()
             TestCase.assertEquals("Error: $exceptionMessage", toastValue)
             TestCase.assertEquals(false, editSuccess)
         }
@@ -228,7 +228,7 @@ class ChatViewModelTest {
 
             viewModel.chatChannelGetList(classId)
 
-            val liveDataValue = viewModel.messageListLiveData.getOrAwaitValue()
+            val liveDataValue = viewModel.accessMessageListLiveData().getOrAwaitValue()
             TestCase.assertEquals(1, liveDataValue.size)
             TestCase.assertEquals(messagesResponse, liveDataValue[0])
         }
@@ -248,7 +248,7 @@ class ChatViewModelTest {
 
             viewModel.chatChannelGetList(classId)
 
-            val toastValue = viewModel.toastMessage.getOrAwaitValue()
+            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
             TestCase.assertEquals("Failure", toastValue)
         }
 
@@ -262,7 +262,7 @@ class ChatViewModelTest {
 
             viewModel.chatChannelGetList(classId)
 
-            val toastValue = viewModel.toastMessage.getOrAwaitValue()
+            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
             TestCase.assertEquals("Error: $exceptionMessage", toastValue)
         }
 

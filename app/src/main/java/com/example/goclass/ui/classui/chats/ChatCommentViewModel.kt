@@ -13,14 +13,14 @@ import kotlinx.coroutines.launch
 class ChatCommentViewModel(
     private val repository: ChatRepository
 ) : ViewModel() {
-    val commentListLiveData : MutableLiveData<List<CommentsResponse>> = MutableLiveData()
+    private val commentListLiveData: MutableLiveData<List<CommentsResponse>> = MutableLiveData()
     private val _toastMessage = MutableLiveData<String>()
     private val _sendSuccess = MutableLiveData<Boolean>()
     private val _editSuccess = MutableLiveData<Boolean>()
 
-    val toastMessage: LiveData<String> get() = _toastMessage
-    val sendSuccess: LiveData<Boolean> get() = _sendSuccess
-    val editSuccess: LiveData<Boolean> get() = _editSuccess
+    private val toastMessage: LiveData<String> get() = _toastMessage
+    private val sendSuccess: LiveData<Boolean> get() = _sendSuccess
+    private val editSuccess: LiveData<Boolean> get() = _editSuccess
 
     fun chatCommentSend(
         classId: Int,
@@ -93,5 +93,21 @@ class ChatCommentViewModel(
             }
         }
         return commentListLiveData
+    }
+
+    fun accessCommentListLiveData(): MutableLiveData<List<CommentsResponse>> {
+        return commentListLiveData
+    }
+
+    fun accessToastMessage(): LiveData<String> {
+        return toastMessage
+    }
+
+    fun accessSendSuccess(): LiveData<Boolean> {
+        return sendSuccess
+    }
+
+    fun accessEditSuccess(): LiveData<Boolean> {
+        return editSuccess
     }
 }

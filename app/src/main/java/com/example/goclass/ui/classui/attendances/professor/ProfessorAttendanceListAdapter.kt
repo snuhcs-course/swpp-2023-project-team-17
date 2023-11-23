@@ -1,5 +1,6 @@
 package com.example.goclass.ui.classui.attendances.professor
 
+import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import com.example.goclass.R
 import com.example.goclass.databinding.ItemProfessorAttendanceListBinding
 import com.example.goclass.network.dataclass.AttendancesResponse
 import com.example.goclass.repository.UserRepository
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -19,6 +21,7 @@ class ProfessorAttendanceListAdapter(
 ) : RecyclerView.Adapter<ProfessorAttendanceListAdapter.ProfessorAttendanceListViewHolder>() {
     private var studentAttendanceList = listOf<AttendancesResponse>()
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setStudentAttendanceList(list: List<AttendancesResponse>) {
         studentAttendanceList = list
         notifyDataSetChanged()
@@ -28,7 +31,7 @@ class ProfessorAttendanceListAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): ProfessorAttendanceListViewHolder {
-        var binding =
+        val binding =
             ItemProfessorAttendanceListBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
@@ -47,6 +50,7 @@ class ProfessorAttendanceListAdapter(
 
     override fun getItemCount(): Int = studentAttendanceList.size
 
+    @OptIn(DelicateCoroutinesApi::class)
     class ProfessorAttendanceListViewHolder(var binding: ItemProfessorAttendanceListBinding, val repository: UserRepository) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(studentAttendanceItem: AttendancesResponse) {

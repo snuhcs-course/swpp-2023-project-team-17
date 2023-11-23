@@ -57,7 +57,7 @@ class ClassScheduler {
         )
     }
 
-    private fun uniqueRequestId(
+    fun uniqueRequestId(
         userId: Int,
         classId: Int,
     ): Int {

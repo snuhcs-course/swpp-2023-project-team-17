@@ -12,9 +12,9 @@ import kotlinx.coroutines.launch
 class ProfessorAttendanceViewModel(
     private val repository: UserRepository,
 ) : ViewModel() {
-    val professorAttendanceListLiveData: MutableLiveData<List<AttendancesResponse>> = MutableLiveData()
+    private val professorAttendanceListLiveData: MutableLiveData<List<AttendancesResponse>> = MutableLiveData()
     private val _toastMessage = MutableLiveData<String>()
-    val toastMessage: LiveData<String> get() = _toastMessage
+    private val toastMessage: LiveData<String> get() = _toastMessage
 
     fun getProfessorAttendanceList(classMap: Map<String, String>): MutableLiveData<List<AttendancesResponse>> {
         viewModelScope.launch {
@@ -29,5 +29,13 @@ class ProfessorAttendanceViewModel(
             }
         }
         return professorAttendanceListLiveData
+    }
+
+    fun accessProfessorAttendanceListLiveData(): MutableLiveData<List<AttendancesResponse>> {
+        return professorAttendanceListLiveData
+    }
+
+    fun accessToastMessage(): LiveData<String> {
+        return toastMessage
     }
 }

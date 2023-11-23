@@ -1,5 +1,6 @@
 package com.example.goclass.ui.classui.chats
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.view.LayoutInflater
@@ -23,6 +24,7 @@ class CommentAdapter(
     RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() {
     private var commentList = listOf<CommentsResponse>()
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setCommentList(list: List<CommentsResponse>) {
         commentList = list
         notifyDataSetChanged()
@@ -31,7 +33,7 @@ class CommentAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): CommentViewHolder {
-        var binding =
+        val binding =
             ItemCommentBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return CommentViewHolder(binding, context)
     }
@@ -58,7 +60,7 @@ class CommentAdapter(
             val outputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
             try {
                 val parsedDate = inputFormat.parse(comment.timeStamp)
-                val formattedDate = outputFormat.format(parsedDate)
+                val formattedDate = parsedDate?.let { outputFormat.format(it) }
                 binding.timeStampText.text = formattedDate
             } catch (e: Exception) {
                 e.printStackTrace()

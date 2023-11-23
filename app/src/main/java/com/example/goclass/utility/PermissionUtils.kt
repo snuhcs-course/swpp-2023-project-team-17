@@ -30,16 +30,11 @@ class PermissionUtils(private val context: Context) {
         val bluetoothPermission = Manifest.permission.BLUETOOTH
 
         // Check bluetooth permission; if not granted, request permission
-        if (ContextCompat.checkSelfPermission(activity, bluetoothPermission) == PackageManager.PERMISSION_GRANTED) {
-            return true
+        return if (ContextCompat.checkSelfPermission(activity, bluetoothPermission) == PackageManager.PERMISSION_GRANTED) {
+            true
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                ActivityCompat.requestPermissions(activity, arrayOf(bluetoothPermission), requestCode)
-                return false
-            } else {
-                // For devices below Android 6.0, Bluetooth permission is granted at installation time
-                return true
-            }
+            ActivityCompat.requestPermissions(activity, arrayOf(bluetoothPermission), requestCode)
+            false
         }
     }
 }

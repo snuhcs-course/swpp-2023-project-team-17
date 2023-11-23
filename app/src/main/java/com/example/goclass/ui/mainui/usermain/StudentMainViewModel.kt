@@ -21,15 +21,14 @@ class StudentMainViewModel(
     application: Application,
 ) : AndroidViewModel(application), KoinComponent {
     private val _toastMessage = MutableLiveData<String>()
-    val toastMessage: LiveData<String> get() = _toastMessage
-    val classListLiveData: MutableLiveData<List<ClassesResponse>> = MutableLiveData()
-
-    private val classScheduler = ClassScheduler()
+    private val classListLiveData: MutableLiveData<List<ClassesResponse>> = MutableLiveData()
+    private val toastMessage: LiveData<String> get() = _toastMessage
 
     fun classJoin(
         userId: Int,
         className: String,
         classCode: String,
+        classScheduler: ClassScheduler,
     ) {
         viewModelScope.launch {
             val joinClass =
@@ -114,4 +113,12 @@ class StudentMainViewModel(
         val endHour: Int,
         val endMinute: Int,
     )
+
+    fun accessClassListLiveData(): MutableLiveData<List<ClassesResponse>> {
+        return classListLiveData
+    }
+
+    fun accessToastMessage(): LiveData<String> {
+        return toastMessage
+    }
 }

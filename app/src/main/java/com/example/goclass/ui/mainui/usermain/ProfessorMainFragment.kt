@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.goclass.ui.classui.ClassActivity
 import com.example.goclass.R
 import com.example.goclass.databinding.FragmentProfessorMainBinding
+import com.example.goclass.ui.classui.ClassScheduler
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.example.goclass.ui.mainui.usermain.ClassListAdapter
 import com.example.goclass.ui.mainui.usermain.utils.TimeSelectionLayout
@@ -49,7 +50,7 @@ class ProfessorMainFragment : Fragment() {
         binding.professorClassRecyclerView.adapter = classListAdapter
         binding.professorClassRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        viewModel.snackbarMessage.observe(viewLifecycleOwner) { message ->
+        viewModel.accessSnackbarMessage().observe(viewLifecycleOwner) { message ->
             Snackbar.make(binding.root, message, Toast.LENGTH_SHORT).show()
         }
 
@@ -84,7 +85,15 @@ class ProfessorMainFragment : Fragment() {
                 val enteredRoomNumber = editRoomNumber.text.toString()
                 val enteredCode = editCode.text.toString()
 
-                viewModel.createClass(enteredClassName, enteredCode, userId, enteredClassTime, enteredBuildingNumber, enteredRoomNumber)
+                viewModel.createClass(
+                    enteredClassName,
+                    enteredCode,
+                    userId,
+                    enteredClassTime,
+                    enteredBuildingNumber,
+                    enteredRoomNumber,
+                    ClassScheduler(),
+                )
                 dialog.dismiss()
             }
             dialog.show()
