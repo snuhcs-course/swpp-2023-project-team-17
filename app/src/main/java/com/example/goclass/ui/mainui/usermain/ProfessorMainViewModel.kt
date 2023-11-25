@@ -95,7 +95,7 @@ class ProfessorMainViewModel(
                     _snackbarMessage.postValue("Successfully created!")
                     getClassList(mapOf("userId" to professorId.toString(), "userType" to "1"))
                 } else {
-                    _snackbarMessage.postValue("create failed")
+                    _snackbarMessage.postValue("Failed to create...")
                 }
             } catch (e: Exception) {
                 _snackbarMessage.postValue("Error: ${e.message}")
@@ -123,10 +123,10 @@ class ProfessorMainViewModel(
             try {
                 val response = classRepository.classDelete(classId)
                 if(response.code == 200) {
-                    _snackbarMessage.postValue("Successfully deleted")
+                    _snackbarMessage.postValue("Successfully deleted.")
                     getClassList(mapOf("userId" to professorId.toString(), "userType" to "1"))
                 } else {
-                    _snackbarMessage.postValue("delete Failed")
+                    _snackbarMessage.postValue("Failed to delete...")
                 }
             } catch (e: Exception) {
                 Log.d("classDeleteError", e.message.toString())
