@@ -20,7 +20,6 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/messageEditButton"
-        style="@style/SmallFont"
         android:layout_width="100dp"
         android:layout_height="40dp"
         android:layout_marginTop="15dp"
@@ -42,7 +41,6 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="10dp"
         android:text="Edit Message Content"
-        style="@style/SmallFont"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

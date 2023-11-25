@@ -1,5 +1,6 @@
 package com.example.goclass.ui.mainui.usermain
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.app.TimePickerDialog
 import android.content.Context
@@ -46,9 +47,14 @@ class ProfessorMainFragment : Fragment() {
 
         val sharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         val userId = sharedPref!!.getInt("userId", -1)
+        val userName = sharedPref.getString("userName", "") ?: ""
+
         classListAdapter = ClassListAdapter(viewModel, 1)
         binding.professorClassRecyclerView.adapter = classListAdapter
         binding.professorClassRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        // Name Textview
+        binding.name.text = userName
 
         viewModel.accessSnackbarMessage().observe(viewLifecycleOwner) { message ->
             Snackbar.make(binding.root, message, Toast.LENGTH_SHORT).show()
@@ -85,6 +91,8 @@ class ProfessorMainFragment : Fragment() {
                 val enteredRoomNumber = editRoomNumber.text.toString()
                 val enteredCode = editCode.text.toString()
 
+
+
                 viewModel.createClass(
                     enteredClassName,
                     enteredCode,
@@ -99,7 +107,7 @@ class ProfessorMainFragment : Fragment() {
             dialog.show()
         }
 
-        // show classList with dummy data
+        // Show ClassList
         val userMap = mapOf("userId" to userId.toString(), "userType" to "1")
         val classListLiveData = viewModel.getClassList(userMap)
 
@@ -110,6 +118,7 @@ class ProfessorMainFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,

@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:textSize="20sp"
         android:fontFamily="@font/relay_noto_sans_medium"
         android:textColor="@color/black"
@@ -37,7 +37,7 @@
         android:id="@+id/nameAndTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="16dp"
         android:text="TextView"
         android:fontFamily="@font/relay_noto_sans_semibold"
         android:textSize="16sp"
@@ -48,18 +48,20 @@
             android:id="@+id/nameText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:textSize="15dp"
+            android:textSize="14sp"
             android:text="TextView"
-            android:textStyle="bold" />
+            android:fontFamily="@font/relay_noto_sans_semibold"
+             />
 
         <TextView
             android:id="@+id/timeStampText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="10dp"
+            android:textSize="10sp"
             android:layout_marginStart="8dp"
-            android:text="TextView" />
+            android:text="TextView"
+            android:fontFamily="@font/relay_noto_sans_medium"
+            android:textColor="#999999" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

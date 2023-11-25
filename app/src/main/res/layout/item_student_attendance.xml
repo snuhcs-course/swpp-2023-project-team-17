@@ -15,9 +15,7 @@
         android:text="Attendance Date"
         android:layout_marginEnd="24dp"
         android:layout_marginStart="16dp"
-        style="@style/SmallFont"
-        android:layout_gravity="center"
-        />
+        android:layout_gravity="center" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/attendanceStatusText"
@@ -28,24 +26,20 @@
         android:text="Status"
         android:layout_marginEnd="16dp"
         android:fontFamily="@font/relay_noto_sans_semibold"
-        style="@style/SmallFont"
         android:textColor="@color/white"
         android:layout_gravity="center"
-        android:background="@drawable/present_bg"
-        />
+        android:background="@drawable/present_bg" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/sendButton"
         android:layout_width="100dp"
         android:layout_height="40dp"
         android:text="Send"
-        style="@style/SmallFont"
         android:textColor="@color/blue"
         android:layout_gravity="center_vertical"
         android:enabled="true"
         android:layout_marginEnd="8dp"
-        android:background="@drawable/attendance_list_btn"
-        />
+        android:background="@drawable/attendance_list_btn" />
 
 
 </LinearLayout>
