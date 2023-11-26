@@ -17,14 +17,10 @@ app.set("port", port);
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-app.get('/', (req, res) => {
-    res.send('Hello World!');
-});
-
 server.listen(port, () => {
     console.log('Server Running...');
 });
+module.exports = { app, connection };
 
 
 // chat with socket
@@ -60,7 +56,7 @@ io.on('connection', function (socket) {
 });
 
 
-/*
+/* (1)
     user login using gmail and get user information
     NOTE: May need changes for social login - current: get token -> process token -> if auth, pass user_email
 */
@@ -71,10 +67,9 @@ app.post('/login/:email', (req, res) => {
 
     connection.query(sql, params, (err, result) => {
         if (err) {
-            console.log(err);
             return res.status(500).json({
                 'code': 500,
-                'message': 'An error occurred'
+                'message': 'database error'
             });
         }
 
@@ -91,20 +86,18 @@ app.post('/login/:email', (req, res) => {
             sql = 'INSERT INTO Users (user_email, user_name, user_type) VALUES (?, "", 0)';
             connection.query(sql, params, (err, result) => {
                 if (err) {
-                    console.log(err);
                     return res.status(500).json({
                         'code': 500,
-                        'message': 'An error occurred'
+                        'message': 'database error'
                     });
                 }
 
                 sql = 'SELECT LAST_INSERT_ID() AS user_id';
                 connection.query(sql, (err, result) => {
                     if (err || result.length == 0) {
-                        console.log(err);
                         return res.status(500).json({
                             'code': 500,
-                            'message': 'An error occurred'
+                            'message': 'database error'
                         });
                     }
 
@@ -123,7 +116,7 @@ app.post('/login/:email', (req, res) => {
 });
 
 
-/*
+/* (2)
     get all user's classes with user_type of Users
 */
 app.get('/users/classes', (req, res) => {
@@ -145,11 +138,15 @@ app.get('/users/classes', (req, res) => {
         let classList = [];
 
         if (err) {
-            console.log(err);
-        } else if (result.length > 0) {
+            return res.status(500).json({
+                'code': 500,
+                'message': 'database error'
+            });
+        }
+
+        if (result.length > 0) {
             resultCode = 200;
             message = 'get classes Success';
-            console.log(message);
             classList = result.map(classItem => ({
                 "classId": classItem.class_id,
                 "className": classItem.class_name,
@@ -162,7 +159,6 @@ app.get('/users/classes', (req, res) => {
         } else {
             resultCode = 200;
             message = 'classList is empty';
-            console.log(message);
         }
 
         res.json({
@@ -173,16 +169,15 @@ app.get('/users/classes', (req, res) => {
     });
 });
 
-/*
+
+/* (3)
     get attendace_date list from Attendances with user_id of Users where is_sent = 1
 */
 app.get('/users/attendance', (req, res) => {
     const classId = req.query.classId;
-
     const sql = 'select attendance_date from Attendances '
         + 'where is_sent = 1 and class_id = ?'
         + 'group by attendance_date';
-
     const params = [classId];
 
     connection.query(sql, params, (err, result) => {
@@ -191,18 +186,21 @@ app.get('/users/attendance', (req, res) => {
         let attendanceDateList = [];
 
         if (err) {
-            console.log(err);
-        } else if (result.length > 0) {
+            return res.status(500).json({
+                'code': 500,
+                'message': 'database error'
+            });
+        }
+        
+        if (result.length > 0) {
             resultCode = 200;
             message = 'get attendance date list Success';
-            console.log(message);
             attendanceDateList = result.map(item => ({
                 "attendanceDate": item.attendance_date
             }));
         } else {
             resultCode = 200;
             message = 'attendanceDateList is empty';
-            console.log(message);
         }
 
         res.json({
@@ -213,16 +211,15 @@ app.get('/users/attendance', (req, res) => {
     });
 });
 
-/*
+
+/* (4)
     get all attendance in specific date with user_id and user_type of Users where is_sent = 1
 */
 app.get('/users/attendance/:date', (req, res) => {
     const attendanceDate = req.params.date;
     const classId = req.query.classId;
-
     const sql = 'select * from Attendances '
         + 'where is_sent = 1 and attendance_date = ? and class_id = ?';
-
     const params = [attendanceDate, classId];
 
     connection.query(sql, params, (err, result) => {
@@ -231,12 +228,15 @@ app.get('/users/attendance/:date', (req, res) => {
         let attendanceList = [];
 
         if (err) {
-            console.log(err);
-        } else if (result.length > 0) {
+            return res.status(500).json({
+                'code': 500,
+                'message': 'database error'
+            });
+        }
+        
+        if (result.length > 0) {
             resultCode = 200;
             message = 'get all attendances in specific date Success';
-            console.log(message);
-
             attendanceList = result.map(item => ({
                 "attendanceId": item.attendance_id,
                 "attendanceStatus": item.attendance_status,
@@ -249,7 +249,6 @@ app.get('/users/attendance/:date', (req, res) => {
         } else {
             resultCode = 200;
             message = 'attendanceList is empty';
-            console.log(message);
         }
 
         res.json({
@@ -260,7 +259,8 @@ app.get('/users/attendance/:date', (req, res) => {
     });
 });
 
-/*
+
+/* (5)
     get user name and user type
 */
 app.get('/users/:id', (req, res) => {
@@ -275,17 +275,20 @@ app.get('/users/:id', (req, res) => {
         let userType = -1;
 
         if (err) {
-            console.log(err);
-        } else if (result.length > 0) {
+            return res.status(500).json({
+                'code': 500,
+                'message': 'database error'
+            });
+        }
+        
+        if (result.length > 0) {
             resultCode = 200;
             message = 'get userName and userType Success';
-            console.log(message);
             userName = result[0].user_name;
             userType = result[0].user_type;
         } else {
             resultCode = 200;
             message = 'There is no user corresponding to that id';
-            console.log(message);
         }
 
         res.json({
@@ -297,29 +300,26 @@ app.get('/users/:id', (req, res) => {
     });
 });
 
-/*
+
+/* (6)
     edit user name and user type with user_name and user_type of Users
 */
 app.put('/users/:id', (req, res) => {
-    console.log(req.body);
-
     const userName = req.body.userName;
     const userType = req.body.userType;
     const userId = req.params.id;
-
     const sql = 'update Users set user_name = ?, user_type = ? where user_id = ?';
     const params = [userName, userType, userId];
 
     connection.query(sql, params, (err, result) => {
-        let resultCode = 404;
-        let message = 'Error occured';
+        let resultCode = 200;
+        let message = 'update userName, userType Success';
 
         if (err) {
-            console.log(err);
-        } else {
-            resultCode = 200;
-            message = 'update userName, userType Success';
-            console.log(message);
+            return res.status(500).json({
+                'code': 500,
+                'message': 'database error'
+            });
         }
 
         res.json({
@@ -329,10 +329,9 @@ app.put('/users/:id', (req, res) => {
     });
 });
 
-// class create
-app.post('/class/create', (req, res) => {
-    console.log(req.body);
 
+// (7) class create
+app.post('/class/create', (req, res) => {
     const className = req.body.className;
     const classCode = req.body.classCode;
     const professorId = req.body.professorId;
@@ -352,40 +351,35 @@ app.post('/class/create', (req, res) => {
 
     connection.query(sql, params, (err, result) => {
         if (err) {
-            console.log(err);
-            return res.status(500).json({ 'code': 500, 'message': 'Error occurred' });
+            return res.status(500).json({
+                'code': 500,
+                'message': 'database error'
+            });
         }
 
         const insertedClassId = result.insertId;
-
         res.json({
             'code': 200,
             'message': "Create class success",
             'classId': insertedClassId
         });
-        console.log(insertedClassId);
     });
 });
 
 
-
-// join class 
+// (8) join class 
 app.post('/class/join/:user_id', (req, res) => {
-    console.log(req.body);
-
     const className = req.body.className;
     const classCode = req.body.classCode;
     const userId = req.params.user_id;
-
     const findClassSql = 'SELECT class_id, class_time FROM Classes WHERE class_name = ? AND class_code = ?';
     const findClassParams = [className, classCode];
 
     connection.query(findClassSql, findClassParams, (err, classResult) => {
         if (err) {
-            console.log(err);
-            return res.json({
-                'code': 404,
-                'message': 'Already joined the class'
+            return res.status(500).json({
+                'code': 500,
+                'message': 'database error'
             });
         }
 
@@ -403,10 +397,9 @@ app.post('/class/join/:user_id', (req, res) => {
 
         connection.query(joinClassSql, joinClassParams, (err, joinResult) => {
             if (err) {
-                console.log(err);
-                return res.json({
-                    'code': 404,
-                    'message': 'Error occured while joining class'
+                return res.status(500).json({
+                    'code': 500,
+                    'message': 'Already joined the class'
                 });
             }
 
@@ -421,14 +414,12 @@ app.post('/class/join/:user_id', (req, res) => {
 });
 
 
-/*
+/* (9)
     get specific class from Classes
 */
 app.get('/class/:id', (req, res) => {
     const classId = req.params.id;
-
     const sql = 'select * from Classes where class_id = ?';
-
     const params = [classId];
 
     connection.query(sql, params, (err, result) => {
@@ -442,11 +433,15 @@ app.get('/class/:id', (req, res) => {
         let roomNumber = -1;
 
         if (err) {
-            console.log(err);
-        } else if (result.length > 0) {
+            return res.status(500).json({
+                'code': 500,
+                'message': 'database error'
+            });
+        }
+        
+        if (result.length > 0) {
             resultCode = 200;
             message = 'get specific class Success';
-            console.log(message);
             className = result[0].class_name;
             classCode = result[0].class_code;
             professorId = result[0].professor_id;
@@ -456,7 +451,6 @@ app.get('/class/:id', (req, res) => {
         } else {
             resultCode = 200;
             message = 'There is no class corresponding to that class_id';
-            console.log(message);
         }
 
         res.json({
@@ -472,26 +466,24 @@ app.get('/class/:id', (req, res) => {
     });
 });
 
-/*
+
+/* (10)
     delete specific class from Classes
 */
 app.delete('/class/:id', (req, res) => {
     const classId = req.params.id;
-
     const sql = 'delete from Classes where class_id = ?';
-
     const params = [classId];
 
     connection.query(sql, params, (err, result) => {
-        let resultCode = 404;
-        let message = 'Error occured';
+        let resultCode = 200;
+        let message = 'delete class Success';
 
         if (err) {
-            console.log(err);
-        } else {
-            resultCode = 200;
-            message = 'delete class Success';
-            console.log(message);
+            return res.status(500).json({
+                'code': 500,
+                'message': 'database error'
+            });
         }
 
         res.json({
@@ -501,15 +493,14 @@ app.delete('/class/:id', (req, res) => {
     });
 });
 
-/*
+
+/* (11)
     get student’s attendance information list with class_id of Classes
 */
 app.get('/class/:id/attendance/:user_id', (req, res) => {
     const userId = req.params.user_id;
     const classId = req.params.id;
-
     const sql = 'select * from Attendances where student_id = ? and class_id = ?';
-
     const params = [userId, classId];
 
     connection.query(sql, params, (err, result) => {
@@ -518,11 +509,15 @@ app.get('/class/:id/attendance/:user_id', (req, res) => {
         let attendanceList = [];
 
         if (err) {
-            console.log(err);
-        } else if (result.length > 0) {
+            return res.status(500).json({
+                'code': 500,
+                'message': 'database error'
+            });
+        }
+        
+        if (result.length > 0) {
             resultCode = 200;
             message = 'get user attendance list Success';
-            console.log(message);
             attendanceList = result.map(item => ({
                 "attendanceId": item.attendance_id,
                 "attendanceStatus": item.attendance_status,
@@ -535,7 +530,6 @@ app.get('/class/:id/attendance/:user_id', (req, res) => {
         } else {
             resultCode = 200;
             message = 'attendanceList is empty';
-            console.log(message);
         }
 
         res.json({
@@ -546,15 +540,12 @@ app.get('/class/:id/attendance/:user_id', (req, res) => {
     });
 });
 
-// get comment message list of the message
-app.get('/chat_channel/:class_id/comment/:id', (req, res) => {
-    console.log(req.body);
 
+// (12) get comment message list of the message
+app.get('/chat_channel/:class_id/comment/:id', (req, res) => {
     const classId = req.params.class_id;
     const commentId = req.params.id;
-
     const sql = 'select * from Messages where class_id = ? and comment_id = ? order by time_stamp';
-
     const params = [classId, commentId];
 
     connection.query(sql, params, (err, result) => {
@@ -563,11 +554,15 @@ app.get('/chat_channel/:class_id/comment/:id', (req, res) => {
         let messageList = [];
 
         if (err) {
-            console.log(err);
-        } else if (result.length > 0) {
+            return res.status(500).json({
+                'code': 500,
+                'message': 'database error'
+            });
+        }
+        
+        if (result.length > 0) {
             resultCode = 200;
             message = 'get comment message list Success';
-            console.log(message);
             messageList = result.map(item => ({
                 "messageId": item.message_id,
                 "commentId": item.comment_id,
@@ -580,7 +575,6 @@ app.get('/chat_channel/:class_id/comment/:id', (req, res) => {
         } else {
             resultCode = 200;
             message = 'messageList is empty';
-            console.log(message);
         }
 
         res.json({
@@ -592,31 +586,26 @@ app.get('/chat_channel/:class_id/comment/:id', (req, res) => {
 });
 
 
-// reply comment on a message
+// (13) reply comment on a message
 app.post('/chat_channel/:class_id/comment/:id', (req, res) => {
-    console.log(req.body);
-
     const classId = req.params.class_id;
     const commentId = req.params.id;
     const senderId = req.body.senderId;
     const content = req.body.content;
-
     const sql = 'insert into Messages(class_id, comment_id, sender_id, content, sender_name) values(?, ?, ?, ?, (select user_name from Users where user_id = ?))';
-
     const params = [classId, commentId, senderId, content, senderId];
 
     connection.query(sql, params, (err, result) => {
-        let resultCode = 404;
-        let message = 'Error occured';
+        let resultCode = 200;
+        let message = 'send new comment message Success';
 
         if (err) {
-            console.log(err);
-        } else {
-            resultCode = 200;
-            message = 'send new comment message Success';
-            console.log(message);
+            return res.status(500).json({
+                'code': 500,
+                'message': 'database error'
+            });
         }
-
+    
         res.json({
             'code': resultCode,
             'message': message
@@ -624,29 +613,25 @@ app.post('/chat_channel/:class_id/comment/:id', (req, res) => {
     });
 });
 
-// update comment on a message
-app.put('/chat_channel/:class_id/comment/:id', (req, res) => {
-    console.log(req.body);
 
+// (14) update comment on a message
+app.put('/chat_channel/:class_id/comment/:id', (req, res) => {
     const messageId = req.body.messageId;
     const content = req.body.content;
-
     const sql = 'update Messages set content = ? where message_id = ?';
-
     const params = [content, messageId];
 
     connection.query(sql, params, (err, result) => {
-        let resultCode = 404;
-        let message = 'Error occured';
+        let resultCode = 200;
+        let message = 'update message content Success';
 
         if (err) {
-            console.log(err);
-        } else {
-            resultCode = 200;
-            message = 'update message content Success';
-            console.log(message);
+            return res.status(500).json({
+                'code': 500,
+                'message': 'database error'
+            });
         }
-
+        
         res.json({
             'code': resultCode,
             'message': message
@@ -654,14 +639,13 @@ app.put('/chat_channel/:class_id/comment/:id', (req, res) => {
     });
 });
 
-/*
+
+/* (15)
     get messages list in chatting channel
 */
 app.get('/chat_channel/:class_id', (req, res) => {
     const classId = req.params.class_id;
-
     const sql = 'select * from Messages where class_id = ? and comment_id = -1 order by time_stamp';
-
     const params = [classId];
 
     connection.query(sql, params, (err, result) => {
@@ -670,11 +654,15 @@ app.get('/chat_channel/:class_id', (req, res) => {
         let messageList = [];
 
         if (err) {
-            console.log(err);
-        } else if (result.length > 0) {
+            return res.status(500).json({
+                'code': 500,
+                'message': 'database error'
+            });
+        }
+        
+        if (result.length > 0) {
             resultCode = 200;
             message = 'get chatting message list Success';
-            console.log(message);
             messageList = result.map(item => ({
                 "messageId": item.message_id,
                 "commentId": item.comment_id,
@@ -687,7 +675,6 @@ app.get('/chat_channel/:class_id', (req, res) => {
         } else {
             resultCode = 200;
             message = 'messageList is empty';
-            console.log(message);
         }
 
         res.json({
@@ -698,30 +685,26 @@ app.get('/chat_channel/:class_id', (req, res) => {
     });
 });
 
-/*
+
+/* (16)
     send new message with class_id, content of Messages
 */
 app.post('/chat_channel/:class_id', (req, res) => {
-    console.log(req.body);
-
     const classId = req.params.class_id;
     const senderId = req.body.senderId;
     const content = req.body.content;
-
     const sql = 'insert into Messages(class_id, sender_id, content, sender_name) values(?, ?, ?, (select user_name from Users where user_id = ?))';
-
     const params = [classId, senderId, content, senderId];
 
     connection.query(sql, params, (err, result) => {
-        let resultCode = 404;
-        let message = 'Error occured';
+        let resultCode = 200;
+        let message = 'send new message Success';
 
         if (err) {
-            console.log(err);
-        } else {
-            resultCode = 200;
-            message = 'send new message Success';
-            console.log(message);
+            return res.status(500).json({
+                'code': 500,
+                'message': 'database error'
+            });
         }
 
         res.json({
@@ -731,29 +714,25 @@ app.post('/chat_channel/:class_id', (req, res) => {
     });
 });
 
-// modify content of message
-app.put('/chat_channel/:class_id', (req, res) => {
-    console.log(req.body);
 
+// (17) modify content of message
+app.put('/chat_channel/:class_id', (req, res) => {
     const messageId = req.body.messageId;
     const content = req.body.content;
-
     const sql = 'update Messages set content = ? where message_id = ?';
-
     const params = [content, messageId];
 
     connection.query(sql, params, (err, result) => {
-        let resultCode = 404;
-        let message = 'Error occured';
+        let resultCode = 200;
+        let message = 'update message content Success';
 
         if (err) {
-            console.log(err);
-        } else {
-            resultCode = 200;
-            message = 'update message content Success';
-            console.log(message);
+            return res.status(500).json({
+                'code': 500,
+                'message': 'database error'
+            });
         }
-
+        
         res.json({
             'code': resultCode,
             'message': message
@@ -761,14 +740,13 @@ app.put('/chat_channel/:class_id', (req, res) => {
     });
 });
 
-/*
+
+/* (18)
     get attendance information
 */
 app.get('/attendance/:id', (req, res) => {
     const attendanceId = req.params.id;
-
     const sql = 'select * from Attendances where attendance_id = ?';
-
     const params = [attendanceId];
 
     connection.query(sql, params, (err, result) => {
@@ -782,11 +760,15 @@ app.get('/attendance/:id', (req, res) => {
         let classId = -1;
 
         if (err) {
-            console.log(err);
-        } else if (result.length > 0) {
+            return res.status(500).json({
+                'code': 500,
+                'message': 'database error'
+            });
+        }
+        
+        if (result.length > 0) {
             resultCode = 200;
             message = 'get attendance information Success';
-            console.log(message);
             attendanceDate = result[0].attendance_date;
             attendanceStatus = result[0].attendance_status;
             attendanceDuration = result[0].attendance_duration;
@@ -796,7 +778,6 @@ app.get('/attendance/:id', (req, res) => {
         } else {
             resultCode = 200;
             message = 'There is no attendance corresponding to that id';
-            console.log(message);
         }
 
         res.json({
@@ -813,28 +794,26 @@ app.get('/attendance/:id', (req, res) => {
     });
 });
 
-/*
+
+/* (19)
     edit is_sent as sent (i.e. is_sent = 1)
 */
 app.put('/attendance/:id', (req, res) => {
     const attendanceId = req.params.id;
-
     const sql = 'update Attendances set is_sent = 1 where attendance_id = ?';
-
     const params = [attendanceId];
 
     connection.query(sql, params, (err, result) => {
-        let resultCode = 404;
-        let message = 'Error occured';
+        let resultCode = 200;
+        let message = 'send attendance information Success';
 
         if (err) {
-            console.log(err);
-        } else {
-            resultCode = 200;
-            message = 'send attendance information Success';
-            console.log(message);
+            return res.status(500).json({
+                'code': 500,
+                'message': 'database error'
+            });
         }
-
+        
         res.json({
             'code': resultCode,
             'message': message
@@ -842,28 +821,26 @@ app.put('/attendance/:id', (req, res) => {
     });
 });
 
-/*
+
+/* (20)
     delete attendance information
 */
 app.delete('/attendance/:id', (req, res) => {
     const attendanceId = req.params.id;
-
     const sql = 'delete from Attendances where attendance_id = ?';
-
     const params = [attendanceId];
 
     connection.query(sql, params, (err, result) => {
-        let resultCode = 404;
-        let message = 'Error occured';
+        let resultCode = 200;
+        let message = 'delete attendance information Success';
 
         if (err) {
-            console.log(err);
-        } else {
-            resultCode = 200;
-            message = 'delete attendance information Success';
-            console.log(message);
+            return res.status(500).json({
+                'code': 500,
+                'message': 'database error'
+            });
         }
-
+        
         res.json({
             'code': resultCode,
             'message': message
@@ -871,34 +848,30 @@ app.delete('/attendance/:id', (req, res) => {
     });
 });
 
-/*
+
+/* (21)
     add student’s attendance information with attendance_status, attendace_duration, class_id of Attendances
 */
 app.post('/attendance/:user_id', (req, res) => {
-    console.log(req.body);
-
     const attendanceStatus = req.body.attendanceStatus;
     const attendanceDuration = req.body.attendanceDuration;
     const userId = req.params.user_id;
     const classId = req.body.classId;
-
     const sql = 'insert into Attendances(attendance_status, attendance_duration, student_id, class_id) '
         + 'values(?, ?, ?, ?)';
-
     const params = [attendanceStatus, attendanceDuration, userId, classId];
 
     connection.query(sql, params, (err, result) => {
-        let resultCode = 404;
-        let message = 'Error occured';
+        let resultCode = 200;
+        let message = 'add attendance information Success';
 
         if (err) {
-            console.log(err);
-        } else {
-            resultCode = 200;
-            message = 'add attendance information Success';
-            console.log(message);
+            return res.status(500).json({
+                'code': 500,
+                'message': 'database error'
+            });
         }
-
+        
         res.json({
             'code': resultCode,
             'message': message
