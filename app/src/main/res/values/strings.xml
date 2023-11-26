@@ -128,4 +128,7 @@
     <string name="dash">-</string>
     <string name="ex_203">Ex) 203</string>
     <string name="create">Create</string>
+    <string name="edit">Edit</string>
+    <string name="done">Done</string>
+    <string name="cancel">Cancel</string>
 </resources>
