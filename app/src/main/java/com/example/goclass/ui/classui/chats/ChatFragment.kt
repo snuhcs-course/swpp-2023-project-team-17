@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -75,7 +77,13 @@ class ChatFragment : Fragment() {
         socket?.connect()
 
         // Keyboard down when you touch other space in screen
-        binding.root.setOnTouchListener { _, _ ->
+        binding.toolbar.setOnTouchListener { _, _ ->
+            val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            imm?.hideSoftInputFromWindow(view?.windowToken, 0)
+            binding.chatText.clearFocus()
+            false
+        }
+        binding.chatRecyclerView.setOnTouchListener { _, _ ->
             val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             imm?.hideSoftInputFromWindow(view?.windowToken, 0)
             binding.chatText.clearFocus()

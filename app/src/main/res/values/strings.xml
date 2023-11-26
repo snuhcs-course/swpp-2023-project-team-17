@@ -131,4 +131,7 @@
     <string name="edit">Edit</string>
     <string name="done">Done</string>
     <string name="cancel">Cancel</string>
+    <string name="list">List</string>
+    <string name="send">Send</string>
+    <string name="status">Status</string>
 </resources>

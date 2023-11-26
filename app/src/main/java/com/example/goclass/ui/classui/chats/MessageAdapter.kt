@@ -57,13 +57,16 @@ class MessageAdapter(
         var context: Context,
     ) :
         RecyclerView.ViewHolder(binding.root) {
+        private var isEditing = false
         fun bind(message: MessagesResponse, userId: Int, onMessageClicked: (MessagesResponse) -> Unit, onMessageEdit: (Int, String, Int) -> Unit) {
             binding.messageText.text = message.content
             binding.chatEditButton.visibility = if (message.senderId == userId) View.VISIBLE else View.GONE
             binding.nameText.text = message.senderName
 
             itemView.setOnClickListener {
-                onMessageClicked(message)
+                if (!isEditing) {
+                    onMessageClicked(message)
+                }
             }
 
             val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
@@ -79,6 +82,7 @@ class MessageAdapter(
 
             // Chat Edit Button
             binding.chatEditButton.setOnClickListener {
+                isEditing = true
                 binding.messageText.visibility = View.GONE
                 binding.messageEditText.apply {
                     visibility = View.VISIBLE
@@ -94,22 +98,26 @@ class MessageAdapter(
 
             // Done Button
             binding.editDoneButton.setOnClickListener {
-                val editedContent = binding.messageEditText.text.toString()
-                onMessageEdit(message.classId, editedContent, message.messageId)
-
-                binding.messageText.apply {
-                    text = editedContent
-                    visibility = View.VISIBLE
+                isEditing = false
+                val editedContent = binding.messageEditText.text.toString().trim()
+                if (editedContent.isNotBlank()) {
+                    onMessageEdit(message.classId, editedContent, message.messageId)
+                    binding.messageText.apply {
+                        text = editedContent
+                        visibility = View.VISIBLE
+                    }
+                    binding.messageEditText.visibility = View.GONE
+                    binding.editDoneButton.visibility = View.GONE
+                    binding.editCancelButton.visibility = View.GONE
                 }
-                binding.messageEditText.visibility = View.GONE
-                binding.editDoneButton.visibility = View.GONE
-                binding.editCancelButton.visibility = View.GONE
             }
 
             // Cancel Button
             binding.editCancelButton.setOnClickListener {
+                isEditing = false
                 binding.messageEditText.visibility = View.GONE
                 binding.messageText.visibility = View.VISIBLE
+                binding.chatEditButton.visibility = View.VISIBLE
                 binding.editDoneButton.visibility = View.GONE
                 binding.editCancelButton.visibility = View.GONE
 
