@@ -14,13 +14,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
-        android:textSize="20sp"
-        android:fontFamily="@font/relay_noto_sans_medium"
         android:textColor="@color/black"
+        tools:text="Dummy"
+        style="@style/Medium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/nameAndTime"
-        tools:text="Dummy" />
+        app:layout_constraintTop_toBottomOf="@id/nameAndTime" />
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/chatEditButton"
@@ -28,7 +27,7 @@
         android:layout_height="40dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
-        android:background="@color/white"
+        android:background="@null"
         android:src="@drawable/edit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -38,9 +37,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="TextView"
-        android:fontFamily="@font/relay_noto_sans_semibold"
-        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -48,10 +44,10 @@
             android:id="@+id/nameText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:text="TextView"
-            android:fontFamily="@font/relay_noto_sans_semibold"
-             />
+            style="@style/Medium"
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/timeStampText"
@@ -60,8 +56,9 @@
             android:textSize="10sp"
             android:layout_marginStart="8dp"
             android:text="TextView"
-            android:fontFamily="@font/relay_noto_sans_medium"
-            android:textColor="#999999" />
+            android:textColor="#999999"
+            style="@style/Medium"
+            tools:ignore="HardcodedText,SmallSp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
