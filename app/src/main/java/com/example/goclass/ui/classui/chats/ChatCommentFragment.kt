@@ -1,11 +1,13 @@
 package com.example.goclass.ui.classui.chats
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,6 +37,7 @@ class ChatCommentFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?
@@ -53,6 +56,26 @@ class ChatCommentFragment : Fragment() {
         // Socket.io settings
         socket = IO.socket(getString(R.string.base_url))
         socket?.connect()
+
+        // Keyboard down when you touch other space in screen
+        binding.toolbar.setOnTouchListener { _, _ ->
+            val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            imm?.hideSoftInputFromWindow(view?.windowToken, 0)
+            binding.commentText.clearFocus()
+            false
+        }
+        binding.commentRecyclerView.setOnTouchListener { _, _ ->
+            val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            imm?.hideSoftInputFromWindow(view?.windowToken, 0)
+            binding.commentText.clearFocus()
+            false
+        }
+        binding.chatMessage.setOnTouchListener { _, _ ->
+            val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            imm?.hideSoftInputFromWindow(view?.windowToken, 0)
+            binding.commentText.clearFocus()
+            false
+        }
     }
 
     override fun onResume() {
@@ -91,17 +114,19 @@ class ChatCommentFragment : Fragment() {
 
         // Chat Send Button
         binding.commentSendButton.setOnClickListener {
-            val comment = binding.commentText.text.toString()
-            val sendData = JSONObject().apply {
-                put("msg", comment)
-                put("class_id", classId)
-                put("sender_name", userName)
-                put("comment_id", messageId)
-                put("time_stamp", getCurrentTime())
+            val comment = binding.commentText.text.toString().trim()
+            if (comment.isNotBlank()) {
+                val sendData = JSONObject().apply {
+                    put("msg", comment)
+                    put("class_id", classId)
+                    put("sender_name", userName)
+                    put("comment_id", messageId)
+                    put("time_stamp", getCurrentTime())
+                }
+                viewModel.chatCommentSend(classId, messageId, userId, comment)
+                socket?.emit("chat", sendData)
+                binding.commentText.setText("")
             }
-            viewModel.chatCommentSend(classId, messageId, userId, comment)
-            socket?.emit("chat", sendData)
-            binding.commentText.setText("")
         }
 
         val commentAdapter = CommentAdapter(requireContext(), userId) { classId, content, commentId, messageId ->

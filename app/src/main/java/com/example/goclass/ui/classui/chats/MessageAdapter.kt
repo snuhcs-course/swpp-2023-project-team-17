@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import androidx.recyclerview.widget.RecyclerView
@@ -55,13 +57,16 @@ class MessageAdapter(
         var context: Context,
     ) :
         RecyclerView.ViewHolder(binding.root) {
+        private var isEditing = false
         fun bind(message: MessagesResponse, userId: Int, onMessageClicked: (MessagesResponse) -> Unit, onMessageEdit: (Int, String, Int) -> Unit) {
             binding.messageText.text = message.content
             binding.chatEditButton.visibility = if (message.senderId == userId) View.VISIBLE else View.GONE
             binding.nameText.text = message.senderName
 
             itemView.setOnClickListener {
-                onMessageClicked(message)
+                if (!isEditing) {
+                    onMessageClicked(message)
+                }
             }
 
             val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
@@ -77,23 +82,47 @@ class MessageAdapter(
 
             // Chat Edit Button
             binding.chatEditButton.setOnClickListener {
-                val dialog = Dialog(context)
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                dialog.setContentView(R.layout.dialog_message_edit)
-                dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_bg)
-
-                val editText = dialog.findViewById<EditText>(R.id.messageEditText)
-                val editButtonDialog = dialog.findViewById<Button>(R.id.messageEditButton)
-
-                editText.setText(message.content)
-
-                editButtonDialog.setOnClickListener {
-                    val content = editText.text.toString()
-                    onMessageEdit(message.classId, content, message.messageId)
-                    dialog.dismiss()
+                isEditing = true
+                binding.messageText.visibility = View.GONE
+                binding.messageEditText.apply {
+                    visibility = View.VISIBLE
+                    setText(binding.messageText.text)
+                    requestFocus()
+                    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
                 }
+                binding.chatEditButton.visibility = View.GONE
+                binding.editDoneButton.visibility = View.VISIBLE
+                binding.editCancelButton.visibility = View.VISIBLE
+            }
 
-                dialog.show()
+            // Done Button
+            binding.editDoneButton.setOnClickListener {
+                isEditing = false
+                val editedContent = binding.messageEditText.text.toString().trim()
+                if (editedContent.isNotBlank()) {
+                    onMessageEdit(message.classId, editedContent, message.messageId)
+                    binding.messageText.apply {
+                        text = editedContent
+                        visibility = View.VISIBLE
+                    }
+                    binding.messageEditText.visibility = View.GONE
+                    binding.editDoneButton.visibility = View.GONE
+                    binding.editCancelButton.visibility = View.GONE
+                }
+            }
+
+            // Cancel Button
+            binding.editCancelButton.setOnClickListener {
+                isEditing = false
+                binding.messageEditText.visibility = View.GONE
+                binding.messageText.visibility = View.VISIBLE
+                binding.chatEditButton.visibility = View.VISIBLE
+                binding.editDoneButton.visibility = View.GONE
+                binding.editCancelButton.visibility = View.GONE
+
+                val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(binding.messageEditText.windowToken, 0)
             }
         }
     }
