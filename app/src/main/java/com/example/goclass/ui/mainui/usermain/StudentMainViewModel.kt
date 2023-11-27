@@ -20,9 +20,9 @@ class StudentMainViewModel(
     private val classRepository: ClassRepository,
     application: Application,
 ) : AndroidViewModel(application), KoinComponent {
-    private val _toastMessage = MutableLiveData<String>()
+    private val _snackbarMessage = MutableLiveData<String>()
     private val classListLiveData: MutableLiveData<List<ClassesResponse>> = MutableLiveData()
-    private val toastMessage: LiveData<String> get() = _toastMessage
+    private val snackbarMessage: LiveData<String> get() = _snackbarMessage
 
     fun classJoin(
         userId: Int,
@@ -81,13 +81,13 @@ class StudentMainViewModel(
                 }
 
                 if (response.code == 200) {
-                    _toastMessage.postValue("Successfully joined!")
+                    _snackbarMessage.postValue("Successfully joined!")
                     getClassList(mapOf("userId" to userId.toString(), "userType" to "0"))
                 } else {
-                    _toastMessage.postValue("join failed")
+                    _snackbarMessage.postValue("Failed to join...")
                 }
             } catch (e: Exception) {
-                _toastMessage.postValue("Error: ${e.message}")
+                _snackbarMessage.postValue("Failed to join: Check class name or class code again.")
             }
         }
     }
@@ -118,7 +118,7 @@ class StudentMainViewModel(
         return classListLiveData
     }
 
-    fun accessToastMessage(): LiveData<String> {
-        return toastMessage
+    fun accessSnackbarMessage(): LiveData<String> {
+        return snackbarMessage
     }
 }

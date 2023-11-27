@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import androidx.recyclerview.widget.RecyclerView
@@ -67,25 +68,46 @@ class CommentAdapter(
                 binding.timeStampText.text = comment.timeStamp
             }
 
-            // Chat Edit Button
+            // Comment Edit Button
             binding.commentEditButton.setOnClickListener {
-                val dialog = Dialog(context)
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                dialog.setContentView(R.layout.dialog_message_edit)
-                dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_bg)
-
-                val editText = dialog.findViewById<EditText>(R.id.messageEditText)
-                val editButtonDialog = dialog.findViewById<Button>(R.id.messageEditButton)
-
-                editText.setText(comment.content)
-
-                editButtonDialog.setOnClickListener {
-                    val content = editText.text.toString()
-                    onCommentEdit(comment.classId, content, comment.commentId, comment.messageId)
-                    dialog.dismiss()
+                binding.commentText.visibility = View.GONE
+                binding.commentEditText.apply {
+                    visibility = View.VISIBLE
+                    setText(binding.commentText.text)
+                    requestFocus()
+                    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
                 }
+                binding.commentEditButton.visibility = View.GONE
+                binding.editDoneButton.visibility = View.VISIBLE
+                binding.editCancelButton.visibility = View.VISIBLE
+            }
 
-                dialog.show()
+            // Done Button
+            binding.editDoneButton.setOnClickListener {
+                val editedContent = binding.commentEditText.text.toString().trim()
+                if (editedContent.isNotBlank()) {
+                    onCommentEdit(comment.classId, editedContent, comment.commentId, comment.messageId)
+                    binding.commentText.apply {
+                        text = editedContent
+                        visibility = View.VISIBLE
+                    }
+                    binding.commentEditText.visibility = View.GONE
+                    binding.editDoneButton.visibility = View.GONE
+                    binding.editCancelButton.visibility = View.GONE
+                }
+            }
+
+            // Cancel Button
+            binding.editCancelButton.setOnClickListener {
+                binding.commentEditText.visibility = View.GONE
+                binding.commentText.visibility = View.VISIBLE
+                binding.commentEditButton.visibility = View.VISIBLE
+                binding.editDoneButton.visibility = View.GONE
+                binding.editCancelButton.visibility = View.GONE
+
+                val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(binding.commentEditText.windowToken, 0)
             }
         }
     }

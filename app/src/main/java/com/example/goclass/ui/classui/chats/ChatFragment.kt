@@ -1,11 +1,15 @@
 package com.example.goclass.ui.classui.chats
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -38,6 +42,7 @@ class ChatFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
@@ -70,6 +75,20 @@ class ChatFragment : Fragment() {
         // Socket.io settings
         socket = IO.socket(getString(R.string.base_url))
         socket?.connect()
+
+        // Keyboard down when you touch other space in screen
+        binding.toolbar.setOnTouchListener { _, _ ->
+            val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            imm?.hideSoftInputFromWindow(view?.windowToken, 0)
+            binding.chatText.clearFocus()
+            false
+        }
+        binding.chatRecyclerView.setOnTouchListener { _, _ ->
+            val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            imm?.hideSoftInputFromWindow(view?.windowToken, 0)
+            binding.chatText.clearFocus()
+            false
+        }
     }
 
     override fun onResume() {
@@ -106,17 +125,19 @@ class ChatFragment : Fragment() {
 
         // Chat Send Button
         binding.chatSendButton.setOnClickListener {
-            val message = binding.chatText.text.toString()
-            val sendData = JSONObject().apply {
-                put("msg", message)
-                put("class_id", classId)
-                put("sender_name", userName)
-                put("comment_id", -1)
-                put("time_stamp", getCurrentTime())
+            val message = binding.chatText.text.toString().trim()
+            if (message.isNotBlank()) {
+                val sendData = JSONObject().apply {
+                    put("msg", message)
+                    put("class_id", classId)
+                    put("sender_name", userName)
+                    put("comment_id", -1)
+                    put("time_stamp", getCurrentTime())
+                }
+                viewModel.chatChannelSend(classId, userId, message)
+                socket?.emit("chat", sendData)
+                binding.chatText.setText("")
             }
-            viewModel.chatChannelSend(classId, userId, message)
-            socket?.emit("chat", sendData)
-            binding.chatText.setText("")
         }
 
         val messageAdapter = MessageAdapter(requireContext(), userId, {message ->
