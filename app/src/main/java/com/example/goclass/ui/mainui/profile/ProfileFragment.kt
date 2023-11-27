@@ -67,7 +67,7 @@ class ProfileFragment : Fragment() {
         } else {
             val userId = SharedPrefsUtils.get(requireContext(), "userId", -1) as Int
             viewModel.userGet(userId)
-            viewModel.accessUserName().observe(
+            viewModel.userName.observe(
                 viewLifecycleOwner,
                 Observer { receivedUserName ->
                     binding.nameEditText.setText(receivedUserName)
@@ -78,7 +78,7 @@ class ProfileFragment : Fragment() {
 
         RadioButtonsUtils.restoreRadioButtonState(binding, storedUserRole)
 
-        viewModel.accessEditSuccess().observe(viewLifecycleOwner) { isSuccess ->
+        viewModel.editSuccess.observe(viewLifecycleOwner) { isSuccess ->
             if (isSuccess) {
                 val selectedRole = RadioButtonsUtils.getSelectedRole(binding)
                 selectedRole?.let {

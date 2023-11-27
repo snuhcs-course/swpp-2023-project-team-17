@@ -46,47 +46,50 @@ class StudentMainViewModelTest {
     @Test
     fun classJoin_success() =
         runTest {
-            val mockResponse = ClassJoinResponse(1, "TestTime", 200, "Message")
+            val successMessage = "Successfully joined!"
+            val mockResponse = ClassJoinResponse(1, "TestTime", 200, successMessage)
 
             coEvery { mockClassRepository.classJoin(any(), any()) } returns mockResponse
 
             viewModel.classJoin(1, "TestName", "TestCode", mockClassScheduler)
 
-            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
-            assertEquals("Successfully joined!", toastValue)
+            val snackbarValue = viewModel.snackbarMessage.getOrAwaitValue()
+            assertEquals(successMessage, snackbarValue)
             coVerify { viewModel.getClassList(mapOf("userId" to "1", "userType" to "0")) }
         }
 
     @Test
     fun classJoin_failure() =
         runTest {
-            val mockFailureResponse = ClassJoinResponse(1, "TestTime", 400, "Failed to join class")
+            val failureMessage = "Failed to join..."
+            val mockFailureResponse = ClassJoinResponse(1, "TestTime", 400, failureMessage)
 
             coEvery { mockClassRepository.classJoin(any(), any()) } returns mockFailureResponse
 
             viewModel.classJoin(1, "TestName", "TestCode", mockClassScheduler)
 
-            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
-            assertEquals("join failed", toastValue)
+            val snackbarValue = viewModel.snackbarMessage.getOrAwaitValue()
+            assertEquals(failureMessage, snackbarValue)
         }
 
     @Test
     fun classJoin_exception() =
         runTest {
-            val exceptionMessage = "Network error"
+            val exceptionMessage = "Failed to join: Check class name or class code again."
             coEvery { mockClassRepository.classJoin(any(), any()) } throws Exception(exceptionMessage)
 
             viewModel.classJoin(1, "TestName", "TestCode", mockClassScheduler)
 
-            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
-            assertEquals("Error: $exceptionMessage", toastValue)
+            val snackbarValue = viewModel.snackbarMessage.getOrAwaitValue()
+            assertEquals("Error: $exceptionMessage", snackbarValue)
         }
 
     @Test
     fun classJoin_success_time_match() =
         runTest {
+            val successMessage = "Successfully joined!"
             val classTime = "1 15:30-16:45"
-            val mockResponse = ClassJoinResponse(1, classTime, 200, "Message")
+            val mockResponse = ClassJoinResponse(1, classTime, 200, successMessage)
 
             coEvery { mockClassRepository.classJoin(any(), any()) } returns mockResponse
             every {
@@ -105,8 +108,8 @@ class StudentMainViewModelTest {
 
             viewModel.classJoin(1, "TestName", "TestCode", mockClassScheduler)
 
-            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
-            assertEquals("Successfully joined!", toastValue)
+            val snackbarValue = viewModel.snackbarMessage.getOrAwaitValue()
+            assertEquals(successMessage, snackbarValue)
             coVerify { viewModel.getClassList(mapOf("userId" to "1", "userType" to "0")) }
         }
 
@@ -137,7 +140,7 @@ class StudentMainViewModelTest {
 
             viewModel.getClassList(userMap)
 
-            val liveDataValue = viewModel.accessClassListLiveData().getOrAwaitValue()
+            val liveDataValue = viewModel.classListLiveData.getOrAwaitValue()
             assertEquals(1, liveDataValue.size)
             assertEquals(classesResponse, liveDataValue[0])
         }

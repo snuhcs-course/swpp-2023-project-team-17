@@ -30,7 +30,6 @@ import com.example.goclass.R
 import com.example.goclass.databinding.FragmentProfessorMainBinding
 import com.example.goclass.ui.classui.ClassScheduler
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import com.example.goclass.ui.mainui.usermain.ClassListAdapter
 import com.example.goclass.ui.mainui.usermain.utils.InputValidnessTest
 import com.example.goclass.ui.mainui.usermain.utils.TimeSelectionLayout
 import com.google.android.material.snackbar.Snackbar
@@ -59,7 +58,7 @@ class ProfessorMainFragment : Fragment() {
         // Name Textview
         binding.name.text = userName
 
-        viewModel.accessSnackbarMessage().observe(viewLifecycleOwner) { message ->
+        viewModel.snackbarMessage.observe(viewLifecycleOwner) { message ->
             Snackbar.make(binding.root, message, Toast.LENGTH_SHORT).show()
         }
 

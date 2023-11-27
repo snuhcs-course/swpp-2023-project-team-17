@@ -59,6 +59,8 @@ class AttendanceRepositoryTest {
                     0,
                     1,
                     1,
+                    200,
+                    "Success",
                 )
 
             coEvery { mockServiceApi.attendanceGet(attendanceId) } returns mockAttendanceResponse

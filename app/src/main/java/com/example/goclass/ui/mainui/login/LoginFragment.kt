@@ -67,7 +67,7 @@ class LoginFragment : Fragment() {
 
         googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
 
-        viewModel.accessUserId().observe(viewLifecycleOwner) { userId ->
+        viewModel.userId.observe(viewLifecycleOwner) { userId ->
             if (userId != null) {
                 val sharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
                 with(sharedPref!!.edit()) {

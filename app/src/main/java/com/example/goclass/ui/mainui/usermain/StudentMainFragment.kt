@@ -46,7 +46,7 @@ class StudentMainFragment : Fragment() {
         val userId = sharedPref!!.getInt("userId", -1)
         val userName = sharedPref?.getString("userName", "") ?: ""
 
-        viewModel.accessSnackbarMessage().observe(viewLifecycleOwner) { message ->
+        viewModel.snackbarMessage.observe(viewLifecycleOwner) { message ->
             Snackbar.make(binding.root, message, Toast.LENGTH_SHORT).show()
         }
 

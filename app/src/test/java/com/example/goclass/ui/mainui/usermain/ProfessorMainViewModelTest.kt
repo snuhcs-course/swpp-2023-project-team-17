@@ -47,6 +47,7 @@ class ProfessorMainViewModelTest {
     @Test
     fun createClass_success() =
         runTest {
+            val successMessage = "Successfully created!"
             val mockClassListsResponse =
                 ClassListsResponse(
                     listOf(),
@@ -57,7 +58,7 @@ class ProfessorMainViewModelTest {
                 ClassCreateResponse(
                     1,
                     200,
-                    "Success",
+                    successMessage,
                 )
 
             coEvery { mockUserRepository.userGetClassList(any()) } returns mockClassListsResponse
@@ -65,8 +66,8 @@ class ProfessorMainViewModelTest {
 
             viewModel.createClass("TestName", "TestCode", 1, "TestTime", "TestBuilding", "TestRoom", mockClassScheduler)
 
-            val toastValue = viewModel.accessSnackbarMessage().getOrAwaitValue()
-            assertEquals("Successfully created!", toastValue)
+            val snackbarValue = viewModel.snackbarMessage.getOrAwaitValue()
+            assertEquals(successMessage, snackbarValue)
             coVerify { viewModel.getClassList(mapOf("userId" to "1", "userType" to "1")) }
         }
 
@@ -74,11 +75,12 @@ class ProfessorMainViewModelTest {
     fun createClass_failure() =
         runTest {
             // Given a failed response from the repository
+            val failureMessage = "Failed to create..."
             val mockFailureResponse =
                 ClassCreateResponse(
                     1,
                     400,
-                    "Failure",
+                    failureMessage,
                 )
 
             coEvery { mockClassRepository.classCreate(any()) } returns mockFailureResponse
@@ -86,9 +88,9 @@ class ProfessorMainViewModelTest {
             // When calling createClass
             viewModel.createClass("TestName", "TestCode", 1, "TestTime", "TestBuilding", "TestRoom", mockClassScheduler)
 
-            // Then we expect a failure message in the toastMessage LiveData
-            val toastValue = viewModel.accessSnackbarMessage().getOrAwaitValue()
-            assertEquals("create failed", toastValue) // Adjust this expected value as per your ViewModel's logic
+            // Then we expect a failure message in the snackbarMessage LiveData
+            val snackbarValue = viewModel.snackbarMessage.getOrAwaitValue()
+            assertEquals(failureMessage, snackbarValue) // Adjust this expected value as per your ViewModel's logic
         }
 
     @Test
@@ -101,14 +103,15 @@ class ProfessorMainViewModelTest {
             // When calling createClass
             viewModel.createClass("TestName", "TestCode", 1, "TestTime", "TestBuilding", "TestRoom", mockClassScheduler)
 
-            // Then we expect an error message in the toastMessage LiveData
-            val toastValue = viewModel.accessSnackbarMessage().getOrAwaitValue()
-            assertEquals("Error: $exceptionMessage", toastValue)
+            // Then we expect an error message in the snackbarMessage LiveData
+            val snackbarValue = viewModel.snackbarMessage.getOrAwaitValue()
+            assertEquals("Error: $exceptionMessage", snackbarValue)
         }
 
     @Test
     fun createClass_success_time_match() =
         runTest {
+            val successMessage = "Successfully created!"
             val classTime = "1 15:30-16:45"
             val mockClassListsResponse =
                 ClassListsResponse(
@@ -120,7 +123,7 @@ class ProfessorMainViewModelTest {
                 ClassCreateResponse(
                     1,
                     200,
-                    "Success",
+                    successMessage,
                 )
 
             coEvery { mockUserRepository.userGetClassList(any()) } returns mockClassListsResponse
@@ -141,8 +144,8 @@ class ProfessorMainViewModelTest {
 
             viewModel.createClass("TestName", "TestCode", 1, classTime, "TestBuilding", "TestRoom", mockClassScheduler)
 
-            val toastValue = viewModel.accessSnackbarMessage().getOrAwaitValue()
-            assertEquals("Successfully created!", toastValue)
+            val snackbarValue = viewModel.snackbarMessage.getOrAwaitValue()
+            assertEquals(successMessage, snackbarValue)
             coVerify { viewModel.getClassList(mapOf("userId" to "1", "userType" to "1")) }
         }
 
@@ -176,7 +179,7 @@ class ProfessorMainViewModelTest {
             viewModel.getClassList(userMap)
 
             // Check if the LiveData has been updated
-            val liveDataValue = viewModel.accessClassListLiveData().getOrAwaitValue()
+            val liveDataValue = viewModel.classListLiveData.getOrAwaitValue()
             assertEquals(1, liveDataValue.size)
             assertEquals(classesResponse, liveDataValue[0])
         }
@@ -193,13 +196,14 @@ class ProfessorMainViewModelTest {
             // Invoke the function
             viewModel.getClassList(userMap)
 
-            val toastValue = viewModel.accessSnackbarMessage().getOrAwaitValue()
-            assertEquals("Error: $exceptionMessage", toastValue)
+            val snackbarValue = viewModel.snackbarMessage.getOrAwaitValue()
+            assertEquals("Error: $exceptionMessage", snackbarValue)
         }
 
     @Test
     fun deleteClass_success() =
         runTest {
+            val successMessage = "Successfully deleted."
             val classId = 123
             val professorId = 12
             val classesResponse =
@@ -223,33 +227,34 @@ class ProfessorMainViewModelTest {
             val mockSuccessResponse =
                 CodeMessageResponse(
                     200,
-                    "Success",
+                    successMessage,
                 )
             coEvery { mockUserRepository.userGetClassList(any()) } returns mockClassListsResponse
             coEvery { mockClassRepository.classDelete(any()) } returns mockSuccessResponse
 
             viewModel.deleteClass(classId, professorId)
 
-            val toastValue = viewModel.accessSnackbarMessage().getOrAwaitValue()
-            assertEquals("Successfully deleted", toastValue)
+            val snackbarValue = viewModel.snackbarMessage.getOrAwaitValue()
+            assertEquals(successMessage, snackbarValue)
         }
 
     @Test
     fun deleteClass_failure() =
         runTest {
+            val failureMessage = "Failed to delete..."
             val classId = 123
             val professorId = 12
             val mockFailureResponse =
                 CodeMessageResponse(
                     400,
-                    "Failure",
+                    failureMessage,
                 )
             coEvery { mockClassRepository.classDelete(any()) } returns mockFailureResponse
 
             viewModel.deleteClass(classId, professorId)
 
-            val toastValue = viewModel.accessSnackbarMessage().getOrAwaitValue()
-            assertEquals("delete Failed", toastValue)
+            val snackbarValue = viewModel.snackbarMessage.getOrAwaitValue()
+            assertEquals(failureMessage, snackbarValue)
         }
 
     @Test
@@ -263,8 +268,8 @@ class ProfessorMainViewModelTest {
 
             viewModel.deleteClass(classId, professorId)
 
-            val toastValue = viewModel.accessSnackbarMessage().getOrAwaitValue()
-            assertEquals("Error: $exceptionMessage", toastValue)
+            val snackbarValue = viewModel.snackbarMessage.getOrAwaitValue()
+            assertEquals("Error: $exceptionMessage", snackbarValue)
         }
 
     @After
