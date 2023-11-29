@@ -55,7 +55,6 @@ class StudentAttendanceAdapter(
 
     override fun getItemCount(): Int = studentAttendanceList.size
 
-    @OptIn(DelicateCoroutinesApi::class)
     class StudentAttendanceViewHolder(var binding: ItemStudentAttendanceBinding, val repository: AttendanceRepository) :
         RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")

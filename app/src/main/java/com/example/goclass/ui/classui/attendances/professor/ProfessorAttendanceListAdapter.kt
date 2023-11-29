@@ -50,7 +50,6 @@ class ProfessorAttendanceListAdapter(
 
     override fun getItemCount(): Int = studentAttendanceList.size
 
-    @OptIn(DelicateCoroutinesApi::class)
     class ProfessorAttendanceListViewHolder(var binding: ItemProfessorAttendanceListBinding, val repository: UserRepository) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(studentAttendanceItem: AttendancesResponse) {
