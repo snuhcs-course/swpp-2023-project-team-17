@@ -3,7 +3,9 @@ package com.example.goclass.ui.classui.attendances.service
 import android.Manifest
 import android.app.Service
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
 import android.bluetooth.le.*
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Handler
@@ -21,11 +23,13 @@ class BleScanService : Service() {
     private var scanCount = 0
     private var successfulScanCount = 0
     private var classId = -1
+    private var scanning = false
 
     private val handler = Handler()
 
     override fun onCreate() {
         super.onCreate()
+        Log.e(TAG, "Blescan create")
         initializeBluetooth()
     }
 
@@ -45,6 +49,7 @@ class BleScanService : Service() {
 
     override fun onDestroy() {
         sendSuccessfulScanCount()
+        Log.e(TAG, "Blescan create")
         super.onDestroy()
     }
 
@@ -57,7 +62,8 @@ class BleScanService : Service() {
     }
 
     private fun initializeBluetooth() {
-        val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        val bluetoothAdapter = bluetoothManager.adapter
 
         if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled) {
             Log.e(TAG, "Bluetooth is not enabled")
@@ -101,9 +107,12 @@ class BleScanService : Service() {
         }
 
         override fun onScanFailed(errorCode: Int) {
-            super.onScanFailed(errorCode)
             Log.e(TAG, "Scan failed with error code: $errorCode")
             bleScanCallback?.onScanFailed(errorCode)
+        }
+
+        override fun onBatchScanResults(results: MutableList<ScanResult>?) {
+            Log.d(TAG, "Scan Batch")
         }
     }
 
@@ -181,9 +190,23 @@ class BleScanService : Service() {
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for Activity#requestPermissions for more details.
+            Log.d(TAG, checkSelfPermission(Manifest.permission.BLUETOOTH_SCAN).toString())
             return
         }
-        bluetoothLeScanner?.startScan(scanFilters, scanSettings, scanCallback)
+        Log.d(TAG, scanFilters.toString())
+        Log.d(TAG, scanSettings.toString())
+        Log.d(TAG, scanCallback.toString())
+        Log.d(TAG, bluetoothLeScanner.toString())
+
+        if (scanning) {
+            Log.d(TAG, "IN SCANNING!")
+            bluetoothLeScanner?.stopScan(scanCallback)
+            bluetoothLeScanner?.startScan(scanFilters, scanSettings, scanCallback)
+        } else {
+            bluetoothLeScanner?.startScan(scanFilters, scanSettings, scanCallback)
+            scanning = true
+        }
+
     }
 
     companion object {

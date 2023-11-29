@@ -16,14 +16,20 @@ class PermissionUtils(private val context: Context) {
     }
 
     fun requestBluetoothPermissions() {
-        val bluetoothPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            Manifest.permission.BLUETOOTH_CONNECT
-        } else {
-            Manifest.permission.BLUETOOTH
-        }
+        val permissionsToRequest = mutableListOf<String>()
 
-        if (ContextCompat.checkSelfPermission(context, bluetoothPermission) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(context as Activity, arrayOf(bluetoothPermission), 101)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            permissionsToRequest.add(Manifest.permission.BLUETOOTH_CONNECT)
+            permissionsToRequest.add(Manifest.permission.BLUETOOTH_SCAN)
+            permissionsToRequest.add(Manifest.permission.BLUETOOTH_ADVERTISE)
+        } else {
+            permissionsToRequest.add(Manifest.permission.BLUETOOTH)
+        }
+        val notGrantedPermissions = permissionsToRequest.filter {
+            ContextCompat.checkSelfPermission(context, it) != PackageManager.PERMISSION_GRANTED
+        }
+        if (notGrantedPermissions.isNotEmpty()) {
+            ActivityCompat.requestPermissions(context as Activity, notGrantedPermissions.toTypedArray(), 101)
         }
     }
 }
