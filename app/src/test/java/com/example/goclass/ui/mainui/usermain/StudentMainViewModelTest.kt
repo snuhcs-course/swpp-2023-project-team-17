@@ -52,7 +52,7 @@ class StudentMainViewModelTest {
 
             viewModel.classJoin(1, "TestName", "TestCode", mockClassScheduler)
 
-            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
+            val toastValue = viewModel.accessSnackbarMessage().getOrAwaitValue()
             assertEquals("Successfully joined!", toastValue)
             coVerify { viewModel.getClassList(mapOf("userId" to "1", "userType" to "0")) }
         }
@@ -66,7 +66,7 @@ class StudentMainViewModelTest {
 
             viewModel.classJoin(1, "TestName", "TestCode", mockClassScheduler)
 
-            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
+            val toastValue = viewModel.accessSnackbarMessage().getOrAwaitValue()
             assertEquals("join failed", toastValue)
         }
 
@@ -78,7 +78,7 @@ class StudentMainViewModelTest {
 
             viewModel.classJoin(1, "TestName", "TestCode", mockClassScheduler)
 
-            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
+            val toastValue = viewModel.accessSnackbarMessage().getOrAwaitValue()
             assertEquals("Error: $exceptionMessage", toastValue)
         }
 
@@ -105,7 +105,7 @@ class StudentMainViewModelTest {
 
             viewModel.classJoin(1, "TestName", "TestCode", mockClassScheduler)
 
-            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
+            val toastValue = viewModel.accessSnackbarMessage().getOrAwaitValue()
             assertEquals("Successfully joined!", toastValue)
             coVerify { viewModel.getClassList(mapOf("userId" to "1", "userType" to "0")) }
         }
