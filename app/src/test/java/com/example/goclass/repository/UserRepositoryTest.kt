@@ -19,7 +19,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
@@ -55,7 +54,7 @@ class UserRepositoryTest {
 
     @Test
     fun userLogin_test() =
-        runTest {
+        runBlocking {
             val userEmail = "a@snu.ac.kr"
             val mockUsersResponse =
                 UsersResponse(
@@ -88,7 +87,7 @@ class UserRepositoryTest {
 
     @Test
     fun userGet_test() =
-        runTest {
+        runBlocking {
             val userId = 1
             val mockUsersResponse =
                 UsersResponse(
@@ -122,7 +121,7 @@ class UserRepositoryTest {
 
     @Test
     fun userEdit_test() =
-        runTest {
+        runBlocking {
             val userId = 1
             val user = Users(0, "name")
             val mockCodeMessageResponse =
@@ -152,7 +151,7 @@ class UserRepositoryTest {
 
     @Test
     fun userGetClassList_test() =
-        runTest {
+        runBlocking {
             val userMap = mapOf("key1" to "value1", "key2" to "value2")
             val mockClassListsResponse =
                 ClassListsResponse(
@@ -193,7 +192,7 @@ class UserRepositoryTest {
 
     @Test
     fun userGetAttendanceListByDate_test() =
-        runTest {
+        runBlocking {
             val date = "YYYY-MM-DD"
             val userMap = mapOf("key1" to "value1", "key2" to "value2")
             val mockAttendanceListsResponse =
@@ -234,7 +233,7 @@ class UserRepositoryTest {
 
     @Test
     fun attendanceGetDateList_test() =
-        runTest {
+        runBlocking {
             val classMap = mapOf("key1" to "value1", "key2" to "value2")
             val mockAttendanceDateListsResponse =
                 AttendanceDateListsResponse(
