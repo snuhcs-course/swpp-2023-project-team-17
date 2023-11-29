@@ -94,9 +94,11 @@ class AttendanceService : Service(), BleScanCallback {
         bleScanService = BleScanService()
         bleScanService.setBleScanCallback(this)
 
+        val durationMillisLong = durationMillis.toLong() * 60000 // Convert minutes to milliseconds
+
         // Start the BleScanService
         val serviceIntent = Intent(this, BleScanService::class.java)
-        serviceIntent.putExtra(BleScanService.EXTRA_DURATION_MILLIS, durationMillis)
+        serviceIntent.putExtra(BleScanService.EXTRA_DURATION_MILLIS, durationMillisLong)
         serviceIntent.putExtra("classId", classId)
         startService(serviceIntent)
 

@@ -38,7 +38,7 @@ class BleAdvertService : Service() {
         .setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY)
         .setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_HIGH)
         .setConnectable(false)
-        .setTimeout(3000000) // Advertise indefinitely (or set a specific duration)
+        .setTimeout(0) // Advertise indefinitely (or set a specific duration)
         .build()
 
     private val advertiseCallback = object : AdvertiseCallback() {

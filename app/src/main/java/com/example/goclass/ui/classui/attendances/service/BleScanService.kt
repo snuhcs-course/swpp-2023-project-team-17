@@ -69,6 +69,7 @@ class BleScanService : Service() {
 
     private val scanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult?) {
+            Log.d(TAG, "스캔 결과 수신: ${result?.device?.address}")
             super.onScanResult(callbackType, result)
             result?.device?.let {
                 Log.i(TAG, "Device found: ${it.address}")
@@ -77,6 +78,26 @@ class BleScanService : Service() {
                     successfulScanCount++
                 }
             }
+
+//            super.onScanResult(callbackType, result)
+//            if (result == null) {
+//                Log.i(TAG, "Scan result is null")
+//                return
+//            }
+//
+//            val device = result.device
+//            val deviceName = "Unknown Device"
+//            val deviceAddress = device.address ?: "No Address"
+//            val rssi = result.rssi
+//
+//            // 스캔 결과에 대한 로그
+//            Log.i(TAG, "Device found: Name: $deviceName, Address: $deviceAddress, RSSI: $rssi")
+//
+//            // 타겟 장치 확인 (여기서는 필터링 없이 모든 장치를 로그로 출력)
+//            if (isTargetDevice(result)) {
+//                bleScanCallback?.onDeviceFound(scanCount)
+//                successfulScanCount++
+//            }
         }
 
         override fun onScanFailed(errorCode: Int) {
@@ -89,7 +110,7 @@ class BleScanService : Service() {
     private fun isTargetDevice(result: ScanResult): Boolean {
         val formattedClassId = classId.toString().padStart(6, '0')
         val targetUuid = formattedClassId + Constants.UUID_STRING
-        val beaconId = "2cdbdd00-13ee-11e4-9b6c-0002a5d5c518"
+        val beaconId = "2cdbdd00-13ee-11e4-9b6c-0002a5d5c51b"
         val targetServiceUuid = ParcelUuid.fromString(beaconId)
         return result.scanRecord?.serviceUuids?.contains(targetServiceUuid) == true
     }
@@ -136,9 +157,11 @@ class BleScanService : Service() {
     }
 
     private fun startScanning() {
+        Log.d(TAG, "start scan")
+
         val formattedClassId = classId.toString().padStart(6, '0')
 
-        val beaconId = "2cdbdd00-13ee-11e4-9b6c-0002a5d5c518"
+        val beaconId = "2cdbdd00-13ee-11e4-9b6c-0002a5d5c51b"
         val targetUuid = ParcelUuid.fromString(beaconId)
 
         val scanFilters: List<ScanFilter> = listOf(
