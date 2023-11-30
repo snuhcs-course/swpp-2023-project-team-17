@@ -47,7 +47,7 @@ class ProfessorAttendanceAdapter(
     override fun getItemCount(): Int = professorAttendanceList.size
 
     class ProfessorAttendanceViewHolder(
-        var binding: ItemProfessorAttendanceBinding,
+        val binding: ItemProfessorAttendanceBinding,
         private val listener: ProfessorAttendanceFragment,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(professorAttendanceItem: AttendancesResponse) {

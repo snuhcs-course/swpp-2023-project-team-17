@@ -50,7 +50,7 @@ class ProfessorAttendanceListAdapter(
 
     override fun getItemCount(): Int = studentAttendanceList.size
 
-    class ProfessorAttendanceListViewHolder(var binding: ItemProfessorAttendanceListBinding, val repository: UserRepository) :
+    class ProfessorAttendanceListViewHolder(val binding: ItemProfessorAttendanceListBinding, val repository: UserRepository) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(studentAttendanceItem: AttendancesResponse) {
             GlobalScope.launch(Dispatchers.IO) {

@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.goclass.repository.AttendanceRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
@@ -19,7 +18,7 @@ class StudentAttendanceAdapterViewModel(
     fun editAttendance (
         attendanceId: Int
     ) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             try {
                 val response = repository.attendanceEdit(attendanceId)
                 if (response.code == 200) {
