@@ -23,19 +23,19 @@ class MainActivity : AppCompatActivity() {
 
         val permissionUtils = PermissionUtils(this)
 
-        permissionUtils.requestBluetoothAdvertisePermissionsWithCallback { bluetoothAdvertPermissionsGranted ->
-            if (bluetoothAdvertPermissionsGranted) {
-                permissionUtils.requestBluetoothPermissions { bluetoothScanPermissionsGranted ->
-                    if (bluetoothScanPermissionsGranted) {
-                        permissionUtils.requestLocationPermissions()
-                    }
-                }
-            }
-        }
+//        permissionUtils.requestBluetoothAdvertisePermissionsWithCallback { bluetoothAdvertPermissionsGranted ->
+//            if (bluetoothAdvertPermissionsGranted) {
+//                permissionUtils.requestBluetoothPermissions { bluetoothScanPermissionsGranted ->
+//                    if (bluetoothScanPermissionsGranted) {
+//                        permissionUtils.requestLocationPermissions()
+//                    }
+//                }
+//            }
+//        }
 //        permissionUtils.requestBluetoothAdvertisePermissionsWithCallback()
 
-//        permissionUtils.requestBluetoothPermissions()
-//        permissionUtils.requestLocationPermissions()
+        permissionUtils.requestBluetoothPermissions()
+        permissionUtils.requestLocationPermissions()
 
         //startLocationService()
 
