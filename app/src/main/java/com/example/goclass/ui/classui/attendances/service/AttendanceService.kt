@@ -9,25 +9,19 @@ import android.content.IntentFilter
 import android.content.ServiceConnection
 import android.os.IBinder
 import android.util.Log
-import com.example.goclass.network.dataclass.Attendances
-import com.example.goclass.repository.AttendanceRepository
 import com.example.goclass.ui.classui.attendances.callback.BleScanCallback
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 class AttendanceService : Service(), BleScanCallback {
-    private lateinit var repository: AttendanceRepository
-
     private lateinit var bleScanService: BleScanService
-    private var classEnd = false
+    private val viewModel: AttendanceServiceViewModel by inject()
 
-    private var attendanceStatus = 0
+    private var classEnd = false
     private var userId = -1
     private var classId = -1
-
     private var scanCount: Int = 0
+    private var _attendanceStatus = 0
+    val attendanceStatus: Int get() = _attendanceStatus
 
     private val bleScanResultReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -133,7 +127,7 @@ class AttendanceService : Service(), BleScanCallback {
 //            delay(60000) // 60 seconds
 //            saveAttendance(attendanceStatus, attendanceDuration, userId, classId)
 //        }
-        saveAttendance(attendanceStatus, attendanceDuration, userId, classId)
+        viewModel.saveAttendance(_attendanceStatus, attendanceDuration, userId, classId)
     }
 
     private fun inClass(): Boolean {
@@ -145,35 +139,17 @@ class AttendanceService : Service(), BleScanCallback {
         return true
     }
 
-    private fun saveAttendance(
-        attendanceStatus: Int,
-        attendanceDuration: Int,
-        userId: Int,
-        classId: Int,
-    ) {
-        val attendances = Attendances(attendanceStatus, attendanceDuration, classId)
-
-        GlobalScope.launch(Dispatchers.IO) {
-            try {
-                repository.attendanceAdd(userId, attendances)
-                Log.d("AttendanceSaveSuccess", "$attendanceStatus, $attendanceDuration")
-            } catch (e: Exception) {
-                Log.e("AttendanceSaveError", e.message.toString())
-            }
-        }
-    }
-
     override fun onDeviceFound(scanCount: Int) {
         // Handle the device found event
         //isDeviceFound = true
         if (scanCount <= 10) {
-            attendanceStatus = 2 // present
+            _attendanceStatus = 2 // present
         } else if (scanCount <= 30) {
-            attendanceStatus = 1 // late
+            _attendanceStatus = 1 // late
         } else {
-            attendanceStatus = 0 // absent
+            _attendanceStatus = 0 // absent
         }
-        Log.i(TAG, "Device found: $attendanceStatus")
+        Log.i(TAG, "Device found: $_attendanceStatus")
     }
 
     override fun onScanFailed(errorCode: Int) {

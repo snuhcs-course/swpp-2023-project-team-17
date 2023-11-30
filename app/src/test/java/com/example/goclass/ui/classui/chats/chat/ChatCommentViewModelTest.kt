@@ -120,7 +120,7 @@ class ChatCommentViewModelTest {
             val toastValue = viewModel.toastMessage.getOrAwaitValue()
             val sendSuccess = viewModel.sendSuccess.getOrAwaitValue()
             TestCase.assertEquals("Error: $exceptionMessage", toastValue)
-            TestCase.assertEquals(false, sendSuccess)
+            TestCase.assertFalse(sendSuccess)
         }
 
     @Test
@@ -208,7 +208,7 @@ class ChatCommentViewModelTest {
             val toastValue = viewModel.toastMessage.getOrAwaitValue()
             val editSuccess = viewModel.editSuccess.getOrAwaitValue()
             TestCase.assertEquals("Error: $exceptionMessage", toastValue)
-            TestCase.assertEquals(false, editSuccess)
+            TestCase.assertFalse(editSuccess)
         }
 
     @Test

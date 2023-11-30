@@ -541,6 +541,39 @@ app.get('/class/:id/attendance/:user_id', (req, res) => {
 });
 
 
+// (22) get comment count
+app.get('/chat_channel/count/:message_id', (req, res) => {
+    const messageId = req.params.message_id;
+    const sql = 'select count(*) as cnt from Messages where comment_id = ?';
+
+    connection.query(sql, messageId, (err, result) => {
+        let resultCode = 200;
+        let message = "";
+        let count = 0;
+
+        if (err) {
+            return res.status(500).json({
+                'code': 500,
+                'message': 'database error'
+            });
+        }
+        
+        if (result.length > 0) {
+            message = 'get comment count Success';
+            count = result[0].cnt
+        } else {
+            message = 'comment count is zero';
+        }
+
+        res.json({
+            'code': resultCode,
+            'message': message,
+            'count': count
+        });
+    });
+});
+
+
 // (12) get comment message list of the message
 app.get('/chat_channel/:class_id/comment/:id', (req, res) => {
     const classId = req.params.class_id;

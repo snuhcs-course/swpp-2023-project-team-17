@@ -14,7 +14,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
@@ -49,7 +48,7 @@ class AttendanceRepositoryTest {
 
     @Test
     fun attendanceGet_test() =
-        runTest {
+        runBlocking {
             val mockAttendanceResponse =
                 AttendancesResponse(
                     1234,
@@ -82,7 +81,7 @@ class AttendanceRepositoryTest {
 
     @Test
     fun attendanceEdit_test() =
-        runTest {
+        runBlocking {
             val mockCodeMessageResponse =
                 CodeMessageResponse(
                     200,
@@ -108,7 +107,7 @@ class AttendanceRepositoryTest {
 
     @Test
     fun attendanceDelete_test() =
-        runTest {
+        runBlocking {
             val mockCodeMessageResponse =
                 CodeMessageResponse(
                     200,
@@ -137,7 +136,7 @@ class AttendanceRepositoryTest {
 
     @Test
     fun attendanceAdd_test() =
-        runTest {
+        runBlocking {
             val userId = 1
             val attendance = Attendances(1, 1, 1)
 
