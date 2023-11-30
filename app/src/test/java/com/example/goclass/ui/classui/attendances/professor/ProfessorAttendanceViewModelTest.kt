@@ -37,6 +37,7 @@ class ProfessorAttendanceViewModelTest {
     @Test
     fun getProfessorAttendanceList_success() =
         runTest {
+            val successMessage = "Success"
             val classMap = mapOf("classId" to "1", "userType" to "1")
             val attendancesResponse =
                 AttendancesResponse(
@@ -48,7 +49,7 @@ class ProfessorAttendanceViewModelTest {
                         attendancesResponse,
                     ),
                     200,
-                    "Success",
+                    successMessage,
                 )
 
             // Define the mock behavior
@@ -58,7 +59,7 @@ class ProfessorAttendanceViewModelTest {
             viewModel.getProfessorAttendanceList(classMap)
 
             // Check if the LiveData has been updated
-            val liveDataValue = viewModel.accessProfessorAttendanceListLiveData().getOrAwaitValue()
+            val liveDataValue = viewModel.professorAttendanceListLiveData.getOrAwaitValue()
             assertEquals(1, liveDataValue.size)
             assertEquals(attendancesResponse, liveDataValue[0])
         }
@@ -72,7 +73,7 @@ class ProfessorAttendanceViewModelTest {
 
             viewModel.getProfessorAttendanceList(classMap)
 
-            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
+            val toastValue = viewModel.toastMessage.getOrAwaitValue()
             assertEquals("Error: $exceptionMessage", toastValue)
         }
 

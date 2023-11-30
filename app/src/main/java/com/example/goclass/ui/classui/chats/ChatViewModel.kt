@@ -13,13 +13,15 @@ import kotlinx.coroutines.launch
 class ChatViewModel(
     private val repository: ChatRepository,
 ) : ViewModel() {
-    private val messageListLiveData: MutableLiveData<List<MessagesResponse>> = MutableLiveData()
+    private val _messageListLiveData: MutableLiveData<List<MessagesResponse>> = MutableLiveData()
     private val _toastMessage = MutableLiveData<String>()
     private val _sendSuccess = MutableLiveData<Boolean>()
     private val _editSuccess = MutableLiveData<Boolean>()
-    private val toastMessage: LiveData<String> get() = _toastMessage
-    private val sendSuccess: LiveData<Boolean> get() = _sendSuccess
-    private val editSuccess: LiveData<Boolean> get() = _editSuccess
+
+    val messageListLiveData: LiveData<List<MessagesResponse>> get() = _messageListLiveData
+    val toastMessage: LiveData<String> get() = _toastMessage
+    val sendSuccess: LiveData<Boolean> get() = _sendSuccess
+    val editSuccess: LiveData<Boolean> get() = _editSuccess
 
     fun chatChannelSend(
         classId: Int,
@@ -78,7 +80,7 @@ class ChatViewModel(
             try {
                 val response = repository.chatChannelGetList(classId)
                 if(response.code == 200){
-                    messageListLiveData.postValue(response.messageList)
+                    _messageListLiveData.postValue(response.messageList)
                     _toastMessage.postValue("Success")
                 } else {
                     _toastMessage.postValue("Failure")
@@ -88,22 +90,6 @@ class ChatViewModel(
                 _toastMessage.postValue("Error: ${e.message}")
             }
         }
-        return messageListLiveData
-    }
-
-    fun accessMessageListLiveData(): MutableLiveData<List<MessagesResponse>> {
-        return messageListLiveData
-    }
-
-    fun accessToastMessage(): LiveData<String> {
-        return toastMessage
-    }
-
-    fun accessSendSuccess(): LiveData<Boolean> {
-        return sendSuccess
-    }
-
-    fun accessEditSuccess(): LiveData<Boolean> {
-        return editSuccess
+        return _messageListLiveData
     }
 }

@@ -13,14 +13,15 @@ import kotlinx.coroutines.launch
 class ChatCommentViewModel(
     private val repository: ChatRepository
 ) : ViewModel() {
-    private val commentListLiveData: MutableLiveData<List<CommentsResponse>> = MutableLiveData()
+    private val _commentListLiveData: MutableLiveData<List<CommentsResponse>> = MutableLiveData()
     private val _toastMessage = MutableLiveData<String>()
     private val _sendSuccess = MutableLiveData<Boolean>()
     private val _editSuccess = MutableLiveData<Boolean>()
 
-    private val toastMessage: LiveData<String> get() = _toastMessage
-    private val sendSuccess: LiveData<Boolean> get() = _sendSuccess
-    private val editSuccess: LiveData<Boolean> get() = _editSuccess
+    val commentListLiveData: LiveData<List<CommentsResponse>> get() = _commentListLiveData
+    val toastMessage: LiveData<String> get() = _toastMessage
+    val sendSuccess: LiveData<Boolean> get() = _sendSuccess
+    val editSuccess: LiveData<Boolean> get() = _editSuccess
 
     fun chatCommentSend(
         classId: Int,
@@ -82,7 +83,7 @@ class ChatCommentViewModel(
             try {
                 val response = repository.chatCommentGetList(classId, commentId)
                 if(response.code == 200){
-                    commentListLiveData.postValue(response.commentList)
+                    _commentListLiveData.postValue(response.commentList)
                     _toastMessage.postValue("Success")
                 } else {
                     _toastMessage.postValue("Failure")
@@ -92,22 +93,6 @@ class ChatCommentViewModel(
                 _toastMessage.postValue("Error: ${e.message}")
             }
         }
-        return commentListLiveData
-    }
-
-    fun accessCommentListLiveData(): MutableLiveData<List<CommentsResponse>> {
-        return commentListLiveData
-    }
-
-    fun accessToastMessage(): LiveData<String> {
-        return toastMessage
-    }
-
-    fun accessSendSuccess(): LiveData<Boolean> {
-        return sendSuccess
-    }
-
-    fun accessEditSuccess(): LiveData<Boolean> {
-        return editSuccess
+        return _commentListLiveData
     }
 }
