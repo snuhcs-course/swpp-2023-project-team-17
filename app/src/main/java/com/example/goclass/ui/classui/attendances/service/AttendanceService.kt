@@ -9,10 +9,8 @@ import android.content.IntentFilter
 import android.content.ServiceConnection
 import android.os.IBinder
 import android.util.Log
-import com.example.goclass.repository.AttendanceRepository
 import com.example.goclass.ui.classui.attendances.callback.BleScanCallback
 import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AttendanceService : Service(), BleScanCallback {
     private lateinit var bleScanService: BleScanService
