@@ -15,9 +15,7 @@ class StudentAttendanceAdapterViewModel(
     private val _editSuccess: MutableLiveData<Boolean> = MutableLiveData()
     val editSuccess: LiveData<Boolean> get() = _editSuccess
 
-    fun editAttendance(
-        attendanceId: Int,
-    ) {
+    fun editAttendance(attendanceId: Int) {
         viewModelScope.launch {
             try {
                 val response = repository.attendanceEdit(attendanceId)
