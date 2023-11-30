@@ -16,9 +16,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class ProfessorAttendanceListAdapter(
-    private val repository: UserRepository,
-) : RecyclerView.Adapter<ProfessorAttendanceListAdapter.ProfessorAttendanceListViewHolder>() {
+class ProfessorAttendanceListAdapter : RecyclerView.Adapter<ProfessorAttendanceListAdapter.ProfessorAttendanceListViewHolder>() {
     private var studentAttendanceList = listOf<AttendancesResponse>()
 
     @SuppressLint("NotifyDataSetChanged")
@@ -37,7 +35,7 @@ class ProfessorAttendanceListAdapter(
                 parent,
                 false,
             )
-        return ProfessorAttendanceListViewHolder(binding, repository)
+        return ProfessorAttendanceListViewHolder(binding)
     }
 
     override fun onBindViewHolder(
@@ -50,21 +48,11 @@ class ProfessorAttendanceListAdapter(
 
     override fun getItemCount(): Int = studentAttendanceList.size
 
-    class ProfessorAttendanceListViewHolder(val binding: ItemProfessorAttendanceListBinding, val repository: UserRepository) :
+    class ProfessorAttendanceListViewHolder(val binding: ItemProfessorAttendanceListBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        @SuppressLint("SetTextI18n")
         fun bind(studentAttendanceItem: AttendancesResponse) {
-            GlobalScope.launch(Dispatchers.IO) {
-                try {
-                    val response = repository.userGet(studentAttendanceItem.studentId)
-                    if (response.code == 200) {
-                        withContext(Dispatchers.Main) {
-                            binding.studentIdText.text = response.userName
-                        }
-                    }
-                } catch (e: Exception) {
-                    Log.d("userNameGetError", e.message.toString())
-                }
-            }
+            binding.studentNameText.text = studentAttendanceItem.studentName
             when (studentAttendanceItem.attendanceStatus) {
                 2 -> {
                     binding.attendanceStatusText.text = "Present"

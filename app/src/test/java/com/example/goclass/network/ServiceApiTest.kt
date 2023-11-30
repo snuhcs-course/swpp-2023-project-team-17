@@ -233,10 +233,11 @@ class ServiceApiTest {
                         AttendancesResponse(
                             1234,
                             0,
-                            "attendanceDate",
+                            "TestAttendanceDate",
                             0,
                             0,
                             1,
+                            "TestStudentName",
                             1,
                         ),
                     ),
@@ -287,6 +288,10 @@ class ServiceApiTest {
                 actualResponse.attendanceList[0].studentId,
             )
             TestCase.assertEquals(
+                expectedResponse.attendanceList[0].studentName,
+                actualResponse.attendanceList[0].studentName,
+            )
+            TestCase.assertEquals(
                 expectedResponse.attendanceList[0].classId,
                 actualResponse.attendanceList[0].classId,
             )
@@ -301,7 +306,7 @@ class ServiceApiTest {
                 AttendanceDateListsResponse(
                     listOf(
                         AttendancesResponse(
-                            "attendanceDate",
+                            "TestAttendanceDate",
                         ),
                     ),
                     200,
@@ -481,7 +486,7 @@ class ServiceApiTest {
                         AttendancesResponse(
                             1234,
                             0,
-                            "attendanceDate",
+                            "TestAttendanceDate",
                             0,
                             0,
                             1,

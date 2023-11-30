@@ -205,6 +205,7 @@ class UserRepositoryTest {
                             0,
                             0,
                             1,
+                            "TestStudentName",
                             1,
                         )
                     ),
