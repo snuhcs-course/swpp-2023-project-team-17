@@ -189,12 +189,24 @@ class ProfessorMainFragment : Fragment() {
             val endTimeButton = layout.findViewWithTag<Button>("endTimeButton")
 
             val day = dayDropdown.selectedItem as String
+            val dayNum = convertDayStringToNumber(day)
             val startTime = startTimeButton.text.toString()
             val endTime = endTimeButton.text.toString()
 
-            classTimes.add("$day $startTime-$endTime")
+            classTimes.add("$dayNum $startTime-$endTime")
         }
 
         return classTimes.joinToString(", ")
+    }
+
+    private fun convertDayStringToNumber(day: String): String {
+        return when (day) {
+            "Mon" -> "2"
+            "Tue" -> "3"
+            "Wed" -> "4"
+            "Thu" -> "5"
+            "Fri" -> "1"
+            else -> "-1" // 또는 에러 처리
+        }
     }
 }

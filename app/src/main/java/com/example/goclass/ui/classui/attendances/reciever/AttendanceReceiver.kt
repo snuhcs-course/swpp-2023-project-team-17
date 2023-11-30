@@ -1,17 +1,18 @@
 package com.example.goclass.ui.classui.attendances.reciever
 
-import BleAdvertService
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.example.goclass.ui.classui.attendances.service.AttendanceService
+import com.example.goclass.ui.classui.attendances.service.BleAdvertService
 
 class AttendanceReceiver : BroadcastReceiver() {
     override fun onReceive(
         context: Context,
         intent: Intent,
     ) {
+        Log.d("atreceiver", "called")
         if (intent != null) {
             val action = intent.action
             if (action == "ATTENDANCE_ALARM_ACTION") {
@@ -23,17 +24,19 @@ class AttendanceReceiver : BroadcastReceiver() {
                 val endHour = intent.getIntExtra("endHour", -1)
                 val endMinute = intent.getIntExtra("endMinute", -1)
                 val userType = intent.getIntExtra("userType", -1)
+                Log.d("usertypecheck", "$userType")
+                Log.d("classIdcheck", "$classId")
 
                 if (userType == 0) {
                     // Create an intent to start the AttendanceService
                     val serviceIntent = Intent(context, AttendanceService::class.java)
                     serviceIntent.action = "ATTENDANCE_CHECK_ACTION"
-                    intent.putExtra("userId", userId)
-                    intent.putExtra("classId", classId)
-                    intent.putExtra("startHour", startHour)
-                    intent.putExtra("startMinute", startMinute)
-                    intent.putExtra("endHour", endHour)
-                    intent.putExtra("endMinute", endMinute)
+                    serviceIntent.putExtra("userId", userId)
+                    serviceIntent.putExtra("classId", classId)
+                    serviceIntent.putExtra("startHour", startHour)
+                    serviceIntent.putExtra("startMinute", startMinute)
+                    serviceIntent.putExtra("endHour", endHour)
+                    serviceIntent.putExtra("endMinute", endMinute)
 
                     // Start the AttendanceService to perform the attendance check
                     context.startService(serviceIntent)
@@ -41,11 +44,11 @@ class AttendanceReceiver : BroadcastReceiver() {
                     // Create an intent to start the BleAdvertService
                     val serviceIntent = Intent(context, BleAdvertService::class.java)
                     serviceIntent.action = "BLE_ADVERT_ACTION"
-                    intent.putExtra("classId", classId)
-                    intent.putExtra("startHour", startHour)
-                    intent.putExtra("startMinute", startMinute)
-                    intent.putExtra("endHour", endHour)
-                    intent.putExtra("endMinute", endMinute)
+                    serviceIntent.putExtra("classId", classId)
+                    serviceIntent.putExtra("startHour", startHour)
+                    serviceIntent.putExtra("startMinute", startMinute)
+                    serviceIntent.putExtra("endHour", endHour)
+                    serviceIntent.putExtra("endMinute", endMinute)
 
                     // Start the AttendanceService to perform the attendance check
                     context.startService(serviceIntent)

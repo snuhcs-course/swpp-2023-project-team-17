@@ -9,32 +9,27 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
 class PermissionUtils(private val context: Context) {
-    fun requestLocationPermissions(): Boolean {
-        var permissionGranted = true
-
-        // Check location permission; if not granted, request permission
+    fun requestLocationPermissions() {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (context is ActivityCompat.OnRequestPermissionsResultCallback) {
-                ActivityCompat.requestPermissions(
-                    context as Activity,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    1000,
-                )
-            }
-            permissionGranted = false
+            ActivityCompat.requestPermissions(context as Activity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1000)
         }
-        return permissionGranted
     }
 
-    fun requestBluetoothPermissions(activity: Activity, requestCode: Int): Boolean {
-        val bluetoothPermission = Manifest.permission.BLUETOOTH
+    fun requestBluetoothPermissions() {
+        val permissionsToRequest = mutableListOf<String>()
 
-        // Check bluetooth permission; if not granted, request permission
-        return if (ContextCompat.checkSelfPermission(activity, bluetoothPermission) == PackageManager.PERMISSION_GRANTED) {
-            true
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            permissionsToRequest.add(Manifest.permission.BLUETOOTH_CONNECT)
+            permissionsToRequest.add(Manifest.permission.BLUETOOTH_SCAN)
+            permissionsToRequest.add(Manifest.permission.BLUETOOTH_ADVERTISE)
         } else {
-            ActivityCompat.requestPermissions(activity, arrayOf(bluetoothPermission), requestCode)
-            false
+            permissionsToRequest.add(Manifest.permission.BLUETOOTH)
+        }
+        val notGrantedPermissions = permissionsToRequest.filter {
+            ContextCompat.checkSelfPermission(context, it) != PackageManager.PERMISSION_GRANTED
+        }
+        if (notGrantedPermissions.isNotEmpty()) {
+            ActivityCompat.requestPermissions(context as Activity, notGrantedPermissions.toTypedArray(), 101)
         }
     }
 }

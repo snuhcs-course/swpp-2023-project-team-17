@@ -101,6 +101,7 @@ class ProfessorMainViewModel(
                 }
             } catch (e: Exception) {
                 _snackbarMessage.postValue("Error: ${e.message}")
+                Log.d("createclass", "${e.message}")
             }
         }
     }
