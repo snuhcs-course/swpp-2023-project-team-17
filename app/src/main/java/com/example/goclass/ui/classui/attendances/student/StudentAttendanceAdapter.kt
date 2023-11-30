@@ -64,7 +64,7 @@ class StudentAttendanceAdapter(
         val viewModel: StudentAttendanceAdapterViewModel,
         val lifecycleOwner: LifecycleOwner,
     ) : RecyclerView.ViewHolder(binding.root) {
-            @SuppressLint("SetTextI18n")
+        @SuppressLint("SetTextI18n")
         fun bind(studentAttendanceItem: AttendancesResponse) {
             val originalFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
             originalFormat.timeZone = TimeZone.getTimeZone("UTC")
@@ -96,8 +96,8 @@ class StudentAttendanceAdapter(
                 binding.sendButton.setOnClickListener {
                     val attendanceId = studentAttendanceItem.attendanceId
                     viewModel.editAttendance(attendanceId)
-                    viewModel.editSuccess.observe(lifecycleOwner) {editSuccess ->
-                        if(editSuccess) {
+                    viewModel.editSuccess.observe(lifecycleOwner) { editSuccess ->
+                        if (editSuccess) {
                             binding.sendButton.isEnabled = false
                             binding.sendButton.text = "Sent"
                             val gray = ContextCompat.getColor(itemView.context, R.color.gray)

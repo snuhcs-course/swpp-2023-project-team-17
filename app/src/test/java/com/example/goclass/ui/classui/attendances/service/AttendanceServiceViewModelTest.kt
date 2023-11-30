@@ -84,5 +84,4 @@ class AttendanceServiceViewModelTest {
     fun tearDown() {
         Dispatchers.resetMain()
     }
-
 }

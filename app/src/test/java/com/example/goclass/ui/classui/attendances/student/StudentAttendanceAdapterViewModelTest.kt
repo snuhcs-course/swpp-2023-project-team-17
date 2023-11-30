@@ -1,19 +1,14 @@
 package com.example.goclass.ui.classui.attendances.student
 
-import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.viewModelScope
 import com.example.goclass.LiveDataTestUtil.getOrAwaitValue
 import com.example.goclass.network.dataclass.CodeMessageResponse
-import com.example.goclass.network.dataclass.CommentListsResponse
 import com.example.goclass.repository.AttendanceRepository
-import com.example.goclass.repository.ClassRepository
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest

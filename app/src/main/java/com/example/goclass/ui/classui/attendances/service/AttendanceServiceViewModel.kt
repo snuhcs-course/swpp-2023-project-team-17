@@ -7,10 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.goclass.network.dataclass.Attendances
 import com.example.goclass.repository.AttendanceRepository
-import com.example.goclass.repository.UserRepository
 import kotlinx.coroutines.launch
 
-class AttendanceServiceViewModel (
+class AttendanceServiceViewModel(
     private val repository: AttendanceRepository,
 ) : ViewModel() {
     private val _addSuccess = MutableLiveData<Boolean>()
@@ -28,7 +27,7 @@ class AttendanceServiceViewModel (
             try {
                 val response = repository.attendanceAdd(userId, attendances)
                 Log.d("AttendanceSaveSuccess", "$attendanceStatus, $attendanceDuration")
-                if(response.code == 200){
+                if (response.code == 200) {
                     _addSuccess.postValue(true)
                 } else {
                     _addSuccess.postValue(false)
