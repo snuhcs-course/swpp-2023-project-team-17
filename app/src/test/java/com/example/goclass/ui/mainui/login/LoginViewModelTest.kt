@@ -9,6 +9,7 @@ import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -18,11 +19,12 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+@ExperimentalCoroutinesApi
 class LoginViewModelTest {
     private lateinit var viewModel: LoginViewModel
     private val mockRepository = mockk<UserRepository>()
     private val testDispatcher = UnconfinedTestDispatcher()
-    val userEmail = "test@email.com"
+    private val userEmail = "test@email.com"
 
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
@@ -36,6 +38,7 @@ class LoginViewModelTest {
     @Test
     fun userLogin_success() =
         runTest {
+            val successMessage = "Success"
             val mockUsersResponse =
                 UsersResponse(
                     "email",
@@ -43,7 +46,7 @@ class LoginViewModelTest {
                     "name",
                     0,
                     200,
-                    "message",
+                    successMessage,
                 )
 
             coEvery { mockRepository.userLogin(userEmail) } returns mockUsersResponse
@@ -57,7 +60,8 @@ class LoginViewModelTest {
     @Test
     fun userLogin_failure() =
         runTest {
-            val mockUsersResponse = UsersResponse(400, "Login failed")
+            val failureMessage = "Failure"
+            val mockUsersResponse = UsersResponse(400, failureMessage)
 
             coEvery { mockRepository.userLogin(userEmail) } returns mockUsersResponse
 

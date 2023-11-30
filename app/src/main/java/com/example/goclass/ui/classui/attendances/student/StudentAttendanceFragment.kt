@@ -53,7 +53,7 @@ class StudentAttendanceFragment : Fragment() {
 
         // show studentAttendanceList with dummy data
         val repository: AttendanceRepository by inject()
-        val studentAttendanceAdapter = StudentAttendanceAdapter(repository)
+        val studentAttendanceAdapter = StudentAttendanceAdapter(repository, viewLifecycleOwner)
         binding.studentAttendanceRecyclerView.adapter = studentAttendanceAdapter
         binding.studentAttendanceRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 

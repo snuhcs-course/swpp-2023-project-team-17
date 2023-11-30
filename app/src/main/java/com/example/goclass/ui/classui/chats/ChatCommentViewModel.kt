@@ -1,4 +1,4 @@
-package com.example.goclass.ui.classui.chats.chat
+package com.example.goclass.ui.classui.chats
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -13,11 +13,12 @@ import kotlinx.coroutines.launch
 class ChatCommentViewModel(
     private val repository: ChatRepository
 ) : ViewModel() {
-    val commentListLiveData : MutableLiveData<List<CommentsResponse>> = MutableLiveData()
+    private val _commentListLiveData: MutableLiveData<List<CommentsResponse>> = MutableLiveData()
     private val _toastMessage = MutableLiveData<String>()
     private val _sendSuccess = MutableLiveData<Boolean>()
     private val _editSuccess = MutableLiveData<Boolean>()
 
+    val commentListLiveData: LiveData<List<CommentsResponse>> get() = _commentListLiveData
     val toastMessage: LiveData<String> get() = _toastMessage
     val sendSuccess: LiveData<Boolean> get() = _sendSuccess
     val editSuccess: LiveData<Boolean> get() = _editSuccess
@@ -82,7 +83,7 @@ class ChatCommentViewModel(
             try {
                 val response = repository.chatCommentGetList(classId, commentId)
                 if(response.code == 200){
-                    commentListLiveData.postValue(response.commentList)
+                    _commentListLiveData.postValue(response.commentList)
                     _toastMessage.postValue("Success")
                 } else {
                     _toastMessage.postValue("Failure")
@@ -92,6 +93,6 @@ class ChatCommentViewModel(
                 _toastMessage.postValue("Error: ${e.message}")
             }
         }
-        return commentListLiveData
+        return _commentListLiveData
     }
 }

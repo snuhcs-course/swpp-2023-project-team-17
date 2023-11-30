@@ -6,8 +6,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.goclass.ui.classui.ClassScheduler
 import com.example.goclass.network.dataclass.Classes
+import com.example.goclass.ui.classui.ClassScheduler
+import com.example.goclass.network.dataclass.ClassesResponse
 import com.example.goclass.repository.ClassRepository
 import com.example.goclass.repository.UserRepository
 import kotlinx.coroutines.launch
@@ -19,16 +20,17 @@ class StudentMainViewModel(
     private val classRepository: ClassRepository,
     application: Application,
 ) : AndroidViewModel(application), KoinComponent {
-    private val _toastMessage = MutableLiveData<String>()
-    val toastMessage: LiveData<String> get() = _toastMessage
-    val classListLiveData: MutableLiveData<List<Classes>> = MutableLiveData()
+    private val _snackbarMessage = MutableLiveData<String>()
+    private val _classListLiveData: MutableLiveData<List<ClassesResponse>> = MutableLiveData()
 
-    private val classScheduler = ClassScheduler()
+    val snackbarMessage: LiveData<String> get() = _snackbarMessage
+    val classListLiveData: LiveData<List<ClassesResponse>> get() = _classListLiveData
 
     fun classJoin(
         userId: Int,
         className: String,
         classCode: String,
+        classScheduler: ClassScheduler,
     ) {
         viewModelScope.launch {
             val joinClass =
@@ -81,29 +83,29 @@ class StudentMainViewModel(
                 }
 
                 if (response.code == 200) {
-                    _toastMessage.postValue("Successfully joined!")
+                    _snackbarMessage.postValue("Successfully joined!")
                     getClassList(mapOf("userId" to userId.toString(), "userType" to "0"))
                 } else {
-                    _toastMessage.postValue("join failed")
+                    _snackbarMessage.postValue("Failed to join...")
                 }
             } catch (e: Exception) {
-                _toastMessage.postValue("Error: ${e.message}")
+                _snackbarMessage.postValue("Failed to join: Check class name or class code again.")
             }
         }
     }
 
-    fun getClassList(user: Map<String, String>): MutableLiveData<List<Classes>> {
+    fun getClassList(user: Map<String, String>): MutableLiveData<List<ClassesResponse>> {
         viewModelScope.launch {
             try {
                 val response = userRepository.userGetClassList(user)
                 if (response.code == 200) {
-                    classListLiveData.postValue(response.classList)
+                    _classListLiveData.postValue(response.classList)
                 }
             } catch (e: Exception) {
                 Log.d("classListError", e.message.toString())
             }
         }
-        return classListLiveData
+        return _classListLiveData
     }
 
     data class TimeElement(

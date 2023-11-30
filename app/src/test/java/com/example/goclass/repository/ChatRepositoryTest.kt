@@ -2,8 +2,6 @@ package com.example.goclass.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.goclass.network.ServiceApi
-import com.example.goclass.network.dataclass.AttendancesResponse
-import com.example.goclass.network.dataclass.ClassesResponse
 import com.example.goclass.network.dataclass.CodeMessageResponse
 import com.example.goclass.network.dataclass.CommentListsResponse
 import com.example.goclass.network.dataclass.Comments
@@ -20,7 +18,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
@@ -54,8 +51,8 @@ class ChatRepositoryTest {
         }
 
     @Test
-    fun chatChannelGetList_success() =
-        runTest {
+    fun chatChannelGetList_test() =
+        runBlocking {
             val classId = 1
             val mockMessageListsResponse =
                 MessageListsResponse(
@@ -94,8 +91,8 @@ class ChatRepositoryTest {
         }
 
     @Test
-    fun chatChannelSend_success() =
-        runTest {
+    fun chatChannelSend_test() =
+        runBlocking {
             val classId = 1
             val messages = Messages(1, "TestMsg")
             val mockCodeMessageResponse =
@@ -124,8 +121,8 @@ class ChatRepositoryTest {
         }
 
     @Test
-    fun chatChannelEdit_success() =
-        runTest {
+    fun chatChannelEdit_test() =
+        runBlocking {
             val classId = 1
             val messages = Messages(1, "TestMsg")
             val mockCodeMessageResponse =
@@ -154,8 +151,8 @@ class ChatRepositoryTest {
         }
 
     @Test
-    fun chatCommentGetList_success() =
-        runTest {
+    fun chatCommentGetList_test() =
+        runBlocking {
             val classId = 1
             val id = 1
             val mockCommentListsResponse =
@@ -198,8 +195,8 @@ class ChatRepositoryTest {
         }
 
     @Test
-    fun chatCommentSend_success() =
-        runTest {
+    fun chatCommentSend_test() =
+        runBlocking {
             val classId = 1
             val userId = 1
             val id = 1
@@ -234,8 +231,8 @@ class ChatRepositoryTest {
         }
 
     @Test
-    fun chatCommentEdit_success() =
-        runTest {
+    fun chatCommentEdit_test() =
+        runBlocking {
             val classId = 1
             val userId = 1
             val id = 1

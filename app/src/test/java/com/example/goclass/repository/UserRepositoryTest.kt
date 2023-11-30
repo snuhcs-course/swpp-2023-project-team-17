@@ -6,7 +6,7 @@ import com.example.goclass.network.dataclass.AttendanceDateListsResponse
 import com.example.goclass.network.dataclass.AttendanceListsResponse
 import com.example.goclass.network.dataclass.AttendancesResponse
 import com.example.goclass.network.dataclass.ClassListsResponse
-import com.example.goclass.network.dataclass.Classes
+import com.example.goclass.network.dataclass.ClassesResponse
 import com.example.goclass.network.dataclass.CodeMessageResponse
 import com.example.goclass.network.dataclass.Users
 import com.example.goclass.network.dataclass.UsersResponse
@@ -19,7 +19,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
@@ -54,8 +53,8 @@ class UserRepositoryTest {
         }
 
     @Test
-    fun userLogin_success() =
-        runTest {
+    fun userLogin_test() =
+        runBlocking {
             val userEmail = "a@snu.ac.kr"
             val mockUsersResponse =
                 UsersResponse(
@@ -87,8 +86,8 @@ class UserRepositoryTest {
         }
 
     @Test
-    fun userGet_success() =
-        runTest {
+    fun userGet_test() =
+        runBlocking {
             val userId = 1
             val mockUsersResponse =
                 UsersResponse(
@@ -121,8 +120,8 @@ class UserRepositoryTest {
         }
 
     @Test
-    fun userEdit_success() =
-        runTest {
+    fun userEdit_test() =
+        runBlocking {
             val userId = 1
             val user = Users(0, "name")
             val mockCodeMessageResponse =
@@ -151,13 +150,14 @@ class UserRepositoryTest {
         }
 
     @Test
-    fun userGetClassList_success() =
-        runTest {
+    fun userGetClassList_test() =
+        runBlocking {
             val userMap = mapOf("key1" to "value1", "key2" to "value2")
             val mockClassListsResponse =
                 ClassListsResponse(
                     listOf(
-                        Classes(
+                        ClassesResponse(
+                            1,
                             "TestName",
                             "TestCode",
                             1,
@@ -191,8 +191,8 @@ class UserRepositoryTest {
         }
 
     @Test
-    fun userGetAttendanceListByDate_success() =
-        runTest {
+    fun userGetAttendanceListByDate_test() =
+        runBlocking {
             val date = "YYYY-MM-DD"
             val userMap = mapOf("key1" to "value1", "key2" to "value2")
             val mockAttendanceListsResponse =
@@ -205,6 +205,7 @@ class UserRepositoryTest {
                             0,
                             0,
                             1,
+                            "TestStudentName",
                             1,
                         )
                     ),
@@ -232,8 +233,8 @@ class UserRepositoryTest {
         }
 
     @Test
-    fun attendanceGetDateList_success() =
-        runTest {
+    fun attendanceGetDateList_test() =
+        runBlocking {
             val classMap = mapOf("key1" to "value1", "key2" to "value2")
             val mockAttendanceDateListsResponse =
                 AttendanceDateListsResponse(

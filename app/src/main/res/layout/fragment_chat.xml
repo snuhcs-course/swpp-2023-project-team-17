@@ -5,12 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".ui.classui.chats.chat.ChatFragment">
+    tools:context=".ui.classui.chats.ChatFragment"
+    android:id="@+id/fragment_chat" >
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chatRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:scrollbars="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintBottom_toTopOf="@id/chatui"/>
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:background="@drawable/appbar_bg"
         app:layout_constraintTop_toTopOf="parent"
@@ -23,7 +35,6 @@
             android:layout_height="50dp"
             android:background="@color/white"
             android:src="@drawable/back"
-            android:contentDescription="To back page button"
             android:layout_gravity="start"/>
 
         <TextView
@@ -31,61 +42,59 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="className"
-            style="@style/SmallFont"
-            android:layout_gravity="center" />
+            style="@style/SemiBold"
+            android:layout_gravity="center"
+            tools:ignore="HardcodedText" />
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/attendanceButton"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:background="@color/white"
-            android:src="@drawable/baseline_calendar_month_24"
-            android:contentDescription="To attendance page button"
+            android:src="@drawable/attendance_btn"
             android:layout_gravity="end" />
     </androidx.appcompat.widget.Toolbar>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/chatRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/chatui"
-        android:layout_width="360dp"
-        android:layout_height="60dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="680dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:minHeight="60dp"
+        android:maxHeight="150dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:clipToOutline="true"
         android:background="@drawable/chatbox_bg"
         >
 
         <EditText
             android:id="@+id/chatText"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:ems="10"
+            android:layout_margin="10dp"
+            style="@style/Medium"
+            android:background="@null"
+            android:scrollbars="vertical"
             android:gravity="center_vertical"
-            android:inputType="text"
-            android:hint="write your messages" />
+            android:inputType="textMultiLine"
+            android:maxLines="6"
+            android:hint="Write your messages..."
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/chatSendButton"
+            tools:ignore="HardcodedText" />
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/chatSendButton"
-            android:layout_width="27dp"
-            android:layout_height="25dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="312dp"
-            android:layout_marginTop="21dp"
-            android:background="#929292"
-            android:src="@android:drawable/ic_menu_send" />
-    </RelativeLayout>
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="#FFFFFF"
+            android:src="@drawable/send" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

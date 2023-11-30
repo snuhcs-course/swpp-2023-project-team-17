@@ -3,7 +3,9 @@ package com.example.goclass.ui.classui.attendances.service
 import android.Manifest
 import android.app.Service
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
 import android.bluetooth.le.*
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Handler
@@ -21,11 +23,13 @@ class BleScanService : Service() {
     private var scanCount = 0
     private var successfulScanCount = 0
     private var classId = -1
+    private var scanning = false
 
     private val handler = Handler()
 
     override fun onCreate() {
         super.onCreate()
+        Log.e(TAG, "Blescan create")
         initializeBluetooth()
     }
 
@@ -45,6 +49,7 @@ class BleScanService : Service() {
 
     override fun onDestroy() {
         sendSuccessfulScanCount()
+        Log.e(TAG, "Blescan create")
         super.onDestroy()
     }
 
@@ -57,7 +62,8 @@ class BleScanService : Service() {
     }
 
     private fun initializeBluetooth() {
-        val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        val bluetoothAdapter = bluetoothManager.adapter
 
         if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled) {
             Log.e(TAG, "Bluetooth is not enabled")
@@ -69,6 +75,7 @@ class BleScanService : Service() {
 
     private val scanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult?) {
+            Log.d(TAG, "스캔 결과 수신: ${result?.device?.address}")
             super.onScanResult(callbackType, result)
             result?.device?.let {
                 Log.i(TAG, "Device found: ${it.address}")
@@ -77,20 +84,50 @@ class BleScanService : Service() {
                     successfulScanCount++
                 }
             }
+
+//            super.onScanResult(callbackType, result)
+//            if (result == null) {
+//                Log.i(TAG, "Scan result is null")
+//                return
+//            }
+//
+//            val device = result.device
+//            val deviceName = "Unknown Device"
+//            val deviceAddress = device.address ?: "No Address"
+//            val rssi = result.rssi
+//
+//            // 스캔 결과에 대한 로그
+//            Log.i(TAG, "Device found: Name: $deviceName, Address: $deviceAddress, RSSI: $rssi")
+//
+//            // 타겟 장치 확인 (여기서는 필터링 없이 모든 장치를 로그로 출력)
+//            if (isTargetDevice(result)) {
+//                bleScanCallback?.onDeviceFound(scanCount)
+//                successfulScanCount++
+//            }
         }
 
         override fun onScanFailed(errorCode: Int) {
-            super.onScanFailed(errorCode)
             Log.e(TAG, "Scan failed with error code: $errorCode")
             bleScanCallback?.onScanFailed(errorCode)
+        }
+
+        override fun onBatchScanResults(results: MutableList<ScanResult>?) {
+            Log.d(TAG, "Scan Batch")
         }
     }
 
     private fun isTargetDevice(result: ScanResult): Boolean {
+//<<<<<<< HEAD
         val formattedClassId = classId.toString().padStart(5, '0')
         val targetUuid = "$formattedClassId-0000-1000-8000-00805f9b34fb"
         val beaconId = "2cdbdd00-13ee-11e4-9b6c-0002a5d5c518"
         val targetServiceUuid = ParcelUuid.fromString(targetUuid)
+//=======
+//        val formattedClassId = classId.toString().padStart(6, '0')
+//        val targetUuid = formattedClassId + Constants.UUID_STRING
+//        val beaconId = "2cdbdd00-13ee-11e4-9b6c-0002a5d5c51b"
+//        val targetServiceUuid = ParcelUuid.fromString(beaconId)
+//>>>>>>> 6f270b13565b158eca00dc6c27788cffd7643903
         return result.scanRecord?.serviceUuids?.contains(targetServiceUuid) == true
     }
 
@@ -137,11 +174,20 @@ class BleScanService : Service() {
     }
 
     private fun startScanning() {
+//<<<<<<< HEAD
+        Log.d(TAG, "start scan")
         val formattedClassId = classId.toString().padStart(5, '0')
 
 //        val beaconId = "2cdbdd00-13ee-11e4-9b6c-0002a5d5c518"
 //        val formattedClassId = classId.toString().padStart(5, '0')
         val beaconId = "$formattedClassId-0000-1000-8000-00805f9b34fb"
+//=======
+//        Log.d(TAG, "start scan")
+//
+//        val formattedClassId = classId.toString().padStart(6, '0')
+//
+//        val beaconId = "2cdbdd00-13ee-11e4-9b6c-0002a5d5c51b"
+//>>>>>>> 6f270b13565b158eca00dc6c27788cffd7643903
         val targetUuid = ParcelUuid.fromString(beaconId)
 
         val scanFilters: List<ScanFilter> = listOf(
@@ -161,9 +207,23 @@ class BleScanService : Service() {
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for Activity#requestPermissions for more details.
+            Log.d(TAG, checkSelfPermission(Manifest.permission.BLUETOOTH_SCAN).toString())
             return
         }
-        bluetoothLeScanner?.startScan(scanFilters, scanSettings, scanCallback)
+        Log.d(TAG, scanFilters.toString())
+        Log.d(TAG, scanSettings.toString())
+        Log.d(TAG, scanCallback.toString())
+        Log.d(TAG, bluetoothLeScanner.toString())
+
+        if (scanning) {
+            Log.d(TAG, "IN SCANNING!")
+            bluetoothLeScanner?.stopScan(scanCallback)
+            bluetoothLeScanner?.startScan(scanFilters, scanSettings, scanCallback)
+        } else {
+            bluetoothLeScanner?.startScan(scanFilters, scanSettings, scanCallback)
+            scanning = true
+        }
+
     }
 
     companion object {
