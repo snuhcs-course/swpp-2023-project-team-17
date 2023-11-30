@@ -61,7 +61,7 @@ class ChatViewModelTest {
             val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
             val sendSuccess = viewModel.accessSendSuccess().getOrAwaitValue()
             TestCase.assertEquals("Success", toastValue)
-            TestCase.assertEquals(true, sendSuccess)
+            TestCase.assertTrue(sendSuccess)
         }
 
     @Test
@@ -90,7 +90,7 @@ class ChatViewModelTest {
             val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
             val sendSuccess = viewModel.accessSendSuccess().getOrAwaitValue()
             TestCase.assertEquals("Failure", toastValue)
-            TestCase.assertEquals(false, sendSuccess)
+            TestCase.assertFalse(sendSuccess)
         }
 
     @Test
@@ -115,7 +115,7 @@ class ChatViewModelTest {
             val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
             val sendSuccess = viewModel.accessSendSuccess().getOrAwaitValue()
             TestCase.assertEquals("Error: $exceptionMessage", toastValue)
-            TestCase.assertEquals(false, sendSuccess)
+            TestCase.assertFalse(sendSuccess)
         }
 
     @Test
@@ -144,7 +144,7 @@ class ChatViewModelTest {
             val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
             val editSuccess = viewModel.accessEditSuccess().getOrAwaitValue()
             TestCase.assertEquals("Success", toastValue)
-            TestCase.assertEquals(true, editSuccess)
+            TestCase.assertTrue(editSuccess)
         }
 
     @Test
@@ -173,7 +173,7 @@ class ChatViewModelTest {
             val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
             val editSuccess = viewModel.accessEditSuccess().getOrAwaitValue()
             TestCase.assertEquals("Failure", toastValue)
-            TestCase.assertEquals(false, editSuccess)
+            TestCase.assertFalse(editSuccess)
         }
 
     @Test
@@ -198,7 +198,7 @@ class ChatViewModelTest {
             val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
             val editSuccess = viewModel.accessEditSuccess().getOrAwaitValue()
             TestCase.assertEquals("Error: $exceptionMessage", toastValue)
-            TestCase.assertEquals(false, editSuccess)
+            TestCase.assertFalse(editSuccess)
         }
 
     @Test

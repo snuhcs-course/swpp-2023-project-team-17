@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.example.goclass.R
 import com.example.goclass.databinding.ItemStudentAttendanceBinding
@@ -23,7 +24,9 @@ import java.util.TimeZone
 
 class StudentAttendanceAdapter(
     private val repository: AttendanceRepository,
+    private val lifecycleOwner: LifecycleOwner,
 ) : RecyclerView.Adapter<StudentAttendanceAdapter.StudentAttendanceViewHolder>() {
+    private val viewModel = StudentAttendanceAdapterViewModel(repository)
     private var studentAttendanceList = listOf<AttendancesResponse>()
 
     @SuppressLint("NotifyDataSetChanged")
@@ -42,7 +45,7 @@ class StudentAttendanceAdapter(
                 parent,
                 false,
             )
-        return StudentAttendanceViewHolder(binding, repository)
+        return StudentAttendanceViewHolder(binding, viewModel, lifecycleOwner)
     }
 
     override fun onBindViewHolder(
@@ -56,8 +59,11 @@ class StudentAttendanceAdapter(
     override fun getItemCount(): Int = studentAttendanceList.size
 
     @OptIn(DelicateCoroutinesApi::class)
-    class StudentAttendanceViewHolder(var binding: ItemStudentAttendanceBinding, val repository: AttendanceRepository) :
-        RecyclerView.ViewHolder(binding.root) {
+    class StudentAttendanceViewHolder(
+        val binding: ItemStudentAttendanceBinding,
+        val viewModel: StudentAttendanceAdapterViewModel,
+        val lifecycleOwner: LifecycleOwner,
+    ) : RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
         fun bind(studentAttendanceItem: AttendancesResponse) {
             val originalFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
@@ -86,23 +92,17 @@ class StudentAttendanceAdapter(
                 binding.sendButton.background = ContextCompat.getDrawable(itemView.context, R.drawable.sent_bg)
             }
 
-            binding.sendButton.setOnClickListener {
-                if (binding.sendButton.isEnabled) {
-                    GlobalScope.launch(Dispatchers.IO) {
-                        val attendanceId = studentAttendanceItem.attendanceId
-                        try {
-                            val response = repository.attendanceEdit(attendanceId)
-                            if (response.code == 200) {
-                                withContext(Dispatchers.Main) {
-                                    binding.sendButton.isEnabled = false
-                                    binding.sendButton.text = "Sent"
-                                    val gray = ContextCompat.getColor(itemView.context, R.color.gray)
-                                    binding.sendButton.setTextColor(gray)
-                                    binding.sendButton.background = ContextCompat.getDrawable(itemView.context, R.drawable.sent_bg)
-                                }
-                            }
-                        } catch (e: Exception) {
-                            Log.d("attendanceSendError", e.message.toString())
+            if (binding.sendButton.isEnabled) {
+                binding.sendButton.setOnClickListener {
+                    val attendanceId = studentAttendanceItem.attendanceId
+                    viewModel.editAttendance(attendanceId)
+                    viewModel.editSuccess.observe(lifecycleOwner) { editSuccess ->
+                        if (editSuccess) {
+                            binding.sendButton.isEnabled = false
+                            binding.sendButton.text = "Sent"
+                            val gray = ContextCompat.getColor(itemView.context, R.color.gray)
+                            binding.sendButton.setTextColor(gray)
+                            binding.sendButton.background = ContextCompat.getDrawable(itemView.context, R.drawable.sent_bg)
                         }
                     }
                 }

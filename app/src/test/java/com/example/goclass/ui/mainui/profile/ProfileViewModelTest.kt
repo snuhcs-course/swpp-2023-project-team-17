@@ -8,6 +8,8 @@ import com.example.goclass.repository.UserRepository
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertFalse
+import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -47,8 +49,8 @@ class ProfileViewModelTest {
             val editSuccess = viewModel.accessEditSuccess().getOrAwaitValue()
             val isLoading = viewModel.accessIsLoading().getOrAwaitValue()
             assertEquals("Success", toastValue)
-            assertEquals(true, editSuccess)
-            assertEquals(false, isLoading)
+            assertTrue(editSuccess)
+            assertFalse(isLoading)
         }
 
     @Test
@@ -64,8 +66,8 @@ class ProfileViewModelTest {
             val editSuccess = viewModel.accessEditSuccess().getOrAwaitValue()
             val isLoading = viewModel.accessIsLoading().getOrAwaitValue()
             assertEquals("Failure", toastValue)
-            assertEquals(false, editSuccess)
-            assertEquals(false, isLoading)
+            assertFalse(editSuccess)
+            assertFalse(isLoading)
         }
 
     @Test
@@ -80,8 +82,8 @@ class ProfileViewModelTest {
             val editSuccess = viewModel.accessEditSuccess().getOrAwaitValue()
             val isLoading = viewModel.accessIsLoading().getOrAwaitValue()
             assertEquals("Error: $exceptionMessage", toastValue)
-            assertEquals(false, editSuccess)
-            assertEquals(false, isLoading)
+            assertFalse(editSuccess)
+            assertFalse(isLoading)
         }
 
     @Test

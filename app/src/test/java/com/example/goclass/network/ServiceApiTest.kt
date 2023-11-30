@@ -23,9 +23,9 @@ import com.squareup.moshi.Moshi
 import junit.framework.TestCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -66,7 +66,7 @@ class ServiceApiTest {
 
     @Test
     fun userLogin_test() =
-        runTest {
+        runBlocking {
             // Given
             val email = "test@example.com"
             val expectedResponse =
@@ -105,7 +105,7 @@ class ServiceApiTest {
 
     @Test
     fun userGet_test() =
-        runTest {
+        runBlocking {
             // Given
             val userId = 1234
             val expectedResponse =
@@ -143,7 +143,7 @@ class ServiceApiTest {
 
     @Test
     fun userEdit_test() =
-        runTest {
+        runBlocking {
             // Given
             val userId = 1234
             val users = Users("test@example.com", userId, "TestName", 0)
@@ -174,7 +174,7 @@ class ServiceApiTest {
 
     @Test
     fun userGetClassList_test() =
-        runTest {
+        runBlocking {
             // Given
             val users = mapOf("userId" to "1", "userType" to "0")
             val expectedResponse =
@@ -223,7 +223,7 @@ class ServiceApiTest {
 
     @Test
     fun userGetAttendanceListByDate_test() =
-        runTest {
+        runBlocking {
             // Given
             val date = "2023-11-16"
             val classes = mapOf("classId" to "1", "userType" to "1")
@@ -233,10 +233,11 @@ class ServiceApiTest {
                         AttendancesResponse(
                             1234,
                             0,
-                            "attendanceDate",
+                            "TestAttendanceDate",
                             0,
                             0,
                             1,
+                            "TestStudentName",
                             1,
                         ),
                     ),
@@ -287,6 +288,10 @@ class ServiceApiTest {
                 actualResponse.attendanceList[0].studentId,
             )
             TestCase.assertEquals(
+                expectedResponse.attendanceList[0].studentName,
+                actualResponse.attendanceList[0].studentName,
+            )
+            TestCase.assertEquals(
                 expectedResponse.attendanceList[0].classId,
                 actualResponse.attendanceList[0].classId,
             )
@@ -294,14 +299,14 @@ class ServiceApiTest {
 
     @Test
     fun attendanceGetDateList_test() =
-        runTest {
+        runBlocking {
             // Given
             val classMap = mapOf("classId" to "1", "userType" to "1")
             val expectedResponse =
                 AttendanceDateListsResponse(
                     listOf(
                         AttendancesResponse(
-                            "attendanceDate",
+                            "TestAttendanceDate",
                         ),
                     ),
                     200,
@@ -334,7 +339,7 @@ class ServiceApiTest {
 
     @Test
     fun classCreate_test() =
-        runTest {
+        runBlocking {
             // Given
             val classes = Classes("TestName", "1234", 1, "TestTime", "TestBuildingNumber", "TestRoomNumber")
             val expectedResponse =
@@ -364,7 +369,7 @@ class ServiceApiTest {
 
     @Test
     fun classJoin_test() =
-        runTest {
+        runBlocking {
             // Given
             val userId = 1
             val classes = Classes("TestName", "1234")
@@ -399,7 +404,7 @@ class ServiceApiTest {
 
     @Test
     fun classGet_test() =
-        runTest {
+        runBlocking {
             // Given
             val classId = 1
             val expectedResponse =
@@ -441,7 +446,7 @@ class ServiceApiTest {
 
     @Test
     fun classDelete_test() =
-        runTest {
+        runBlocking {
             // Given
             val classId = 1
             val expectedResponse =
@@ -471,7 +476,7 @@ class ServiceApiTest {
 
     @Test
     fun classGetAttendanceListByUserId_test() =
-        runTest {
+        runBlocking {
             // Given
             val classId = 1
             val userId = 1
@@ -481,7 +486,7 @@ class ServiceApiTest {
                         AttendancesResponse(
                             1234,
                             0,
-                            "attendanceDate",
+                            "TestAttendanceDate",
                             0,
                             0,
                             1,
@@ -542,7 +547,7 @@ class ServiceApiTest {
 
     @Test
     fun chatChannelGetList_test() =
-        runTest {
+        runBlocking {
             // Given
             val classId = 1234
             val expectedResponse =
@@ -592,7 +597,7 @@ class ServiceApiTest {
 
     @Test
     fun chatChannelSend_test() =
-        runTest {
+        runBlocking {
             // Given
             val classId = 1234
             val messages = Messages(1, "TestContent")
@@ -623,7 +628,7 @@ class ServiceApiTest {
 
     @Test
     fun chatChannelEdit_test() =
-        runTest {
+        runBlocking {
             // Given
             val classId = 1234
             val messages = Messages(1, "TestContent")
@@ -654,7 +659,7 @@ class ServiceApiTest {
 
     @Test
     fun chatCommentGetList_test() =
-        runTest {
+        runBlocking {
             // Given
             val classId = 1234
             val messageId = 123
@@ -705,7 +710,7 @@ class ServiceApiTest {
 
     @Test
     fun chatCommentSend_test() =
-        runTest {
+        runBlocking {
             // Given
             val classId = 1234
             val messageId = 123
@@ -739,7 +744,7 @@ class ServiceApiTest {
 
     @Test
     fun chatCommentEdit_test() =
-        runTest {
+        runBlocking {
             // Given
             val classId = 1234
             val messageId = 123
@@ -773,7 +778,7 @@ class ServiceApiTest {
 
     @Test
     fun attendanceGet_test() =
-        runTest {
+        runBlocking {
             // Given
             val attendanceId = 1234
             val expectedResponse =
@@ -817,7 +822,7 @@ class ServiceApiTest {
 
     @Test
     fun attendanceEdit_test() =
-        runTest {
+        runBlocking {
             // Given
             val attendanceId = 1234
             val expectedResponse =
@@ -847,7 +852,7 @@ class ServiceApiTest {
 
     @Test
     fun attendanceDelete_test() =
-        runTest {
+        runBlocking {
             // Given
             val attendanceId = 1234
             val expectedResponse =
@@ -877,7 +882,7 @@ class ServiceApiTest {
 
     @Test
     fun attendanceAdd_test() =
-        runTest {
+        runBlocking {
             // Given
             val attendanceId = 1234
             val attendances = Attendances(2, 60, 1)
