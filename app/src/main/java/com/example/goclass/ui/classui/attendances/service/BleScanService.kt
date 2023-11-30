@@ -87,10 +87,10 @@ class BleScanService : Service() {
     }
 
     private fun isTargetDevice(result: ScanResult): Boolean {
-        val formattedClassId = classId.toString().padStart(6, '0')
-        val targetUuid = formattedClassId + Constants.UUID_STRING
+        val formattedClassId = classId.toString().padStart(5, '0')
+        val targetUuid = "$formattedClassId-0000-1000-8000-00805f9b34fb"
         val beaconId = "2cdbdd00-13ee-11e4-9b6c-0002a5d5c518"
-        val targetServiceUuid = ParcelUuid.fromString(beaconId)
+        val targetServiceUuid = ParcelUuid.fromString(targetUuid)
         return result.scanRecord?.serviceUuids?.contains(targetServiceUuid) == true
     }
 
@@ -107,6 +107,7 @@ class BleScanService : Service() {
     }
 
     private fun stopScanning() {
+        Log.d(TAG, "stopScanning")
         if (checkSelfPermission(Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    Activity#requestPermissions
@@ -136,9 +137,11 @@ class BleScanService : Service() {
     }
 
     private fun startScanning() {
-        val formattedClassId = classId.toString().padStart(6, '0')
+        val formattedClassId = classId.toString().padStart(5, '0')
 
-        val beaconId = "2cdbdd00-13ee-11e4-9b6c-0002a5d5c518"
+//        val beaconId = "2cdbdd00-13ee-11e4-9b6c-0002a5d5c518"
+//        val formattedClassId = classId.toString().padStart(5, '0')
+        val beaconId = "$formattedClassId-0000-1000-8000-00805f9b34fb"
         val targetUuid = ParcelUuid.fromString(beaconId)
 
         val scanFilters: List<ScanFilter> = listOf(

@@ -17,10 +17,14 @@ import android.util.Log
 import androidx.core.app.ActivityCompat
 import com.example.goclass.ui.classui.attendances.service.BleScanService
 import com.example.goclass.utility.Constants
+import java.util.Timer
+import java.util.TimerTask
 import java.lang.NumberFormatException
 import java.util.UUID
 
 class BleAdvertService : Service() {
+
+    private lateinit var advertiseTimer: Timer
 
     private var bluetoothAdapter: BluetoothAdapter? = null
     private var advertiseHandler: Handler? = null
@@ -38,7 +42,7 @@ class BleAdvertService : Service() {
         .setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY)
         .setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_HIGH)
         .setConnectable(false)
-        .setTimeout(3000000) // Advertise indefinitely (or set a specific duration)
+        .setTimeout(0) // Advertise indefinitely (or set a specific duration)
         .build()
 
     private val advertiseCallback = object : AdvertiseCallback() {
@@ -76,13 +80,18 @@ class BleAdvertService : Service() {
                 val endHour = intent.getIntExtra("endHour", -1)
                 val endMinute = intent.getIntExtra("endMinute", -1)
                 if (classId != -1) {
-                    durationMillis = ((endHour*60 + endMinute) - (startHour*60 + startMinute)).toLong()
+                    Log.d(TAG, "endHour: $endHour")
+                    Log.d(TAG, "endMinute: $endMinute")
+                    Log.d(TAG, "startHour: $startHour")
+                    Log.d(TAG, "startMinute: $startMinute")
+                    durationMillis = (((endHour*60 + endMinute) - (startHour*60 + startMinute)) * 60 * 1000).toLong()
+                    Log.d(TAG, "durationMillis: $durationMillis")
                     val formattedClassId = classId.toString().padEnd(5,'0')
                     Log.d(TAG, "$formattedClassId")
                     val formattedUuid = "$formattedClassId-0000-1000-8000-00805f9b34fb"
                     val sampleUuid = UUID.randomUUID().toString()
                     try {
-                        val parcelUuid = ParcelUuid.fromString(sampleUuid)
+                        val parcelUuid = ParcelUuid.fromString(formattedUuid)
                         advertiseData = AdvertiseData.Builder()
                             .setIncludeDeviceName(false)
                             .addServiceUuid(parcelUuid)
@@ -157,20 +166,32 @@ class BleAdvertService : Service() {
             Log.e(TAG, "필요한 블루투스 광고 권한이 없습니다.")
             return
         }
+
+        Log.d(TAG, "bluetoothLeAdvertiser: $bluetoothAdapter.bluetoothLeAdvertiser")
         bluetoothAdapter?.bluetoothLeAdvertiser?.startAdvertising(
             advertiseSettings,
             advertiseData,
             advertiseCallback
         )
+        Log.d(TAG, "After startAdvertising")
 
-        // Schedule to stop advertising after a certain duration (e.g., 10 seconds)
+        // Schedule to stop advertising after a certain duration (e.g., durationMillis)
+        Log.d(TAG, "durationMillis: $durationMillis")
         advertiseHandler = Handler()
         advertiseHandler?.postDelayed({
             stopAdvertising()
         }, durationMillis)
+//        Log.d(TAG, "durationMillis: $durationMillis")
+//        advertiseTimer = Timer()
+//        advertiseTimer.schedule(object : TimerTask() {
+//            override fun run() {
+//                stopAdvertising()
+//            }
+//        }, durationMillis)
     }
 
     private fun stopAdvertising() {
+        Log.d(TAG, "stopAdvertising")
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.BLUETOOTH_ADVERTISE
@@ -186,6 +207,7 @@ class BleAdvertService : Service() {
             return
         }
         bluetoothAdapter?.bluetoothLeAdvertiser?.stopAdvertising(advertiseCallback)
+//        advertiseTimer.cancel()
         stopSelf()
     }
 

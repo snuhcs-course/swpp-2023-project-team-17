@@ -40,6 +40,7 @@ class AttendanceReceiver : BroadcastReceiver() {
 
                     // Start the AttendanceService to perform the attendance check
                     context.startService(serviceIntent)
+                    Log.d("AttendanceReceiver", "start AttendanceService")
                 } else if (userType == 1) {
                     // Create an intent to start the BleAdvertService
                     val serviceIntent = Intent(context, BleAdvertService::class.java)
@@ -49,9 +50,14 @@ class AttendanceReceiver : BroadcastReceiver() {
                     serviceIntent.putExtra("startMinute", startMinute)
                     serviceIntent.putExtra("endHour", endHour)
                     serviceIntent.putExtra("endMinute", endMinute)
+                    Log.d("AttendanceReceiver", "endHour: $endHour")
+                    Log.d("AttendanceReceiver", "endMinute: $endMinute")
+                    Log.d("AttendanceReceiver", "startHour: $startHour")
+                    Log.d("AttendanceReceiver", "startMinute: $startMinute")
 
                     // Start the AttendanceService to perform the attendance check
                     context.startService(serviceIntent)
+                    Log.d("AttendanceReceiver", "start BleAdvertService")
                 } else {
                     Log.d("AttendanceReceiver", "Error in userType")
                 }

@@ -79,7 +79,7 @@ class AttendanceService : Service(), BleScanCallback {
                 val endHour = intent.getIntExtra("endHour", -1)
                 val endMinute = intent.getIntExtra("endMinute", -1)
                 if (userId != -1 && classId != -1) {
-                    val durationMillis = (endHour*60 + endMinute) - (startHour*60 + startMinute)
+                    val durationMillis = ((endHour*60 + endMinute) - (startHour*60 + startMinute) * 60 * 1000).toLong()
                     startBleScanning(durationMillis);
                 } else {
                     Log.d("Error", "Invalid userId or classId")
@@ -90,7 +90,7 @@ class AttendanceService : Service(), BleScanCallback {
         return START_STICKY
     }
 
-    private fun startBleScanning(durationMillis: Int) {
+    private fun startBleScanning(durationMillis: Long) {
         bleScanService = BleScanService()
         bleScanService.setBleScanCallback(this)
 

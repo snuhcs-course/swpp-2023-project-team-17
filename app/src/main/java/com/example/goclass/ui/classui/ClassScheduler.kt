@@ -31,6 +31,10 @@ class ClassScheduler {
             putExtra("endHour", endHour)
             putExtra("endMinute", endMinute)
             putExtra("userType", userType)
+            Log.d("classScheduler", "endHour: $endHour")
+            Log.d("classScheduler", "endMinute: $endMinute")
+            Log.d("classScheduler", "startHour: $startHour")
+            Log.d("classScheduler", "startMinute: $startMinute")
         }
 
         Log.d("classScheduler", "dayOfWeek: $dayOfWeek")
