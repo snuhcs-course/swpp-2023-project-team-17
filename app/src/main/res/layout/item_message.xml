@@ -4,38 +4,115 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingVertical="16dp">
+    android:paddingVertical="16dp"
+    android:background="@drawable/chat_bg"
+    >
 
     <TextView
         android:id="@+id/messageText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:textSize="20sp"
+        android:layout_marginBottom="16dp"
+        android:textColor="@color/black"
+        tools:text="Dummy"
+        style="@style/Medium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/nameText"
-        tools:text="Dummy" />
+        app:layout_constraintTop_toBottomOf="@id/nameAndTime" />
 
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/chatEditButton"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/messageEditText"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:src="@android:drawable/ic_menu_edit"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/nameText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="TextView"
-        android:textStyle="bold"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/edit_text_bg"
+        android:visibility="gone"
+        android:inputType="textMultiLine"
+        style="@style/Medium"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/messageText"
+        app:layout_constraintEnd_toStartOf="@id/chatEditButton"
+        app:layout_constraintBottom_toBottomOf="@id/messageText" />
+
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/chatEditButton"
+        android:layout_width="40dp"
+        android:layout_height="20dp"
+        android:layout_marginEnd="10dp"
+        android:background="@null"
+        android:text="@string/edit"
+        android:textSize="10sp"
+        android:textAllCaps="false"
+        android:textColor="@color/gray"
+        style="@style/Medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="SmallSp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/editDoneButton"
+        android:layout_width="40dp"
+        android:layout_height="20dp"
+        android:layout_marginEnd="5dp"
+        android:background="@null"
+        android:text="@string/done"
+        android:visibility="gone"
+        android:textSize="10sp"
+        android:textAllCaps="false"
+        android:textColor="@color/gray"
+        style="@style/Medium"
+        app:layout_constraintEnd_toStartOf="@+id/editCancelButton"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="SmallSp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/editCancelButton"
+        android:layout_width="40dp"
+        android:layout_height="20dp"
+        android:layout_marginEnd="10dp"
+        android:background="@null"
+        android:visibility="gone"
+        android:text="@string/cancel"
+        android:textSize="10sp"
+        android:textAllCaps="false"
+        android:textColor="@color/red"
+        style="@style/Medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="SmallSp" />
+
+    <LinearLayout
+        android:id="@+id/nameAndTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/nameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="TextView"
+            style="@style/Medium"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/timeStampText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:layout_marginStart="8dp"
+            android:text="TextView"
+            android:textColor="#999999"
+            style="@style/Medium"
+            tools:ignore="HardcodedText,SmallSp" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

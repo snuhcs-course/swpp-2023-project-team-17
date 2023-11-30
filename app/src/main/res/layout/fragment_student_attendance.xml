@@ -10,6 +10,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:background="@drawable/appbar_bg"
         app:layout_constraintTop_toTopOf="parent"
@@ -30,22 +31,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="className"
-            style="@style/SmallFont"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            tools:ignore="HardcodedText"
+            style="@style/SemiBold"/>
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/studentAttendanceRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="8dp"
-        android:clipToPadding="false"
+        android:layout_height="0dp"
         android:scrollbars="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <Button
         android:id="@+id/button"

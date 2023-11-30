@@ -1,8 +1,10 @@
 package com.example.goclass.di
 
+import com.example.goclass.R
 import com.example.goclass.network.ServiceApi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -23,7 +25,7 @@ val networkModule =
         }
 
         single<Retrofit> {
-            val baseUrl = "http://ec2-43-202-167-120.ap-northeast-2.compute.amazonaws.com:3000"
+            val baseUrl = androidContext().getString(R.string.base_url)
             Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())

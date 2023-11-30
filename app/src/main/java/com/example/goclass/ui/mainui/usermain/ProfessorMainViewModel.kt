@@ -5,9 +5,9 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.goclass.network.dataclass.Classes
+import com.example.goclass.network.dataclass.ClassesResponse
 import com.example.goclass.repository.ClassRepository
 import com.example.goclass.repository.UserRepository
 import com.example.goclass.ui.classui.ClassScheduler
@@ -20,11 +20,11 @@ class ProfessorMainViewModel(
     private val classRepository: ClassRepository,
     application: Application,
 ) : AndroidViewModel(application), KoinComponent {
-    private val _toastMessage = MutableLiveData<String>()
-    val toastMessage: LiveData<String> get() = _toastMessage
-    val classListLiveData: MutableLiveData<List<Classes>> = MutableLiveData()
+    private val _snackbarMessage = MutableLiveData<String>()
+    private val _classListLiveData: MutableLiveData<List<ClassesResponse>> = MutableLiveData()
 
-    private val classScheduler = ClassScheduler()
+    val classListLiveData: LiveData<List<ClassesResponse>> get() = _classListLiveData
+    val snackbarMessage: LiveData<String> get() = _snackbarMessage
 
     fun createClass(
         className: String,
@@ -33,6 +33,7 @@ class ProfessorMainViewModel(
         classTime: String,
         buildingNumber: String,
         roomNumber: String,
+        classScheduler: ClassScheduler,
     ) {
         viewModelScope.launch {
             val newClass =
@@ -93,30 +94,31 @@ class ProfessorMainViewModel(
                 }
 
                 if (response.code == 200) {
-                    _toastMessage.postValue("Successfully created!")
+                    _snackbarMessage.postValue("Successfully created!")
                     getClassList(mapOf("userId" to professorId.toString(), "userType" to "1"))
                 } else {
-                    _toastMessage.postValue("create failed")
+                    _snackbarMessage.postValue("Failed to create...")
                 }
             } catch (e: Exception) {
-                _toastMessage.postValue("Error: ${e.message}")
+                _snackbarMessage.postValue("Error: ${e.message}")
                 Log.d("createclass", "${e.message}")
             }
         }
     }
 
-    fun getClassList(user: Map<String, String>): MutableLiveData<List<Classes>> {
+    fun getClassList(user: Map<String, String>): MutableLiveData<List<ClassesResponse>> {
         viewModelScope.launch {
             try {
                 val response = userRepository.userGetClassList(user)
                 if (response.code == 200) {
-                    classListLiveData.postValue(response.classList)
+                    _classListLiveData.postValue(response.classList)
                 }
             } catch (e: Exception) {
                 Log.d("classListError", e.message.toString())
+                _snackbarMessage.postValue("Error: ${e.message}")
             }
         }
-        return classListLiveData
+        return _classListLiveData
     }
 
     fun deleteClass(classId: Int, professorId: Int) {
@@ -124,13 +126,14 @@ class ProfessorMainViewModel(
             try {
                 val response = classRepository.classDelete(classId)
                 if(response.code == 200) {
-                    _toastMessage.postValue("Successfully deleted")
+                    _snackbarMessage.postValue("Successfully deleted.")
                     getClassList(mapOf("userId" to professorId.toString(), "userType" to "1"))
                 } else {
-                    _toastMessage.postValue("delete Failed")
+                    _snackbarMessage.postValue("Failed to delete...")
                 }
             } catch (e: Exception) {
                 Log.d("classDeleteError", e.message.toString())
+                _snackbarMessage.postValue("Error: ${e.message}")
             }
         }
     }

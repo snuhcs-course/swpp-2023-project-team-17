@@ -84,7 +84,7 @@ class ClassScheduler {
         Log.d("classScheduler", "알람 설정됨: $dayOfWeek, $startHour:$startMinute")
     }
 
-    private fun uniqueRequestId(
+    fun uniqueRequestId(
         userId: Int,
         classId: Int,
     ): Int {

@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.goclass.network.ServiceApi
 import com.example.goclass.network.dataclass.AttendanceListsResponse
 import com.example.goclass.network.dataclass.AttendancesResponse
+import com.example.goclass.network.dataclass.ClassCreateResponse
 import com.example.goclass.network.dataclass.ClassJoinResponse
 import com.example.goclass.network.dataclass.Classes
 import com.example.goclass.network.dataclass.ClassesResponse
@@ -17,7 +18,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
@@ -53,21 +53,21 @@ class ClassRepositoryTest {
         }
 
     @Test
-    fun classCreate_success() =
-        runTest {
+    fun classCreate_test() =
+        runBlocking {
             val classes =
                 Classes("name", "code")
-            val mockCodeMessageResponse =
-                CodeMessageResponse(
+            val mockClassCreateResponse =
+                ClassCreateResponse(
+                    1,
                     200,
                     "Success",
                 )
 
-            coEvery { mockServiceApi.classCreate(classes) } returns mockCodeMessageResponse
-
+            coEvery { mockServiceApi.classCreate(classes) } returns mockClassCreateResponse
             val actualResponse = repository.classCreate(classes)
 
-            TestCase.assertEquals(mockCodeMessageResponse, actualResponse)
+            TestCase.assertEquals(mockClassCreateResponse, actualResponse)
         }
 
     @Test
@@ -85,8 +85,8 @@ class ClassRepositoryTest {
         }
 
     @Test
-    fun classJoin_success() =
-        runTest {
+    fun classJoin_test() =
+        runBlocking {
             val userId = 1
             val classes =
                 Classes("name", "code")
@@ -118,8 +118,8 @@ class ClassRepositoryTest {
         }
 
     @Test
-    fun classGet_success() =
-        runTest {
+    fun classGet_test() =
+        runBlocking {
             val classId = 1
             val mockClassesResponse =
                 ClassesResponse(
@@ -153,8 +153,8 @@ class ClassRepositoryTest {
         }
 
     @Test
-    fun classDelete_success() =
-        runTest {
+    fun classDelete_test() =
+        runBlocking {
             val classId = 1
             val mockCodeMessageResponse =
                 CodeMessageResponse(
@@ -183,8 +183,8 @@ class ClassRepositoryTest {
         }
 
     @Test
-    fun classGetAttendanceListByUserId_success() =
-        runTest {
+    fun classGetAttendanceListByUserId_test() =
+        runBlocking {
             val classId = 1
             val userId = 1
             val mockAttendanceListsResponse =

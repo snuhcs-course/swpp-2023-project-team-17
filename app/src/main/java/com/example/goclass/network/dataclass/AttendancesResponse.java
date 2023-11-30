@@ -15,6 +15,8 @@ public class AttendancesResponse {
     int isSent;
     @SerializedName("studentId")
     int studentId;
+    @SerializedName("studentName")
+    String studentName;
     @SerializedName("classId")
     int classId;
 
@@ -45,6 +47,17 @@ public class AttendancesResponse {
         this.classId = classId;
     }
 
+    public AttendancesResponse(int attendanceId, int attendanceStatus, String attendanceDate, int attendanceDuration, int isSent, int studentId, String studentName, int classId) {
+        this.attendanceId = attendanceId;
+        this.attendanceStatus = attendanceStatus;
+        this.attendanceDate = attendanceDate;
+        this.attendanceDuration = attendanceDuration;
+        this.isSent = isSent;
+        this.studentId = studentId;
+        this.studentName = studentName;
+        this.classId = classId;
+    }
+
     public AttendancesResponse(String attendanceDate) {
         this.attendanceDate = attendanceDate;
     }
@@ -71,6 +84,10 @@ public class AttendancesResponse {
 
     public int getStudentId() {
         return studentId;
+    }
+
+    public String getStudentName() {
+        return studentName;
     }
 
     public int getClassId() {
