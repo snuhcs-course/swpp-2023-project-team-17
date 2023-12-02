@@ -1,6 +1,9 @@
 package com.example.goclass.ui.classui.attendances.service
 
 import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
@@ -13,8 +16,14 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.ParcelUuid
 import android.util.Log
+//<<<<<<< HEAD
 import androidx.core.app.ActivityCompat
+//=======
+import androidx.core.app.NotificationCompat
+import com.example.goclass.R
+//>>>>>>> 40de6801afd7a2dcf7ac48a46f53a9e8c16cabe6
 import com.example.goclass.ui.classui.attendances.callback.BleScanCallback
+import com.example.goclass.ui.mainui.MainActivity
 import com.example.goclass.utility.Constants
 
 class BleScanService : Service() {
@@ -38,10 +47,14 @@ class BleScanService : Service() {
         super.onCreate()
         Log.d(TAG, "Blescan create")
         initializeBluetooth()
+//<<<<<<< HEAD
 
         // Initialize the handler for incrementing scanCount every minute
         scanIntervalHandler = Handler()
 //        startIncrementingScanCount()
+//=======
+        createNotificationChannel()
+//>>>>>>> 40de6801afd7a2dcf7ac48a46f53a9e8c16cabe6
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -58,6 +71,7 @@ class BleScanService : Service() {
             stopScanningService()
         }, durationMillis)
 
+        startForegroundNotification()
         startScanningWithInterval()
 //        startScanning()
         return START_STICKY
@@ -304,6 +318,41 @@ class BleScanService : Service() {
 
     }
 
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val serviceChannel = NotificationChannel(
+                CHANNEL_ID,
+                "BLE Scan Service Channel",
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+            val manager = getSystemService(NotificationManager::class.java)
+            manager.createNotificationChannel(serviceChannel)
+        }
+    }
+
+    private fun startForegroundNotification() {
+        val notificationIntent = Intent(this, MainActivity::class.java)
+        val pendingIntentFlags =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            } else {
+                PendingIntent.FLAG_UPDATE_CURRENT
+            }
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            0, notificationIntent, pendingIntentFlags
+        )
+
+        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setContentTitle("BLE Scanning")
+            .setContentText("Scanning for BLE devices in the background.")
+            .setSmallIcon(R.drawable.ic_launcher_foreground) // 알맞은 아이콘으로 교체하세요.
+            .setContentIntent(pendingIntent)
+            .build()
+
+        startForeground(1, notification)
+    }
+
     companion object {
         const val ACTION_BLE_SCAN_RESULT = "com.example.goclass.BLE_SCAN_RESULT"
         const val ACTION_BLE_FIRST_SCAN = "com.example.goclass.BLE_FIRST_SCAN"
@@ -313,6 +362,7 @@ class BleScanService : Service() {
         const val EXTRA_DURATION_MILLIS = "extra_duration_millis"
         private const val DEFAULT_DURATION_MILLIS = 6300000L // 105 minutes (1hr 45min)
         private const val SCAN_INTERVAL_MILLIS = 60000L // 1 minute
+        private const val CHANNEL_ID = "BleScanServiceChannel"
     }
 }
 
