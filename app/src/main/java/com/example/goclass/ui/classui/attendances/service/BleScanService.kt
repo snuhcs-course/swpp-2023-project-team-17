@@ -5,7 +5,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
-import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.*
 import android.content.Context
@@ -22,9 +21,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import com.example.goclass.R
 //>>>>>>> 40de6801afd7a2dcf7ac48a46f53a9e8c16cabe6
-import com.example.goclass.ui.classui.attendances.callback.BleScanCallback
 import com.example.goclass.ui.mainui.MainActivity
-import com.example.goclass.utility.Constants
+import java.util.regex.Pattern
 
 class BleScanService : Service() {
 
@@ -170,12 +168,14 @@ class BleScanService : Service() {
         val targetUuid = "$formattedClassId-0000-1100-8000-00805f9b34fc"
         Log.d(TAG, "target uuid: $targetUuid")
         val beaconId = "2cdbdd00-13ee-11e4-9b6c-0002a5d5c518"
-        val targetServiceUuid = ParcelUuid.fromString(targetUuid)
+        val targetBeaconUuid = ParcelUuid.fromString(beaconId)
+        val targetDeviceUuid = ParcelUuid.fromString(targetUuid)
         Log.d(TAG, "detected serviceUuids: $${result.scanRecord?.serviceUuids}")
-        Log.d(TAG, "isTargetDevice: ${result.scanRecord?.serviceUuids?.contains(targetServiceUuid)}")
+        Log.d(TAG, "isTargetDevice: ${result.scanRecord?.serviceUuids?.contains(targetDeviceUuid)}")
 //        val targetServiceUuid = ParcelUuid.fromString(beaconId )
 
-        return result.scanRecord?.serviceUuids?.contains(targetServiceUuid) == true
+        return (result.scanRecord?.serviceUuids?.contains(targetDeviceUuid) == true) &&
+                (result.scanRecord?.serviceUuids?.contains(targetBeaconUuid) == true)
     }
 
     private fun startScanningWithInterval() {
@@ -261,11 +261,16 @@ class BleScanService : Service() {
         val targetDeviceUuid = ParcelUuid.fromString(targetDeviceId)
         val mask = ParcelUuid.fromString("00000000-0000-0000-0000-00000000FFFF")
 
-        val scanFilters: List<ScanFilter> = listOf(
-            ScanFilter.Builder()
-                .setServiceUuid(targetDeviceUuid, mask)
-                .build()
-        )
+        val scanFilterDevice = ScanFilter.Builder()
+            .setServiceUuid(targetDeviceUuid, mask)
+            .build()
+        // TODO: modify scanFilterBeacon to filter based on unique signal info of SNU attendance beacons
+        val scanFilterBeacon = ScanFilter.Builder()
+            .setServiceUuid(targetBeaconUuid, mask)
+            .build()
+
+        val scanFilters: List<ScanFilter> = listOf(scanFilterDevice, scanFilterBeacon)
+
 
         val scanSettings = ScanSettings.Builder()
             .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
