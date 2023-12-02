@@ -38,7 +38,7 @@ class BleAdvertService : Service() {
 //        .addServiceUuid(ParcelUuid.fromString(uuid)) // Replace with your actual service UUID
 //        .build()
 
-    private val advertiseSettings = AdvertiseSettings.Builder()
+    private var advertiseSettings = AdvertiseSettings.Builder()
         .setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY)
         .setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_HIGH)
         .setConnectable(false)
@@ -86,16 +86,25 @@ class BleAdvertService : Service() {
                     Log.d(TAG, "startMinute: $startMinute")
                     durationMillis = (((endHour*60 + endMinute) - (startHour*60 + startMinute)) * 60 * 1000).toLong()
                     Log.d(TAG, "durationMillis: $durationMillis")
-                    val formattedClassId = classId.toString().padEnd(5,'0')
+                    val formattedClassId = classId.toString().padEnd(8,'0')
                     Log.d(TAG, "$formattedClassId")
-                    val formattedUuid = "$formattedClassId-0000-1000-8000-00805f9b34fb"
+                    val formattedUuid = "$formattedClassId-0000-1100-8000-00805f9b34fc"
                     val sampleUuid = UUID.randomUUID().toString()
                     try {
                         val parcelUuid = ParcelUuid.fromString(formattedUuid)
+//                        val deviceName = Constants.advertisingDeviceName
+//                        advertiseData = AdvertiseData.Builder()
+//                            .setIncludeDeviceName(false)
+//                            .addServiceUuid(parcelUuid)
+//                            .build()
                         advertiseData = AdvertiseData.Builder()
-                            .setIncludeDeviceName(false)
+//                            .setIncludeDeviceName(true) // Include the device name
                             .addServiceUuid(parcelUuid)
+                            .setIncludeTxPowerLevel(false) // Include if you want to include TX power level
                             .build()
+
+                        // Set the device name
+//                        advertiseSettings = advertiseSettings.setLocalName(deviceName)
 
                         Log.d(TAG, "AdvertiseSettings: $advertiseSettings")
                         Log.d(TAG, "AdvertiseData: $advertiseData")
@@ -116,6 +125,7 @@ class BleAdvertService : Service() {
     }
 
     override fun onDestroy() {
+        Log.d(TAG, "onDestroy")
         stopAdvertising()
         super.onDestroy()
     }
@@ -166,6 +176,8 @@ class BleAdvertService : Service() {
             Log.e(TAG, "필요한 블루투스 광고 권한이 없습니다.")
             return
         }
+
+        Log.d(TAG, "in startAdvertising - advertiseData: $advertiseData")
 
         Log.d(TAG, "bluetoothLeAdvertiser: $bluetoothAdapter.bluetoothLeAdvertiser")
         bluetoothAdapter?.bluetoothLeAdvertiser?.startAdvertising(

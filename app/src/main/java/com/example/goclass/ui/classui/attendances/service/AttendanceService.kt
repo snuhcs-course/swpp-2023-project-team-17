@@ -7,12 +7,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.ServiceConnection
+import android.os.Handler
 import android.os.IBinder
 import android.util.Log
 import com.example.goclass.ui.classui.attendances.callback.BleScanCallback
 import org.koin.android.ext.android.inject
 
-class AttendanceService : Service(), BleScanCallback {
+class AttendanceService : Service() { //, BleScanCallback {
     private lateinit var bleScanService: BleScanService
     private val viewModel: AttendanceServiceViewModel by inject()
 
@@ -20,15 +21,26 @@ class AttendanceService : Service(), BleScanCallback {
     private var userId = -1
     private var classId = -1
     private var scanCount: Int = 0
-    private var _attendanceStatus = 0
-    val attendanceStatus: Int get() = _attendanceStatus
+    private var firstSuccess: Int = 0 // scan count at first successful scan
+//    private var attendanceStatus = 0
+//    val attendanceStatus: Int get() = _attendanceStatus
 
     private val bleScanResultReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == BleScanService.ACTION_BLE_SCAN_RESULT) {
-                scanCount = intent.getIntExtra(BleScanService.EXTRA_SCAN_COUNT, 0)
+                scanCount = intent.getIntExtra(BleScanService.EXTRA_SCAN_COUNT, 0) + 1
                 Log.i(TAG, "Received scanCount: $scanCount")
                 //performAttendanceCheck(scanCount)
+                stopSelf()
+            }
+        }
+    }
+
+    private val bleFirstScanReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == BleScanService.ACTION_BLE_FIRST_SCAN) {
+                firstSuccess = intent.getIntExtra(BleScanService.FIRST_SCAN_AT, 0) + 1
+                Log.i(TAG, "Received first scan at: $firstSuccess")
             }
         }
     }
@@ -37,15 +49,19 @@ class AttendanceService : Service(), BleScanCallback {
         super.onCreate()
         Log.i(TAG, "AttendanceService 생성됨")
         // Register the BroadcastReceiver to receive scan results
-        val filter = IntentFilter(BleScanService.ACTION_BLE_SCAN_RESULT)
-        registerReceiver(bleScanResultReceiver, filter)
+        val scanCountFilter = IntentFilter(BleScanService.ACTION_BLE_SCAN_RESULT)
+        val firstScanFilter = IntentFilter(BleScanService.ACTION_BLE_FIRST_SCAN)
+        registerReceiver(bleFirstScanReceiver, firstScanFilter)
+        registerReceiver(bleScanResultReceiver, scanCountFilter)
     }
 
     override fun onDestroy() {
+        Log.d(TAG, "onDestroy")
         performAttendanceCheck()
         super.onDestroy()
 
         // Unregister the BroadcastReceiver
+        unregisterReceiver(bleFirstScanReceiver)
         unregisterReceiver(bleScanResultReceiver)
 
         // Unbind from the BleScanService
@@ -73,7 +89,7 @@ class AttendanceService : Service(), BleScanCallback {
                 val endHour = intent.getIntExtra("endHour", -1)
                 val endMinute = intent.getIntExtra("endMinute", -1)
                 if (userId != -1 && classId != -1) {
-                    val durationMillis = ((endHour*60 + endMinute) - (startHour*60 + startMinute) * 60 * 1000).toLong()
+                    val durationMillis = ((endHour*60 + endMinute) - (startHour*60 + startMinute))
                     startBleScanning(durationMillis);
                 } else {
                     Log.d("Error", "Invalid userId or classId")
@@ -84,9 +100,9 @@ class AttendanceService : Service(), BleScanCallback {
         return START_STICKY
     }
 
-    private fun startBleScanning(durationMillis: Long) {
-        bleScanService = BleScanService()
-        bleScanService.setBleScanCallback(this)
+    private fun startBleScanning(durationMillis: Int) {
+//        bleScanService = BleScanService()
+//        bleScanService.setBleScanCallback(this)
 
         val durationMillisLong = durationMillis.toLong() * 60000 // Convert minutes to milliseconds
 
@@ -102,6 +118,16 @@ class AttendanceService : Service(), BleScanCallback {
     }
 
     private fun performAttendanceCheck() {
+        Log.d(TAG, "performAttendanceCheck")
+
+        var attendanceStatus = if (firstSuccess <= 10) {
+            2 // present
+        } else if (firstSuccess <= 30) {
+            1 // late
+        } else {
+            0 // absent
+        }
+
         var attendanceDuration = scanCount
 
         // val classDuration = (endHour * 60 + endMinute) - (startHour * 60 + startMinute)
@@ -131,7 +157,7 @@ class AttendanceService : Service(), BleScanCallback {
 //            delay(60000) // 60 seconds
 //            saveAttendance(attendanceStatus, attendanceDuration, userId, classId)
 //        }
-        viewModel.saveAttendance(_attendanceStatus, attendanceDuration, userId, classId)
+        viewModel.saveAttendance(attendanceStatus, attendanceDuration, userId, classId)
     }
 
     private fun inClass(): Boolean {
@@ -143,31 +169,35 @@ class AttendanceService : Service(), BleScanCallback {
         return true
     }
 
-    override fun onDeviceFound(scanCount: Int) {
-        // Handle the device found event
-        //isDeviceFound = true
-        if (scanCount <= 10) {
-            _attendanceStatus = 2 // present
-        } else if (scanCount <= 30) {
-            _attendanceStatus = 1 // late
-        } else {
-            _attendanceStatus = 0 // absent
-        }
-        Log.i(TAG, "Device found: $_attendanceStatus")
-    }
+//    override fun onDeviceFound(scanCount: Int) {
+//        // Handle the device found event
+//        //isDeviceFound = true
+//        if (scanCount <= 10) {
+//            _attendanceStatus = 2 // present
+//        } else if (scanCount <= 30) {
+//            _attendanceStatus = 1 // late
+//        } else {
+//            _attendanceStatus = 0 // absent
+//        }
+//        Log.i(TAG, "Device found: $_attendanceStatus")
+//    }
 
-    override fun onScanFailed(errorCode: Int) {
-        // Handle the scan failure event
-        //isDeviceFound = false
-        // Perform actions based on scan failure
-        Log.e(TAG, "Scan failed with error code: $errorCode")
-    }
+//    override fun onScanFailed(errorCode: Int) {
+//        // Handle the scan failure event
+//        //isDeviceFound = false
+//        // Perform actions based on scan failure
+//        Log.e(TAG, "Scan failed with error code: $errorCode")
+//    }
 
-    override fun onScanFinish() {
-        classEnd = true
-        stopSelf() // stop AttendanceCheckService on callback
-        Log.e(TAG, "Scan finished; class ended: $classEnd")
-    }
+//    override fun onScanFinish() {
+//        classEnd = true
+//
+//        Handler().postDelayed({
+//            Log.i(TAG, "Class ended: $classEnd")
+//            stopSelf()
+//        }, 1000)
+////        stopSelf() // stop AttendanceCheckService on callback
+//    }
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
