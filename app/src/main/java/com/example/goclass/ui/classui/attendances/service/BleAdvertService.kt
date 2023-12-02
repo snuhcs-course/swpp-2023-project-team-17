@@ -1,12 +1,17 @@
 package com.example.goclass.ui.classui.attendances.service
 
 import android.Manifest
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.AdvertiseCallback
 import android.bluetooth.le.AdvertiseData
 import android.bluetooth.le.AdvertiseSettings
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -15,7 +20,10 @@ import android.os.IBinder
 import android.os.ParcelUuid
 import android.util.Log
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import com.example.goclass.R
 import com.example.goclass.ui.classui.attendances.service.BleScanService
+import com.example.goclass.ui.mainui.MainActivity
 import com.example.goclass.utility.Constants
 import java.util.Timer
 import java.util.TimerTask
@@ -61,6 +69,7 @@ class BleAdvertService : Service() {
         super.onCreate()
         Log.i(TAG, "BleAdvertService가 생성됨")
         initializeBluetooth()
+        createNotificationChannel()
 
         if (!bluetoothAdapter!!.isMultipleAdvertisementSupported) {
             Log.e(TAG, "이 기기는 블루투스 LE 광고를 지원하지 않습니다.")
@@ -167,6 +176,8 @@ class BleAdvertService : Service() {
             return
         }
 
+        startForeground(NOTIFICATION_ID, createNotification())
+
         Log.d(TAG, "bluetoothLeAdvertiser: $bluetoothAdapter.bluetoothLeAdvertiser")
         bluetoothAdapter?.bluetoothLeAdvertiser?.startAdvertising(
             advertiseSettings,
@@ -211,9 +222,49 @@ class BleAdvertService : Service() {
         stopSelf()
     }
 
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.notification_channel_name_ble_advert)
+            val descriptionText = getString(R.string.notification_channel_description_ble_advert)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+    private fun createNotification(): Notification {
+        val notificationIntent = Intent(this, MainActivity::class.java)
+        val pendingIntentFlags =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            } else {
+                PendingIntent.FLAG_UPDATE_CURRENT
+            }
+        val pendingIntent =
+            PendingIntent.getActivity(
+                this,
+                0,
+                notificationIntent,
+                pendingIntentFlags,
+            )
+
+        return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+            .setContentTitle(getString(R.string.ble_advert_notification_title))
+            .setContentText(getString(R.string.ble_advert_notification_content))
+            .setSmallIcon(R.drawable.ic_launcher_foreground) // 아이콘 설정 필요
+            .setContentIntent(pendingIntent)
+            .build()
+    }
+
     companion object {
         private const val TAG = "BleAdvertService"
         const val EXTRA_DURATION_MILLIS = "extra_duration_millis"
         private const val DEFAULT_ADVERTISING_DURATION_MILLIS = 6300000L // 105 seconds
+        private const val NOTIFICATION_CHANNEL_ID = "ble_advert_service_channel"
+        private const val NOTIFICATION_ID = 1
     }
 }

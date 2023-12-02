@@ -205,7 +205,7 @@ class ProfessorMainFragment : Fragment() {
             "Tue" -> "3"
             "Wed" -> "4"
             "Thu" -> "5"
-            "Fri" -> "1"
+            "Fri" -> "7"
             else -> "-1" // 또는 에러 처리
         }
     }
