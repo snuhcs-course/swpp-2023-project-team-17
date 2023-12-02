@@ -13,8 +13,7 @@ import java.util.TimeZone
 
 class ProfessorAttendanceAdapter(
     private val listener: ProfessorAttendanceFragment,
-) :
-    RecyclerView.Adapter<ProfessorAttendanceAdapter.ProfessorAttendanceViewHolder>() {
+) : RecyclerView.Adapter<ProfessorAttendanceAdapter.ProfessorAttendanceViewHolder>() {
     private var professorAttendanceList = listOf<AttendancesResponse>()
 
     @SuppressLint("NotifyDataSetChanged")

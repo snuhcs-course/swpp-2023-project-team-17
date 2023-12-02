@@ -10,6 +10,9 @@
         <action
             android:id="@+id/action_studentAttendanceFragment_to_chatFragment"
             app:destination="@id/chatFragment" />
+        <action
+            android:id="@+id/action_studentAttendanceFragment_to_attendanceDetailFragment"
+            app:destination="@id/attendanceDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/professorAttendanceFragment"
@@ -29,6 +32,9 @@
         <action
             android:id="@+id/action_professorAttendanceListFragment_to_professorAttendanceFragment"
             app:destination="@id/professorAttendanceFragment" />
+        <action
+            android:id="@+id/action_professorAttendanceListFragment_to_attendanceDetailFragment"
+            app:destination="@id/attendanceDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/chatFragment"
@@ -59,5 +65,17 @@
         <action
             android:id="@+id/action_chatCommentFragment_to_chatFragment"
             app:destination="@id/chatFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/attendanceDetailFragment"
+        android:name="com.example.goclass.ui.classui.attendances.AttendanceDetailFragment"
+        android:label="fragment_attendance_detail" >
+        <action
+            android:id="@+id/action_attendanceDetailFragment_to_studentAttendanceFragment"
+            app:destination="@id/studentAttendanceFragment" />
+        <action
+            android:id="@+id/action_attendanceDetailFragment_to_professorAttendanceListFragment"
+            app:destination="@id/professorAttendanceListFragment" />
     </fragment>
 </navigation>

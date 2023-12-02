@@ -21,12 +21,13 @@ import java.util.TimeZone
 class ProfessorAttendanceListFragment : Fragment() {
     private lateinit var binding: FragmentProfessorAttendanceListBinding
     private val viewModel: ProfessorAttendanceListViewModel by viewModel()
+    private lateinit var className: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         binding = FragmentProfessorAttendanceListBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -37,9 +38,9 @@ class ProfessorAttendanceListFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        val classSharedPrf = activity?.getSharedPreferences("ClassPrefs", Context.MODE_PRIVATE)
-        val classId = classSharedPrf!!.getInt("classId", -1)
-        val className = classSharedPrf!!.getString("className", "")
+        val classSharedPref = activity?.getSharedPreferences("ClassPrefs", Context.MODE_PRIVATE)
+        val classId = classSharedPref!!.getInt("classId", -1)
+        className = classSharedPref.getString("className", "")?: ""
         val attendanceSharedPref = activity?.getSharedPreferences("AttendancePrefs", Context.MODE_PRIVATE)
         val date = attendanceSharedPref!!.getString("date", "")!!
 
@@ -52,8 +53,7 @@ class ProfessorAttendanceListFragment : Fragment() {
         }
 
         val classMap = mapOf("classId" to classId.toString(), "userType" to "1")
-        val repository: UserRepository by inject() //이거 사용 안하는데?
-        val professorAttendanceListAdapter = ProfessorAttendanceListAdapter()
+        val professorAttendanceListAdapter = ProfessorAttendanceListAdapter(this)
         binding.professorAttendanceListRecyclerView.adapter = professorAttendanceListAdapter
         binding.professorAttendanceListRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -69,5 +69,17 @@ class ProfessorAttendanceListFragment : Fragment() {
         val targetFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val date: Date = originalFormat.parse(utcDate) ?: return ""
         return targetFormat.format(date)
+    }
+
+    fun onItemClicked(studentId: Int, studentName: String) {
+        val attendanceSharedPref = activity?.getSharedPreferences("AttendancePrefs", Context.MODE_PRIVATE)
+        with(attendanceSharedPref?.edit()) {
+            this?.putString("className", className)
+            this?.putInt("userType", 0)
+            this?.putInt("studentId", studentId)
+            this?.putString("studentName", studentName)
+            this?.apply()
+        }
+        findNavController().navigate(R.id.action_professorAttendanceListFragment_to_attendanceDetailFragment)
     }
 }

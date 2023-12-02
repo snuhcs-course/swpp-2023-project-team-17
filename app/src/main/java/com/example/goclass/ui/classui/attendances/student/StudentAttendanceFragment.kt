@@ -17,12 +17,13 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class StudentAttendanceFragment : Fragment() {
     private lateinit var binding: FragmentStudentAttendanceBinding
     private val viewModel: StudentAttendanceViewModel by viewModel()
+    private lateinit var className: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         binding = FragmentStudentAttendanceBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -37,8 +38,8 @@ class StudentAttendanceFragment : Fragment() {
         val userId = userSharedPref!!.getInt("userId", -1)
 
         val classSharedPref = activity?.getSharedPreferences("ClassPrefs", Context.MODE_PRIVATE)
-        val className = classSharedPref!!.getString("className", "")
-        val classId = classSharedPref!!.getInt("classId", -1)
+        className = classSharedPref!!.getString("className", "")?: ""
+        val classId = classSharedPref.getInt("classId", -1)
 
         binding.className.text = className
 
@@ -53,7 +54,7 @@ class StudentAttendanceFragment : Fragment() {
 
         // show studentAttendanceList with dummy data
         val repository: AttendanceRepository by inject()
-        val studentAttendanceAdapter = StudentAttendanceAdapter(repository, viewLifecycleOwner)
+        val studentAttendanceAdapter = StudentAttendanceAdapter(repository, viewLifecycleOwner, this)
         binding.studentAttendanceRecyclerView.adapter = studentAttendanceAdapter
         binding.studentAttendanceRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -61,5 +62,17 @@ class StudentAttendanceFragment : Fragment() {
         studentAttendanceListLiveData.observe(viewLifecycleOwner) { studentAttendanceList ->
             studentAttendanceAdapter.setStudentAttendanceList(studentAttendanceList)
         }
+    }
+
+    fun onItemClicked(studentId: Int, studentName: String) {
+        val attendanceSharedPref = activity?.getSharedPreferences("AttendancePrefs", Context.MODE_PRIVATE)
+        with(attendanceSharedPref?.edit()) {
+            this?.putString("className", className)
+            this?.putInt("userType", 0)
+            this?.putInt("studentId", studentId)
+            this?.putString("studentName", studentName)
+            this?.apply()
+        }
+        findNavController().navigate(R.id.action_studentAttendanceFragment_to_attendanceDetailFragment)
     }
 }
