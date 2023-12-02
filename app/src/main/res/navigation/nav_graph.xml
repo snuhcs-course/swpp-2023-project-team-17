@@ -11,8 +11,7 @@
         <action
             android:id="@+id/action_loginFragment_to_profileFragment"
             app:destination="@id/profileFragment"
-            app:popUpTo="@+id/loginFragment"
-            app:popUpToInclusive="true" />
+            app:popUpTo="@+id/nav_graph" />
     </fragment>
 
     <fragment
@@ -22,18 +21,15 @@
         <action
             android:id="@+id/action_profileFragment_to_loginFragment"
             app:destination="@id/loginFragment"
-            app:popUpTo="@id/profileFragment"
-            app:popUpToInclusive="true" />
+            app:popUpTo="@+id/nav_graph"/>
         <action
             android:id="@+id/action_profileFragment_to_studentMainFragment"
             app:destination="@id/studentMainFragment"
-            app:popUpTo="@+id/profileFragment"
-            app:popUpToInclusive="false" />
+            app:popUpTo="@+id/nav_graph"/>
         <action
             android:id="@+id/action_profileFragment_to_professorMainFragment"
             app:destination="@id/professorMainFragment"
-            app:popUpTo="@+id/profileFragment"
-            app:popUpToInclusive="false" />
+            app:popUpTo="@+id/nav_graph"/>
     </fragment>
 
     <fragment
@@ -42,7 +38,8 @@
         android:label="StudentMainFragment">
         <action
             android:id="@+id/action_studentMainFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
+            app:destination="@id/profileFragment"
+            app:popUpTo="@id/studentMainFragment"/>
     </fragment>
 
     <fragment
@@ -51,6 +48,7 @@
         android:label="ProfessorMainFragment">
         <action
             android:id="@+id/action_professorMainFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
+            app:destination="@id/profileFragment"
+            app:popUpTo="@id/professorMainFragment"/>
     </fragment>
 </navigation>
