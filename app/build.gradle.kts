@@ -78,6 +78,7 @@ dependencies {
     implementation("org.objenesis:objenesis:3.2")
     implementation("com.google.android.gms:play-services-location:19.0.1")
     implementation("com.google.android.gms:play-services-maps:18.1.0")
+    implementation("androidx.test.espresso:espresso-contrib:3.5.1")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("io.mockk:mockk:1.11.0")
