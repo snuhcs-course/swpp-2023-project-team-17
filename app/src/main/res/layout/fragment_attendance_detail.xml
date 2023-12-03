@@ -36,4 +36,50 @@
             tools:ignore="HardcodedText" />
     </androidx.appcompat.widget.Toolbar>
 
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="date"
+        android:layout_margin="15dp"
+        android:layout_gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/SemiBold"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/studentName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="studentName"
+        android:layout_margin="15dp"
+        android:layout_gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/date"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/SemiBold"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="status"
+        android:layout_margin="15dp"
+        android:layout_gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/studentName"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/SemiBold"
+        tools:ignore="HardcodedText" />
+
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/chart"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="40dp"
+        app:layout_constraintTop_toBottomOf="@id/status"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

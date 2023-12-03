@@ -63,14 +63,19 @@ class StudentAttendanceAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
         fun bind(studentAttendanceItem: AttendancesResponse) {
-            //함수 분리?
+            val studentId = studentAttendanceItem.studentId
+            val studentName = studentAttendanceItem.studentName?:""
+
             val originalFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
             originalFormat.timeZone = TimeZone.getTimeZone("UTC")
             val targetFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             val date: Date? = originalFormat.parse(studentAttendanceItem.attendanceDate)
-            binding.attendanceDateText.text = date?.let { targetFormat.format(it) }
+            val dateText = date?.let { targetFormat.format(it) } ?:""
+
+            binding.attendanceDateText.text = dateText
 
             val attendanceStatus = studentAttendanceItem.attendanceStatus
+
             if (attendanceStatus == 2) {
                 binding.attendanceStatusText.text = "Present"
             } else if (attendanceStatus == 1) {
@@ -106,7 +111,7 @@ class StudentAttendanceAdapter(
                 }
             }
             binding.attendanceDetailButton.setOnClickListener {
-                listener.onItemClicked(studentAttendanceItem.studentId, studentAttendanceItem.studentName)
+                listener.onItemClicked(studentId, studentName, dateText, attendanceStatus)
             }
         }
     }

@@ -13,6 +13,10 @@ import com.example.goclass.databinding.FragmentStudentAttendanceBinding
 import com.example.goclass.repository.AttendanceRepository
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 class StudentAttendanceFragment : Fragment() {
     private lateinit var binding: FragmentStudentAttendanceBinding
@@ -64,13 +68,20 @@ class StudentAttendanceFragment : Fragment() {
         }
     }
 
-    fun onItemClicked(studentId: Int, studentName: String) {
+    fun onItemClicked(
+        studentId: Int,
+        studentName: String,
+        date: String,
+        attendanceStatus: Int,
+    ) {
         val attendanceSharedPref = activity?.getSharedPreferences("AttendancePrefs", Context.MODE_PRIVATE)
         with(attendanceSharedPref?.edit()) {
             this?.putString("className", className)
             this?.putInt("userType", 0)
             this?.putInt("studentId", studentId)
             this?.putString("studentName", studentName)
+            this?.putString("date", date)
+            this?.putInt("attendanceStatus", attendanceStatus)
             this?.apply()
         }
         findNavController().navigate(R.id.action_studentAttendanceFragment_to_attendanceDetailFragment)
