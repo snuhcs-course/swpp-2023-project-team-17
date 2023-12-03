@@ -14,7 +14,7 @@ import com.example.goclass.ui.mainui.MainActivity
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-class LoginFragmentTest {
+class LoginFragmentUITest {
     @Before
     fun setUp() {
         Intents.init()

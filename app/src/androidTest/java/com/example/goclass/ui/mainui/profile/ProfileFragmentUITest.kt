@@ -12,7 +12,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.example.goclass.R
 import com.example.goclass.ui.mainui.MainActivity
 import org.junit.Test
-class ProfileFragmentTest {
+class ProfileFragmentUITest {
     private val userId = 1
     private val userName = "abc"
     @Test
