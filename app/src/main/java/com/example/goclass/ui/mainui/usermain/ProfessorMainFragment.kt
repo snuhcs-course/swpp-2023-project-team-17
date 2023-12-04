@@ -2,20 +2,16 @@ package com.example.goclass.ui.mainui.usermain
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.inputmethod.InputMethodManager
-import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
@@ -25,14 +21,15 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.goclass.ui.classui.ClassActivity
 import com.example.goclass.R
 import com.example.goclass.databinding.FragmentProfessorMainBinding
+import com.example.goclass.ui.classui.ClassActivity
 import com.example.goclass.ui.classui.ClassScheduler
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.example.goclass.ui.mainui.usermain.utils.InputValidnessTest
 import com.example.goclass.ui.mainui.usermain.utils.TimeSelectionLayout
 import com.google.android.material.snackbar.Snackbar
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ProfessorMainFragment : Fragment() {
     private lateinit var binding: FragmentProfessorMainBinding
@@ -108,12 +105,12 @@ class ProfessorMainFragment : Fragment() {
                     return@setOnClickListener
                 }
 
-                if (!InputValidnessTest.isClassTimeValid(timeSelectionContainer)) {
-                    Snackbar.make(dialog.findViewById<LinearLayout>(R.id.classNameEdittext), "Invalid class time", Snackbar.LENGTH_SHORT)
-                        .setBackgroundTint(Color.parseColor("#FF515c"))
-                        .show()
-                    return@setOnClickListener
-                }
+//                if (!InputValidnessTest.isClassTimeValid(timeSelectionContainer)) {
+//                    Snackbar.make(dialog.findViewById<LinearLayout>(R.id.classNameEdittext), "Invalid class time", Snackbar.LENGTH_SHORT)
+//                        .setBackgroundTint(Color.parseColor("#FF515c"))
+//                        .show()
+//                    return@setOnClickListener
+//                }
 
                 if (!InputValidnessTest.isClassValid(enteredBuildingNumber, enteredRoomNumber)) {
                     Snackbar.make(dialog.findViewById<LinearLayout>(R.id.classNameEdittext), "Please enter building number and room number.", Snackbar.LENGTH_SHORT)

@@ -1,6 +1,7 @@
 package com.example.goclass.network
 
 import com.example.goclass.network.dataclass.AttendanceDateListsResponse
+import com.example.goclass.network.dataclass.AttendanceDetailListResponse
 import com.example.goclass.network.dataclass.AttendanceListsResponse
 import com.example.goclass.network.dataclass.Attendances
 import com.example.goclass.network.dataclass.AttendancesResponse
@@ -147,4 +148,15 @@ interface ServiceApi {
         @Path("user_id") userId: Int,
         @Body attendances: Attendances,
     ): CodeMessageResponse
+
+    @GET("/attendance/detail/{attendance_id}")
+    suspend fun attendanceDetailListGet(
+        @Path("attendance_id") attendanceId: Int,
+    ): AttendanceDetailListResponse
+
+    @PUT("/attendance/detail/{attendance_id}")
+    suspend fun attendanceDetailListAdd(
+        @Path("attendance_id") attendanceId: Int,
+        @QueryMap isAttendMap: Map<String, String>,
+    ): AttendanceDetailListResponse
 }
