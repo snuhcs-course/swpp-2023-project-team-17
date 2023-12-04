@@ -1,23 +1,32 @@
 package com.example.goclass.ui.classui.attendances.service
 
 import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
-import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.*
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.ParcelUuid
 import android.util.Log
-import com.example.goclass.ui.classui.attendances.callback.BleScanCallback
-import com.example.goclass.utility.Constants
+//<<<<<<< HEAD
+import androidx.core.app.ActivityCompat
+//=======
+import androidx.core.app.NotificationCompat
+import com.example.goclass.R
+//>>>>>>> 40de6801afd7a2dcf7ac48a46f53a9e8c16cabe6
+import com.example.goclass.ui.mainui.MainActivity
+import java.util.regex.Pattern
 
 class BleScanService : Service() {
 
-    private var bleScanCallback: BleScanCallback? = null
+//    private var bleScanCallback: BleScanCallback? = null
     private var bluetoothLeScanner: BluetoothLeScanner? = null
     private var scanIntervalHandler: Handler? = null
     private var scanCount = 0
@@ -25,31 +34,51 @@ class BleScanService : Service() {
     private var classId = -1
     private var scanning = false
 
+    private var deviceFound = false
+    private var firstScan = true
+
+    private var durationSec = 0
+
     private val handler = Handler()
 
     override fun onCreate() {
         super.onCreate()
-        Log.e(TAG, "Blescan create")
+        Log.d(TAG, "Blescan create")
         initializeBluetooth()
+//<<<<<<< HEAD
+
+        // Initialize the handler for incrementing scanCount every minute
+        scanIntervalHandler = Handler()
+//        startIncrementingScanCount()
+//=======
+        createNotificationChannel()
+//>>>>>>> 40de6801afd7a2dcf7ac48a46f53a9e8c16cabe6
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val durationMillis = intent?.getLongExtra(EXTRA_DURATION_MILLIS, DEFAULT_DURATION_MILLIS)
             ?: DEFAULT_DURATION_MILLIS
         classId = intent?.getIntExtra("classId", -1)?: -1
+        durationSec = (durationMillis / 1000).toInt()
 
         // Schedule a task to stop the service after the designated duration
+        Log.d(TAG, "durationMillis: $durationMillis")
         handler.postDelayed({
-            stopSelf() // This will stop the service after the duration
+            Log.d(TAG, "durationMillis over")
+//            stopSelf() // This will stop the service after the duration
+            stopScanningService()
         }, durationMillis)
 
+        startForegroundNotification()
         startScanningWithInterval()
+//        startScanning()
         return START_STICKY
     }
 
     override fun onDestroy() {
-        sendSuccessfulScanCount()
-        Log.e(TAG, "Blescan create")
+        Log.d(TAG, "onDestroy: Blescan destroy")
+//        sendSuccessfulScanCount()
+        scanIntervalHandler?.removeCallbacksAndMessages(null)
         super.onDestroy()
     }
 
@@ -57,9 +86,9 @@ class BleScanService : Service() {
         return null
     }
 
-    fun setBleScanCallback(callback: BleScanCallback?) {
-        this.bleScanCallback = callback
-    }
+//    fun setBleScanCallback(callback: BleScanCallback?) {
+//        this.bleScanCallback = callback
+//    }
 
     private fun initializeBluetooth() {
         val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
@@ -75,14 +104,31 @@ class BleScanService : Service() {
 
     private val scanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult?) {
-            Log.d(TAG, "스캔 결과 수신: ${result?.device?.address}")
             super.onScanResult(callbackType, result)
+            Log.d(TAG, "onScanResult: ${result?.device?.address}")
+
             result?.device?.let {
-                Log.i(TAG, "Device found: ${it.address}")
+                Log.i(TAG, "Device found with address: ${it.address}")
+//                Log.i(TAG, "Device found with uuid:  ${it.uuids}")
                 if (isTargetDevice(result)) {
-                    bleScanCallback?.onDeviceFound(scanCount)
-                    successfulScanCount++
+                    Log.i(TAG, "Device is TargetDevice")
+//                    bleScanCallback?.onDeviceFound(scanCount)
+                    if (firstScan) {
+                        deviceFound()
+                        firstScan = false
+                    }
+                    if (!deviceFound) { // 1분 동안 한 번이라도 신호가 잡히면 successfulScanCount 올림
+                        successfulScanCount++
+                        deviceFound = true
+                        Log.i(TAG, "successfulScanCount incremented: $successfulScanCount")
+                    } else {
+                        Log.i(TAG, "successfulScanCount already incremented: $successfulScanCount")
+                    }
+                } else {
+                    Log.i(TAG, "Device is not TargetDevice")
                 }
+            } ?: run {
+                Log.e(TAG, "No device found")
             }
 
 //            super.onScanResult(callbackType, result)
@@ -108,7 +154,7 @@ class BleScanService : Service() {
 
         override fun onScanFailed(errorCode: Int) {
             Log.e(TAG, "Scan failed with error code: $errorCode")
-            bleScanCallback?.onScanFailed(errorCode)
+//            bleScanCallback?.onScanFailed(errorCode)
         }
 
         override fun onBatchScanResults(results: MutableList<ScanResult>?) {
@@ -117,26 +163,55 @@ class BleScanService : Service() {
     }
 
     private fun isTargetDevice(result: ScanResult): Boolean {
-        val formattedClassId = classId.toString().padStart(6, '0')
-        val targetUuid = formattedClassId + Constants.UUID_STRING
-        val beaconId = "2cdbdd00-13ee-11e4-9b6c-0002a5d5c51b"
-        val targetServiceUuid = ParcelUuid.fromString(beaconId)
-        return result.scanRecord?.serviceUuids?.contains(targetServiceUuid) == true
+        Log.d(TAG, "check isTargetDevice")
+        val formattedClassId = classId.toString().padEnd(8, '0')
+        val targetUuid = "$formattedClassId-0000-1100-8000-00805f9b34fc"
+        Log.d(TAG, "target uuid: $targetUuid")
+        val beaconId = "2cdbdd00-13ee-11e4-9b6c-0002a5d5c518"
+        val targetBeaconUuid = ParcelUuid.fromString(beaconId)
+        val targetDeviceUuid = ParcelUuid.fromString(targetUuid)
+        Log.d(TAG, "detected serviceUuids: $${result.scanRecord?.serviceUuids}")
+        Log.d(TAG, "isTargetDevice: ${result.scanRecord?.serviceUuids?.contains(targetDeviceUuid)}")
+//        val targetServiceUuid = ParcelUuid.fromString(beaconId )
+
+        return (result.scanRecord?.serviceUuids?.contains(targetDeviceUuid) == true) &&
+                (result.scanRecord?.serviceUuids?.contains(targetBeaconUuid) == true)
     }
 
     private fun startScanningWithInterval() {
+        Log.d(TAG, "startScanningWithInterval success")
         // Initial scan
         startScanning()
 
         // Schedule periodic scans with a 1-minute interval
-        scanIntervalHandler = Handler()
+//        scanIntervalHandler = Handler()
         scanIntervalHandler?.postDelayed({
             stopScanning()
             startScanningWithInterval()
         }, SCAN_INTERVAL_MILLIS)
     }
 
+    private fun stopScanningService() {
+        Log.d(TAG, "stopScanningService")
+        if (checkSelfPermission(Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    Activity#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for Activity#requestPermissions for more details.
+            return
+        }
+        bluetoothLeScanner?.stopScan(scanCallback)
+
+        sendSuccessfulScanCount()
+
+        stopSelf()
+    }
+
     private fun stopScanning() {
+        Log.d(TAG, "stopScanning")
         if (checkSelfPermission(Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    Activity#requestPermissions
@@ -154,7 +229,9 @@ class BleScanService : Service() {
 //        intent.putExtra(EXTRA_SCAN_COUNT, scanCount)
 //        sendBroadcast(intent)
 
+        deviceFound = false
         scanCount++
+        Log.d(TAG, "scanCount in stopScanning: $scanCount")
     }
 
     private fun sendSuccessfulScanCount() {
@@ -162,22 +239,38 @@ class BleScanService : Service() {
         val intent = Intent(ACTION_BLE_SCAN_RESULT)
         intent.putExtra(EXTRA_SCAN_COUNT, successfulScanCount)
         sendBroadcast(intent)
-        bleScanCallback?.onScanFinish()
+//        bleScanCallback?.onScanFinish()
+    }
+
+    private fun deviceFound() {
+        val intent = Intent(ACTION_BLE_FIRST_SCAN)
+        intent.putExtra(FIRST_SCAN_AT, scanCount)
+        sendBroadcast(intent)
     }
 
     private fun startScanning() {
+
         Log.d(TAG, "start scan")
+        val formattedClassId = classId.toString().padEnd(8, '0')
 
-        val formattedClassId = classId.toString().padStart(6, '0')
+        val targetBeaconId = "2cdbdd00-13ee-11e4-9b6c-0002a5d5c518"
+        val targetDeviceId = "$formattedClassId-0000-1100-8000-00805f9b34fc"
+        val targetDeviceUuid32BitPattern = "5f9b34fc"
 
-        val beaconId = "2cdbdd00-13ee-11e4-9b6c-0002a5d5c51b"
-        val targetUuid = ParcelUuid.fromString(beaconId)
+        val targetBeaconUuid = ParcelUuid.fromString(targetBeaconId)
+        val targetDeviceUuid = ParcelUuid.fromString(targetDeviceId)
+        val mask = ParcelUuid.fromString("00000000-0000-0000-0000-00000000FFFF")
 
-        val scanFilters: List<ScanFilter> = listOf(
-            ScanFilter.Builder()
-                .setServiceUuid(targetUuid)
-                .build()
-        )
+        val scanFilterDevice = ScanFilter.Builder()
+            .setServiceUuid(targetDeviceUuid, mask)
+            .build()
+        // TODO: modify scanFilterBeacon to filter based on unique signal info of SNU attendance beacons
+        val scanFilterBeacon = ScanFilter.Builder()
+            .setServiceUuid(targetBeaconUuid, mask)
+            .build()
+
+        val scanFilters: List<ScanFilter> = listOf(scanFilterDevice, scanFilterBeacon)
+
 
         val scanSettings = ScanSettings.Builder()
             .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
@@ -190,6 +283,7 @@ class BleScanService : Service() {
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for Activity#requestPermissions for more details.
+            Log.d(TAG, "no bleScanning permission")
             Log.d(TAG, checkSelfPermission(Manifest.permission.BLUETOOTH_SCAN).toString())
             return
         }
@@ -198,23 +292,82 @@ class BleScanService : Service() {
         Log.d(TAG, scanCallback.toString())
         Log.d(TAG, bluetoothLeScanner.toString())
 
-        if (scanning) {
-            Log.d(TAG, "IN SCANNING!")
-            bluetoothLeScanner?.stopScan(scanCallback)
-            bluetoothLeScanner?.startScan(scanFilters, scanSettings, scanCallback)
+        val bluetoothConnectPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            Manifest.permission.BLUETOOTH_CONNECT
         } else {
-            bluetoothLeScanner?.startScan(scanFilters, scanSettings, scanCallback)
-            scanning = true
+            null // 이전 버전에서는 필요 없음
         }
+
+        val hasScanPermission = ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED
+        val hasConnectPermission = bluetoothConnectPermission?.let { ActivityCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED } ?: true
+
+        if (!hasScanPermission || !hasConnectPermission) {
+            Log.e(TAG, "필요한 블루투스 권한이 없습니다.")
+//            return
+        }
+
+//        if (scanCount < durationSec) {
+            if (scanning) {
+                Log.d(TAG, "IN SCANNING!")
+                bluetoothLeScanner?.stopScan(scanCallback)
+                bluetoothLeScanner?.startScan(scanFilters, scanSettings, scanCallback)
+                Log.d(TAG, "after startScan")
+            } else {
+                bluetoothLeScanner?.startScan(scanFilters, scanSettings, scanCallback)
+                Log.d(TAG, "first scan")
+                scanning = true
+            }
+//        } else {
+//            stopSelf()
+//        }
 
     }
 
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val serviceChannel = NotificationChannel(
+                CHANNEL_ID,
+                "BLE Scan Service Channel",
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+            val manager = getSystemService(NotificationManager::class.java)
+            manager.createNotificationChannel(serviceChannel)
+        }
+    }
+
+    private fun startForegroundNotification() {
+        val notificationIntent = Intent(this, MainActivity::class.java)
+        val pendingIntentFlags =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            } else {
+                PendingIntent.FLAG_UPDATE_CURRENT
+            }
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            0, notificationIntent, pendingIntentFlags
+        )
+
+        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setContentTitle("BLE Scanning")
+            .setContentText("Scanning for BLE devices in the background.")
+            .setSmallIcon(R.drawable.ic_launcher_foreground) // 알맞은 아이콘으로 교체하세요.
+            .setContentIntent(pendingIntent)
+            .build()
+
+        startForeground(1, notification)
+    }
+
     companion object {
-        const val ACTION_BLE_SCAN_RESULT = "com.example.yourapp.BLE_SCAN_RESULT"
+        const val ACTION_BLE_SCAN_RESULT = "com.example.goclass.BLE_SCAN_RESULT"
+        const val ACTION_BLE_FIRST_SCAN = "com.example.goclass.BLE_FIRST_SCAN"
         const val EXTRA_SCAN_COUNT = "extra_scan_count"
+        const val FIRST_SCAN_AT = "first_scan_at"
         private const val TAG = "BleScanningService"
         const val EXTRA_DURATION_MILLIS = "extra_duration_millis"
         private const val DEFAULT_DURATION_MILLIS = 6300000L // 105 minutes (1hr 45min)
         private const val SCAN_INTERVAL_MILLIS = 60000L // 1 minute
+        private const val CHANNEL_ID = "BleScanServiceChannel"
     }
 }
+

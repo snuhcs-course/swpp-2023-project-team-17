@@ -15,8 +15,17 @@ class PermissionUtils(private val context: Context) {
         }
     }
 
+//<<<<<<< HEAD
+//    fun requestBluetoothPermissions(callback: (Boolean) -> Unit) {
+//        val bluetoothPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+//            Manifest.permission.BLUETOOTH_CONNECT
+//        } else {
+//            Manifest.permission.BLUETOOTH
+//        }
+//=======
     fun requestBluetoothPermissions() {
         val permissionsToRequest = mutableListOf<String>()
+//>>>>>>> 6f270b13565b158eca00dc6c27788cffd7643903
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             permissionsToRequest.add(Manifest.permission.BLUETOOTH_CONNECT)
@@ -30,6 +39,28 @@ class PermissionUtils(private val context: Context) {
         }
         if (notGrantedPermissions.isNotEmpty()) {
             ActivityCompat.requestPermissions(context as Activity, notGrantedPermissions.toTypedArray(), 101)
+        }
+
+//        callback(true)
+    }
+
+    fun requestBluetoothAdvertisePermissionsWithCallback(callback: (Boolean) -> Unit) {
+        val bluetoothAdvertisePermission = Manifest.permission.BLUETOOTH_ADVERTISE
+
+        if (ContextCompat.checkSelfPermission(
+                context,
+                bluetoothAdvertisePermission
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // Request Bluetooth advertising permissions
+            ActivityCompat.requestPermissions(
+                context as Activity,
+                arrayOf(bluetoothAdvertisePermission),
+                102
+            )
+        } else {
+            // Bluetooth advertising permissions already granted
+            callback(true)
         }
     }
 }
