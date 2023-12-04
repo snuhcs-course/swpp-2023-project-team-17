@@ -19,6 +19,7 @@ import android.util.Log
 import androidx.core.app.ActivityCompat
 //=======
 import androidx.core.app.NotificationCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.goclass.R
 //>>>>>>> 40de6801afd7a2dcf7ac48a46f53a9e8c16cabe6
 import com.example.goclass.ui.mainui.MainActivity
@@ -39,20 +40,19 @@ class BleScanService : Service() {
 
     private var durationSec = 0
 
+    private val scanResultsList = ArrayList<Boolean>()
+    private var minutesElapsed = 0
+
     private val handler = Handler()
 
     override fun onCreate() {
         super.onCreate()
         Log.d(TAG, "Blescan create")
         initializeBluetooth()
-//<<<<<<< HEAD
 
         // Initialize the handler for incrementing scanCount every minute
         scanIntervalHandler = Handler()
-//        startIncrementingScanCount()
-//=======
         createNotificationChannel()
-//>>>>>>> 40de6801afd7a2dcf7ac48a46f53a9e8c16cabe6
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -65,19 +65,17 @@ class BleScanService : Service() {
         Log.d(TAG, "durationMillis: $durationMillis")
         handler.postDelayed({
             Log.d(TAG, "durationMillis over")
-//            stopSelf() // This will stop the service after the duration
             stopScanningService()
         }, durationMillis)
 
         startForegroundNotification()
         startScanningWithInterval()
-//        startScanning()
         return START_STICKY
     }
 
     override fun onDestroy() {
         Log.d(TAG, "onDestroy: Blescan destroy")
-//        sendSuccessfulScanCount()
+        sendScanResults()
         scanIntervalHandler?.removeCallbacksAndMessages(null)
         super.onDestroy()
     }
@@ -85,10 +83,6 @@ class BleScanService : Service() {
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
-
-//    fun setBleScanCallback(callback: BleScanCallback?) {
-//        this.bleScanCallback = callback
-//    }
 
     private fun initializeBluetooth() {
         val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
@@ -109,10 +103,8 @@ class BleScanService : Service() {
 
             result?.device?.let {
                 Log.i(TAG, "Device found with address: ${it.address}")
-//                Log.i(TAG, "Device found with uuid:  ${it.uuids}")
                 if (isTargetDevice(result)) {
                     Log.i(TAG, "Device is TargetDevice")
-//                    bleScanCallback?.onDeviceFound(scanCount)
                     if (firstScan) {
                         deviceFound()
                         firstScan = false
@@ -120,6 +112,10 @@ class BleScanService : Service() {
                     if (!deviceFound) { // 1분 동안 한 번이라도 신호가 잡히면 successfulScanCount 올림
                         successfulScanCount++
                         deviceFound = true
+                        while (scanResultsList.size <= minutesElapsed) {
+                            scanResultsList.add(false)
+                        }
+                        scanResultsList[minutesElapsed] = true
                         Log.i(TAG, "successfulScanCount incremented: $successfulScanCount")
                     } else {
                         Log.i(TAG, "successfulScanCount already incremented: $successfulScanCount")
@@ -130,31 +126,10 @@ class BleScanService : Service() {
             } ?: run {
                 Log.e(TAG, "No device found")
             }
-
-//            super.onScanResult(callbackType, result)
-//            if (result == null) {
-//                Log.i(TAG, "Scan result is null")
-//                return
-//            }
-//
-//            val device = result.device
-//            val deviceName = "Unknown Device"
-//            val deviceAddress = device.address ?: "No Address"
-//            val rssi = result.rssi
-//
-//            // 스캔 결과에 대한 로그
-//            Log.i(TAG, "Device found: Name: $deviceName, Address: $deviceAddress, RSSI: $rssi")
-//
-//            // 타겟 장치 확인 (여기서는 필터링 없이 모든 장치를 로그로 출력)
-//            if (isTargetDevice(result)) {
-//                bleScanCallback?.onDeviceFound(scanCount)
-//                successfulScanCount++
-//            }
         }
 
         override fun onScanFailed(errorCode: Int) {
             Log.e(TAG, "Scan failed with error code: $errorCode")
-//            bleScanCallback?.onScanFailed(errorCode)
         }
 
         override fun onBatchScanResults(results: MutableList<ScanResult>?) {
@@ -172,7 +147,6 @@ class BleScanService : Service() {
         val targetDeviceUuid = ParcelUuid.fromString(targetUuid)
         Log.d(TAG, "detected serviceUuids: $${result.scanRecord?.serviceUuids}")
         Log.d(TAG, "isTargetDevice: ${result.scanRecord?.serviceUuids?.contains(targetDeviceUuid)}")
-//        val targetServiceUuid = ParcelUuid.fromString(beaconId )
 
         return (result.scanRecord?.serviceUuids?.contains(targetDeviceUuid) == true) &&
                 (result.scanRecord?.serviceUuids?.contains(targetBeaconUuid) == true)
@@ -184,8 +158,9 @@ class BleScanService : Service() {
         startScanning()
 
         // Schedule periodic scans with a 1-minute interval
-//        scanIntervalHandler = Handler()
         scanIntervalHandler?.postDelayed({
+            deviceFound = false
+            minutesElapsed++
             stopScanning()
             startScanningWithInterval()
         }, SCAN_INTERVAL_MILLIS)
@@ -224,11 +199,6 @@ class BleScanService : Service() {
         }
         bluetoothLeScanner?.stopScan(scanCallback)
 
-//        // Pass scanCount to AttendanceService using Intent
-//        val intent = Intent(ACTION_BLE_SCAN_RESULT)
-//        intent.putExtra(EXTRA_SCAN_COUNT, scanCount)
-//        sendBroadcast(intent)
-
         deviceFound = false
         scanCount++
         Log.d(TAG, "scanCount in stopScanning: $scanCount")
@@ -239,7 +209,6 @@ class BleScanService : Service() {
         val intent = Intent(ACTION_BLE_SCAN_RESULT)
         intent.putExtra(EXTRA_SCAN_COUNT, successfulScanCount)
         sendBroadcast(intent)
-//        bleScanCallback?.onScanFinish()
     }
 
     private fun deviceFound() {
@@ -317,10 +286,6 @@ class BleScanService : Service() {
                 Log.d(TAG, "first scan")
                 scanning = true
             }
-//        } else {
-//            stopSelf()
-//        }
-
     }
 
     private fun createNotificationChannel() {
@@ -356,6 +321,12 @@ class BleScanService : Service() {
             .build()
 
         startForeground(1, notification)
+    }
+
+    private fun sendScanResults() {
+        val intent = Intent("com.example.goclass.SCAN_RESULTS")
+        intent.putExtra("scanResults", scanResultsList)
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
     }
 
     companion object {
