@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.example.goclass.R
 import com.example.goclass.databinding.ActivityMainBinding
@@ -63,15 +64,19 @@ class MainActivity : AppCompatActivity() {
         val userRole = sharedPref.getString("userRole", "") ?: ""
 
         if (isLoggedIn) {
+            val navOptions = NavOptions.Builder()
+                .setPopUpTo(R.id.nav_graph, true)
+                .build()
+
             when (userRole) {
                 "student" -> {
-                    navController.navigate(R.id.studentMainFragment)
+                    navController.navigate(R.id.studentMainFragment, null, navOptions)
                 }
                 "professor" -> {
-                    navController.navigate(R.id.professorMainFragment)
+                    navController.navigate(R.id.professorMainFragment, null, navOptions)
                 }
                 else -> {
-                    navController.navigate(R.id.profileFragment)
+                    navController.navigate(R.id.profileFragment, null, navOptions)
                 }
             }
         } else {

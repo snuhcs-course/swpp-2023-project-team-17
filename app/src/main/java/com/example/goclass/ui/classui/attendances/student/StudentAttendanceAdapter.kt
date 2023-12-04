@@ -66,6 +66,7 @@ class StudentAttendanceAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
         fun bind(studentAttendanceItem: AttendancesResponse) {
+            //함수 분리?
             val originalFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
             originalFormat.timeZone = TimeZone.getTimeZone("UTC")
             val targetFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())

@@ -51,6 +51,7 @@ class ProfessorAttendanceAdapter(
         private val listener: ProfessorAttendanceFragment,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(professorAttendanceItem: AttendancesResponse) {
+            //이거 분리?
             val originalFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
             originalFormat.timeZone = TimeZone.getTimeZone("UTC")
             val targetFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())

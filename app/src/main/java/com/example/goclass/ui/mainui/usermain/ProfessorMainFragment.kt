@@ -202,15 +202,10 @@ class ProfessorMainFragment : Fragment() {
     private fun convertDayStringToNumber(day: String): String {
         return when (day) {
             "Mon" -> "2"
-//            "Mon" -> "7"
             "Tue" -> "3"
             "Wed" -> "4"
             "Thu" -> "5"
-//<<<<<<< HEAD
             "Fri" -> "6"
-//=======
-//            "Fri" -> "7"
-//>>>>>>> 40de6801afd7a2dcf7ac48a46f53a9e8c16cabe6
             else -> "-1" // 또는 에러 처리
         }
     }

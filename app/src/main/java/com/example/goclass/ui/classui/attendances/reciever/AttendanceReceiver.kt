@@ -30,6 +30,7 @@ class AttendanceReceiver : BroadcastReceiver() {
                 if (userType == 0) {
                     // Create an intent to start the AttendanceService
                     val serviceIntent = Intent(context, AttendanceService::class.java)
+                    //함수로 분리 가능?
                     serviceIntent.action = "ATTENDANCE_CHECK_ACTION"
                     serviceIntent.putExtra("userId", userId)
                     serviceIntent.putExtra("classId", classId)
@@ -44,6 +45,7 @@ class AttendanceReceiver : BroadcastReceiver() {
                 } else if (userType == 1) {
                     // Create an intent to start the BleAdvertService
                     val serviceIntent = Intent(context, BleAdvertService::class.java)
+                    //여기도
                     serviceIntent.action = "BLE_ADVERT_ACTION"
                     serviceIntent.putExtra("classId", classId)
                     serviceIntent.putExtra("startHour", startHour)

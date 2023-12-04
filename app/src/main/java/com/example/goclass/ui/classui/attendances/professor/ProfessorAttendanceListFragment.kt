@@ -51,9 +51,8 @@ class ProfessorAttendanceListFragment : Fragment() {
             findNavController().navigate(R.id.action_professorAttendanceListFragment_to_professorAttendanceFragment)
         }
 
-        // show professorStudentAttendanceList with dummy data
         val classMap = mapOf("classId" to classId.toString(), "userType" to "1")
-        val repository: UserRepository by inject()
+        val repository: UserRepository by inject() //이거 사용 안하는데?
         val professorAttendanceListAdapter = ProfessorAttendanceListAdapter()
         binding.professorAttendanceListRecyclerView.adapter = professorAttendanceListAdapter
         binding.professorAttendanceListRecyclerView.layoutManager = LinearLayoutManager(requireContext())
