@@ -21,6 +21,6 @@ class AttendanceRepository(private val serviceApi: ServiceApi) {
 
     suspend fun attendanceDetailListAdd(
         attendanceId: Int,
-        isAttendMap: Map<String, String>,
-    ) = serviceApi.attendanceDetailListAdd(attendanceId, isAttendMap)
+        attendances: Attendances,
+    ) = serviceApi.attendanceDetailListAdd(attendanceId, attendances)
 }
