@@ -42,7 +42,7 @@ class AttendanceDetailFragment : Fragment() {
 
         val attendanceSharedPref = activity?.getSharedPreferences("AttendancePrefs", Context.MODE_PRIVATE)
         val className = attendanceSharedPref!!.getString("className", "")
-        val userType = attendanceSharedPref.getInt("userType", -1)
+        val userRole = attendanceSharedPref.getString("userType", "")
         val studentId = attendanceSharedPref.getInt("studentId", -1)
         val studentName = attendanceSharedPref.getString("studentName", "")
         val date = attendanceSharedPref.getString("date", "")
@@ -66,7 +66,7 @@ class AttendanceDetailFragment : Fragment() {
 
         // Back Button
         binding.backButton.setOnClickListener {
-            if (userType == 0) {
+            if (userRole == "student") {
                 findNavController().navigate(R.id.action_attendanceDetailFragment_to_studentAttendanceFragment)
             } else {
                 findNavController().navigate(R.id.action_attendanceDetailFragment_to_professorAttendanceListFragment)
