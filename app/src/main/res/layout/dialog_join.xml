@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/dialog_join">
+
+    <EditText
+        android:id="@+id/codeEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="20dp"
+        android:padding="16dp"
+        android:background="@drawable/edit_text_bg"
+        android:hint="@string/enter_class_code"
+        android:inputType="textMultiLine"
+        style="@style/SemiBold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/classCode" />
+
+    <EditText
+        android:id="@+id/nameEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="20dp"
+        android:padding="16dp"
+        android:background="@drawable/edit_text_bg"
+        android:hint="@string/enter_class_name"
+        android:inputType="textMultiLine"
+        style="@style/SemiBold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/className" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/joinButton"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_margin="30dp"
+        android:background="@drawable/black_btn_bg"
+        android:text="@string/join"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:stateListAnimator="@null"
+        style="@style/Bold"
+        app:layout_constraintTop_toBottomOf="@+id/codeEditText"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/className"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="@string/class_name"
+        style="@style/Bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/classCode"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="@string/class_code"
+        style="@style/Bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/nameEditText" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

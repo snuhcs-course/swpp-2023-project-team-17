@@ -2,18 +2,42 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
+        tools:ignore="CoarseFineLocation" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+
     <application
+        android:name=".GoClassApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GoClass"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.classui.ClassActivity"
+            android:exported="false"
+            android:label="@string/title_activity_class"
+            />
+        <activity
+            android:name=".ui.mainui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,6 +45,25 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
 
+        <service android:name=".ui.classui.attendances.service.LocationService" />
+        <service
+            android:name=".ui.classui.attendances.service.AttendanceService"
+            android:enabled="true"
+            android:exported="false" />
+        <service android:name=".ui.classui.attendances.service.BleAdvertService"
+            android:enabled="true"
+            android:exported="false" />
+        <service android:name=".ui.classui.attendances.service.BleScanService"
+            android:enabled="true"
+            android:exported="false"/>
+        <receiver
+            android:name=".ui.classui.attendances.reciever.AttendanceReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+    </application>
 </manifest>
