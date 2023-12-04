@@ -65,7 +65,7 @@ class ProfessorAttendanceListFragment : Fragment() {
         val attendanceSharedPref = activity?.getSharedPreferences("AttendancePrefs", Context.MODE_PRIVATE)
         with(attendanceSharedPref?.edit()) {
             this?.putString("className", className)
-            this?.putInt("userType", 0)
+            this?.putString("userRole", "professor")
             this?.putInt("studentId", studentId)
             this?.putString("studentName", studentName)
             this?.putInt("attendanceStatus", attendanceStatus)
