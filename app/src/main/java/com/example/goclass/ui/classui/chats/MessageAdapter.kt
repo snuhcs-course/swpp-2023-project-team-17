@@ -53,8 +53,8 @@ class MessageAdapter(
     override fun getItemCount(): Int = messageList.size
 
     class MessageViewHolder(
-        var binding: ItemMessageBinding,
-        var context: Context,
+        val binding: ItemMessageBinding,
+        val context: Context,
     ) :
         RecyclerView.ViewHolder(binding.root) {
         private var isEditing = false

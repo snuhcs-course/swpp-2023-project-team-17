@@ -1,7 +1,10 @@
 package com.example.goclass.di
 
+import com.example.goclass.ui.classui.attendances.AttendanceDetailViewModel
 import com.example.goclass.ui.classui.attendances.professor.ProfessorAttendanceListViewModel
 import com.example.goclass.ui.classui.attendances.professor.ProfessorAttendanceViewModel
+import com.example.goclass.ui.classui.attendances.service.AttendanceServiceViewModel
+import com.example.goclass.ui.classui.attendances.student.StudentAttendanceAdapterViewModel
 import com.example.goclass.ui.classui.attendances.student.StudentAttendanceViewModel
 import com.example.goclass.ui.classui.chats.ChatCommentViewModel
 import com.example.goclass.ui.classui.chats.ChatViewModel
@@ -41,5 +44,14 @@ val viewModelModule =
         }
         viewModel {
             ChatCommentViewModel(get())
+        }
+        viewModel {
+            AttendanceServiceViewModel(get())
+        }
+        viewModel {
+            StudentAttendanceAdapterViewModel(get())
+        }
+        viewModel {
+            AttendanceDetailViewModel(get())
         }
     }

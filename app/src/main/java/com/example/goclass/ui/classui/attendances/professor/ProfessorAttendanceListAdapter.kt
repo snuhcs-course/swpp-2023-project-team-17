@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class ProfessorAttendanceListAdapter(
-    private val repository: UserRepository,
+    private val listener: ProfessorAttendanceListFragment,
 ) : RecyclerView.Adapter<ProfessorAttendanceListAdapter.ProfessorAttendanceListViewHolder>() {
     private var studentAttendanceList = listOf<AttendancesResponse>()
 
@@ -37,7 +37,7 @@ class ProfessorAttendanceListAdapter(
                 parent,
                 false,
             )
-        return ProfessorAttendanceListViewHolder(binding, repository)
+        return ProfessorAttendanceListViewHolder(binding, listener)
     }
 
     override fun onBindViewHolder(
@@ -50,23 +50,20 @@ class ProfessorAttendanceListAdapter(
 
     override fun getItemCount(): Int = studentAttendanceList.size
 
-    @OptIn(DelicateCoroutinesApi::class)
-    class ProfessorAttendanceListViewHolder(var binding: ItemProfessorAttendanceListBinding, val repository: UserRepository) :
+    class ProfessorAttendanceListViewHolder(
+        val binding: ItemProfessorAttendanceListBinding,
+        private val listener: ProfessorAttendanceListFragment,
+    ) :
         RecyclerView.ViewHolder(binding.root) {
+        @SuppressLint("SetTextI18n")
         fun bind(studentAttendanceItem: AttendancesResponse) {
-            GlobalScope.launch(Dispatchers.IO) {
-                try {
-                    val response = repository.userGet(studentAttendanceItem.studentId)
-                    if (response.code == 200) {
-                        withContext(Dispatchers.Main) {
-                            binding.studentIdText.text = response.userName
-                        }
-                    }
-                } catch (e: Exception) {
-                    Log.d("userNameGetError", e.message.toString())
-                }
-            }
-            when (studentAttendanceItem.attendanceStatus) {
+            val studentId = studentAttendanceItem.studentId
+            val studentName = studentAttendanceItem.studentName?:""
+            val attendanceStatus = studentAttendanceItem.attendanceStatus
+
+            binding.studentNameText.text = studentName
+
+            when (attendanceStatus) {
                 2 -> {
                     binding.attendanceStatusText.text = "Present"
                 }
@@ -78,6 +75,9 @@ class ProfessorAttendanceListAdapter(
                     binding.attendanceStatusText.text = "Absent"
                     binding.attendanceStatusText.background = ContextCompat.getDrawable(itemView.context, R.drawable.absent_bg)
                 }
+            }
+            binding.attendanceDetailButton.setOnClickListener {
+                listener.onItemClicked(studentId, studentName, attendanceStatus)
             }
         }
     }

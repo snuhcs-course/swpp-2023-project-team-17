@@ -38,6 +38,7 @@ class LoginViewModelTest {
     @Test
     fun userLogin_success() =
         runTest {
+            val successMessage = "Success"
             val mockUsersResponse =
                 UsersResponse(
                     "email",
@@ -45,27 +46,28 @@ class LoginViewModelTest {
                     "name",
                     0,
                     200,
-                    "message",
+                    successMessage,
                 )
 
             coEvery { mockRepository.userLogin(userEmail) } returns mockUsersResponse
 
             viewModel.userLogin(userEmail)
 
-            val userId = viewModel.accessUserId().getOrAwaitValue()
+            val userId = viewModel.userId.getOrAwaitValue()
             assertEquals(1, userId)
         }
 
     @Test
     fun userLogin_failure() =
         runTest {
-            val mockUsersResponse = UsersResponse(400, "Login failed")
+            val failureMessage = "Failure"
+            val mockUsersResponse = UsersResponse(400, failureMessage)
 
             coEvery { mockRepository.userLogin(userEmail) } returns mockUsersResponse
 
             viewModel.userLogin(userEmail)
 
-            val userId = viewModel.accessUserId().getOrAwaitValue()
+            val userId = viewModel.userId.getOrAwaitValue()
             assertNull(userId)
         }
 
@@ -78,7 +80,7 @@ class LoginViewModelTest {
 
             viewModel.userLogin(userEmail)
 
-            val userIdValue = viewModel.accessUserId().getOrAwaitValue()
+            val userIdValue = viewModel.userId.getOrAwaitValue()
             assertNull(userIdValue)
         }
 

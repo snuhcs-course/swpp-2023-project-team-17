@@ -15,9 +15,11 @@ class StudentAttendanceViewModel(
     private val classRepository: ClassRepository,
     private val attendanceRepository: AttendanceRepository,
 ) : ViewModel() {
-    private val studentAttendanceListLiveData: MutableLiveData<List<AttendancesResponse>> = MutableLiveData()
+    private val _studentAttendanceListLiveData: MutableLiveData<List<AttendancesResponse>> = MutableLiveData()
     private val _toastMessage = MutableLiveData<String>()
-    private val toastMessage: LiveData<String> get() = _toastMessage
+
+    val studentAttendanceListLiveData: LiveData<List<AttendancesResponse>> get() = _studentAttendanceListLiveData
+    val toastMessage: LiveData<String> get() = _toastMessage
 
     fun getStudentAttendanceList(
         classId: Int,
@@ -27,14 +29,14 @@ class StudentAttendanceViewModel(
             try {
                 val response = classRepository.classGetAttendanceListByUserId(classId, userId)
                 if (response.code == 200) {
-                    studentAttendanceListLiveData.postValue(response.attendanceList)
+                    _studentAttendanceListLiveData.postValue(response.attendanceList)
                 }
             } catch (e: Exception) {
                 Log.d("studentAttendanceListError", e.message.toString())
                 _toastMessage.postValue("Error: ${e.message}")
             }
         }
-        return studentAttendanceListLiveData
+        return _studentAttendanceListLiveData
     }
 
     fun addAttendance(
@@ -61,13 +63,5 @@ class StudentAttendanceViewModel(
                 _toastMessage.postValue("Error: ${e.message}")
             }
         }
-    }
-
-    fun accessStudentAttendanceListLiveData(): MutableLiveData<List<AttendancesResponse>> {
-        return studentAttendanceListLiveData
-    }
-
-    fun accessToastMessage(): LiveData<String> {
-        return toastMessage
     }
 }

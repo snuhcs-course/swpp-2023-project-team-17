@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.goclass.R
@@ -56,7 +57,9 @@ class ChatFragment : Fragment() {
 
         // Back Button
         binding.backButton.setOnClickListener {
-            val intent = Intent(requireActivity(), MainActivity::class.java)
+            val intent = Intent(requireActivity(), MainActivity::class.java).apply{
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            }
             startActivity(intent)
         }
 

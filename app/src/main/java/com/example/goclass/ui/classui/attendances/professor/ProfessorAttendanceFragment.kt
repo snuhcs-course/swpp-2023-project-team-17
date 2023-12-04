@@ -20,7 +20,7 @@ class ProfessorAttendanceFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         binding = FragmentProfessorAttendanceBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -31,9 +31,9 @@ class ProfessorAttendanceFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        val classSharedPrf = activity?.getSharedPreferences("ClassPrefs", Context.MODE_PRIVATE)
-        val className = classSharedPrf!!.getString("className", "")
-        val classId = classSharedPrf!!.getInt("classId", -1)
+        val classSharedPref = activity?.getSharedPreferences("ClassPrefs", Context.MODE_PRIVATE)
+        val className = classSharedPref!!.getString("className", "")
+        val classId = classSharedPref.getInt("classId", -1)
 
         binding.className.text = className
 

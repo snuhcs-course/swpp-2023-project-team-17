@@ -1,11 +1,14 @@
 package com.example.goclass.ui.mainui
 
+import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.example.goclass.R
 import com.example.goclass.databinding.ActivityMainBinding
@@ -21,9 +24,21 @@ class MainActivity : AppCompatActivity() {
 
         val permissionUtils = PermissionUtils(this)
 
-        // start tracking location (gps) if permission granted
-        while (!permissionUtils.requestLocationPermissions()) Thread.sleep(100)
-        startLocationService()
+//        permissionUtils.requestBluetoothAdvertisePermissionsWithCallback { bluetoothAdvertPermissionsGranted ->
+//            if (bluetoothAdvertPermissionsGranted) {
+//                permissionUtils.requestBluetoothPermissions { bluetoothScanPermissionsGranted ->
+//                    if (bluetoothScanPermissionsGranted) {
+//                        permissionUtils.requestLocationPermissions()
+//                    }
+//                }
+//            }
+//        }
+//        permissionUtils.requestBluetoothAdvertisePermissionsWithCallback()
+
+        permissionUtils.requestBluetoothPermissions()
+        permissionUtils.requestLocationPermissions()
+
+        //startLocationService()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -39,21 +54,29 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
     private fun checkLoginStatus() {
         val sharedPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         val isLoggedIn = sharedPref.getBoolean("isLoggedIn", false)
         val userRole = sharedPref.getString("userRole", "") ?: ""
 
         if (isLoggedIn) {
+            val navOptions = NavOptions.Builder()
+                .setPopUpTo(R.id.nav_graph, true)
+                .build()
+
             when (userRole) {
                 "student" -> {
-                    navController.navigate(R.id.studentMainFragment)
+                    navController.navigate(R.id.studentMainFragment, null, navOptions)
                 }
                 "professor" -> {
-                    navController.navigate(R.id.professorMainFragment)
+                    navController.navigate(R.id.professorMainFragment, null, navOptions)
                 }
                 else -> {
-                    navController.navigate(R.id.profileFragment)
+                    navController.navigate(R.id.profileFragment, null, navOptions)
                 }
             }
         } else {
@@ -65,5 +88,9 @@ class MainActivity : AppCompatActivity() {
         Log.d("Debug", "before starting LocationService")
         startService(Intent(this, LocationService::class.java))
         Log.d("Debug", "after starting LocationService")
+    }
+
+    companion object {
+        private const val BLUETOOTH_REQUEST_CODE = 101 // 블루투스 권한 요청 코드
     }
 }

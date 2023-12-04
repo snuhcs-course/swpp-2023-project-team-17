@@ -176,7 +176,7 @@ app.get('/users/classes', (req, res) => {
 app.get('/users/attendance', (req, res) => {
     const classId = req.query.classId;
     const sql = 'select attendance_date from Attendances '
-        + 'where is_sent = 1 and class_id = ?'
+        + 'where is_sent = 1 and class_id = ? '
         + 'group by attendance_date';
     const params = [classId];
 
@@ -218,8 +218,10 @@ app.get('/users/attendance', (req, res) => {
 app.get('/users/attendance/:date', (req, res) => {
     const attendanceDate = req.params.date;
     const classId = req.query.classId;
-    const sql = 'select * from Attendances '
-        + 'where is_sent = 1 and attendance_date = ? and class_id = ?';
+    const sql = 'SELECT Attendances.*, Users.user_name '
+                + 'FROM Attendances '
+                + 'INNER JOIN Users ON Attendances.student_id = Users.user_id '
+                + 'where is_sent = 1 and attendance_date = ? and class_id = ?';
     const params = [attendanceDate, classId];
 
     connection.query(sql, params, (err, result) => {
@@ -244,7 +246,8 @@ app.get('/users/attendance/:date', (req, res) => {
                 "attendanceDuration": item.attendance_duration,
                 "isSent": item.is_sent,
                 "classId": item.class_id,
-                "studentId": item.student_id
+                "studentId": item.student_id,
+                "userName": item.user_name
             }));
         } else {
             resultCode = 200;
@@ -500,7 +503,10 @@ app.delete('/class/:id', (req, res) => {
 app.get('/class/:id/attendance/:user_id', (req, res) => {
     const userId = req.params.user_id;
     const classId = req.params.id;
-    const sql = 'select * from Attendances where student_id = ? and class_id = ?';
+    const sql = 'SELECT Attendances.*, Users.user_name '
+                + 'FROM Attendances '
+                + 'INNER JOIN Users ON Attendances.student_id = Users.user_id '
+                + 'where student_id = ? and class_id = ?';
     const params = [userId, classId];
 
     connection.query(sql, params, (err, result) => {
@@ -525,7 +531,8 @@ app.get('/class/:id/attendance/:user_id', (req, res) => {
                 "attendanceDate": item.attendance_date,
                 "isSent": item.is_sent,
                 "classId": item.class_id,
-                "studentId": item.student_id
+                "studentId": item.student_id,
+                "userName": item.user_name
             }));
         } else {
             resultCode = 200;
@@ -536,6 +543,39 @@ app.get('/class/:id/attendance/:user_id', (req, res) => {
             'code': resultCode,
             'message': message,
             'attendanceList': attendanceList
+        });
+    });
+});
+
+
+// (22) get comment count
+app.get('/chat_channel/count/:message_id', (req, res) => {
+    const messageId = req.params.message_id;
+    const sql = 'select count(*) as cnt from Messages where comment_id = ?';
+
+    connection.query(sql, messageId, (err, result) => {
+        let resultCode = 200;
+        let message = "";
+        let count = 0;
+
+        if (err) {
+            return res.status(500).json({
+                'code': 500,
+                'message': 'database error'
+            });
+        }
+        
+        if (result.length > 0) {
+            message = 'get comment count Success';
+            count = result[0].cnt
+        } else {
+            message = 'comment count is zero';
+        }
+
+        res.json({
+            'code': resultCode,
+            'message': message,
+            'count': count
         });
     });
 });
@@ -741,12 +781,91 @@ app.put('/chat_channel/:class_id', (req, res) => {
 });
 
 
+// (23) get attendance detail list
+app.get('/attendance/detail/:attendance_id', (req, res) => {
+    const attendanceId = req.params.attendance_id;
+    const sql = 'SELECT attendance_detail '
+                + 'FROM Attendances '
+                + 'where attendance_id = ?';
+    const params = [attendanceId];
+
+    connection.query(sql, params, (err, result) => {
+        let resultCode = 404;
+        let message = "get attendance detail list Error";
+        let attendanceDetailList = [];
+
+        if (err) {
+            return res.status(500).json({
+                'code': 500,
+                'message': 'database error'
+            });
+        }
+        
+        if (result.length > 0) {
+            resultCode = 200;
+            message = 'get attendance detail list Success';
+            detail = result[0].attendance_detail;
+            if (!(detail == null || detail == '')) {
+                attendanceDetailList = detail.split(',').map(item => parseInt(item.trim()));
+            }
+        }
+
+        res.json({
+            'code': resultCode,
+            'message': message,
+            'attendanceDetailList': attendanceDetailList
+        });
+    });
+});
+
+
+// (24) add attendance detail
+app.put('/attendance/detail/:attendance_id', (req, res) => {
+    const attendanceId = req.params.attendance_id;
+    const isAttend = req.query.is_attend;
+    const getDetailSql = 'SELECT attendance_detail FROM Attendances WHERE attendance_id = ?';
+    connection.query(getDetailSql, [attendanceId], (err, result) => {
+        if (err) {
+            return res.status(500).json({
+                'code': 500,
+                'message': 'database error'
+            });
+        }
+
+        let currentDetail = result[0].attendance_detail;
+        if (currentDetail == null || currentDetail == '') {
+            currentDetail = isAttend;
+        } else {
+            currentDetail = currentDetail + ', ' + isAttend;
+        }
+
+        const updateSql = 'UPDATE Attendances SET attendance_detail = ? WHERE attendance_id = ?';
+        connection.query(updateSql, [currentDetail, attendanceId], (err, result) => {
+            if (err) {
+                return res.status(500).json({
+                    'code': 500,
+                    'message': 'database error'
+                });
+            }
+
+            return res.status(200).json({
+                'code': 200,
+                'message': 'add attendance detail Success'
+            });
+        });
+    });
+});
+
+
 /* (18)
     get attendance information
 */
 app.get('/attendance/:id', (req, res) => {
     const attendanceId = req.params.id;
-    const sql = 'select * from Attendances where attendance_id = ?';
+    const sql = 'SELECT Attendances.*, Users.user_name '
+                + 'FROM Attendances '
+                + 'INNER JOIN Users ON Attendances.student_id = Users.user_id '
+                + 'where attendance_id = ?';
     const params = [attendanceId];
 
     connection.query(sql, params, (err, result) => {
@@ -758,6 +877,7 @@ app.get('/attendance/:id', (req, res) => {
         let isSent = -1;
         let studentId = -1;
         let classId = -1;
+        let userName = "";
 
         if (err) {
             return res.status(500).json({
@@ -775,6 +895,7 @@ app.get('/attendance/:id', (req, res) => {
             isSent = result[0].is_sent;
             studentId = result[0].student_id;
             classId = result[0].class_id;
+            userName = result[0].user_name
         } else {
             resultCode = 200;
             message = 'There is no attendance corresponding to that id';
@@ -789,7 +910,8 @@ app.get('/attendance/:id', (req, res) => {
             'attendanceDuration': attendanceDuration,
             'isSent': isSent,
             'studentId': studentId,
-            'classId': classId
+            'classId': classId,
+            'userName': userName
         });
     });
 });

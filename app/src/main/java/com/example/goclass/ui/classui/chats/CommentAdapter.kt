@@ -50,7 +50,10 @@ class CommentAdapter(
 
     override fun getItemCount(): Int = commentList.size
 
-    class CommentViewHolder(var binding: ItemCommentBinding, var context: Context) :
+    class CommentViewHolder(
+        val binding: ItemCommentBinding,
+        val context: Context,
+    ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(comment: CommentsResponse, userId: Int, onCommentEdit: (Int, String, Int, Int) -> Unit) {
             binding.commentText.text = comment.content

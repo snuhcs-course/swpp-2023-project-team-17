@@ -9,7 +9,8 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel(private val repository: UserRepository) : ViewModel() {
     private val _userId = MutableLiveData<Int?>()
-    private val userId: LiveData<Int?> get() = _userId
+
+    val userId: LiveData<Int?> get() = _userId
 
     fun userLogin(userEmail: String) {
         viewModelScope.launch {
@@ -24,9 +25,5 @@ class LoginViewModel(private val repository: UserRepository) : ViewModel() {
                 _userId.postValue(null)
             }
         }
-    }
-
-    fun accessUserId(): LiveData<Int?> {
-        return userId
     }
 }

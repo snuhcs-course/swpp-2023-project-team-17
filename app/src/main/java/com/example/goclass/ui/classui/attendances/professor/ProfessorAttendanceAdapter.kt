@@ -13,8 +13,7 @@ import java.util.TimeZone
 
 class ProfessorAttendanceAdapter(
     private val listener: ProfessorAttendanceFragment,
-) :
-    RecyclerView.Adapter<ProfessorAttendanceAdapter.ProfessorAttendanceViewHolder>() {
+) : RecyclerView.Adapter<ProfessorAttendanceAdapter.ProfessorAttendanceViewHolder>() {
     private var professorAttendanceList = listOf<AttendancesResponse>()
 
     @SuppressLint("NotifyDataSetChanged")
@@ -47,7 +46,7 @@ class ProfessorAttendanceAdapter(
     override fun getItemCount(): Int = professorAttendanceList.size
 
     class ProfessorAttendanceViewHolder(
-        var binding: ItemProfessorAttendanceBinding,
+        val binding: ItemProfessorAttendanceBinding,
         private val listener: ProfessorAttendanceFragment,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(professorAttendanceItem: AttendancesResponse) {
@@ -55,10 +54,11 @@ class ProfessorAttendanceAdapter(
             originalFormat.timeZone = TimeZone.getTimeZone("UTC")
             val targetFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             val date: Date? = originalFormat.parse(professorAttendanceItem.attendanceDate)
+            val dateText = date?.let { targetFormat.format(it) } ?: ""
 
-            binding.attendanceDateText.text = targetFormat.format(date)
+            binding.attendanceDateText.text = dateText
             binding.studentListButton.setOnClickListener {
-                listener.onItemClicked(professorAttendanceItem.attendanceDate)
+                listener.onItemClicked(dateText)
             }
         }
     }

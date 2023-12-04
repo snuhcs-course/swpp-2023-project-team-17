@@ -1,6 +1,7 @@
 package com.example.goclass.network
 
 import com.example.goclass.network.dataclass.AttendanceDateListsResponse
+import com.example.goclass.network.dataclass.AttendanceDetailListResponse
 import com.example.goclass.network.dataclass.AttendanceListsResponse
 import com.example.goclass.network.dataclass.Attendances
 import com.example.goclass.network.dataclass.AttendancesResponse
@@ -10,6 +11,7 @@ import com.example.goclass.network.dataclass.ClassListsResponse
 import com.example.goclass.network.dataclass.Classes
 import com.example.goclass.network.dataclass.ClassesResponse
 import com.example.goclass.network.dataclass.CodeMessageResponse
+import com.example.goclass.network.dataclass.CommentCountResponse
 import com.example.goclass.network.dataclass.CommentListsResponse
 import com.example.goclass.network.dataclass.Comments
 import com.example.goclass.network.dataclass.MessageListsResponse
@@ -84,6 +86,11 @@ interface ServiceApi {
         @Path("user_id") userId: Int,
     ): AttendanceListsResponse
 
+    @GET("/chat_channel/count/{message_id}")
+    suspend fun chatChannelGetCommentCount(
+        @Path("message_id") messageId: Int,
+    ): CommentCountResponse
+
     @GET("/chat_channel/{class_id}")
     suspend fun chatChannelGetList(
         @Path("class_id") classId: Int,
@@ -141,4 +148,15 @@ interface ServiceApi {
         @Path("user_id") userId: Int,
         @Body attendances: Attendances,
     ): CodeMessageResponse
+
+    @GET("/attendance/detail/{attendance_id}")
+    suspend fun attendanceDetailListGet(
+        @Path("attendance_id") attendanceId: Int,
+    ): AttendanceDetailListResponse
+
+    @PUT("/attendance/detail/{attendance_id}")
+    suspend fun attendanceDetailListAdd(
+        @Path("attendance_id") attendanceId: Int,
+        @QueryMap isAttendMap: Map<String, String>,
+    ): AttendanceDetailListResponse
 }

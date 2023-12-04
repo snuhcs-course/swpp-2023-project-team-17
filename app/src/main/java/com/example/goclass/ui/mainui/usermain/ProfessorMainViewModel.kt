@@ -21,8 +21,10 @@ class ProfessorMainViewModel(
     application: Application,
 ) : AndroidViewModel(application), KoinComponent {
     private val _snackbarMessage = MutableLiveData<String>()
-    private val classListLiveData: MutableLiveData<List<ClassesResponse>> = MutableLiveData()
-    private val snackbarMessage: LiveData<String> get() = _snackbarMessage
+    private val _classListLiveData: MutableLiveData<List<ClassesResponse>> = MutableLiveData()
+
+    val classListLiveData: LiveData<List<ClassesResponse>> get() = _classListLiveData
+    val snackbarMessage: LiveData<String> get() = _snackbarMessage
 
     fun createClass(
         className: String,
@@ -99,6 +101,7 @@ class ProfessorMainViewModel(
                 }
             } catch (e: Exception) {
                 _snackbarMessage.postValue("Error: ${e.message}")
+                Log.d("createclass", "${e.message}")
             }
         }
     }
@@ -108,14 +111,14 @@ class ProfessorMainViewModel(
             try {
                 val response = userRepository.userGetClassList(user)
                 if (response.code == 200) {
-                    classListLiveData.postValue(response.classList)
+                    _classListLiveData.postValue(response.classList)
                 }
             } catch (e: Exception) {
                 Log.d("classListError", e.message.toString())
                 _snackbarMessage.postValue("Error: ${e.message}")
             }
         }
-        return classListLiveData
+        return _classListLiveData
     }
 
     fun deleteClass(classId: Int, professorId: Int) {
@@ -133,13 +136,5 @@ class ProfessorMainViewModel(
                 _snackbarMessage.postValue("Error: ${e.message}")
             }
         }
-    }
-
-    fun accessSnackbarMessage(): LiveData<String> {
-        return snackbarMessage
-    }
-
-    fun accessClassListLiveData(): MutableLiveData<List<ClassesResponse>> {
-        return classListLiveData
     }
 }

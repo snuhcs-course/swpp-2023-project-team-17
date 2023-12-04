@@ -21,8 +21,10 @@ class StudentMainViewModel(
     application: Application,
 ) : AndroidViewModel(application), KoinComponent {
     private val _snackbarMessage = MutableLiveData<String>()
-    private val classListLiveData: MutableLiveData<List<ClassesResponse>> = MutableLiveData()
-    private val snackbarMessage: LiveData<String> get() = _snackbarMessage
+    private val _classListLiveData: MutableLiveData<List<ClassesResponse>> = MutableLiveData()
+
+    val snackbarMessage: LiveData<String> get() = _snackbarMessage
+    val classListLiveData: LiveData<List<ClassesResponse>> get() = _classListLiveData
 
     fun classJoin(
         userId: Int,
@@ -97,13 +99,13 @@ class StudentMainViewModel(
             try {
                 val response = userRepository.userGetClassList(user)
                 if (response.code == 200) {
-                    classListLiveData.postValue(response.classList)
+                    _classListLiveData.postValue(response.classList)
                 }
             } catch (e: Exception) {
                 Log.d("classListError", e.message.toString())
             }
         }
-        return classListLiveData
+        return _classListLiveData
     }
 
     data class TimeElement(
@@ -113,12 +115,4 @@ class StudentMainViewModel(
         val endHour: Int,
         val endMinute: Int,
     )
-
-    fun accessClassListLiveData(): MutableLiveData<List<ClassesResponse>> {
-        return classListLiveData
-    }
-
-    fun accessSnackbarMessage(): LiveData<String> {
-        return snackbarMessage
-    }
 }

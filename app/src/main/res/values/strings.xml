@@ -134,4 +134,9 @@
     <string name="list">List</string>
     <string name="send">Send</string>
     <string name="status">Status</string>
+    <string name="detail">Detail</string>
+    <string name="notification_channel_name_ble_advert">블루투스 광고 서비스</string>
+    <string name="notification_channel_description_ble_advert">앱이 백그라운드에서 블루투스 광고를 진행합니다.</string>
+    <string name="ble_advert_notification_title">블루투스 광고 진행 중</string>
+    <string name="ble_advert_notification_content">블루투스 광고가 백그라운드에서 실행되고 있습니다.</string>
 </resources>

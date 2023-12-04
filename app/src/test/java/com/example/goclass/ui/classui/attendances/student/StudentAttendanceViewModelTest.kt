@@ -40,6 +40,7 @@ class StudentAttendanceViewModelTest {
     @Test
     fun getStudentAttendanceList_success() =
         runTest {
+            val successMessage = "Success"
             val classId = 1
             val userId = 1
             val attendancesResponse =
@@ -58,7 +59,7 @@ class StudentAttendanceViewModelTest {
                         attendancesResponse,
                     ),
                     200,
-                    "Success",
+                    successMessage,
                 )
 
             // Define the mock behavior
@@ -68,7 +69,7 @@ class StudentAttendanceViewModelTest {
             viewModel.getStudentAttendanceList(classId, userId)
 
             // Check if the LiveData has been updated
-            val liveDataValue = viewModel.accessStudentAttendanceListLiveData().getOrAwaitValue()
+            val liveDataValue = viewModel.studentAttendanceListLiveData.getOrAwaitValue()
             TestCase.assertEquals(1, liveDataValue.size)
             TestCase.assertEquals(attendancesResponse, liveDataValue[0])
         }
@@ -83,13 +84,14 @@ class StudentAttendanceViewModelTest {
 
             viewModel.getStudentAttendanceList(classId, userId)
 
-            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
+            val toastValue = viewModel.toastMessage.getOrAwaitValue()
             TestCase.assertEquals("Error: $exceptionMessage", toastValue)
         }
 
     @Test
     fun addAttendance_success() =
         runTest {
+            val successMessage = "Successfully added"
             val classId = 1
             val userId = 1
             val attendancesResponse =
@@ -114,7 +116,7 @@ class StudentAttendanceViewModelTest {
             val mockCodeMessageResponse =
                 CodeMessageResponse(
                     200,
-                    "Success",
+                    successMessage,
                 )
             // Define the mock behavior
             coEvery { mockClassRepository.classGetAttendanceListByUserId(classId, userId) } returns mockAttendanceListsResponse
@@ -123,19 +125,20 @@ class StudentAttendanceViewModelTest {
             // Invoke the function
             viewModel.addAttendance(classId, userId)
 
-            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
-            TestCase.assertEquals("Successfully added", toastValue)
+            val toastValue = viewModel.toastMessage.getOrAwaitValue()
+            TestCase.assertEquals(successMessage, toastValue)
         }
 
     @Test
     fun addAttendance_failure() =
         runTest {
+            val failureMessage = "Failed to add"
             val classId = 1
             val userId = 1
             val mockCodeMessageResponse =
                 CodeMessageResponse(
                     400,
-                    "Failure",
+                    failureMessage,
                 )
             // Define the mock behavior
             coEvery { mockAttendanceRepository.attendanceAdd(any(), any()) } returns mockCodeMessageResponse
@@ -143,7 +146,7 @@ class StudentAttendanceViewModelTest {
             // Invoke the function
             viewModel.addAttendance(classId, userId)
 
-            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
+            val toastValue = viewModel.toastMessage.getOrAwaitValue()
             TestCase.assertEquals("Failed to add", toastValue)
         }
 
@@ -160,7 +163,7 @@ class StudentAttendanceViewModelTest {
             // Invoke the function
             viewModel.addAttendance(classId, userId)
 
-            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
+            val toastValue = viewModel.toastMessage.getOrAwaitValue()
             TestCase.assertEquals("Error: $exceptionMessage", toastValue)
         }
 

@@ -5,6 +5,8 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.icu.util.Calendar
+import android.os.Build
+import android.util.Log
 import com.example.goclass.ui.classui.attendances.reciever.AttendanceReceiver
 
 class ClassScheduler {
@@ -20,41 +22,70 @@ class ClassScheduler {
         userType: Int,
     ) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(context, AttendanceReceiver::class.java)
+        val intent = Intent(context, AttendanceReceiver::class.java).apply {
+            action = "ATTENDANCE_ALARM_ACTION"
+            putExtra("userId", userId)
+            putExtra("classId", classId)
+            putExtra("startHour", startHour)
+            putExtra("startMinute", startMinute)
+            putExtra("endHour", endHour)
+            putExtra("endMinute", endMinute)
+            putExtra("userType", userType)
+            Log.d("classScheduler", "endHour: $endHour")
+            Log.d("classScheduler", "endMinute: $endMinute")
+            Log.d("classScheduler", "startHour: $startHour")
+            Log.d("classScheduler", "startMinute: $startMinute")
+        }
 
-        // Pass class info to the receiver
-        intent.putExtra("userId", userId)
-        intent.putExtra("classId", classId)
-        intent.putExtra("startHour", startHour)
-        intent.putExtra("startMinute", startMinute)
-        intent.putExtra("endHour", endHour)
-        intent.putExtra("endMinute", endMinute)
-        intent.putExtra("userType", userType)
+        Log.d("classScheduler", "dayOfWeek: $dayOfWeek")
+        Log.d("classScheduler", "classId: $classId")
 
-        val pendingIntent = PendingIntent.getBroadcast(context, uniqueRequestId(userId, classId), intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent =
+            PendingIntent.getBroadcast(
+                context,
+                uniqueRequestId(userId, classId),
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
 
         val now = Calendar.getInstance()
-        val alarmTime = Calendar.getInstance()
+        val alarmTime = Calendar.getInstance().apply {
+            set(Calendar.DAY_OF_WEEK, dayOfWeek)
+            set(Calendar.HOUR_OF_DAY, startHour)
+            set(Calendar.MINUTE, startMinute)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
 
-        // Set the day of the week, hour, and minute for the alarm
-        alarmTime.set(Calendar.DAY_OF_WEEK, dayOfWeek)
-        alarmTime.set(Calendar.HOUR_OF_DAY, startHour)
-        alarmTime.set(Calendar.MINUTE, startMinute)
-        alarmTime.set(Calendar.SECOND, 0)
-        alarmTime.set(Calendar.MILLISECOND, 0)
-
-        // If the alarm time is in the past, add a week to it
-        if (alarmTime.before(now)) {
-            alarmTime.add(Calendar.WEEK_OF_YEAR, 1)
+            if (before(now)) {
+                add(Calendar.WEEK_OF_YEAR, 1)
+            }
         }
 
         // Schedule the alarm to repeat weekly
-        alarmManager.setRepeating(
-            AlarmManager.RTC_WAKEUP,
-            alarmTime.timeInMillis,
-            AlarmManager.INTERVAL_DAY * 7,
-            pendingIntent,
-        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !alarmManager.canScheduleExactAlarms()) {
+            // 권한 요청을 위한 인텐트 생성 및 전송 필요 (Activity에서 처리)
+            // 예를 들어, 권한 요청 인텐트를 Broadcast로 보내고, Activity에서 이를 받아 처리
+            val permissionIntent = Intent("com.example.goclass.REQUEST_EXACT_ALARM")
+            context.sendBroadcast(permissionIntent)
+        } else {
+            Log.d("classScheduler", "setexact call")
+            // 정확한 알람 설정
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    alarmTime.timeInMillis,
+                    pendingIntent
+                )
+            } else {
+                alarmManager.setExact(
+                    AlarmManager.RTC_WAKEUP,
+                    alarmTime.timeInMillis,
+                    pendingIntent
+                )
+            }
+        }
+
+        Log.d("classScheduler", "알람 설정됨: $dayOfWeek, $startHour:$startMinute")
     }
 
     fun uniqueRequestId(

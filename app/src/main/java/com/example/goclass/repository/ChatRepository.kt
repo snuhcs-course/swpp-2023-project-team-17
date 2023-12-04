@@ -5,6 +5,7 @@ import com.example.goclass.network.dataclass.Comments
 import com.example.goclass.network.dataclass.Messages
 
 class ChatRepository(private val serviceApi: ServiceApi) {
+    suspend fun chatChannelGetCommentCount(messageId: Int) = serviceApi.chatChannelGetCommentCount(messageId)
     suspend fun chatChannelGetList(classId: Int) = serviceApi.chatChannelGetList(classId)
 
     suspend fun chatChannelSend(

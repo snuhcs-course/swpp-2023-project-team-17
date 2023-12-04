@@ -74,11 +74,7 @@ dependencies {
     implementation("io.socket:socket.io-client:2.0.0")
     implementation("androidx.test:core-ktx:1.5.0")
     implementation("androidx.test.ext:junit-ktx:1.1.5")
-    implementation("androidx.test.espresso:espresso-intents:3.5.1")
-    implementation("org.objenesis:objenesis:3.2")
-    implementation("com.google.android.gms:play-services-location:19.0.1")
-    implementation("com.google.android.gms:play-services-maps:18.1.0")
-    implementation("androidx.test.espresso:espresso-contrib:3.5.1")
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("io.mockk:mockk:1.11.0")

@@ -8,6 +8,8 @@ import com.example.goclass.repository.UserRepository
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertFalse
+import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -37,16 +39,17 @@ class ProfileViewModelTest {
     @Test
     fun userEdit_success() =
         runTest {
-            val mockResponse = CodeMessageResponse(200, "Message")
+            val successMessage = "Success"
+            val mockResponse = CodeMessageResponse(200, successMessage)
 
             coEvery { mockRepository.userEdit(any(), any()) } returns mockResponse
 
             viewModel.userEdit(1, 0, "TestName")
 
-            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
-            val editSuccess = viewModel.accessEditSuccess().getOrAwaitValue()
-            val isLoading = viewModel.accessIsLoading().getOrAwaitValue()
-            assertEquals("Success", toastValue)
+            val toastValue = viewModel.toastMessage.getOrAwaitValue()
+            val editSuccess = viewModel.editSuccess.getOrAwaitValue()
+            val isLoading = viewModel.isLoading.getOrAwaitValue()
+            assertEquals(successMessage, toastValue)
             assertEquals(true, editSuccess)
             assertEquals(false, isLoading)
         }
@@ -54,16 +57,17 @@ class ProfileViewModelTest {
     @Test
     fun userEdit_failure() =
         runTest {
-            val mockFailureResponse = CodeMessageResponse(400, "Failed to edit profile")
+            val failureMessage = "Failure"
+            val mockFailureResponse = CodeMessageResponse(400, failureMessage)
 
             coEvery { mockRepository.userEdit(any(), any()) } returns mockFailureResponse
 
             viewModel.userEdit(1, 0, "TestName")
 
-            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
-            val editSuccess = viewModel.accessEditSuccess().getOrAwaitValue()
-            val isLoading = viewModel.accessIsLoading().getOrAwaitValue()
-            assertEquals("Failure", toastValue)
+            val toastValue = viewModel.toastMessage.getOrAwaitValue()
+            val editSuccess = viewModel.editSuccess.getOrAwaitValue()
+            val isLoading = viewModel.isLoading.getOrAwaitValue()
+            assertEquals(failureMessage, toastValue)
             assertEquals(false, editSuccess)
             assertEquals(false, isLoading)
         }
@@ -76,12 +80,12 @@ class ProfileViewModelTest {
 
             viewModel.userEdit(1, 0, "TestName")
 
-            val toastValue = viewModel.accessToastMessage().getOrAwaitValue()
-            val editSuccess = viewModel.accessEditSuccess().getOrAwaitValue()
-            val isLoading = viewModel.accessIsLoading().getOrAwaitValue()
+            val toastValue = viewModel.toastMessage.getOrAwaitValue()
+            val editSuccess = viewModel.editSuccess.getOrAwaitValue()
+            val isLoading = viewModel.isLoading.getOrAwaitValue()
             assertEquals("Error: $exceptionMessage", toastValue)
-            assertEquals(false, editSuccess)
-            assertEquals(false, isLoading)
+            assertFalse(editSuccess)
+            assertFalse(isLoading)
         }
 
     @Test
@@ -93,7 +97,7 @@ class ProfileViewModelTest {
 
             viewModel.userGet(1)
 
-            val userName = viewModel.accessUserName().getOrAwaitValue()
+            val userName = viewModel.userName.getOrAwaitValue()
             assertEquals(mockUserResponse.userName, userName)
         }
 
