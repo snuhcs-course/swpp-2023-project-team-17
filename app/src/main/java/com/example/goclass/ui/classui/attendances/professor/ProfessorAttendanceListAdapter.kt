@@ -16,7 +16,9 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class ProfessorAttendanceListAdapter : RecyclerView.Adapter<ProfessorAttendanceListAdapter.ProfessorAttendanceListViewHolder>() {
+class ProfessorAttendanceListAdapter(
+    private val listener: ProfessorAttendanceListFragment,
+) : RecyclerView.Adapter<ProfessorAttendanceListAdapter.ProfessorAttendanceListViewHolder>() {
     private var studentAttendanceList = listOf<AttendancesResponse>()
 
     @SuppressLint("NotifyDataSetChanged")
@@ -35,7 +37,7 @@ class ProfessorAttendanceListAdapter : RecyclerView.Adapter<ProfessorAttendanceL
                 parent,
                 false,
             )
-        return ProfessorAttendanceListViewHolder(binding)
+        return ProfessorAttendanceListViewHolder(binding, listener)
     }
 
     override fun onBindViewHolder(
@@ -48,12 +50,20 @@ class ProfessorAttendanceListAdapter : RecyclerView.Adapter<ProfessorAttendanceL
 
     override fun getItemCount(): Int = studentAttendanceList.size
 
-    class ProfessorAttendanceListViewHolder(val binding: ItemProfessorAttendanceListBinding) :
+    class ProfessorAttendanceListViewHolder(
+        val binding: ItemProfessorAttendanceListBinding,
+        private val listener: ProfessorAttendanceListFragment,
+    ) :
         RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
         fun bind(studentAttendanceItem: AttendancesResponse) {
-            binding.studentNameText.text = studentAttendanceItem.studentName
-            when (studentAttendanceItem.attendanceStatus) {
+            val studentId = studentAttendanceItem.studentId
+            val studentName = studentAttendanceItem.studentName?:""
+            val attendanceStatus = studentAttendanceItem.attendanceStatus
+
+            binding.studentNameText.text = studentName
+
+            when (attendanceStatus) {
                 2 -> {
                     binding.attendanceStatusText.text = "Present"
                 }
@@ -65,6 +75,9 @@ class ProfessorAttendanceListAdapter : RecyclerView.Adapter<ProfessorAttendanceL
                     binding.attendanceStatusText.text = "Absent"
                     binding.attendanceStatusText.background = ContextCompat.getDrawable(itemView.context, R.drawable.absent_bg)
                 }
+            }
+            binding.attendanceDetailButton.setOnClickListener {
+                listener.onItemClicked(studentId, studentName, attendanceStatus)
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.example.goclass.di
 
+import com.example.goclass.ui.classui.attendances.AttendanceDetailViewModel
 import com.example.goclass.ui.classui.attendances.professor.ProfessorAttendanceListViewModel
 import com.example.goclass.ui.classui.attendances.professor.ProfessorAttendanceViewModel
 import com.example.goclass.ui.classui.attendances.service.AttendanceServiceViewModel
@@ -49,5 +50,8 @@ val viewModelModule =
         }
         viewModel {
             StudentAttendanceAdapterViewModel(get())
+        }
+        viewModel {
+            AttendanceDetailViewModel(get())
         }
     }

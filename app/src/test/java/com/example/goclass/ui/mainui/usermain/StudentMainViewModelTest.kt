@@ -81,7 +81,7 @@ class StudentMainViewModelTest {
             viewModel.classJoin(1, "TestName", "TestCode", mockClassScheduler)
 
             val snackbarValue = viewModel.snackbarMessage.getOrAwaitValue()
-            assertEquals("Error: $exceptionMessage", snackbarValue)
+            assertEquals(exceptionMessage, snackbarValue)
         }
 
     @Test
