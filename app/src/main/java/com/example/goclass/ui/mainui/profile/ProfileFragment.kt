@@ -17,10 +17,13 @@ import com.example.goclass.databinding.FragmentProfileBinding
 import com.example.goclass.ui.mainui.profile.utils.RadioButtonsUtils
 import com.example.goclass.ui.mainui.profile.utils.SharedPrefsUtils
 import com.example.goclass.ui.mainui.profile.utils.SnackBarUtils
+import com.example.goclass.utility.SnackbarBuilder
+import com.example.goclass.utility.StatusCheckUtils
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.time.Duration
 
 
 class ProfileFragment : Fragment() {
@@ -144,9 +147,9 @@ class ProfileFragment : Fragment() {
             val userName = binding.nameEditText.text.toString()
 
             if (userType == null) {
-                SnackBarUtils.showSnackBar(binding.root, "Please select your role.")
+                showSnackbar("Please select your role.", R.color.red)
             } else if (userName == "") {
-                SnackBarUtils.showSnackBar(binding.root, "Please enter your name.")
+                showSnackbar("Please enter your name.", R.color.red)
             } else {
                 SharedPrefsUtils.save(requireContext(), "userName", userName)
                 viewModel.userEdit(userId, userType, userName)
@@ -161,5 +164,22 @@ class ProfileFragment : Fragment() {
             binding.nameEditText.clearFocus()
             false
         }
+
+        observeViewModel()
+    }
+
+    private fun observeViewModel() {
+        viewModel.editSuccess.observe(viewLifecycleOwner) { isSuccess ->
+            if (!isSuccess) {
+                showSnackbar("Server Error: Check your network connection.", R.color.red)
+            }
+        }
+    }
+    private fun showSnackbar(message: String, colorResId: Int) {
+        SnackbarBuilder(binding.root)
+            .setMessage(message)
+            .setBackgroundColor(colorResId)
+            .build()
+            .show()
     }
 }

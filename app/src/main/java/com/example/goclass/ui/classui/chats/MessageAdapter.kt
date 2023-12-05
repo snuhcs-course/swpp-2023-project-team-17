@@ -80,6 +80,16 @@ class MessageAdapter(
                 binding.timeStampText.text = message.timeStamp
             }
 
+            var commentCountText = message.commentCount
+
+            // Comment Count
+            if (commentCountText == "0") {
+                binding.commentCount.visibility = View.GONE
+            } else {
+                commentCountText += " comments"
+                binding.commentCount.text = commentCountText
+            }
+
             // Chat Edit Button
             binding.chatEditButton.setOnClickListener {
                 isEditing = true

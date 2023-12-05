@@ -17,7 +17,6 @@
         android:textColor="@color/black"
         tools:text="Dummy"
         style="@style/Medium"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/nameAndTime" />
 
@@ -114,5 +113,19 @@
             style="@style/Medium"
             tools:ignore="HardcodedText,SmallSp" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/commentCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="0 comments"
+        android:textSize="12sp"
+        android:textColor="@color/gray"
+        style="@style/Bold"
+        app:layout_constraintTop_toBottomOf="@id/messageText"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="HardcodedText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

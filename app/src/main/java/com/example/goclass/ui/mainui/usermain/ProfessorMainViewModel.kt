@@ -115,7 +115,7 @@ class ProfessorMainViewModel(
                 }
             } catch (e: Exception) {
                 Log.d("classListError", e.message.toString())
-                _snackbarMessage.postValue("Error: ${e.message}")
+                _snackbarMessage.postValue("Cannot load class list. Check your network connection.")
             }
         }
         return _classListLiveData
@@ -129,11 +129,11 @@ class ProfessorMainViewModel(
                     _snackbarMessage.postValue("Successfully deleted.")
                     getClassList(mapOf("userId" to professorId.toString(), "userType" to "1"))
                 } else {
-                    _snackbarMessage.postValue("Failed to delete...")
+                    _snackbarMessage.postValue("Cannot delete class. Check your network connection.")
                 }
             } catch (e: Exception) {
                 Log.d("classDeleteError", e.message.toString())
-                _snackbarMessage.postValue("Error: ${e.message}")
+                _snackbarMessage.postValue("Cannot delete class. Check your network connection.")
             }
         }
     }

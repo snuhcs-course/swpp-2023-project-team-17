@@ -23,6 +23,7 @@ import com.example.goclass.R
 import com.example.goclass.databinding.FragmentStudentMainBinding
 import com.example.goclass.ui.classui.ClassScheduler
 import com.example.goclass.ui.mainui.usermain.utils.InputValidnessTest
+import com.example.goclass.utility.SnackbarBuilder
 import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -128,5 +129,12 @@ class StudentMainFragment : Fragment() {
             val intent = Intent(view.context, ClassActivity::class.java)
             startActivity(intent)
         }
+    }
+    private fun showSnackbar(message: String, colorResId: Int) {
+        SnackbarBuilder(binding.root)
+            .setMessage(message)
+            .setBackgroundColor(colorResId)
+            .build()
+            .show()
     }
 }
