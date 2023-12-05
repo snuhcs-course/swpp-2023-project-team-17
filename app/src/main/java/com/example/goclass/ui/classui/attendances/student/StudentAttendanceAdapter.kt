@@ -63,7 +63,7 @@ class StudentAttendanceAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
         fun bind(studentAttendanceItem: AttendancesResponse) {
-            val studentId = studentAttendanceItem.studentId
+            val attendanceId = studentAttendanceItem.attendanceId
             val studentName = studentAttendanceItem.studentName?:""
 
             val originalFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
@@ -97,7 +97,6 @@ class StudentAttendanceAdapter(
 
             if (binding.sendButton.isEnabled) {
                 binding.sendButton.setOnClickListener {
-                    val attendanceId = studentAttendanceItem.attendanceId
                     viewModel.editAttendance(attendanceId)
                     viewModel.editSuccess.observe(lifecycleOwner) { editSuccess ->
                         if (editSuccess) {
@@ -111,7 +110,7 @@ class StudentAttendanceAdapter(
                 }
             }
             binding.attendanceDetailButton.setOnClickListener {
-                listener.onItemClicked(studentId, studentName, dateText, attendanceStatus)
+                listener.onItemClicked(attendanceId, studentName, dateText, attendanceStatus)
             }
         }
     }

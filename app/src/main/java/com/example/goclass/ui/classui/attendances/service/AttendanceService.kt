@@ -25,7 +25,7 @@ class AttendanceService : Service() { //, BleScanCallback {
     private val bleScanResultReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == BleScanService.ACTION_BLE_SCAN_RESULT) {
-                scanCount = intent.getIntExtra(BleScanService.EXTRA_SCAN_COUNT, 0) + 1
+                scanCount = intent.getIntExtra(BleScanService.EXTRA_SCAN_COUNT, 0)
                 Log.i(TAG, "Received scanCount: $scanCount")
                 stopSelf()
             }
@@ -126,15 +126,16 @@ class AttendanceService : Service() { //, BleScanCallback {
     private fun performAttendanceCheck(scanResults: BooleanArray) {
         Log.d(TAG, "performAttendanceCheck")
 
-        var attendanceStatus = if (firstSuccess <= 10) {
-            2 // present
-        } else if (firstSuccess <= 30) {
-            1 // late
-        } else {
-            0 // absent
-        }
+        val attendanceStatus =
+            if (firstSuccess <= 10) {
+                2 // present
+            } else if (firstSuccess <= 30) {
+                1 // late
+            } else {
+                0 // absent
+            }
 
-        var attendanceDuration = scanCount
+        val attendanceDuration = scanCount
 
         viewModel.saveAttendance(attendanceStatus, attendanceDuration, userId, classId)
     }

@@ -148,8 +148,8 @@ class BleScanService : Service() {
         Log.d(TAG, "detected serviceUuids: ${result.scanRecord?.serviceUuids}")
         Log.d(TAG, "isTargetDevice: ${result.scanRecord?.serviceUuids?.contains(targetDeviceUuid)}")
 
-        return (result.scanRecord?.serviceUuids?.contains(targetDeviceUuid) == true) &&
-                (result.scanRecord?.serviceUuids?.contains(targetBeaconUuid) == true)
+        return (result.scanRecord?.serviceUuids?.contains(targetDeviceUuid) == true) //&&
+//                (result.scanRecord?.serviceUuids?.contains(targetBeaconUuid) == true)
     }
 
     private fun startScanningWithInterval() {
@@ -208,12 +208,14 @@ class BleScanService : Service() {
         // Pass scanCount to AttendanceService using Intent
         val intent = Intent(ACTION_BLE_SCAN_RESULT)
         intent.putExtra(EXTRA_SCAN_COUNT, successfulScanCount)
+        Log.d(TAG, "sendSuccessfulScanCount: $successfulScanCount")
         sendBroadcast(intent)
     }
 
     private fun deviceFound() {
         val intent = Intent(ACTION_BLE_FIRST_SCAN)
         intent.putExtra(FIRST_SCAN_AT, scanCount)
+        Log.d(TAG, "deviceFound at: $scanCount")
         sendBroadcast(intent)
     }
 
@@ -240,7 +242,9 @@ class BleScanService : Service() {
             .setServiceUuid(targetBeaconUuid, beaconMask)
             .build()
 
-        val scanFilters: List<ScanFilter> = listOf(scanFilterDevice, scanFilterBeacon)
+        val scanFilters: List<ScanFilter> = listOf(scanFilterDevice)
+//        val scanFilters: List<ScanFilter> = listOf(scanFilterDevice, scanFilterBeacon)
+
         Log.d(TAG, "scanFilters: $scanFilters")
 
 
