@@ -44,9 +44,10 @@ class AttendanceService : Service() { //, BleScanCallback {
     private val scanResultsReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == "com.example.goclass.SCAN_RESULTS") {
-                val scanResults = intent.getBooleanArrayExtra("scanResults")
+                val scanResults = intent.getStringArrayExtra("scanResults")
                 scanResults?.let{
-                    performAttendanceCheck(it)
+                    val scanResultsList = it.toList()
+                    performAttendanceCheck(scanResultsList)
                 }
             }
         }
@@ -123,7 +124,7 @@ class AttendanceService : Service() { //, BleScanCallback {
         bindService(bindIntent, serviceConnection, Context.BIND_AUTO_CREATE)
     }
 
-    private fun performAttendanceCheck(scanResults: BooleanArray) {
+    private fun performAttendanceCheck(scanResults: List<String>) {
         Log.d(TAG, "performAttendanceCheck")
 
         val attendanceStatus =
@@ -137,7 +138,9 @@ class AttendanceService : Service() { //, BleScanCallback {
 
         val attendanceDuration = scanCount
 
-        viewModel.saveAttendance(attendanceStatus, attendanceDuration, userId, classId)
+        Log.d(TAG, scanResults.toString())
+
+        viewModel.saveAttendance(attendanceStatus, attendanceDuration, userId, classId, scanResults)
     }
 
     private val serviceConnection = object : ServiceConnection {

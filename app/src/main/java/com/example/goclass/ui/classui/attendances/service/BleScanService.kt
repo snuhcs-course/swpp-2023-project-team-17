@@ -37,10 +37,11 @@ class BleScanService : Service() {
 
     private var deviceFound = false
     private var firstScan = true
+    private var firstScanTime = 0
 
     private var durationSec = 0
 
-    private val scanResultsList = ArrayList<Boolean>()
+    private val scanResultsList = mutableListOf<String>()
     private var minutesElapsed = 0
 
     private val handler = Handler()
@@ -75,7 +76,6 @@ class BleScanService : Service() {
 
     override fun onDestroy() {
         Log.d(TAG, "onDestroy: Blescan destroy")
-        sendScanResults()
         scanIntervalHandler?.removeCallbacksAndMessages(null)
         super.onDestroy()
     }
@@ -113,9 +113,9 @@ class BleScanService : Service() {
                         successfulScanCount++
                         deviceFound = true
                         while (scanResultsList.size <= minutesElapsed) {
-                            scanResultsList.add(false)
+                            scanResultsList += "0"
                         }
-                        scanResultsList[minutesElapsed] = true
+                        scanResultsList += "1"
                         Log.i(TAG, "successfulScanCount incremented: $successfulScanCount")
                     } else {
                         Log.i(TAG, "successfulScanCount already incremented: $successfulScanCount")
@@ -181,6 +181,8 @@ class BleScanService : Service() {
         bluetoothLeScanner?.stopScan(scanCallback)
 
         sendSuccessfulScanCount()
+        sendScanResults()
+        sendFirstScan()
 
         stopSelf()
     }
@@ -212,11 +214,16 @@ class BleScanService : Service() {
         sendBroadcast(intent)
     }
 
-    private fun deviceFound() {
+    private fun sendFirstScan() {
         val intent = Intent(ACTION_BLE_FIRST_SCAN)
-        intent.putExtra(FIRST_SCAN_AT, scanCount)
-        Log.d(TAG, "deviceFound at: $scanCount")
+        intent.putExtra(FIRST_SCAN_AT, firstScanTime)
+        Log.d(TAG, "sendFirstScan at: $firstScanTime")
         sendBroadcast(intent)
+    }
+
+    private fun deviceFound() {
+        firstScanTime = scanCount
+        Log.d(TAG, "FirstScanTime: $firstScanTime")
     }
 
     private fun startScanning() {
@@ -332,7 +339,8 @@ class BleScanService : Service() {
 
     private fun sendScanResults() {
         val intent = Intent("com.example.goclass.SCAN_RESULTS")
-        intent.putExtra("scanResults", scanResultsList)
+        intent.putExtra("scanResults", scanResultsList.toTypedArray())
+        Log.d(TAG, scanResultsList.toString())
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
     }
 
