@@ -62,6 +62,7 @@ class ProfessorAttendanceListFragment : Fragment() {
             refreshData()
         }
     }
+
     private fun refreshData() {
         val classSharedPref = activity?.getSharedPreferences("ClassPrefs", Context.MODE_PRIVATE)
         val classId = classSharedPref!!.getInt("classId", -1)
@@ -72,10 +73,12 @@ class ProfessorAttendanceListFragment : Fragment() {
         studentAttendanceListLiveData.observe(viewLifecycleOwner) { studentAttendanceList ->
             (binding.professorAttendanceListRecyclerView.adapter as? ProfessorAttendanceListAdapter)?.setStudentAttendanceList(studentAttendanceList)
         }
-        SnackbarBuilder(binding.root)
-            .setMessage("Refreshed!")
-            .build()
-            .show()
+        viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
+            SnackbarBuilder(binding.root)
+                .setMessage(message)
+                .build()
+                .show()
+        }
     }
 
     fun onItemClicked(
