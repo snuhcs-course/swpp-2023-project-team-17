@@ -4,12 +4,10 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -19,14 +17,20 @@ import com.example.goclass.databinding.FragmentProfileBinding
 import com.example.goclass.ui.mainui.profile.utils.RadioButtonsUtils
 import com.example.goclass.ui.mainui.profile.utils.SharedPrefsUtils
 import com.example.goclass.ui.mainui.profile.utils.SnackBarUtils
+import com.example.goclass.utility.SnackbarBuilder
+import com.example.goclass.utility.StatusCheckUtils
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.time.Duration
 
 
 class ProfileFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
     private val viewModel: ProfileViewModel by viewModel()
+    private lateinit var googleSignInClient: GoogleSignInClient
 
-    @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -41,6 +45,7 @@ class ProfileFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
@@ -49,6 +54,13 @@ class ProfileFragment : Fragment() {
             view,
             savedInstanceState,
         )
+
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+
+        googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
 
         val storedUserName = SharedPrefsUtils.get(requireContext(), "userName", "") as String
         val storedUserRole = SharedPrefsUtils.get(requireContext(), "userRole", "") as String
@@ -109,7 +121,9 @@ class ProfileFragment : Fragment() {
 
             dialogView.findViewById<AppCompatButton>(R.id.yesButton).setOnClickListener {
                 SharedPrefsUtils.clear(requireContext())
-                findNavController().navigate(R.id.action_profileFragment_to_loginFragment)
+                googleSignInClient.signOut().addOnCompleteListener {
+                    findNavController().navigate(R.id.action_profileFragment_to_loginFragment)
+                }
                 alertDialog.dismiss()
             }
 
@@ -133,9 +147,9 @@ class ProfileFragment : Fragment() {
             val userName = binding.nameEditText.text.toString()
 
             if (userType == null) {
-                SnackBarUtils.showSnackBar(binding.root, "Please select your role.")
+                showSnackbar("Please select your role.", R.color.red)
             } else if (userName == "") {
-                SnackBarUtils.showSnackBar(binding.root, "Please enter your name.")
+                showSnackbar("Please enter your name.", R.color.red)
             } else {
                 SharedPrefsUtils.save(requireContext(), "userName", userName)
                 viewModel.userEdit(userId, userType, userName)
@@ -147,7 +161,25 @@ class ProfileFragment : Fragment() {
         binding.root.setOnTouchListener { _, _ ->
             val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             imm?.hideSoftInputFromWindow(view.windowToken, 0)
+            binding.nameEditText.clearFocus()
             false
         }
+
+        observeViewModel()
+    }
+
+    private fun observeViewModel() {
+        viewModel.editSuccess.observe(viewLifecycleOwner) { isSuccess ->
+            if (!isSuccess) {
+                showSnackbar("Server Error: Check your network connection.", R.color.red)
+            }
+        }
+    }
+    private fun showSnackbar(message: String, colorResId: Int) {
+        SnackbarBuilder(binding.root)
+            .setMessage(message)
+            .setBackgroundColor(colorResId)
+            .build()
+            .show()
     }
 }

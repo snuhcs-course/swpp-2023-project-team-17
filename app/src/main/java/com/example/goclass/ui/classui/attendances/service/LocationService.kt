@@ -118,7 +118,6 @@ class LocationService : Service() {
                 .setContentTitle("위치 추적 중")
                 .setContentText("백그라운드에서 위치를 추적 중입니다.")
                 .setContentIntent(pendingIntent)
-                .setSmallIcon(R.drawable.baseline_location_on_24)
                 .build()
 
         Log.d("notificationl", "create notification")

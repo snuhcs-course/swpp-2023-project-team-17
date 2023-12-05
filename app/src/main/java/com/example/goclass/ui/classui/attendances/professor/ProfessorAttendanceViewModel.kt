@@ -12,8 +12,10 @@ import kotlinx.coroutines.launch
 class ProfessorAttendanceViewModel(
     private val repository: UserRepository,
 ) : ViewModel() {
-    val professorAttendanceListLiveData: MutableLiveData<List<AttendancesResponse>> = MutableLiveData()
+    private val _professorAttendanceListLiveData: MutableLiveData<List<AttendancesResponse>> = MutableLiveData()
     private val _toastMessage = MutableLiveData<String>()
+
+    val professorAttendanceListLiveData: LiveData<List<AttendancesResponse>> get() = _professorAttendanceListLiveData
     val toastMessage: LiveData<String> get() = _toastMessage
 
     fun getProfessorAttendanceList(classMap: Map<String, String>): MutableLiveData<List<AttendancesResponse>> {
@@ -21,13 +23,13 @@ class ProfessorAttendanceViewModel(
             try {
                 val response = repository.attendanceGetDateList(classMap)
                 if (response.code == 200) {
-                    professorAttendanceListLiveData.postValue(response.attendanceDateList)
+                    _professorAttendanceListLiveData.postValue(response.attendanceDateList)
                 }
             } catch (e: Exception) {
                 Log.d("professorAttendanceListError", e.message.toString())
                 _toastMessage.postValue("Error: ${e.message}")
             }
         }
-        return professorAttendanceListLiveData
+        return _professorAttendanceListLiveData
     }
 }

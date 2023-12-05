@@ -18,7 +18,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
@@ -53,7 +52,7 @@ class ChatRepositoryTest {
 
     @Test
     fun chatChannelGetList_test() =
-        runTest {
+        runBlocking {
             val classId = 1
             val mockMessageListsResponse =
                 MessageListsResponse(
@@ -93,7 +92,7 @@ class ChatRepositoryTest {
 
     @Test
     fun chatChannelSend_test() =
-        runTest {
+        runBlocking {
             val classId = 1
             val messages = Messages(1, "TestMsg")
             val mockCodeMessageResponse =
@@ -123,7 +122,7 @@ class ChatRepositoryTest {
 
     @Test
     fun chatChannelEdit_test() =
-        runTest {
+        runBlocking {
             val classId = 1
             val messages = Messages(1, "TestMsg")
             val mockCodeMessageResponse =
@@ -153,7 +152,7 @@ class ChatRepositoryTest {
 
     @Test
     fun chatCommentGetList_test() =
-        runTest {
+        runBlocking {
             val classId = 1
             val id = 1
             val mockCommentListsResponse =
@@ -197,7 +196,7 @@ class ChatRepositoryTest {
 
     @Test
     fun chatCommentSend_test() =
-        runTest {
+        runBlocking {
             val classId = 1
             val userId = 1
             val id = 1
@@ -233,7 +232,7 @@ class ChatRepositoryTest {
 
     @Test
     fun chatCommentEdit_test() =
-        runTest {
+        runBlocking {
             val classId = 1
             val userId = 1
             val id = 1

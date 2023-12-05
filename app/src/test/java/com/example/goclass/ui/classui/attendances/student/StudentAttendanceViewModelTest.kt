@@ -40,6 +40,7 @@ class StudentAttendanceViewModelTest {
     @Test
     fun getStudentAttendanceList_success() =
         runTest {
+            val successMessage = "Success"
             val classId = 1
             val userId = 1
             val attendancesResponse =
@@ -58,7 +59,7 @@ class StudentAttendanceViewModelTest {
                         attendancesResponse,
                     ),
                     200,
-                    "Success",
+                    successMessage,
                 )
 
             // Define the mock behavior
@@ -90,6 +91,7 @@ class StudentAttendanceViewModelTest {
     @Test
     fun addAttendance_success() =
         runTest {
+            val successMessage = "Successfully added"
             val classId = 1
             val userId = 1
             val attendancesResponse =
@@ -114,7 +116,7 @@ class StudentAttendanceViewModelTest {
             val mockCodeMessageResponse =
                 CodeMessageResponse(
                     200,
-                    "Success",
+                    successMessage,
                 )
             // Define the mock behavior
             coEvery { mockClassRepository.classGetAttendanceListByUserId(classId, userId) } returns mockAttendanceListsResponse
@@ -124,18 +126,19 @@ class StudentAttendanceViewModelTest {
             viewModel.addAttendance(classId, userId)
 
             val toastValue = viewModel.toastMessage.getOrAwaitValue()
-            TestCase.assertEquals("Successfully added", toastValue)
+            TestCase.assertEquals(successMessage, toastValue)
         }
 
     @Test
     fun addAttendance_failure() =
         runTest {
+            val failureMessage = "Failed to add"
             val classId = 1
             val userId = 1
             val mockCodeMessageResponse =
                 CodeMessageResponse(
                     400,
-                    "Failure",
+                    failureMessage,
                 )
             // Define the mock behavior
             coEvery { mockAttendanceRepository.attendanceAdd(any(), any()) } returns mockCodeMessageResponse

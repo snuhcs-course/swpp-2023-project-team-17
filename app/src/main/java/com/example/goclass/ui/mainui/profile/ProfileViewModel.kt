@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.goclass.network.dataclass.Users
 import com.example.goclass.repository.UserRepository
+import com.example.goclass.utility.SnackbarBuilder
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
@@ -14,11 +15,13 @@ class ProfileViewModel(
 ) : ViewModel() {
     private val _toastMessage = MutableLiveData<String>()
     private val _editSuccess = MutableLiveData<Boolean>()
+    private val _isLoading: MutableLiveData<Boolean> = MutableLiveData()
+    private val _userName: MutableLiveData<String> = MutableLiveData()
 
     val toastMessage: LiveData<String> get() = _toastMessage
     val editSuccess: LiveData<Boolean> get() = _editSuccess
-    val isLoading = MutableLiveData<Boolean>()
-    val userName: MutableLiveData<String> = MutableLiveData()
+    val isLoading: LiveData<Boolean> get() = _isLoading
+    val userName: LiveData<String> get() = _userName
 
     fun userEdit(
         userId: Int,
@@ -27,21 +30,18 @@ class ProfileViewModel(
     ) {
         val editProfile = Users(userType, userName)
         viewModelScope.launch {
-            isLoading.postValue(true)
+            _isLoading.postValue(true)
             try {
                 val response = repository.userEdit(userId, editProfile)
                 if (response.code == 200) {
-                    _toastMessage.postValue("Success")
                     _editSuccess.postValue(true)
                 } else {
-                    _toastMessage.postValue("Failure")
                     _editSuccess.postValue(false)
                 }
             } catch (e: Exception) {
-                _toastMessage.postValue("Error: ${e.message}")
                 _editSuccess.postValue(false)
             } finally {
-                isLoading.postValue(false)
+                _isLoading.postValue(false)
             }
         }
     }
@@ -49,7 +49,7 @@ class ProfileViewModel(
     fun userGet(userId: Int) {
         viewModelScope.launch {
             val result = repository.userGet(userId)
-            userName.postValue(result?.userName ?: "")
+            _userName.postValue(result.userName ?: "")
         }
     }
 }

@@ -43,6 +43,7 @@ class ClassListAdapter(
         return ClassViewHolder(binding, viewModel, userType)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onBindViewHolder(
         holder: ClassViewHolder,
         position: Int,
@@ -68,6 +69,7 @@ class ClassListAdapter(
         private val viewModel: ProfessorMainViewModel,
         private val userType: Int,
     ) : RecyclerView.ViewHolder(binding.root) {
+        @SuppressLint("SetTextI18n")
         fun bind(
             classItem: ClassesResponse,
             isExpanded: Boolean,

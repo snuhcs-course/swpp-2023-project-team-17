@@ -37,6 +37,7 @@ class ProfessorAttendanceViewModelTest {
     @Test
     fun getProfessorAttendanceList_success() =
         runTest {
+            val successMessage = "Success"
             val classMap = mapOf("classId" to "1", "userType" to "1")
             val attendancesResponse =
                 AttendancesResponse(
@@ -48,7 +49,7 @@ class ProfessorAttendanceViewModelTest {
                         attendancesResponse,
                     ),
                     200,
-                    "Success",
+                    successMessage,
                 )
 
             // Define the mock behavior

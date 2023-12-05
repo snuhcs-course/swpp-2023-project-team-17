@@ -18,7 +18,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
@@ -55,7 +54,7 @@ class ClassRepositoryTest {
 
     @Test
     fun classCreate_test() =
-        runTest {
+        runBlocking {
             val classes =
                 Classes("name", "code")
             val mockClassCreateResponse =
@@ -87,7 +86,7 @@ class ClassRepositoryTest {
 
     @Test
     fun classJoin_test() =
-        runTest {
+        runBlocking {
             val userId = 1
             val classes =
                 Classes("name", "code")
@@ -120,7 +119,7 @@ class ClassRepositoryTest {
 
     @Test
     fun classGet_test() =
-        runTest {
+        runBlocking {
             val classId = 1
             val mockClassesResponse =
                 ClassesResponse(
@@ -155,7 +154,7 @@ class ClassRepositoryTest {
 
     @Test
     fun classDelete_test() =
-        runTest {
+        runBlocking {
             val classId = 1
             val mockCodeMessageResponse =
                 CodeMessageResponse(
@@ -185,7 +184,7 @@ class ClassRepositoryTest {
 
     @Test
     fun classGetAttendanceListByUserId_test() =
-        runTest {
+        runBlocking {
             val classId = 1
             val userId = 1
             val mockAttendanceListsResponse =

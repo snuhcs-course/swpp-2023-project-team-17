@@ -6,6 +6,7 @@ import com.example.goclass.network.dataclass.CodeMessageResponse
 import com.example.goclass.network.dataclass.CommentListsResponse
 import com.example.goclass.network.dataclass.CommentsResponse
 import com.example.goclass.repository.ChatRepository
+import com.example.goclass.ui.classui.chats.ChatCommentViewModel
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase
@@ -37,6 +38,7 @@ class ChatCommentViewModelTest {
     @Test
     fun chatCommentSend_success() =
         runTest {
+            val successMessage = "Success"
             val classId = 1
             val userId = 1
             val id = 1
@@ -44,7 +46,7 @@ class ChatCommentViewModelTest {
             val mockCodeMessageResponse =
                 CodeMessageResponse(
                     200,
-                    "Success",
+                    successMessage,
                 )
             val mockCommentListsResponse =
                 CommentListsResponse(
@@ -60,13 +62,14 @@ class ChatCommentViewModelTest {
 
             val toastValue = viewModel.toastMessage.getOrAwaitValue()
             val sendSuccess = viewModel.sendSuccess.getOrAwaitValue()
-            TestCase.assertEquals("Success", toastValue)
+            TestCase.assertEquals(successMessage, toastValue)
             TestCase.assertEquals(true, sendSuccess)
         }
 
     @Test
     fun chatCommentSend_failure() =
         runTest {
+            val failureMessage = "Failure"
             val classId = 1
             val userId = 1
             val id = 1
@@ -74,7 +77,7 @@ class ChatCommentViewModelTest {
             val mockCodeMessageResponse =
                 CodeMessageResponse(
                     400,
-                    "Failure",
+                    failureMessage,
                 )
             val mockCommentListsResponse =
                 CommentListsResponse(
@@ -90,7 +93,7 @@ class ChatCommentViewModelTest {
 
             val toastValue = viewModel.toastMessage.getOrAwaitValue()
             val sendSuccess = viewModel.sendSuccess.getOrAwaitValue()
-            TestCase.assertEquals("Failure", toastValue)
+            TestCase.assertEquals(failureMessage, toastValue)
             TestCase.assertEquals(false, sendSuccess)
         }
 
@@ -117,12 +120,13 @@ class ChatCommentViewModelTest {
             val toastValue = viewModel.toastMessage.getOrAwaitValue()
             val sendSuccess = viewModel.sendSuccess.getOrAwaitValue()
             TestCase.assertEquals("Error: $exceptionMessage", toastValue)
-            TestCase.assertEquals(false, sendSuccess)
+            TestCase.assertFalse(sendSuccess)
         }
 
     @Test
     fun chatCommentEdit_success() =
         runTest {
+            val successMessage = "Success"
             val classId = 1
             val content = "TestContent"
             val commentId = 1
@@ -130,7 +134,7 @@ class ChatCommentViewModelTest {
             val mockCodeMessageResponse =
                 CodeMessageResponse(
                     200,
-                    "Success",
+                    successMessage,
                 )
             val mockCommentListsResponse =
                 CommentListsResponse(
@@ -146,13 +150,14 @@ class ChatCommentViewModelTest {
 
             val toastValue = viewModel.toastMessage.getOrAwaitValue()
             val editSuccess = viewModel.editSuccess.getOrAwaitValue()
-            TestCase.assertEquals("Success", toastValue)
+            TestCase.assertEquals(successMessage, toastValue)
             TestCase.assertEquals(true, editSuccess)
         }
 
     @Test
     fun chatCommentEdit_failure() =
         runTest {
+            val failureMessage = "Failure"
             val classId = 1
             val content = "TestContent"
             val commentId = 1
@@ -160,7 +165,7 @@ class ChatCommentViewModelTest {
             val mockCodeMessageResponse =
                 CodeMessageResponse(
                     400,
-                    "Failure",
+                    failureMessage,
                 )
             val mockCommentListsResponse =
                 CommentListsResponse(
@@ -176,7 +181,7 @@ class ChatCommentViewModelTest {
 
             val toastValue = viewModel.toastMessage.getOrAwaitValue()
             val editSuccess = viewModel.editSuccess.getOrAwaitValue()
-            TestCase.assertEquals("Failure", toastValue)
+            TestCase.assertEquals(failureMessage, toastValue)
             TestCase.assertEquals(false, editSuccess)
         }
 
@@ -203,12 +208,13 @@ class ChatCommentViewModelTest {
             val toastValue = viewModel.toastMessage.getOrAwaitValue()
             val editSuccess = viewModel.editSuccess.getOrAwaitValue()
             TestCase.assertEquals("Error: $exceptionMessage", toastValue)
-            TestCase.assertEquals(false, editSuccess)
+            TestCase.assertFalse(editSuccess)
         }
 
     @Test
     fun chatCommentGetList_success() =
         runTest {
+            val successMessage = "Success"
             val classId = 1
             val commentId = 1
             val commentsResponse =
@@ -227,7 +233,7 @@ class ChatCommentViewModelTest {
                         commentsResponse,
                     ),
                     200,
-                    "Success",
+                    successMessage,
                 )
 
             coEvery { mockChatRepository.chatCommentGetList(any(), any()) } returns mockCommentListsResponse
@@ -242,13 +248,14 @@ class ChatCommentViewModelTest {
     @Test
     fun chatCommentGetList_failure() =
         runTest {
+            val failureMessage = "Failure"
             val classId = 1
             val commentId = 1
             val mockCommentListsResponse =
                 CommentListsResponse(
                     listOf(),
                     400,
-                    "Failure",
+                    failureMessage,
                 )
 
             coEvery { mockChatRepository.chatCommentGetList(any(), any()) } returns mockCommentListsResponse
@@ -256,7 +263,7 @@ class ChatCommentViewModelTest {
             viewModel.chatCommentGetList(classId, commentId)
 
             val toastValue = viewModel.toastMessage.getOrAwaitValue()
-            TestCase.assertEquals("Failure", toastValue)
+            TestCase.assertEquals(failureMessage, toastValue)
         }
 
     @Test

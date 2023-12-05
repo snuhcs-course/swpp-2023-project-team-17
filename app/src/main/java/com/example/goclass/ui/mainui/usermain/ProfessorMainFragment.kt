@@ -1,18 +1,17 @@
 package com.example.goclass.ui.mainui.usermain
 
+import android.annotation.SuppressLint
 import android.app.Dialog
-import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.ArrayAdapter
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
-import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
@@ -22,18 +21,22 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.goclass.ui.classui.ClassActivity
 import com.example.goclass.R
 import com.example.goclass.databinding.FragmentProfessorMainBinding
+import com.example.goclass.ui.classui.ClassActivity
+import com.example.goclass.ui.classui.ClassScheduler
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import com.example.goclass.ui.mainui.usermain.ClassListAdapter
+import com.example.goclass.ui.mainui.usermain.utils.InputValidnessTest
 import com.example.goclass.ui.mainui.usermain.utils.TimeSelectionLayout
+import com.google.android.material.snackbar.Snackbar
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ProfessorMainFragment : Fragment() {
     private lateinit var binding: FragmentProfessorMainBinding
     private val viewModel: ProfessorMainViewModel by viewModel()
     private lateinit var classListAdapter: ClassListAdapter
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -43,12 +46,17 @@ class ProfessorMainFragment : Fragment() {
 
         val sharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         val userId = sharedPref!!.getInt("userId", -1)
+        val userName = sharedPref.getString("userName", "") ?: ""
+
         classListAdapter = ClassListAdapter(viewModel, 1)
         binding.professorClassRecyclerView.adapter = classListAdapter
         binding.professorClassRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
-            Toast.makeText(requireActivity().applicationContext, message, Toast.LENGTH_SHORT).show()
+        // Name Textview
+        binding.name.text = userName
+
+        viewModel.snackbarMessage.observe(viewLifecycleOwner) { message ->
+            Snackbar.make(binding.root, message, Toast.LENGTH_SHORT).show()
         }
 
         binding.createButton.setOnClickListener {
@@ -75,6 +83,14 @@ class ProfessorMainFragment : Fragment() {
                 timeSelectionContainer.addView(newTimeSelectionLayout)
             }
 
+            // Keyboard down when you touch other space in screen
+            dialog.findViewById<ConstraintLayout>(R.id.dialog_create).setOnTouchListener { _, _ ->
+                val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(dialog.currentFocus?.windowToken, 0)
+                dialog.currentFocus?.clearFocus()
+                true
+            }
+
             createButtonDialog.setOnClickListener {
                 val enteredClassName = editClassName.text.toString()
                 val enteredClassTime = generateClassTimeString(timeSelectionContainer)
@@ -82,13 +98,49 @@ class ProfessorMainFragment : Fragment() {
                 val enteredRoomNumber = editRoomNumber.text.toString()
                 val enteredCode = editCode.text.toString()
 
-                viewModel.createClass(enteredClassName, enteredCode, userId, enteredClassTime, enteredBuildingNumber, enteredRoomNumber)
+                if (!InputValidnessTest.isClassNameValid(enteredClassName)) {
+                    Snackbar.make(dialog.findViewById<EditText>(R.id.classNameEdittext), "Please enter class name.", Snackbar.LENGTH_SHORT)
+                        .setBackgroundTint(Color.parseColor("#FF515C"))
+                        .show()
+                    return@setOnClickListener
+                }
+
+                if (!InputValidnessTest.isClassTimeValid(timeSelectionContainer)) {
+                    Snackbar.make(dialog.findViewById<LinearLayout>(R.id.classNameEdittext), "Invalid class time", Snackbar.LENGTH_SHORT)
+                        .setBackgroundTint(Color.parseColor("#FF515c"))
+                        .show()
+                    return@setOnClickListener
+                }
+
+                if (!InputValidnessTest.isClassValid(enteredBuildingNumber, enteredRoomNumber)) {
+                    Snackbar.make(dialog.findViewById<LinearLayout>(R.id.classNameEdittext), "Please enter building number and room number.", Snackbar.LENGTH_SHORT)
+                        .setBackgroundTint(Color.parseColor("#FF515c"))
+                        .show()
+                    return@setOnClickListener
+                }
+
+                if (!InputValidnessTest.isClassCodeValid(enteredCode)) {
+                    Snackbar.make(dialog.findViewById<LinearLayout>(R.id.classNameEdittext), "Please enter class code", Snackbar.LENGTH_SHORT)
+                        .setBackgroundTint(Color.parseColor("#FF515c"))
+                        .show()
+                    return@setOnClickListener
+                }
+
+                viewModel.createClass(
+                    enteredClassName,
+                    enteredCode,
+                    userId,
+                    enteredClassTime,
+                    enteredBuildingNumber,
+                    enteredRoomNumber,
+                    ClassScheduler(),
+                )
                 dialog.dismiss()
             }
             dialog.show()
         }
 
-        // show classList with dummy data
+        // Show ClassList
         val userMap = mapOf("userId" to userId.toString(), "userType" to "1")
         val classListLiveData = viewModel.getClassList(userMap)
 
@@ -99,6 +151,7 @@ class ProfessorMainFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
@@ -133,12 +186,24 @@ class ProfessorMainFragment : Fragment() {
             val endTimeButton = layout.findViewWithTag<Button>("endTimeButton")
 
             val day = dayDropdown.selectedItem as String
+            val dayNum = convertDayStringToNumber(day)
             val startTime = startTimeButton.text.toString()
             val endTime = endTimeButton.text.toString()
 
-            classTimes.add("$day $startTime-$endTime")
+            classTimes.add("$dayNum $startTime-$endTime")
         }
 
         return classTimes.joinToString(", ")
+    }
+
+    private fun convertDayStringToNumber(day: String): String {
+        return when (day) {
+            "Mon" -> "2"
+            "Tue" -> "3"
+            "Wed" -> "4"
+            "Thu" -> "5"
+            "Fri" -> "6"
+            else -> "-1" // 또는 에러 처리
+        }
     }
 }
