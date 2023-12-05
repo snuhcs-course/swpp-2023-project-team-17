@@ -822,9 +822,9 @@ app.get('/attendance/detail/:attendance_id', (req, res) => {
 // (24) add attendance detail
 app.put('/attendance/detail/:attendance_id', (req, res) => {
     const attendanceId = req.params.attendance_id;
-    const isAttend = req.query.is_attend;
-    const getDetailSql = 'SELECT attendance_detail FROM Attendances WHERE attendance_id = ?';
-    connection.query(getDetailSql, [attendanceId], (err, result) => {
+    const attendanceDetailList = req.body.attendance_detail_list.join(", ");
+    const sql = 'UPDATE Attendances SET attendance_detail = ? WHERE attendance_id = ?';
+    connection.query(sql, [attendanceDetailList, attendanceId], (err, result) => {
         if (err) {
             return res.status(500).json({
                 'code': 500,
@@ -832,26 +832,9 @@ app.put('/attendance/detail/:attendance_id', (req, res) => {
             });
         }
 
-        let currentDetail = result[0].attendance_detail;
-        if (currentDetail == null || currentDetail == '') {
-            currentDetail = isAttend;
-        } else {
-            currentDetail = currentDetail + ', ' + isAttend;
-        }
-
-        const updateSql = 'UPDATE Attendances SET attendance_detail = ? WHERE attendance_id = ?';
-        connection.query(updateSql, [currentDetail, attendanceId], (err, result) => {
-            if (err) {
-                return res.status(500).json({
-                    'code': 500,
-                    'message': 'database error'
-                });
-            }
-
-            return res.status(200).json({
-                'code': 200,
-                'message': 'add attendance detail Success'
-            });
+        return res.json({
+            'code': 200,
+            'message': 'add attendance detail Success'
         });
     });
 });

@@ -157,6 +157,6 @@ interface ServiceApi {
     @PUT("/attendance/detail/{attendance_id}")
     suspend fun attendanceDetailListAdd(
         @Path("attendance_id") attendanceId: Int,
-        @QueryMap isAttendMap: Map<String, String>,
+        @Body attendances: Attendances,
     ): CodeMessageResponse
 }
