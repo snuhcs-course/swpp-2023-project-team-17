@@ -69,7 +69,7 @@ class StudentAttendanceFragment : Fragment() {
     }
 
     fun onItemClicked(
-        studentId: Int,
+        attendanceId: Int,
         studentName: String,
         date: String,
         attendanceStatus: Int,
@@ -78,7 +78,7 @@ class StudentAttendanceFragment : Fragment() {
         with(attendanceSharedPref?.edit()) {
             this?.putString("className", className)
             this?.putString("userRole", "student")
-            this?.putInt("studentId", studentId)
+            this?.putInt("attendanceId", attendanceId)
             this?.putString("studentName", studentName)
             this?.putString("date", date)
             this?.putInt("attendanceStatus", attendanceStatus)

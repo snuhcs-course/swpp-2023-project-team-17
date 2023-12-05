@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class AttendanceDetailListResponse {
+public class AttendanceDetailListsResponse {
     @SerializedName("attendanceDetailList")
     private List<String> attendanceDetailList;
     @SerializedName("code")
@@ -12,7 +12,7 @@ public class AttendanceDetailListResponse {
     @SerializedName("message")
     private String message;
 
-    public AttendanceDetailListResponse(List<String> attendanceDetailList, int code, String message) {
+    public AttendanceDetailListsResponse(List<String> attendanceDetailList, int code, String message) {
         this.attendanceDetailList = attendanceDetailList;
         this.code = code;
         this.message = message;
