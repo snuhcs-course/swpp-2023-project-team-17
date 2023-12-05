@@ -126,15 +126,16 @@ class AttendanceService : Service() { //, BleScanCallback {
     private fun performAttendanceCheck(scanResults: BooleanArray) {
         Log.d(TAG, "performAttendanceCheck")
 
-        var attendanceStatus = if (firstSuccess <= 10) {
-            2 // present
-        } else if (firstSuccess <= 30) {
-            1 // late
-        } else {
-            0 // absent
-        }
+        val attendanceStatus =
+            if (firstSuccess <= 10) {
+                2 // present
+            } else if (firstSuccess <= 30) {
+                1 // late
+            } else {
+                0 // absent
+            }
 
-        var attendanceDuration = scanCount
+        val attendanceDuration = scanCount
 
         viewModel.saveAttendance(attendanceStatus, attendanceDuration, userId, classId)
     }

@@ -43,7 +43,7 @@ class AttendanceDetailFragment : Fragment() {
         val attendanceSharedPref = activity?.getSharedPreferences("AttendancePrefs", Context.MODE_PRIVATE)
         val className = attendanceSharedPref!!.getString("className", "")
         val userRole = attendanceSharedPref.getString("userType", "")
-        val studentId = attendanceSharedPref.getInt("studentId", -1)
+        val attendanceId = attendanceSharedPref.getInt("attendanceId", -1)
         val studentName = attendanceSharedPref.getString("studentName", "")
         val date = attendanceSharedPref.getString("date", "")
         val attendanceStatus = attendanceSharedPref.getInt("attendanceStatus", -1)
@@ -73,13 +73,18 @@ class AttendanceDetailFragment : Fragment() {
             }
         }
 
+        // BarChart entries
         val barChart: BarChart = binding.chart
-
-        // 가상의 데이터 생성 (1분 간격으로 60분간의 데이터)
         val entries = ArrayList<BarEntry>()
-        for (i in 0 until 60) {
-            val value = if (i % 5 == 0) 0f else 1f // 예시 데이터, 1분 간격으로 교실에 있었는 지 여부를 표현
-            entries.add(BarEntry(i.toFloat(), value))
+        val attendanceDetailListLiveDate = viewModel.getAttendanceDetail(attendanceId)
+        attendanceDetailListLiveDate.observe(viewLifecycleOwner) { attendanceDetailList ->
+            for (i in attendanceDetailList.indices) {
+                if (attendanceDetailList[i] == "1") {
+                    entries.add(BarEntry(i.toFloat(), 1f))
+                } else {
+                    entries.add(BarEntry(i.toFloat(), 0f))
+                }
+            }
         }
 
         // BarDataSet Configuration
@@ -105,6 +110,5 @@ class AttendanceDetailFragment : Fragment() {
 
         // Bar Update
         barChart.invalidate()
-
     }
 }
