@@ -27,8 +27,6 @@ class MainActivity : AppCompatActivity() {
         permissionUtils = PermissionUtils(this)
         permissionUtils.requestBluetoothPermissions()
 
-        //startLocationService()
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -72,12 +70,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             navController.navigate(R.id.loginFragment)
         }
-    }
-
-    private fun startLocationService() {
-        Log.d("Debug", "before starting LocationService")
-        startService(Intent(this, LocationService::class.java))
-        Log.d("Debug", "after starting LocationService")
     }
 
     companion object {
