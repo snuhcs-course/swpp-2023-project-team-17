@@ -15,7 +15,7 @@ public class AttendancesResponse {
     int isSent;
     @SerializedName("studentId")
     int studentId;
-    @SerializedName("studentName")
+    @SerializedName("userName")
     String studentName;
     @SerializedName("classId")
     int classId;
