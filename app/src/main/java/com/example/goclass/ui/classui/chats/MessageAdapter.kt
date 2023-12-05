@@ -83,7 +83,7 @@ class MessageAdapter(
             var commentCountText = message.commentCount
 
             // Comment Count
-            if (commentCountText == "0") {
+            if (commentCountText == "0" || commentCountText == null) {
                 binding.commentCount.visibility = View.GONE
             } else {
                 commentCountText += " comments"
