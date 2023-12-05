@@ -2,6 +2,7 @@ package com.example.goclass.utility
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -36,13 +37,30 @@ class PermissionUtils(private val context: Context) {
         }
     }
 
+    fun showNotificationPermissionDialog() {
+        AlertDialog.Builder(context)
+            .setTitle("알림 권한 필요")
+            .setMessage("이 앱의 기능을 사용하려면 알림 권한이 필요합니다. 설정 화면으로 이동하시겠습니까?")
+            .setPositiveButton("이동") { dialog, which ->
+                openNotificationSettings()
+            }
+            .setNegativeButton("취소", null)
+            .show()
+    }
+
+    private fun openNotificationSettings() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+            }
+            context.startActivity(intent)
+        }
+    }
+
     fun requestNotificationPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (!NotificationManagerCompat.from(context).areNotificationsEnabled()) {
-                val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
-                    putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
-                }
-                context.startActivity(intent)
+                showNotificationPermissionDialog()
             }
         }
     }
