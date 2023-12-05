@@ -3,9 +3,12 @@ package com.example.goclass.utility
 import android.Manifest
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
+import android.provider.Settings
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 
 class PermissionUtils(private val context: Context) {
@@ -15,17 +18,8 @@ class PermissionUtils(private val context: Context) {
         }
     }
 
-//<<<<<<< HEAD
-//    fun requestBluetoothPermissions(callback: (Boolean) -> Unit) {
-//        val bluetoothPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-//            Manifest.permission.BLUETOOTH_CONNECT
-//        } else {
-//            Manifest.permission.BLUETOOTH
-//        }
-//=======
     fun requestBluetoothPermissions() {
         val permissionsToRequest = mutableListOf<String>()
-//>>>>>>> 6f270b13565b158eca00dc6c27788cffd7643903
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             permissionsToRequest.add(Manifest.permission.BLUETOOTH_CONNECT)
@@ -38,10 +32,27 @@ class PermissionUtils(private val context: Context) {
             ContextCompat.checkSelfPermission(context, it) != PackageManager.PERMISSION_GRANTED
         }
         if (notGrantedPermissions.isNotEmpty()) {
-            ActivityCompat.requestPermissions(context as Activity, notGrantedPermissions.toTypedArray(), 101)
+            ActivityCompat.requestPermissions(context as Activity, permissionsToRequest.toTypedArray(), 101)
         }
+    }
 
-//        callback(true)
+    fun requestNotificationPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (!NotificationManagerCompat.from(context).areNotificationsEnabled()) {
+                val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                    putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                }
+                context.startActivity(intent)
+            }
+        }
+    }
+
+    fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            101 -> {
+                requestNotificationPermissions()
+            }
+        }
     }
 
     fun requestBluetoothAdvertisePermissionsWithCallback(callback: (Boolean) -> Unit) {

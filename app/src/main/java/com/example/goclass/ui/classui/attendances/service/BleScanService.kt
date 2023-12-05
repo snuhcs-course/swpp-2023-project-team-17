@@ -27,7 +27,7 @@ import java.util.regex.Pattern
 
 class BleScanService : Service() {
 
-//    private var bleScanCallback: BleScanCallback? = null
+    //    private var bleScanCallback: BleScanCallback? = null
     private var bluetoothLeScanner: BluetoothLeScanner? = null
     private var scanIntervalHandler: Handler? = null
     private var scanCount = 0
@@ -37,10 +37,11 @@ class BleScanService : Service() {
 
     private var deviceFound = false
     private var firstScan = true
+    private var firstScanTime = 0
 
     private var durationSec = 0
 
-    private val scanResultsList = ArrayList<Boolean>()
+    private val scanResultsList = mutableListOf<String>()
     private var minutesElapsed = 0
 
     private val handler = Handler()
@@ -75,7 +76,6 @@ class BleScanService : Service() {
 
     override fun onDestroy() {
         Log.d(TAG, "onDestroy: Blescan destroy")
-        sendScanResults()
         scanIntervalHandler?.removeCallbacksAndMessages(null)
         super.onDestroy()
     }
@@ -113,9 +113,9 @@ class BleScanService : Service() {
                         successfulScanCount++
                         deviceFound = true
                         while (scanResultsList.size <= minutesElapsed) {
-                            scanResultsList.add(false)
+                            scanResultsList += "0"
                         }
-                        scanResultsList[minutesElapsed] = true
+                        scanResultsList += "1"
                         Log.i(TAG, "successfulScanCount incremented: $successfulScanCount")
                     } else {
                         Log.i(TAG, "successfulScanCount already incremented: $successfulScanCount")
@@ -142,14 +142,14 @@ class BleScanService : Service() {
         val formattedClassId = classId.toString().padEnd(8, '0')
         val targetUuid = "$formattedClassId-0000-1100-8000-00805f9b34fc"
         Log.d(TAG, "target uuid: $targetUuid")
-        val beaconId = "2cdbdd00-13ee-11e4-9b6c-0002a5d5c518"
+        val beaconId = "8ec90001-f315-4f60-9fb8-838830daea50"//"2cdbdd00-13ee-11e4-9b6c-0002a5d5c518"
         val targetBeaconUuid = ParcelUuid.fromString(beaconId)
         val targetDeviceUuid = ParcelUuid.fromString(targetUuid)
-        Log.d(TAG, "detected serviceUuids: $${result.scanRecord?.serviceUuids}")
+        Log.d(TAG, "detected serviceUuids: ${result.scanRecord?.serviceUuids}")
         Log.d(TAG, "isTargetDevice: ${result.scanRecord?.serviceUuids?.contains(targetDeviceUuid)}")
 
-        return (result.scanRecord?.serviceUuids?.contains(targetDeviceUuid) == true) &&
-                (result.scanRecord?.serviceUuids?.contains(targetBeaconUuid) == true)
+        return (result.scanRecord?.serviceUuids?.contains(targetDeviceUuid) == true) //&&
+//                (result.scanRecord?.serviceUuids?.contains(targetBeaconUuid) == true)
     }
 
     private fun startScanningWithInterval() {
@@ -181,6 +181,8 @@ class BleScanService : Service() {
         bluetoothLeScanner?.stopScan(scanCallback)
 
         sendSuccessfulScanCount()
+        sendScanResults()
+        sendFirstScan()
 
         stopSelf()
     }
@@ -208,13 +210,20 @@ class BleScanService : Service() {
         // Pass scanCount to AttendanceService using Intent
         val intent = Intent(ACTION_BLE_SCAN_RESULT)
         intent.putExtra(EXTRA_SCAN_COUNT, successfulScanCount)
+        Log.d(TAG, "sendSuccessfulScanCount: $successfulScanCount")
+        sendBroadcast(intent)
+    }
+
+    private fun sendFirstScan() {
+        val intent = Intent(ACTION_BLE_FIRST_SCAN)
+        intent.putExtra(FIRST_SCAN_AT, firstScanTime)
+        Log.d(TAG, "sendFirstScan at: $firstScanTime")
         sendBroadcast(intent)
     }
 
     private fun deviceFound() {
-        val intent = Intent(ACTION_BLE_FIRST_SCAN)
-        intent.putExtra(FIRST_SCAN_AT, scanCount)
-        sendBroadcast(intent)
+        firstScanTime = scanCount
+        Log.d(TAG, "FirstScanTime: $firstScanTime")
     }
 
     private fun startScanning() {
@@ -222,23 +231,28 @@ class BleScanService : Service() {
         Log.d(TAG, "start scan")
         val formattedClassId = classId.toString().padEnd(8, '0')
 
-        val targetBeaconId = "2cdbdd00-13ee-11e4-9b6c-0002a5d5c518"
+        val targetBeaconId = "8ec90001-f315-4f60-9fb8-838830daea50"//"2cdbdd00-13ee-11e4-9b6c-0002a5d5c518"
         val targetDeviceId = "$formattedClassId-0000-1100-8000-00805f9b34fc"
         val targetDeviceUuid32BitPattern = "5f9b34fc"
 
         val targetBeaconUuid = ParcelUuid.fromString(targetBeaconId)
         val targetDeviceUuid = ParcelUuid.fromString(targetDeviceId)
-        val mask = ParcelUuid.fromString("00000000-0000-0000-0000-00000000FFFF")
+        val beaconMask = ParcelUuid.fromString("00000000-0000-0000-0000-0000FFFF0000")
+        val deviceMask = ParcelUuid.fromString("00000000-0000-0000-0000-00000000FFFF")
+
 
         val scanFilterDevice = ScanFilter.Builder()
-            .setServiceUuid(targetDeviceUuid, mask)
+            .setServiceUuid(targetDeviceUuid, deviceMask)
             .build()
         // TODO: modify scanFilterBeacon to filter based on unique signal info of SNU attendance beacons
         val scanFilterBeacon = ScanFilter.Builder()
-            .setServiceUuid(targetBeaconUuid, mask)
+            .setServiceUuid(targetBeaconUuid, beaconMask)
             .build()
 
-        val scanFilters: List<ScanFilter> = listOf(scanFilterDevice, scanFilterBeacon)
+        val scanFilters: List<ScanFilter> = listOf(scanFilterDevice)
+//        val scanFilters: List<ScanFilter> = listOf(scanFilterDevice, scanFilterBeacon)
+
+        Log.d(TAG, "scanFilters: $scanFilters")
 
 
         val scanSettings = ScanSettings.Builder()
@@ -276,16 +290,16 @@ class BleScanService : Service() {
         }
 
 //        if (scanCount < durationSec) {
-            if (scanning) {
-                Log.d(TAG, "IN SCANNING!")
-                bluetoothLeScanner?.stopScan(scanCallback)
-                bluetoothLeScanner?.startScan(scanFilters, scanSettings, scanCallback)
-                Log.d(TAG, "after startScan")
-            } else {
-                bluetoothLeScanner?.startScan(scanFilters, scanSettings, scanCallback)
-                Log.d(TAG, "first scan")
-                scanning = true
-            }
+        if (scanning) {
+            Log.d(TAG, "IN SCANNING!")
+            bluetoothLeScanner?.stopScan(scanCallback)
+            bluetoothLeScanner?.startScan(scanFilters, scanSettings, scanCallback)
+            Log.d(TAG, "after startScan")
+        } else {
+            bluetoothLeScanner?.startScan(scanFilters, scanSettings, scanCallback)
+            Log.d(TAG, "first scan")
+            scanning = true
+        }
     }
 
     private fun createNotificationChannel() {
@@ -325,7 +339,8 @@ class BleScanService : Service() {
 
     private fun sendScanResults() {
         val intent = Intent("com.example.goclass.SCAN_RESULTS")
-        intent.putExtra("scanResults", scanResultsList)
+        intent.putExtra("scanResults", scanResultsList.toTypedArray())
+        Log.d(TAG, scanResultsList.toString())
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
     }
 

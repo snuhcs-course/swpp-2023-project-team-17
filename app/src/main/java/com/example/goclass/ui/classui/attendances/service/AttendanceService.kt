@@ -25,7 +25,7 @@ class AttendanceService : Service() { //, BleScanCallback {
     private val bleScanResultReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == BleScanService.ACTION_BLE_SCAN_RESULT) {
-                scanCount = intent.getIntExtra(BleScanService.EXTRA_SCAN_COUNT, 0) + 1
+                scanCount = intent.getIntExtra(BleScanService.EXTRA_SCAN_COUNT, 0)
                 Log.i(TAG, "Received scanCount: $scanCount")
                 stopSelf()
             }
@@ -44,9 +44,10 @@ class AttendanceService : Service() { //, BleScanCallback {
     private val scanResultsReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == "com.example.goclass.SCAN_RESULTS") {
-                val scanResults = intent.getBooleanArrayExtra("scanResults")
+                val scanResults = intent.getStringArrayExtra("scanResults")
                 scanResults?.let{
-                    performAttendanceCheck(it)
+                    val scanResultsList = it.toList()
+                    performAttendanceCheck(scanResultsList)
                 }
             }
         }
@@ -123,20 +124,23 @@ class AttendanceService : Service() { //, BleScanCallback {
         bindService(bindIntent, serviceConnection, Context.BIND_AUTO_CREATE)
     }
 
-    private fun performAttendanceCheck(scanResults: BooleanArray) {
+    private fun performAttendanceCheck(scanResults: List<String>) {
         Log.d(TAG, "performAttendanceCheck")
 
-        var attendanceStatus = if (firstSuccess <= 10) {
-            2 // present
-        } else if (firstSuccess <= 30) {
-            1 // late
-        } else {
-            0 // absent
-        }
+        val attendanceStatus =
+            if (firstSuccess <= 10) {
+                2 // present
+            } else if (firstSuccess <= 30) {
+                1 // late
+            } else {
+                0 // absent
+            }
 
-        var attendanceDuration = scanCount
+        val attendanceDuration = scanCount
 
-        viewModel.saveAttendance(attendanceStatus, attendanceDuration, userId, classId)
+        Log.d(TAG, scanResults.toString())
+
+        viewModel.saveAttendance(attendanceStatus, attendanceDuration, userId, classId, scanResults)
     }
 
     private val serviceConnection = object : ServiceConnection {

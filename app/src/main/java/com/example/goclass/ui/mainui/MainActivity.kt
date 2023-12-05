@@ -18,25 +18,14 @@ import com.example.goclass.utility.PermissionUtils
 class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private lateinit var binding: ActivityMainBinding
+    private lateinit var permissionUtils: PermissionUtils
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val permissionUtils = PermissionUtils(this)
-
-//        permissionUtils.requestBluetoothAdvertisePermissionsWithCallback { bluetoothAdvertPermissionsGranted ->
-//            if (bluetoothAdvertPermissionsGranted) {
-//                permissionUtils.requestBluetoothPermissions { bluetoothScanPermissionsGranted ->
-//                    if (bluetoothScanPermissionsGranted) {
-//                        permissionUtils.requestLocationPermissions()
-//                    }
-//                }
-//            }
-//        }
-//        permissionUtils.requestBluetoothAdvertisePermissionsWithCallback()
-
+        permissionUtils = PermissionUtils(this)
         permissionUtils.requestBluetoothPermissions()
-        permissionUtils.requestLocationPermissions()
 
         //startLocationService()
 
@@ -56,6 +45,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        permissionUtils.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun checkLoginStatus() {

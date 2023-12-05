@@ -17,8 +17,10 @@ public class MessagesResponse {
     String senderName;
     @SerializedName("content")
     String content;
+    @SerializedName("commentCount")
+    String commentCount;
 
-    public MessagesResponse(int messageId, int commentId, int classId, String timeStamp, int senderId, String senderName, String content) {
+    public MessagesResponse(int messageId, int commentId, int classId, String timeStamp, int senderId, String senderName, String content, String commentCount) {
         this.messageId = messageId;
         this.commentId = commentId;
         this.classId = classId;
@@ -26,6 +28,7 @@ public class MessagesResponse {
         this.senderId = senderId;
         this.senderName = senderName;
         this.content = content;
+        this.commentCount = commentCount;
     }
 
     public MessagesResponse(int classId, int commentId, String senderName, String content, String timeStamp) {
