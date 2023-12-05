@@ -25,7 +25,7 @@ class AttendanceService : Service() { //, BleScanCallback {
     private val bleScanResultReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == BleScanService.ACTION_BLE_SCAN_RESULT) {
-                scanCount = intent.getIntExtra(BleScanService.EXTRA_SCAN_COUNT, 0) + 1
+                scanCount = intent.getIntExtra(BleScanService.EXTRA_SCAN_COUNT, 0)
                 Log.i(TAG, "Received scanCount: $scanCount")
                 stopSelf()
             }
