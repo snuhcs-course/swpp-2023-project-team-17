@@ -18,7 +18,8 @@
         tools:text="Dummy"
         style="@style/Medium"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/nameAndTime" />
+        app:layout_constraintTop_toBottomOf="@id/nameAndTime"
+        app:layout_constraintBottom_toTopOf="@id/commentCount"/>
 
     <EditText
         android:id="@+id/messageEditText"
@@ -32,9 +33,9 @@
         android:inputType="textMultiLine"
         style="@style/Medium"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/messageText"
+        app:layout_constraintTop_toBottomOf="@id/nameAndTime"
         app:layout_constraintEnd_toStartOf="@id/chatEditButton"
-        app:layout_constraintBottom_toBottomOf="@id/messageText" />
+        app:layout_constraintBottom_toTopOf="@id/commentCount" />
 
 
 
@@ -119,13 +120,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
         android:text="0 comments"
         android:textSize="12sp"
         android:textColor="@color/gray"
         style="@style/Bold"
-        app:layout_constraintTop_toBottomOf="@id/messageText"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         tools:ignore="HardcodedText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
