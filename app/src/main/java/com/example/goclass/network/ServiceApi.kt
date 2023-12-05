@@ -11,7 +11,6 @@ import com.example.goclass.network.dataclass.ClassListsResponse
 import com.example.goclass.network.dataclass.Classes
 import com.example.goclass.network.dataclass.ClassesResponse
 import com.example.goclass.network.dataclass.CodeMessageResponse
-import com.example.goclass.network.dataclass.CommentCountResponse
 import com.example.goclass.network.dataclass.CommentListsResponse
 import com.example.goclass.network.dataclass.Comments
 import com.example.goclass.network.dataclass.MessageListsResponse
@@ -85,11 +84,6 @@ interface ServiceApi {
         @Path("id") classId: Int,
         @Path("user_id") userId: Int,
     ): AttendanceListsResponse
-
-    @GET("/chat_channel/count/{message_id}")
-    suspend fun chatChannelGetCommentCount(
-        @Path("message_id") messageId: Int,
-    ): CommentCountResponse
 
     @GET("/chat_channel/{class_id}")
     suspend fun chatChannelGetList(
