@@ -114,7 +114,9 @@ class AttendanceService : Service() { //, BleScanCallback {
         Log.d(TAG, "performAttendanceCheck")
 
         val attendanceStatus =
-            if (firstSuccess <= 10) {
+            if (scanCount == 0) {
+                0
+            } else if (firstSuccess <= 10) {
                 2 // present
             } else if (firstSuccess <= 30) {
                 1 // late
