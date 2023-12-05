@@ -43,7 +43,7 @@ class ClassScheduler {
         val pendingIntent =
             PendingIntent.getBroadcast(
                 context,
-                uniqueRequestId(userId, classId),
+                uniqueRequestId(userId, classId, dayOfWeek, startHour, startMinute),
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
@@ -91,7 +91,15 @@ class ClassScheduler {
     fun uniqueRequestId(
         userId: Int,
         classId: Int,
+        dayOfWeek: Int,
+        startHour: Int,
+        startMinute: Int,
     ): Int {
-        return userId.hashCode() * 31 + classId.hashCode()
+        var result = userId.hashCode()
+        result = 31 * result + classId.hashCode()
+        result = 31 * result + dayOfWeek
+        result = 31 * result + startHour
+        result = 31 * result + startMinute
+        return result
     }
 }

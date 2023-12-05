@@ -115,6 +115,7 @@ class BleScanService : Service() {
                         while (scanResultsList.size <= minutesElapsed) {
                             scanResultsList.add(false)
                         }
+                        Log.d(TAG, "minutesElapsed: $minutesElapsed")
                         scanResultsList[minutesElapsed] = true
                         Log.i(TAG, "successfulScanCount incremented: $successfulScanCount")
                     } else {
@@ -143,13 +144,13 @@ class BleScanService : Service() {
         val targetUuid = "$formattedClassId-0000-1100-8000-00805f9b34fc"
         Log.d(TAG, "target uuid: $targetUuid")
         val beaconId = "2cdbdd00-13ee-11e4-9b6c-0002a5d5c518"
-        val targetBeaconUuid = ParcelUuid.fromString(beaconId)
+//        val targetBeaconUuid = ParcelUuid.fromString(beaconId)
         val targetDeviceUuid = ParcelUuid.fromString(targetUuid)
         Log.d(TAG, "detected serviceUuids: $${result.scanRecord?.serviceUuids}")
         Log.d(TAG, "isTargetDevice: ${result.scanRecord?.serviceUuids?.contains(targetDeviceUuid)}")
 
-        return (result.scanRecord?.serviceUuids?.contains(targetDeviceUuid) == true) &&
-                (result.scanRecord?.serviceUuids?.contains(targetBeaconUuid) == true)
+        return (result.scanRecord?.serviceUuids?.contains(targetDeviceUuid) == true) //&&
+//                (result.scanRecord?.serviceUuids?.contains(targetBeaconUuid) == true)
     }
 
     private fun startScanningWithInterval() {
@@ -159,8 +160,6 @@ class BleScanService : Service() {
 
         // Schedule periodic scans with a 1-minute interval
         scanIntervalHandler?.postDelayed({
-            deviceFound = false
-            minutesElapsed++
             stopScanning()
             startScanningWithInterval()
         }, SCAN_INTERVAL_MILLIS)
@@ -222,11 +221,11 @@ class BleScanService : Service() {
         Log.d(TAG, "start scan")
         val formattedClassId = classId.toString().padEnd(8, '0')
 
-        val targetBeaconId = "2cdbdd00-13ee-11e4-9b6c-0002a5d5c518"
+        val targetBeaconId = "8ec90001-f315-4f60-9fb8-838830daea50"
         val targetDeviceId = "$formattedClassId-0000-1100-8000-00805f9b34fc"
         val targetDeviceUuid32BitPattern = "5f9b34fc"
 
-        val targetBeaconUuid = ParcelUuid.fromString(targetBeaconId)
+//        val targetBeaconUuid = ParcelUuid.fromString(targetBeaconId)
         val targetDeviceUuid = ParcelUuid.fromString(targetDeviceId)
         val mask = ParcelUuid.fromString("00000000-0000-0000-0000-00000000FFFF")
 
@@ -234,11 +233,13 @@ class BleScanService : Service() {
             .setServiceUuid(targetDeviceUuid, mask)
             .build()
         // TODO: modify scanFilterBeacon to filter based on unique signal info of SNU attendance beacons
-        val scanFilterBeacon = ScanFilter.Builder()
-            .setServiceUuid(targetBeaconUuid, mask)
-            .build()
+//        val scanFilterBeacon = ScanFilter.Builder()
+//            .setServiceUuid(targetBeaconUuid, mask)
+//            .build()
 
-        val scanFilters: List<ScanFilter> = listOf(scanFilterDevice, scanFilterBeacon)
+//        val scanFilters: List<ScanFilter> = listOf(scanFilterDevice, scanFilterBeacon)
+        val scanFilters: List<ScanFilter> = listOf(scanFilterDevice)
+
 
 
         val scanSettings = ScanSettings.Builder()
@@ -326,6 +327,7 @@ class BleScanService : Service() {
     private fun sendScanResults() {
         val intent = Intent("com.example.goclass.SCAN_RESULTS")
         intent.putExtra("scanResults", scanResultsList)
+        Log.d(TAG, scanResultsList.toString())
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
     }
 
