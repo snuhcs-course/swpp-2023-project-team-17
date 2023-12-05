@@ -57,7 +57,7 @@ class ProfessorAttendanceListAdapter(
         RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
         fun bind(studentAttendanceItem: AttendancesResponse) {
-            val studentId = studentAttendanceItem.studentId
+            val attendanceId = studentAttendanceItem.attendanceId
             val studentName = studentAttendanceItem.studentName?:""
             val attendanceStatus = studentAttendanceItem.attendanceStatus
 
@@ -77,7 +77,7 @@ class ProfessorAttendanceListAdapter(
                 }
             }
             binding.attendanceDetailButton.setOnClickListener {
-                listener.onItemClicked(studentId, studentName, attendanceStatus)
+                listener.onItemClicked(attendanceId, studentName, attendanceStatus)
             }
         }
     }
