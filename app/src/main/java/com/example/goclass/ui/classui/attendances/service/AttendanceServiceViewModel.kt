@@ -20,8 +20,9 @@ class AttendanceServiceViewModel(
         attendanceDuration: Int,
         userId: Int,
         classId: Int,
+        scanResults: List<String>
     ) {
-        val attendances = Attendances(attendanceStatus, attendanceDuration, classId)
+        val attendances = Attendances(attendanceStatus, attendanceDuration, classId, scanResults)
 
         viewModelScope.launch {
             try {

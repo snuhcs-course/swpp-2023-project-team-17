@@ -20,6 +20,13 @@ public class Attendances {
         this.classId = classId;
     }
 
+    public Attendances(int attendanceStatus, int attendanceDuration, int classId, List<String> attendanceDetailList) {
+        this.attendanceStatus = attendanceStatus;
+        this.attendanceDuration = attendanceDuration;
+        this.classId = classId;
+        this.attendanceDetailList = attendanceDetailList;
+    }
+
     public Attendances(List<String> attendanceDetailList) {
         this.attendanceDetailList = attendanceDetailList;
     }

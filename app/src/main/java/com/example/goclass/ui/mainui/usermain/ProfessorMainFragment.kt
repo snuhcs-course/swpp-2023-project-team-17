@@ -105,12 +105,12 @@ class ProfessorMainFragment : Fragment() {
                     return@setOnClickListener
                 }
 
-//                if (!InputValidnessTest.isClassTimeValid(timeSelectionContainer)) {
-//                    Snackbar.make(dialog.findViewById<LinearLayout>(R.id.classNameEdittext), "Invalid class time", Snackbar.LENGTH_SHORT)
-//                        .setBackgroundTint(Color.parseColor("#FF515c"))
-//                        .show()
-//                    return@setOnClickListener
-//                }
+                if (!InputValidnessTest.isClassTimeValid(timeSelectionContainer)) {
+                    Snackbar.make(dialog.findViewById<LinearLayout>(R.id.classNameEdittext), "Invalid class time", Snackbar.LENGTH_SHORT)
+                        .setBackgroundTint(Color.parseColor("#FF515c"))
+                        .show()
+                    return@setOnClickListener
+                }
 
                 if (!InputValidnessTest.isClassValid(enteredBuildingNumber, enteredRoomNumber)) {
                     Snackbar.make(dialog.findViewById<LinearLayout>(R.id.classNameEdittext), "Please enter building number and room number.", Snackbar.LENGTH_SHORT)

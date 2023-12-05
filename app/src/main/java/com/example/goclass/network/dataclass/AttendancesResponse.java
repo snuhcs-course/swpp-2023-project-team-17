@@ -15,17 +15,18 @@ public class AttendancesResponse {
     int isSent;
     @SerializedName("studentId")
     int studentId;
-    @SerializedName("studentName")
+    @SerializedName("userName")
     String studentName;
     @SerializedName("classId")
     int classId;
-
+    @SerializedName("attendanceDetail")
+    String attendanceDetail;
     @SerializedName("code")
     private int code;
     @SerializedName("message")
     private String message;
 
-    public AttendancesResponse(int attendanceId, int attendanceStatus, String attendanceDate, int attendanceDuration, int isSent, int studentId, int classId, int code, String message) {
+    public AttendancesResponse(int attendanceId, int attendanceStatus, String attendanceDate, int attendanceDuration, int isSent, int studentId, int classId, int code, String message, String attendanceDetail) {
         this.attendanceId = attendanceId;
         this.attendanceStatus = attendanceStatus;
         this.attendanceDate = attendanceDate;
@@ -35,6 +36,7 @@ public class AttendancesResponse {
         this.classId = classId;
         this.code = code;
         this.message = message;
+        this.attendanceDetail = attendanceDetail;
     }
 
     public AttendancesResponse(int attendanceId, int attendanceStatus, String attendanceDate, int attendanceDuration, int isSent, int studentId, int classId) {
@@ -88,6 +90,10 @@ public class AttendancesResponse {
 
     public String getStudentName() {
         return studentName;
+    }
+
+    public String getAttendanceDetail() {
+        return attendanceDetail;
     }
 
     public int getClassId() {

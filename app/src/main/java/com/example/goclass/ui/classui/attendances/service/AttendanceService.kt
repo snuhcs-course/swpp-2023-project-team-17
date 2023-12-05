@@ -22,31 +22,18 @@ class AttendanceService : Service() { //, BleScanCallback {
     private var scanCount: Int = 0
     private var firstSuccess: Int = 0 // scan count at first successful scan
 
-    private val bleScanResultReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            if (intent?.action == BleScanService.ACTION_BLE_SCAN_RESULT) {
-                scanCount = intent.getIntExtra(BleScanService.EXTRA_SCAN_COUNT, 0)
-                Log.i(TAG, "Received scanCount: $scanCount")
-                stopSelf()
-            }
-        }
-    }
-
-    private val bleFirstScanReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            if (intent?.action == BleScanService.ACTION_BLE_FIRST_SCAN) {
-                firstSuccess = intent.getIntExtra(BleScanService.FIRST_SCAN_AT, 0) + 1
-                Log.i(TAG, "Received first scan at: $firstSuccess")
-            }
-        }
-    }
-
     private val scanResultsReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == "com.example.goclass.SCAN_RESULTS") {
-                val scanResults = intent.getBooleanArrayExtra("scanResults")
+                val scanResults = intent.getStringArrayExtra("scanResults")
+                firstSuccess = intent.getIntExtra(BleScanService.FIRST_SCAN_AT, 0) + 1
+                scanCount = intent.getIntExtra(BleScanService.EXTRA_SCAN_COUNT, 0)
+                Log.i(TAG, "Received first scan at: $firstSuccess")
+                Log.i(TAG, "Received scanCount: $scanCount")
+
                 scanResults?.let{
-                    performAttendanceCheck(it)
+                    val scanResultsList = it.toList()
+                    performAttendanceCheck(scanResultsList)
                 }
             }
         }
@@ -56,10 +43,10 @@ class AttendanceService : Service() { //, BleScanCallback {
         super.onCreate()
         Log.i(TAG, "AttendanceService 생성됨")
         // Register the BroadcastReceiver to receive scan results
-        val scanCountFilter = IntentFilter(BleScanService.ACTION_BLE_SCAN_RESULT)
-        val firstScanFilter = IntentFilter(BleScanService.ACTION_BLE_FIRST_SCAN)
-        registerReceiver(bleFirstScanReceiver, firstScanFilter)
-        registerReceiver(bleScanResultReceiver, scanCountFilter)
+//        val scanCountFilter = IntentFilter(BleScanService.ACTION_BLE_SCAN_RESULT)
+//        val firstScanFilter = IntentFilter(BleScanService.ACTION_BLE_FIRST_SCAN)
+//        registerReceiver(bleFirstScanReceiver, firstScanFilter)
+//        registerReceiver(bleScanResultReceiver, scanCountFilter)
         LocalBroadcastManager.getInstance(this)
             .registerReceiver(scanResultsReceiver, IntentFilter("com.example.goclass.SCAN_RESULTS"))
     }
@@ -69,8 +56,8 @@ class AttendanceService : Service() { //, BleScanCallback {
         super.onDestroy()
 
         // Unregister the BroadcastReceiver
-        unregisterReceiver(bleFirstScanReceiver)
-        unregisterReceiver(bleScanResultReceiver)
+//        unregisterReceiver(bleFirstScanReceiver)
+//        unregisterReceiver(bleScanResultReceiver)
         LocalBroadcastManager.getInstance(this).unregisterReceiver(scanResultsReceiver)
 
         // Unbind from the BleScanService
@@ -123,11 +110,13 @@ class AttendanceService : Service() { //, BleScanCallback {
         bindService(bindIntent, serviceConnection, Context.BIND_AUTO_CREATE)
     }
 
-    private fun performAttendanceCheck(scanResults: BooleanArray) {
+    private fun performAttendanceCheck(scanResults: List<String>) {
         Log.d(TAG, "performAttendanceCheck")
 
         val attendanceStatus =
-            if (firstSuccess <= 10) {
+            if (scanCount == 0) {
+                0
+            } else if (firstSuccess <= 10) {
                 2 // present
             } else if (firstSuccess <= 30) {
                 1 // late
@@ -136,8 +125,11 @@ class AttendanceService : Service() { //, BleScanCallback {
             }
 
         val attendanceDuration = scanCount
+        Log.d(TAG, "attendanceDuration: $attendanceDuration")
 
-        viewModel.saveAttendance(attendanceStatus, attendanceDuration, userId, classId)
+        Log.d(TAG, scanResults.toString())
+
+        viewModel.saveAttendance(attendanceStatus, attendanceDuration, userId, classId, scanResults)
     }
 
     private val serviceConnection = object : ServiceConnection {
