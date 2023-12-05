@@ -27,7 +27,7 @@ import java.util.regex.Pattern
 
 class BleScanService : Service() {
 
-//    private var bleScanCallback: BleScanCallback? = null
+    //    private var bleScanCallback: BleScanCallback? = null
     private var bluetoothLeScanner: BluetoothLeScanner? = null
     private var scanIntervalHandler: Handler? = null
     private var scanCount = 0
@@ -244,6 +244,7 @@ class BleScanService : Service() {
 
         val scanFilters: List<ScanFilter> = listOf(scanFilterDevice)
 //        val scanFilters: List<ScanFilter> = listOf(scanFilterDevice, scanFilterBeacon)
+
         Log.d(TAG, "scanFilters: $scanFilters")
 
 
@@ -282,16 +283,16 @@ class BleScanService : Service() {
         }
 
 //        if (scanCount < durationSec) {
-            if (scanning) {
-                Log.d(TAG, "IN SCANNING!")
-                bluetoothLeScanner?.stopScan(scanCallback)
-                bluetoothLeScanner?.startScan(scanFilters, scanSettings, scanCallback)
-                Log.d(TAG, "after startScan")
-            } else {
-                bluetoothLeScanner?.startScan(scanFilters, scanSettings, scanCallback)
-                Log.d(TAG, "first scan")
-                scanning = true
-            }
+        if (scanning) {
+            Log.d(TAG, "IN SCANNING!")
+            bluetoothLeScanner?.stopScan(scanCallback)
+            bluetoothLeScanner?.startScan(scanFilters, scanSettings, scanCallback)
+            Log.d(TAG, "after startScan")
+        } else {
+            bluetoothLeScanner?.startScan(scanFilters, scanSettings, scanCallback)
+            Log.d(TAG, "first scan")
+            scanning = true
+        }
     }
 
     private fun createNotificationChannel() {
