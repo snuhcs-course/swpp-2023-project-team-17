@@ -142,10 +142,10 @@ class BleScanService : Service() {
         val formattedClassId = classId.toString().padEnd(8, '0')
         val targetUuid = "$formattedClassId-0000-1100-8000-00805f9b34fc"
         Log.d(TAG, "target uuid: $targetUuid")
-        val beaconId = "2cdbdd00-13ee-11e4-9b6c-0002a5d5c518"
+        val beaconId = "8ec90001-f315-4f60-9fb8-838830daea50"//"2cdbdd00-13ee-11e4-9b6c-0002a5d5c518"
         val targetBeaconUuid = ParcelUuid.fromString(beaconId)
         val targetDeviceUuid = ParcelUuid.fromString(targetUuid)
-        Log.d(TAG, "detected serviceUuids: $${result.scanRecord?.serviceUuids}")
+        Log.d(TAG, "detected serviceUuids: ${result.scanRecord?.serviceUuids}")
         Log.d(TAG, "isTargetDevice: ${result.scanRecord?.serviceUuids?.contains(targetDeviceUuid)}")
 
         return (result.scanRecord?.serviceUuids?.contains(targetDeviceUuid) == true) &&
@@ -222,23 +222,26 @@ class BleScanService : Service() {
         Log.d(TAG, "start scan")
         val formattedClassId = classId.toString().padEnd(8, '0')
 
-        val targetBeaconId = "2cdbdd00-13ee-11e4-9b6c-0002a5d5c518"
+        val targetBeaconId = "8ec90001-f315-4f60-9fb8-838830daea50"//"2cdbdd00-13ee-11e4-9b6c-0002a5d5c518"
         val targetDeviceId = "$formattedClassId-0000-1100-8000-00805f9b34fc"
         val targetDeviceUuid32BitPattern = "5f9b34fc"
 
         val targetBeaconUuid = ParcelUuid.fromString(targetBeaconId)
         val targetDeviceUuid = ParcelUuid.fromString(targetDeviceId)
-        val mask = ParcelUuid.fromString("00000000-0000-0000-0000-00000000FFFF")
+        val beaconMask = ParcelUuid.fromString("00000000-0000-0000-0000-0000FFFF0000")
+        val deviceMask = ParcelUuid.fromString("00000000-0000-0000-0000-00000000FFFF")
+
 
         val scanFilterDevice = ScanFilter.Builder()
-            .setServiceUuid(targetDeviceUuid, mask)
+            .setServiceUuid(targetDeviceUuid, deviceMask)
             .build()
         // TODO: modify scanFilterBeacon to filter based on unique signal info of SNU attendance beacons
         val scanFilterBeacon = ScanFilter.Builder()
-            .setServiceUuid(targetBeaconUuid, mask)
+            .setServiceUuid(targetBeaconUuid, beaconMask)
             .build()
 
         val scanFilters: List<ScanFilter> = listOf(scanFilterDevice, scanFilterBeacon)
+        Log.d(TAG, "scanFilters: $scanFilters")
 
 
         val scanSettings = ScanSettings.Builder()
