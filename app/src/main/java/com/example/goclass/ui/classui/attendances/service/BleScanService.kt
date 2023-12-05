@@ -180,9 +180,7 @@ class BleScanService : Service() {
         }
         bluetoothLeScanner?.stopScan(scanCallback)
 
-        sendSuccessfulScanCount()
         sendScanResults()
-        sendFirstScan()
 
         stopSelf()
     }
@@ -205,22 +203,6 @@ class BleScanService : Service() {
         scanCount++
         Log.d(TAG, "scanCount in stopScanning: $scanCount")
     }
-
-    private fun sendSuccessfulScanCount() {
-        // Pass scanCount to AttendanceService using Intent
-        val intent = Intent(ACTION_BLE_SCAN_RESULT)
-        intent.putExtra(EXTRA_SCAN_COUNT, successfulScanCount)
-        Log.d(TAG, "sendSuccessfulScanCount: $successfulScanCount")
-        sendBroadcast(intent)
-    }
-
-    private fun sendFirstScan() {
-        val intent = Intent(ACTION_BLE_FIRST_SCAN)
-        intent.putExtra(FIRST_SCAN_AT, firstScanTime)
-        Log.d(TAG, "sendFirstScan at: $firstScanTime")
-        sendBroadcast(intent)
-    }
-
     private fun deviceFound() {
         firstScanTime = scanCount
         Log.d(TAG, "FirstScanTime: $firstScanTime")
@@ -339,7 +321,11 @@ class BleScanService : Service() {
 
     private fun sendScanResults() {
         val intent = Intent("com.example.goclass.SCAN_RESULTS")
+
         intent.putExtra("scanResults", scanResultsList.toTypedArray())
+        intent.putExtra(EXTRA_SCAN_COUNT, successfulScanCount)
+        intent.putExtra(FIRST_SCAN_AT, firstScanTime)
+
         Log.d(TAG, scanResultsList.toString())
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
     }
