@@ -39,6 +39,9 @@ class BleScanService : Service() {
     private var firstScan = true
     private var firstScanTime = 0
 
+    private var profDeviceFound = false
+    private var beaconFound = false
+
     private var durationSec = 0
 
     private val scanResultsList = mutableListOf<String>()
@@ -115,8 +118,10 @@ class BleScanService : Service() {
 
             result?.device?.let {
                 Log.i(TAG, "Device found with address: ${it.address}")
-                if (isTargetDevice(result)) {
-                    Log.i(TAG, "Device is TargetDevice")
+                if (isTargetBeacon(result)) {beaconFound = true}
+                if (isTargetDevice(result)) {profDeviceFound = true}
+                if ((beaconDeviceSuccess())) {
+                    Log.i(TAG, "Both TargetDevice found")
                     if (firstScan) {
                         deviceFound()
                         firstScan = false
@@ -149,19 +154,45 @@ class BleScanService : Service() {
         }
     }
 
+//    private fun isTargetDevice(result: ScanResult): Boolean {
+//        Log.d(TAG, "check isTargetDevice")
+//        val formattedClassId = classId.toString().padEnd(8, '0')
+//        val targetUuid = "$formattedClassId-0000-1100-8000-00805f9b34fc"
+//        Log.d(TAG, "target uuid: $targetUuid")
+//        val beaconId = "8ec90001-f315-4f60-9fb8-838830daea50"//"2cdbdd00-13ee-11e4-9b6c-0002a5d5c518"
+//        val targetBeaconUuid = ParcelUuid.fromString(beaconId)
+//        val targetDeviceUuid = ParcelUuid.fromString(targetUuid)
+//        Log.d(TAG, "detected serviceUuids: ${result.scanRecord?.serviceUuids}")
+//        Log.d(TAG, "isTargetDevice: ${result.scanRecord?.serviceUuids?.contains(targetDeviceUuid)}")
+//
+//        return (result.scanRecord?.serviceUuids?.contains(targetDeviceUuid) == true) //&&
+////                (result.scanRecord?.serviceUuids?.contains(targetBeaconUuid) == true)
+//    }
     private fun isTargetDevice(result: ScanResult): Boolean {
         Log.d(TAG, "check isTargetDevice")
         val formattedClassId = classId.toString().padEnd(8, '0')
         val targetUuid = "$formattedClassId-0000-1100-8000-00805f9b34fc"
         Log.d(TAG, "target uuid: $targetUuid")
-        val beaconId = "8ec90001-f315-4f60-9fb8-838830daea50"//"2cdbdd00-13ee-11e4-9b6c-0002a5d5c518"
-        val targetBeaconUuid = ParcelUuid.fromString(beaconId)
         val targetDeviceUuid = ParcelUuid.fromString(targetUuid)
         Log.d(TAG, "detected serviceUuids: ${result.scanRecord?.serviceUuids}")
         Log.d(TAG, "isTargetDevice: ${result.scanRecord?.serviceUuids?.contains(targetDeviceUuid)}")
 
-        return (result.scanRecord?.serviceUuids?.contains(targetDeviceUuid) == true) //&&
-//                (result.scanRecord?.serviceUuids?.contains(targetBeaconUuid) == true)
+        return (result.scanRecord?.serviceUuids?.contains(targetDeviceUuid) == true)
+    }
+
+    private fun isTargetBeacon(result: ScanResult): Boolean {
+        Log.d(TAG, "check isTargetBeacon")
+        val beaconId = "8ec90001-f315-4f60-9fb8-838830daea50"//"2cdbdd00-13ee-11e4-9b6c-0002a5d5c518"
+        val targetBeaconUuid = ParcelUuid.fromString(beaconId)
+        Log.d(TAG, "detected serviceUuids: ${result.scanRecord?.serviceUuids}")
+        Log.d(TAG, "isTargetDevice: ${result.scanRecord?.serviceUuids?.contains(targetBeaconUuid)}")
+
+        return (result.scanRecord?.serviceUuids?.contains(targetBeaconUuid) == true)
+    }
+
+    private fun beaconDeviceSuccess(): Boolean {
+        Log.d(TAG, "beaconDeviceSuccess: ${beaconFound && profDeviceFound}")
+        return beaconFound && profDeviceFound
     }
 
     private fun startScanningWithInterval() {
@@ -217,6 +248,8 @@ class BleScanService : Service() {
         bluetoothLeScanner?.stopScan(scanCallback)
 
         deviceFound = false
+        profDeviceFound = false
+        beaconFound = false
         scanCount++
         Log.d(TAG, "scanCount in stopScanning: $scanCount")
     }
@@ -248,8 +281,8 @@ class BleScanService : Service() {
             .setServiceUuid(targetBeaconUuid, beaconMask)
             .build()
 
-        val scanFilters: List<ScanFilter> = listOf(scanFilterDevice)
-//        val scanFilters: List<ScanFilter> = listOf(scanFilterDevice, scanFilterBeacon)
+//        val scanFilters: List<ScanFilter> = listOf(scanFilterDevice)
+        val scanFilters: List<ScanFilter> = listOf(scanFilterDevice, scanFilterBeacon)
 
         Log.d(TAG, "scanFilters: $scanFilters")
 
