@@ -1,3 +1,4 @@
+
 # SNU-SWPP-Template
 
 You can use the README file to showcase and promote your mobile app. The template provided below is just a starting point. Feel free to craft your README as you see fit. 
