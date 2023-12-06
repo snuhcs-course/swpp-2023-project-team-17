@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.goclass.R
 import com.example.goclass.databinding.FragmentProfessorAttendanceListBinding
+import com.example.goclass.utility.SnackbarBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ProfessorAttendanceListFragment : Fragment() {
@@ -54,6 +55,29 @@ class ProfessorAttendanceListFragment : Fragment() {
         val studentAttendanceListLiveData = viewModel.getStudentAttendanceList(date, classMap)
         studentAttendanceListLiveData.observe(viewLifecycleOwner) { studentAttendanceList ->
             professorAttendanceListAdapter.setStudentAttendanceList(studentAttendanceList)
+        }
+
+        // Refresh Button
+        binding.refreshButton.setOnClickListener {
+            refreshData()
+        }
+    }
+
+    private fun refreshData() {
+        val classSharedPref = activity?.getSharedPreferences("ClassPrefs", Context.MODE_PRIVATE)
+        val classId = classSharedPref!!.getInt("classId", -1)
+        val attendanceSharedPref = activity?.getSharedPreferences("AttendancePrefs", Context.MODE_PRIVATE)
+        val date = attendanceSharedPref!!.getString("date", "") ?: ""
+
+        val studentAttendanceListLiveData = viewModel.getStudentAttendanceList(date, mapOf("classId" to classId.toString(), "userType" to "1"))
+        studentAttendanceListLiveData.observe(viewLifecycleOwner) { studentAttendanceList ->
+            (binding.professorAttendanceListRecyclerView.adapter as? ProfessorAttendanceListAdapter)?.setStudentAttendanceList(studentAttendanceList)
+        }
+        viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
+            SnackbarBuilder(binding.root)
+                .setMessage(message)
+                .build()
+                .show()
         }
     }
 

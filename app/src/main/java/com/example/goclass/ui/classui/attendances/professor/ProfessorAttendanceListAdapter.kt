@@ -76,8 +76,19 @@ class ProfessorAttendanceListAdapter(
                     binding.attendanceStatusText.background = ContextCompat.getDrawable(itemView.context, R.drawable.absent_bg)
                 }
             }
-            binding.attendanceDetailButton.setOnClickListener {
-                listener.onItemClicked(attendanceId, studentName, attendanceStatus)
+            itemView.setOnClickListener {
+                listener.onItemClicked(
+                    studentAttendanceItem.attendanceId,
+                    studentAttendanceItem.studentName ?: "",
+                    studentAttendanceItem.attendanceStatus
+                )
+            }
+            binding.attendanceStatusText.setOnClickListener {
+                listener.onItemClicked(
+                    studentAttendanceItem.attendanceId,
+                    studentAttendanceItem.studentName ?: "",
+                    studentAttendanceItem.attendanceStatus
+                )
             }
         }
     }
