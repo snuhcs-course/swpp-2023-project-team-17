@@ -197,6 +197,8 @@ class BleScanService : Service() {
 
         initializeParams()
 
+        stopForeground(true)
+
         stopSelf()
     }
 
@@ -326,8 +328,8 @@ class BleScanService : Service() {
 
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("BLE Scanning")
-            .setContentText("Scanning for BLE devices in the background.")
-            .setSmallIcon(R.drawable.ic_launcher_foreground) // 알맞은 아이콘으로 교체하세요.
+            .setContentText("출석체크를 위한 BLE scanning 동작 중. 제거 시 출석정보가 수집되지 않을 수 있습니다.")
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentIntent(pendingIntent)
             .build()
 

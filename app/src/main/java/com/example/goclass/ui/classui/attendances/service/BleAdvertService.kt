@@ -217,6 +217,7 @@ class BleAdvertService : Service() {
 
     private fun stopAdvertising() {
         Log.d(TAG, "stopAdvertising")
+        stopForeground(true)
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.BLUETOOTH_ADVERTISE
