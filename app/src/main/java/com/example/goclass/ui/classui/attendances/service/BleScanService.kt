@@ -56,6 +56,18 @@ class BleScanService : Service() {
         createNotificationChannel()
     }
 
+    private fun initializeParams() {
+        scanCount = 0
+        successfulScanCount = 0
+        scanning = false
+        deviceFound = false
+        firstScan = true
+        firstScanTime = 0
+        durationSec = 0
+        minutesElapsed = 0
+        scanResultsList.clear()
+    }
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val durationMillis = intent?.getLongExtra(EXTRA_DURATION_MILLIS, DEFAULT_DURATION_MILLIS)
             ?: DEFAULT_DURATION_MILLIS
@@ -182,6 +194,8 @@ class BleScanService : Service() {
         scanIntervalHandler?.removeCallbacksAndMessages(null)
 
         sendScanResults()
+
+        initializeParams()
 
         stopSelf()
     }
