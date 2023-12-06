@@ -1,14 +1,10 @@
 package com.example.goclass.ui.classui.attendances
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.goclass.network.dataclass.Attendances
-import com.example.goclass.network.dataclass.AttendancesResponse
 import com.example.goclass.repository.AttendanceRepository
-import com.example.goclass.repository.UserRepository
 import kotlinx.coroutines.launch
 
 class AttendanceDetailViewModel(
@@ -25,9 +21,9 @@ class AttendanceDetailViewModel(
     ): MutableLiveData<List<String>> {
         viewModelScope.launch {
             try {
-                val response = repository.attendanceDetailListGet(attendanceId)
+                val response = repository.attendanceGet(attendanceId)
                 if (response.code == 200) {
-                    _attendanceDetailListLiveData.postValue(response.attendanceDetailList)
+//                    _attendanceDetailListLiveData.postValue(response.attendanceDetail)
                     _toastMessage.postValue("Successfully get")
                 } else if (response.code == 500) {
                     _toastMessage.postValue("Error: Database error")

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.goclass.network.dataclass.Users
 import com.example.goclass.repository.UserRepository
+import com.example.goclass.utility.SnackbarBuilder
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
@@ -33,14 +34,11 @@ class ProfileViewModel(
             try {
                 val response = repository.userEdit(userId, editProfile)
                 if (response.code == 200) {
-                    _toastMessage.postValue("Success")
                     _editSuccess.postValue(true)
                 } else {
-                    _toastMessage.postValue("Failure")
                     _editSuccess.postValue(false)
                 }
             } catch (e: Exception) {
-                _toastMessage.postValue("Error: ${e.message}")
                 _editSuccess.postValue(false)
             } finally {
                 _isLoading.postValue(false)

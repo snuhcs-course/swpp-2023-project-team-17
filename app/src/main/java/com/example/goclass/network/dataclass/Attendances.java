@@ -11,8 +11,8 @@ public class Attendances {
     int attendanceDuration = -1;
     @SerializedName("classId")
     int classId = -1;
-    @SerializedName("attendance_detail_list")
-    List<String> attendanceDetailList;
+    @SerializedName("attendanceDetail")
+    String attendanceDetail;
 
     public Attendances(int attendanceStatus, int attendanceDuration, int classId) {
         this.attendanceStatus = attendanceStatus;
@@ -20,7 +20,10 @@ public class Attendances {
         this.classId = classId;
     }
 
-    public Attendances(List<String> attendanceDetailList) {
-        this.attendanceDetailList = attendanceDetailList;
+    public Attendances(int attendanceStatus, int attendanceDuration, int classId, String attendanceDetailList) {
+        this.attendanceStatus = attendanceStatus;
+        this.attendanceDuration = attendanceDuration;
+        this.classId = classId;
+        this.attendanceDetail = attendanceDetailList;
     }
 }

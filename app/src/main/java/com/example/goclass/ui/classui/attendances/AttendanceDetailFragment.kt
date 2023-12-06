@@ -42,7 +42,7 @@ class AttendanceDetailFragment : Fragment() {
 
         val attendanceSharedPref = activity?.getSharedPreferences("AttendancePrefs", Context.MODE_PRIVATE)
         val className = attendanceSharedPref!!.getString("className", "")
-        val userRole = attendanceSharedPref.getString("userType", "")
+        val userRole = attendanceSharedPref.getString("userRole", "")
         val attendanceId = attendanceSharedPref.getInt("attendanceId", -1)
         val studentName = attendanceSharedPref.getString("studentName", "")
         val date = attendanceSharedPref.getString("date", "")

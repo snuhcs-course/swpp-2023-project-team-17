@@ -12,7 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.goclass.R
 import com.example.goclass.databinding.FragmentLoginBinding
-import com.example.goclass.ui.mainui.login.utils.StatusCheckUtils
+import com.example.goclass.utility.StatusCheckUtils
+import com.example.goclass.utility.SnackbarBuilder
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -78,16 +79,16 @@ class LoginFragment : Fragment() {
                 findNavController().navigate(R.id.action_loginFragment_to_profileFragment)
             }
             else {
-                StatusCheckUtils.showLoginFailedSnackBar(binding.root)
+                showSnackbar("Login Failed: Server error", R.color.red)
             }
         }
 
         // Login Button
         binding.loginButton.setOnClickListener {
             if (!StatusCheckUtils.isNetworkConnected(requireContext())) {
-                StatusCheckUtils.showNetworkErrorSnackBar(binding.root)
+                showSnackbar("No Network Connection", R.color.red)
             } else {
-                StatusCheckUtils.showLoggingInSnackBar(binding.root)
+                showSnackbar("Logging In...", R.color.black)
                 signInWithGoogle()
             }
         }
@@ -105,11 +106,19 @@ class LoginFragment : Fragment() {
                 Log.d("loginaa", task.isSuccessful.toString())
                 if (task.isSuccessful) {
                     viewModel.userLogin(account.email!!)
-                    StatusCheckUtils.showLoginSuccessSnackBar(binding.root)
+                    showSnackbar("Login Successful!", R.color.green)
                 } else {
-                    StatusCheckUtils.showLoginFailedSnackBar(binding.root)
+                    showSnackbar("Login Failed: Server error", R.color.red)
                 }
             }
+    }
+
+    private fun showSnackbar(message: String, colorResId: Int) {
+        SnackbarBuilder(binding.root)
+            .setMessage(message)
+            .setBackgroundColor(colorResId)
+            .build()
+            .show()
     }
 
     override fun onDestroyView() {

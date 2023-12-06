@@ -86,7 +86,7 @@ class StudentMainViewModel(
                     _snackbarMessage.postValue("Successfully joined!")
                     getClassList(mapOf("userId" to userId.toString(), "userType" to "0"))
                 } else {
-                    _snackbarMessage.postValue("Failed to join...")
+                    _snackbarMessage.postValue("Failed to join: Check class name or class code again.")
                 }
             } catch (e: Exception) {
                 _snackbarMessage.postValue("Failed to join: Check class name or class code again.")
@@ -102,6 +102,7 @@ class StudentMainViewModel(
                     _classListLiveData.postValue(response.classList)
                 }
             } catch (e: Exception) {
+                _snackbarMessage.postValue("Cannot load class list. Check your network connection.")
                 Log.d("classListError", e.message.toString())
             }
         }

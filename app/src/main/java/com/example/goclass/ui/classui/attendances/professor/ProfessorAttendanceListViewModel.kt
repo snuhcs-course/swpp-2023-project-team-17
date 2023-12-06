@@ -27,10 +27,13 @@ class ProfessorAttendanceListViewModel(
                 val response = repository.userGetAttendanceListByDate(date, classMap)
                 if (response.code == 200) {
                     _studentAttendanceListLiveData.postValue(response.attendanceList)
+                    _toastMessage.postValue("Refreshed!")
+                } else {
+                    _toastMessage.postValue("Failed to refresh: Check network connection.")
                 }
             } catch (e: Exception) {
                 Log.d("professorStudentAttendanceListError", e.message.toString())
-                _toastMessage.postValue("Error: ${e.message}")
+                _toastMessage.postValue("Failed to refresh: Check network connection.")
             }
         }
         return _studentAttendanceListLiveData

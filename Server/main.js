@@ -247,7 +247,8 @@ app.get('/users/attendance/:date', (req, res) => {
                 "isSent": item.is_sent,
                 "classId": item.class_id,
                 "studentId": item.student_id,
-                "userName": item.user_name
+                "userName": item.user_name,
+                "attendanceDetail": item.attendance_detail
             }));
         } else {
             resultCode = 200;
@@ -532,7 +533,8 @@ app.get('/class/:id/attendance/:user_id', (req, res) => {
                 "isSent": item.is_sent,
                 "classId": item.class_id,
                 "studentId": item.student_id,
-                "userName": item.user_name
+                "userName": item.user_name,
+                "attendanceDetail": item.attendance_detail
             }));
         } else {
             resultCode = 200;
@@ -751,65 +753,6 @@ app.put('/chat_channel/:class_id', (req, res) => {
 });
 
 
-// (23) get attendance detail list
-app.get('/attendance/detail/:attendance_id', (req, res) => {
-    const attendanceId = req.params.attendance_id;
-    const sql = 'SELECT attendance_detail '
-                + 'FROM Attendances '
-                + 'where attendance_id = ?';
-    const params = [attendanceId];
-
-    connection.query(sql, params, (err, result) => {
-        let resultCode = 404;
-        let message = "get attendance detail list Error";
-        let attendanceDetailList = [];
-
-        if (err) {
-            return res.status(500).json({
-                'code': 500,
-                'message': 'database error'
-            });
-        }
-        
-        if (result.length > 0) {
-            resultCode = 200;
-            message = 'get attendance detail list Success';
-            detail = result[0].attendance_detail;
-            if (!(detail == null || detail == '')) {
-                attendanceDetailList = detail.split(',').map(item => parseInt(item.trim()));
-            }
-        }
-
-        res.json({
-            'code': resultCode,
-            'message': message,
-            'attendanceDetailList': attendanceDetailList
-        });
-    });
-});
-
-
-// (24) add attendance detail
-app.put('/attendance/detail/:attendance_id', (req, res) => {
-    const attendanceId = req.params.attendance_id;
-    const attendanceDetailList = req.body.attendance_detail_list.join(", ");
-    const sql = 'UPDATE Attendances SET attendance_detail = ? WHERE attendance_id = ?';
-    connection.query(sql, [attendanceDetailList, attendanceId], (err, result) => {
-        if (err) {
-            return res.status(500).json({
-                'code': 500,
-                'message': 'database error'
-            });
-        }
-
-        return res.json({
-            'code': 200,
-            'message': 'add attendance detail Success'
-        });
-    });
-});
-
-
 /* (18)
     get attendance information
 */
@@ -831,6 +774,7 @@ app.get('/attendance/:id', (req, res) => {
         let studentId = -1;
         let classId = -1;
         let userName = "";
+        let attendanceDetail = "";
 
         if (err) {
             return res.status(500).json({
@@ -848,7 +792,8 @@ app.get('/attendance/:id', (req, res) => {
             isSent = result[0].is_sent;
             studentId = result[0].student_id;
             classId = result[0].class_id;
-            userName = result[0].user_name
+            userName = result[0].user_name;
+            attendanceDetail = result[0].attendance_detail;
         } else {
             resultCode = 200;
             message = 'There is no attendance corresponding to that id';
@@ -864,7 +809,8 @@ app.get('/attendance/:id', (req, res) => {
             'isSent': isSent,
             'studentId': studentId,
             'classId': classId,
-            'userName': userName
+            'userName': userName,
+            'attendanceDetail': attendanceDetail
         });
     });
 });
@@ -932,9 +878,15 @@ app.post('/attendance/:user_id', (req, res) => {
     const attendanceDuration = req.body.attendanceDuration;
     const userId = req.params.user_id;
     const classId = req.body.classId;
-    const sql = 'insert into Attendances(attendance_status, attendance_duration, student_id, class_id) '
-        + 'values(?, ?, ?, ?)';
-    const params = [attendanceStatus, attendanceDuration, userId, classId];
+    let attendanceDetail = null
+
+    if(req.body.attendance_detail) {
+        attendanceDetail = req.body.attendance_detail;
+    }    
+
+    const sql = 'insert into Attendances(attendance_status, attendance_duration, attendance_detail, student_id, class_id) '
+        + 'values(?, ?, ?, ?, ?)';
+    const params = [attendanceStatus, attendanceDuration, attendanceDetail, userId, classId];
 
     connection.query(sql, params, (err, result) => {
         let resultCode = 200;

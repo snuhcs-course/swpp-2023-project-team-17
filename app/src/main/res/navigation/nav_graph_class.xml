@@ -78,9 +78,13 @@
         android:label="fragment_attendance_detail" >
         <action
             android:id="@+id/action_attendanceDetailFragment_to_studentAttendanceFragment"
-            app:destination="@id/studentAttendanceFragment" />
+            app:destination="@id/studentAttendanceFragment"
+            app:popUpTo="@id/studentAttendanceFragment"
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_attendanceDetailFragment_to_professorAttendanceListFragment"
-            app:destination="@id/professorAttendanceListFragment" />
+            app:destination="@id/professorAttendanceListFragment"
+            app:popUpTo="@id/professorAttendanceFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
 </navigation>

@@ -14,13 +14,4 @@ class AttendanceRepository(private val serviceApi: ServiceApi) {
         userId: Int,
         attendances: Attendances,
     ) = serviceApi.attendanceAdd(userId, attendances)
-
-    suspend fun attendanceDetailListGet(
-        attendanceId: Int,
-    ) = serviceApi.attendanceDetailListGet(attendanceId)
-
-    suspend fun attendanceDetailListAdd(
-        attendanceId: Int,
-        attendances: Attendances,
-    ) = serviceApi.attendanceDetailListAdd(attendanceId, attendances)
 }

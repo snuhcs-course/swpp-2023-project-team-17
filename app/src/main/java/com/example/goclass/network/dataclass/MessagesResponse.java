@@ -66,4 +66,6 @@ public class MessagesResponse {
     public String getContent() {
         return content;
     }
+
+    public String getCommentCount() { return commentCount; }
 }
