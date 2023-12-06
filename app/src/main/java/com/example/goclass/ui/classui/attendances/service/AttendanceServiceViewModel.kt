@@ -22,7 +22,7 @@ class AttendanceServiceViewModel(
         classId: Int,
         scanResults: List<String>
     ) {
-        val attendanceDetail = scanResults.toString()
+        val attendanceDetail = scanResults.joinToString()
         val attendances = Attendances(attendanceStatus, attendanceDuration, classId, attendanceDetail)
 
         viewModelScope.launch {
