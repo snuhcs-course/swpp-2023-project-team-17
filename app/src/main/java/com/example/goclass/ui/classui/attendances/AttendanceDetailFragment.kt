@@ -4,10 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.goclass.R
@@ -78,37 +80,36 @@ class AttendanceDetailFragment : Fragment() {
         val entries = ArrayList<BarEntry>()
         val attendanceDetailListLiveDate = viewModel.getAttendanceDetail(attendanceId)
         attendanceDetailListLiveDate.observe(viewLifecycleOwner) { attendanceDetailList ->
-            for (i in attendanceDetailList.indices) {
-                if (attendanceDetailList[i] == "1") {
-                    entries.add(BarEntry(i.toFloat(), 1f))
-                } else {
-                    entries.add(BarEntry(i.toFloat(), 0f))
+            if(attendanceDetailList.isNotEmpty()) {
+                for ((index, detail) in attendanceDetailList.withIndex()) {
+                    if (detail == '1') {
+                        entries.add(BarEntry(index.toFloat(), 1f))
+                    } else {
+                        entries.add(BarEntry(index.toFloat(), 0f))
+                    }
                 }
             }
+
+            // BarDataSet Configuration
+            val barDataSet = BarDataSet(entries, "In Class")
+            barDataSet.color = Color.parseColor("#6D9FFF")
+            barDataSet.setDrawValues(false)
+
+            // BarData Configuration
+            val barData = BarData(barDataSet)
+            barData.barWidth = 1.0f
+
+            // BarChart Configuration
+            barChart.data = barData
+            barChart.description.isEnabled = false
+            barChart.xAxis.isEnabled = true
+            barChart.axisLeft.setDrawLabels(false)
+            barChart.axisLeft.axisMaximum = 1.0f
+            barChart.axisLeft.axisMinimum = 0f
+            barChart.axisRight.isEnabled = false
+
+            // Bar Update
+            barChart.invalidate()
         }
-
-        // BarDataSet Configuration
-        val barDataSet = BarDataSet(entries, "In Class")
-        barDataSet.color = Color.parseColor("#6D9FFF")
-        barDataSet.setDrawValues(false)
-
-        // BarData Configuration
-        val barData = BarData(barDataSet)
-        barData.barWidth = 1.0f
-
-        // BarChart Configuration
-        barChart.data = barData
-        barChart.setFitBars(true)
-        barChart.description.isEnabled = false
-        barChart.xAxis.isEnabled = false
-        barChart.legend.textSize = 18f
-        barChart.legend.formSize = 14f
-        barChart.axisLeft.setDrawLabels(false)
-        barChart.axisLeft.axisMaximum = 1.0f
-        barChart.axisLeft.axisMinimum = 0f
-        barChart.axisRight.isEnabled = false
-
-        // Bar Update
-        barChart.invalidate()
     }
 }

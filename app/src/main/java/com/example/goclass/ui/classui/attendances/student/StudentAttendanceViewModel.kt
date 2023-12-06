@@ -45,11 +45,13 @@ class StudentAttendanceViewModel(
     ) {
         viewModelScope.launch {
             try {
+                val attendanceDetail = "010011000111000011110000011111000000111111"
                 val attendance =
                     Attendances(
                         2,
-                        60,
+                        30,
                         classId,
+                        attendanceDetail,
                     )
                 val response = attendanceRepository.attendanceAdd(userId, attendance)
                 if (response.code == 200) {
@@ -59,7 +61,6 @@ class StudentAttendanceViewModel(
                     _toastMessage.postValue("Failed to add")
                 }
             } catch (e: Exception) {
-                Log.d("dummyAttendanceError", e.message.toString())
                 _toastMessage.postValue("Error: ${e.message}")
             }
         }
