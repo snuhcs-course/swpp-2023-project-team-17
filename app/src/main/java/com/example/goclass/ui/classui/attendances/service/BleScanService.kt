@@ -179,6 +179,7 @@ class BleScanService : Service() {
             return
         }
         bluetoothLeScanner?.stopScan(scanCallback)
+        scanIntervalHandler?.removeCallbacksAndMessages(null)
 
         sendScanResults()
 
