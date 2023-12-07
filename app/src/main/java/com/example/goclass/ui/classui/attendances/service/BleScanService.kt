@@ -83,6 +83,7 @@ class BleScanService : Service() {
             Log.d(TAG, "durationMillis over")
             stopScanningService()
         }, durationMillis)
+        scanResultsList += "0"
 
         startForegroundNotification()
         startScanningWithInterval()
@@ -129,10 +130,6 @@ class BleScanService : Service() {
                     if (!deviceFound) { // 1분 동안 한 번이라도 신호가 잡히면 successfulScanCount 올림
                         successfulScanCount++
                         deviceFound = true
-                        while (scanResultsList.size <= minutesElapsed) {
-                            scanResultsList += "0"
-                        }
-                        scanResultsList += "1"
                         Log.i(TAG, "successfulScanCount incremented: $successfulScanCount")
                     } else {
                         Log.i(TAG, "successfulScanCount already incremented: $successfulScanCount")
@@ -154,7 +151,7 @@ class BleScanService : Service() {
         }
     }
 
-//    private fun isTargetDevice(result: ScanResult): Boolean {
+    //    private fun isTargetDevice(result: ScanResult): Boolean {
 //        Log.d(TAG, "check isTargetDevice")
 //        val formattedClassId = classId.toString().padEnd(8, '0')
 //        val targetUuid = "$formattedClassId-0000-1100-8000-00805f9b34fc"
@@ -221,6 +218,11 @@ class BleScanService : Service() {
             // for Activity#requestPermissions for more details.
             return
         }
+        if(profDeviceFound && beaconFound) {
+            scanResultsList += "1"
+        } else {
+            scanResultsList += "0"
+        }
         bluetoothLeScanner?.stopScan(scanCallback)
         scanIntervalHandler?.removeCallbacksAndMessages(null)
 
@@ -246,6 +248,11 @@ class BleScanService : Service() {
             return
         }
         bluetoothLeScanner?.stopScan(scanCallback)
+        if(profDeviceFound && beaconFound) {
+            scanResultsList += "1"
+        } else {
+            scanResultsList += "0"
+        }
 
         deviceFound = false
         profDeviceFound = false
