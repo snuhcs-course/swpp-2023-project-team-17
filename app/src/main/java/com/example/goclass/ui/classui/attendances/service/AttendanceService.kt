@@ -116,7 +116,7 @@ class AttendanceService : Service() { //, BleScanCallback {
         val attendanceStatus =
             if (scanCount == 0) {
                 0
-            } else if (firstSuccess <= 10) {
+            } else if (firstSuccess <= 5) {
                 2 // present
             } else if (firstSuccess <= 30) {
                 1 // late

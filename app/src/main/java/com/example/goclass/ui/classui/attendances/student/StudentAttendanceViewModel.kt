@@ -45,7 +45,7 @@ class StudentAttendanceViewModel(
     ) {
         viewModelScope.launch {
             try {
-                val attendanceDetail = "010011000111000011110000011111000000111111"
+                val attendanceDetail = "0111111111111111"
                 val attendance =
                     Attendances(
                         2,
