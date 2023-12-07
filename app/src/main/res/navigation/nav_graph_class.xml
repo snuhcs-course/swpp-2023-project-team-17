@@ -84,7 +84,7 @@
         <action
             android:id="@+id/action_attendanceDetailFragment_to_professorAttendanceListFragment"
             app:destination="@id/professorAttendanceListFragment"
-            app:popUpTo="@id/professorAttendanceFragment"
+            app:popUpTo="@id/professorAttendanceListFragment"
             app:popUpToInclusive="true"/>
     </fragment>
 </navigation>

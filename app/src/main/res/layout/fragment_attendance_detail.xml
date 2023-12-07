@@ -45,6 +45,7 @@
         android:layout_gravity="center"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@color/gray"
         style="@style/SemiBold"
         tools:ignore="HardcodedText" />
 
@@ -57,6 +58,7 @@
         android:layout_gravity="center"
         app:layout_constraintTop_toBottomOf="@id/date"
         app:layout_constraintStart_toStartOf="parent"
+        android:textSize="20sp"
         style="@style/SemiBold"
         tools:ignore="HardcodedText" />
 
@@ -76,7 +78,7 @@
         android:id="@+id/chart"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="70dp"
+        android:layout_margin="20dp"
         app:layout_constraintTop_toBottomOf="@id/status"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
