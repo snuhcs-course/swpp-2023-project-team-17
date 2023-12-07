@@ -3,6 +3,7 @@ package com.example.goclass.ui.classui.attendances
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -75,10 +76,10 @@ class AttendanceDetailFragment : Fragment() {
         val entries = ArrayList<BarEntry>()
         val attendanceDetailListLiveDate = viewModel.getAttendanceDetail(attendanceId)
         attendanceDetailListLiveDate.observe(viewLifecycleOwner) { attendanceDetailList ->
-            if(attendanceDetailList.isNotEmpty()) {
+            if (attendanceDetailList.isNotEmpty()) {
                 for ((index, detail) in attendanceDetailList.withIndex()) {
                     if (detail == '1') {
-                        entries.add(BarEntry(index.toFloat(), 1f))
+                        entries.add(BarEntry(index.toFloat(), 0.9f))
                     } else {
                         entries.add(BarEntry(index.toFloat(), 0f))
                     }
@@ -92,18 +93,19 @@ class AttendanceDetailFragment : Fragment() {
 
             // BarData Configuration
             val barData = BarData(barDataSet)
-            barData.barWidth = 2.0f
+            barData.barWidth = 0.9f
 
-            // BarChart Configuration
+            // LineChart Configuration
             barChart.data = barData
             barChart.description.isEnabled = false
             barChart.xAxis.isEnabled = true
+            barChart.xAxis.axisMinimum = 1f
             barChart.axisLeft.setDrawLabels(false)
             barChart.axisLeft.axisMaximum = 1.0f
             barChart.axisLeft.axisMinimum = 0f
             barChart.axisRight.isEnabled = false
 
-            // Bar Update
+            // Line Update
             barChart.invalidate()
         }
     }
