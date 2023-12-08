@@ -23,6 +23,7 @@ import com.example.goclass.R
 import com.example.goclass.databinding.FragmentStudentMainBinding
 import com.example.goclass.ui.classui.ClassScheduler
 import com.example.goclass.ui.mainui.usermain.utils.InputValidnessTest
+import com.example.goclass.utility.PermissionUtils
 import com.example.goclass.utility.SnackbarBuilder
 import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -35,6 +36,8 @@ class StudentMainFragment : Fragment() {
         parametersOf(requireActivity().application)
     }
     private val professorMainViewModel: ProfessorMainViewModel by viewModel()
+
+    private lateinit var permissionUtils: PermissionUtils
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
@@ -49,6 +52,11 @@ class StudentMainFragment : Fragment() {
 
         viewModel.snackbarMessage.observe(viewLifecycleOwner) { message ->
             Snackbar.make(binding.root, message, Toast.LENGTH_SHORT).show()
+        }
+
+        permissionUtils = PermissionUtils(requireContext())
+        if (permissionUtils.checkPermissions()) {
+            permissionUtils.showPermissionDeniedDialog()
         }
 
         // Name Textview

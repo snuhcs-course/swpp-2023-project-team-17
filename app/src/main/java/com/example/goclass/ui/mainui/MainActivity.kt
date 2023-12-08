@@ -25,7 +25,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         permissionUtils = PermissionUtils(this)
-        permissionUtils.requestBluetoothPermissions()
+        permissionUtils.requestLocationPermissions()
+//        permissionUtils.requestBluetoothPermissions()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
