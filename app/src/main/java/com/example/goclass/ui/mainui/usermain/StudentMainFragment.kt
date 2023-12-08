@@ -37,8 +37,6 @@ class StudentMainFragment : Fragment() {
     }
     private val professorMainViewModel: ProfessorMainViewModel by viewModel()
 
-    private lateinit var permissionUtils: PermissionUtils
-
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,11 +50,6 @@ class StudentMainFragment : Fragment() {
 
         viewModel.snackbarMessage.observe(viewLifecycleOwner) { message ->
             Snackbar.make(binding.root, message, Toast.LENGTH_SHORT).show()
-        }
-
-        permissionUtils = PermissionUtils(requireContext())
-        if (permissionUtils.checkPermissions()) {
-            permissionUtils.showPermissionDeniedDialog()
         }
 
         // Name Textview

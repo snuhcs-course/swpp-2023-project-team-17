@@ -35,9 +35,6 @@ class PermissionUtils(private val context: Context) {
                 fineLocationPermissionCode
             )
         } else {
-            // ACCESS_FINE_LOCATION is already granted, request ACCESS_BACKGROUND_LOCATION
-//            requestBackgroundLocationPermission()
-//            showBackgroundLocationPermissionDialog()
             showPermissionDeniedDialog()
         }
     }
@@ -55,9 +52,6 @@ class PermissionUtils(private val context: Context) {
                 arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION),
                 backgroundLocationPermissionCode
             )
-        } else {
-            // ACCESS_BACKGROUND_LOCATION is not required or already granted
-            // You can add additional logic here if needed
         }
     }
 
@@ -91,31 +85,27 @@ class PermissionUtils(private val context: Context) {
     }
 
     private fun showBackgroundLocationPermissionDialog() {
-        AlertDialog.Builder(context)
-            .setTitle("위치 권한 항상 허용 필요")
-            .setMessage("이 앱의 기능을 사용하려면 위치 권한이 \"항상 허용\"으로 설정되어야 합니다. 설정 화면으로 이동하시겠습니까?")
-            .setPositiveButton("이동") { dialog, which ->
-                requestBackgroundLocationPermission()
-            }
-            .setNegativeButton("취소", null)
-            .show()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            AlertDialog.Builder(context)
+                .setTitle("위치 권한 항상 허용 필요")
+                .setMessage("이 앱의 기능을 사용하려면 위치 권한이 \"항상 허용\"으로 설정되어야 합니다. 설정 화면으로 이동하시겠습니까?")
+                .setPositiveButton("이동") { dialog, which ->
+                    requestBackgroundLocationPermission()
+                }
+                .setNegativeButton("취소", null)
+                .show()
+        }
     }
-
-//    private fun showPermissionDeniedDialog() {
-//        AlertDialog.Builder(context)
-//            .setTitle("권한 필요")
-//            .setMessage("이 앱의 기능을 사용하려면 <위치>, <근처 기기>, <알림> 권한이 필요합니다. 위치 권한은 \"항상 허용\"으로 설정되어야 합니다. 설정 화면으로 이동하시겠습니까?")
-//            .setPositiveButton("이동") { dialog, which ->
-//                navigateToAppPermissionSettings()
-//            }
-//            .setNegativeButton("취소", null)
-//            .show()
-//    }
 
     fun showPermissionDeniedDialog() {
         AlertDialog.Builder(context)
             .setTitle("<위치 항상 허용>, <근처 기기>, <알림> 권한 필요")
-            .setMessage("이 앱의 기능을 사용하려면 위 권한이 필요합니다. 설정 화면으로 이동하시겠습니까? 취소를 누르시면 앱을 정상적으로 사용하실 수 없습니다.")
+            .setMessage("이 앱의 기능을 사용하려면 위 권한이 모두 필요합니다. 설정 화면으로 이동하시겠습니까? \n취소를 누르시면 앱을 정상적으로 사용하실 수 없습니다.")
             .setPositiveButton("이동") { dialog, which ->
                 navigateToAppPermissionSettings()
             }
@@ -175,9 +165,8 @@ class PermissionUtils(private val context: Context) {
             fineLocationPermissionCode -> {
                 // Handle the result of ACCESS_FINE_LOCATION request
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    requestBackgroundLocationPermission()
+                    showBackgroundLocationPermissionDialog()
                 } else {
-//                    showLocationPermissionDialog()
                     Log.d("Permissions", "fineLocationPermissionCode")
                     showPermissionDeniedDialog()
                 }
@@ -200,26 +189,6 @@ class PermissionUtils(private val context: Context) {
                     showPermissionDeniedDialog()
                 }
             }
-        }
-    }
-
-    fun requestBluetoothAdvertisePermissionsWithCallback(callback: (Boolean) -> Unit) {
-        val bluetoothAdvertisePermission = Manifest.permission.BLUETOOTH_ADVERTISE
-
-        if (ContextCompat.checkSelfPermission(
-                context,
-                bluetoothAdvertisePermission
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // Request Bluetooth advertising permissions
-            ActivityCompat.requestPermissions(
-                context as Activity,
-                arrayOf(bluetoothAdvertisePermission),
-                102
-            )
-        } else {
-            // Bluetooth advertising permissions already granted
-            callback(true)
         }
     }
 }

@@ -17,6 +17,7 @@ import com.example.goclass.databinding.FragmentProfileBinding
 import com.example.goclass.ui.mainui.profile.utils.RadioButtonsUtils
 import com.example.goclass.ui.mainui.profile.utils.SharedPrefsUtils
 import com.example.goclass.ui.mainui.profile.utils.SnackBarUtils
+import com.example.goclass.utility.PermissionUtils
 import com.example.goclass.utility.SnackbarBuilder
 import com.example.goclass.utility.StatusCheckUtils
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -31,6 +32,8 @@ class ProfileFragment : Fragment() {
     private val viewModel: ProfileViewModel by viewModel()
     private lateinit var googleSignInClient: GoogleSignInClient
 
+    private lateinit var permissionUtils: PermissionUtils
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,6 +45,13 @@ class ProfileFragment : Fragment() {
                 container,
                 false,
             )
+
+        permissionUtils = PermissionUtils(requireContext())
+        if (!permissionUtils.checkPermissions()) {
+            permissionUtils.showPermissionDeniedDialog()
+        }
+
+
         return binding.root
     }
 
