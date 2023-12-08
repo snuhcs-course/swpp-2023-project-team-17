@@ -13,7 +13,6 @@ import com.example.goclass.repository.UserRepository
 import com.example.goclass.ui.classui.ClassScheduler
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
-import java.lang.Exception
 
 class ProfessorMainViewModel(
     private val userRepository: UserRepository,
@@ -100,7 +99,7 @@ class ProfessorMainViewModel(
                     _snackbarMessage.postValue("Failed to create...")
                 }
             } catch (e: Exception) {
-                _snackbarMessage.postValue("Error: ${e.message}")
+                _snackbarMessage.postValue("The provided Class Name & Code are already in use by another class.")
                 Log.d("createclass", "${e.message}")
             }
         }

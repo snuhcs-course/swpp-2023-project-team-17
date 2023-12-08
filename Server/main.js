@@ -880,8 +880,8 @@ app.post('/attendance/:user_id', (req, res) => {
     const classId = req.body.classId;
     let attendanceDetail = null
 
-    if(req.body.attendance_detail) {
-        attendanceDetail = req.body.attendance_detail;
+    if(req.body.attendanceDetail) {
+        attendanceDetail = req.body.attendanceDetail;
     }    
 
     const sql = 'insert into Attendances(attendance_status, attendance_duration, attendance_detail, student_id, class_id) '
