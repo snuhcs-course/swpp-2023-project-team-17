@@ -17,11 +17,7 @@ app.set("port", port);
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-server.listen(port, () => {
-    console.log('Server Running...');
-});
 module.exports = { app, connection };
-
 
 // chat with socket
 io.on('connection', function (socket) {
@@ -225,7 +221,7 @@ app.get('/users/attendance/:date', (req, res) => {
     const params = [attendanceDate, classId];
 
     connection.query(sql, params, (err, result) => {
-        let resultCode = 404;
+        let resultCode = 200;
         let message = 'Error occured';
         let attendanceList = [];
 
@@ -237,7 +233,6 @@ app.get('/users/attendance/:date', (req, res) => {
         }
         
         if (result.length > 0) {
-            resultCode = 200;
             message = 'get all attendances in specific date Success';
             attendanceList = result.map(item => ({
                 "attendanceId": item.attendance_id,
@@ -251,7 +246,6 @@ app.get('/users/attendance/:date', (req, res) => {
                 "attendanceDetail": item.attendance_detail
             }));
         } else {
-            resultCode = 200;
             message = 'attendanceList is empty';
         }
 
@@ -765,8 +759,8 @@ app.get('/attendance/:id', (req, res) => {
     const params = [attendanceId];
 
     connection.query(sql, params, (err, result) => {
-        let resultCode = 404;
-        let message = 'Error occured';
+        let resultCode = 200;
+        let message = '';
         let attendanceDate = -1;
         let attendanceStatus = -1;
         let attendanceDuration = -1;
@@ -784,7 +778,6 @@ app.get('/attendance/:id', (req, res) => {
         }
         
         if (result.length > 0) {
-            resultCode = 200;
             message = 'get attendance information Success';
             attendanceDate = result[0].attendance_date;
             attendanceStatus = result[0].attendance_status;
@@ -795,7 +788,6 @@ app.get('/attendance/:id', (req, res) => {
             userName = result[0].user_name;
             attendanceDetail = result[0].attendance_detail;
         } else {
-            resultCode = 200;
             message = 'There is no attendance corresponding to that id';
         }
 
@@ -880,8 +872,8 @@ app.post('/attendance/:user_id', (req, res) => {
     const classId = req.body.classId;
     let attendanceDetail = null
 
-    if(req.body.attendance_detail) {
-        attendanceDetail = req.body.attendance_detail;
+    if(req.body.attendanceDetail) {
+        attendanceDetail = req.body.attendanceDetail;
     }    
 
     const sql = 'insert into Attendances(attendance_status, attendance_duration, attendance_detail, student_id, class_id) '
