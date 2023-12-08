@@ -1,8 +1,9 @@
+const sinon = require('sinon');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const sinon = require('sinon');
 const { app, connection } = require('../main');
-const should = chai.should();
+
+chai.should();
 chai.use(chaiHttp);
 
 
@@ -55,8 +56,37 @@ describe('Login Endpoint', () => {
       });
   });
 
-  it('should handle database error', (done) => {
+  it('should handle database error during user retrieval', (done) => {
     connection.query.onCall(0).callsArgWith(2, new Error('database error'), null);
+
+    chai.request(app)
+      .post(`/login/${mockUserEmail}`)
+      .end((err, res) => {
+        res.should.have.status(500);
+        res.body.should.have.property('code').eql(500);
+        res.body.should.have.property('message').eql('database error');
+        done();
+      });
+  });
+
+  it('should handle database error during user creation', (done) => {
+    connection.query.onCall(0).callsArgWith(2, null, []);
+    connection.query.onCall(1).callsArgWith(2, new Error('database error'), null);
+
+    chai.request(app)
+      .post(`/login/${mockUserEmail}`)
+      .end((err, res) => {
+        res.should.have.status(500);
+        res.body.should.have.property('code').eql(500);
+        res.body.should.have.property('message').eql('database error');
+        done();
+      });
+  });
+
+  it('should handle database error during last inserted ID retrieval', (done) => {
+    connection.query.onCall(0).callsArgWith(2, null, []);
+    connection.query.onCall(1).callsArgWith(2, null, []);
+    connection.query.onCall(2).callsArgWith(1, new Error('database error'), null);
 
     chai.request(app)
       .post(`/login/${mockUserEmail}`)
@@ -231,6 +261,8 @@ describe('Get Attendance for a Specific Date Endpoint', () => {
       is_sent: 1,
       class_id: 1,
       student_id: 101,
+      user_name: 'kms',
+      attendance_detail: '0111110001100011'
     },
   ];
 
@@ -660,6 +692,8 @@ describe('Get User Attendance List Endpoint', () => {
       is_sent: 1,
       class_id: 2,
       student_id: 1,
+      user_name: 'kms',
+      attendance_detail: '0111110001100011'
     },
   ];
 
@@ -882,7 +916,8 @@ describe('Get Chatting Messages Endpoint', () => {
       time_stamp: '2023-11-26T12:34:56',
       sender_id: 2,
       sender_name: 'TestUser',
-      content: 'Hello, this is a test message.'
+      content: 'Hello, this is a test message.',
+      comment_count: '6'
     },
     // Additional mock messages can be added for testing variations
   ];
@@ -1046,7 +1081,9 @@ describe('Get Attendance Information Endpoint', () => {
       attendance_duration: 60,
       is_sent: 0,
       student_id: 123,
-      class_id: 456
+      class_id: 456,
+      user_name: 'kms',
+      attendance_detail: '0111110001100011'
     }];
 
     connection.query.onCall(0).callsArgWith(2, null, mockResult);
@@ -1064,6 +1101,8 @@ describe('Get Attendance Information Endpoint', () => {
         res.body.should.have.property('isSent').eql(mockResult[0].is_sent);
         res.body.should.have.property('studentId').eql(mockResult[0].student_id);
         res.body.should.have.property('classId').eql(mockResult[0].class_id);
+        res.body.should.have.property('userName').eql(mockResult[0].user_name);
+        res.body.should.have.property('attendanceDetail').eql(mockResult[0].attendance_detail);
         done();
       });
   });
@@ -1184,8 +1223,9 @@ describe('Delete Attendance Information Endpoint', () => {
 describe('Add Attendance Information Endpoint', () => {
   const mockUserId = 1;
   const mockAttendanceStatus = 'Present';
-  const mockAttendanceDuration = 60;
+  const mockAttendanceDuration = 30;
   const mockClassId = 123;
+  const mockAttendanceDetail = '0111110001100011';
 
   beforeEach(() => {
     sinon.stub(connection, 'query');
@@ -1195,7 +1235,7 @@ describe('Add Attendance Information Endpoint', () => {
     connection.query.restore();
   });
 
-  it('should add attendance information successfully', (done) => {
+  it('should add attendance information successfully without attendanceDetail', (done) => {
     const mockResult = { insertId: 1 };
 
     connection.query.onCall(0).callsArgWith(2, null, mockResult);
@@ -1215,6 +1255,27 @@ describe('Add Attendance Information Endpoint', () => {
       });
   });
 
+  it('should add attendance information successfully with attendanceDetail', (done) => {
+    const mockResult = { insertId: 1 };
+
+    connection.query.onCall(0).callsArgWith(2, null, mockResult);
+
+    chai.request(app)
+      .post(`/attendance/${mockUserId}`)
+      .send({
+        attendanceStatus: mockAttendanceStatus,
+        attendanceDuration: mockAttendanceDuration,
+        classId: mockClassId,
+        attendanceDetail: mockAttendanceDetail
+      })
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.have.property('code').eql(200);
+        res.body.should.have.property('message').eql('add attendance information Success');
+        done();
+      });
+  });
+
   it('should handle database error', (done) => {
     connection.query.onCall(0).callsArgWith(2, new Error('database error'), null);
 
@@ -1223,7 +1284,8 @@ describe('Add Attendance Information Endpoint', () => {
       .send({
         attendanceStatus: mockAttendanceStatus,
         attendanceDuration: mockAttendanceDuration,
-        classId: mockClassId
+        classId: mockClassId,
+        attendanceDetail: mockAttendanceDetail
       })
       .end((err, res) => {
         res.should.have.status(500);
