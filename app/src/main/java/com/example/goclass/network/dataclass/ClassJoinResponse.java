@@ -30,4 +30,9 @@ public class ClassJoinResponse {
         this.code = code;
         this.message = message;
     }
+
+    public ClassJoinResponse(int code, String message) {
+        this.code = code;
+        this.message = message;
+    }
 }

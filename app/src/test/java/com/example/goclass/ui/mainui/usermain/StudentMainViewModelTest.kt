@@ -47,9 +47,11 @@ class StudentMainViewModelTest {
     fun classJoin_success() =
         runTest {
             val successMessage = "Successfully joined!"
-            val mockResponse = ClassJoinResponse(1, "TestTime", 200, successMessage)
+            val mockClassJoinResponse = ClassJoinResponse(1, "TestTime", 200, successMessage)
+            val mockClassListsResponse = ClassListsResponse(listOf(), 200, "Success")
 
-            coEvery { mockClassRepository.classJoin(any(), any()) } returns mockResponse
+            coEvery { mockClassRepository.classJoin(any(), any()) } returns mockClassJoinResponse
+            coEvery { mockUserRepository.userGetClassList(any()) } returns mockClassListsResponse
 
             viewModel.classJoin(1, "TestName", "TestCode", mockClassScheduler)
 
@@ -61,10 +63,10 @@ class StudentMainViewModelTest {
     @Test
     fun classJoin_failure() =
         runTest {
-            val failureMessage = "Failed to join..."
-            val mockFailureResponse = ClassJoinResponse(1, "TestTime", 400, failureMessage)
+            val failureMessage = "Failed to join: Check class name or class code again."
+            val mockClassJoinResponse = ClassJoinResponse(400, failureMessage)
 
-            coEvery { mockClassRepository.classJoin(any(), any()) } returns mockFailureResponse
+            coEvery { mockClassRepository.classJoin(any(), any()) } returns mockClassJoinResponse
 
             viewModel.classJoin(1, "TestName", "TestCode", mockClassScheduler)
 
@@ -89,9 +91,11 @@ class StudentMainViewModelTest {
         runTest {
             val successMessage = "Successfully joined!"
             val classTime = "1 15:30-16:45"
-            val mockResponse = ClassJoinResponse(1, classTime, 200, successMessage)
+            val mockClassJoinResponse = ClassJoinResponse(1, classTime, 200, successMessage)
+            val mockClassListsResponse = ClassListsResponse(listOf(), 200, "Success")
 
-            coEvery { mockClassRepository.classJoin(any(), any()) } returns mockResponse
+            coEvery { mockClassRepository.classJoin(any(), any()) } returns mockClassJoinResponse
+            coEvery { mockUserRepository.userGetClassList(any()) } returns mockClassListsResponse
             every {
                 mockClassScheduler.scheduleClass(
                     any(),

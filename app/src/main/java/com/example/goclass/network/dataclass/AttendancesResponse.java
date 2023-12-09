@@ -26,30 +26,7 @@ public class AttendancesResponse {
     @SerializedName("message")
     private String message;
 
-    public AttendancesResponse(int attendanceId, int attendanceStatus, String attendanceDate, int attendanceDuration, int isSent, int studentId, int classId, int code, String message, String attendanceDetail) {
-        this.attendanceId = attendanceId;
-        this.attendanceStatus = attendanceStatus;
-        this.attendanceDate = attendanceDate;
-        this.attendanceDuration = attendanceDuration;
-        this.isSent = isSent;
-        this.studentId = studentId;
-        this.classId = classId;
-        this.code = code;
-        this.message = message;
-        this.attendanceDetail = attendanceDetail;
-    }
-
-    public AttendancesResponse(int attendanceId, int attendanceStatus, String attendanceDate, int attendanceDuration, int isSent, int studentId, int classId) {
-        this.attendanceId = attendanceId;
-        this.attendanceStatus = attendanceStatus;
-        this.attendanceDate = attendanceDate;
-        this.attendanceDuration = attendanceDuration;
-        this.isSent = isSent;
-        this.studentId = studentId;
-        this.classId = classId;
-    }
-
-    public AttendancesResponse(int attendanceId, int attendanceStatus, String attendanceDate, int attendanceDuration, int isSent, int studentId, String studentName, int classId) {
+    public AttendancesResponse(int attendanceId, int attendanceStatus, String attendanceDate, int attendanceDuration, int isSent, int studentId, String studentName, int classId, String attendanceDetail, int code, String message) {
         this.attendanceId = attendanceId;
         this.attendanceStatus = attendanceStatus;
         this.attendanceDate = attendanceDate;
@@ -58,6 +35,26 @@ public class AttendancesResponse {
         this.studentId = studentId;
         this.studentName = studentName;
         this.classId = classId;
+        this.attendanceDetail = attendanceDetail;
+        this.code = code;
+        this.message = message;
+    }
+
+    public AttendancesResponse(int code, String message) {
+        this.code = code;
+        this.message = message;
+    }
+
+    public AttendancesResponse(int attendanceId, int attendanceStatus, String attendanceDate, int attendanceDuration, int isSent, int studentId, String studentName, int classId, String attendanceDetail) {
+        this.attendanceId = attendanceId;
+        this.attendanceStatus = attendanceStatus;
+        this.attendanceDate = attendanceDate;
+        this.attendanceDuration = attendanceDuration;
+        this.isSent = isSent;
+        this.studentId = studentId;
+        this.studentName = studentName;
+        this.classId = classId;
+        this.attendanceDetail = attendanceDetail;
     }
 
     public AttendancesResponse(String attendanceDate) {

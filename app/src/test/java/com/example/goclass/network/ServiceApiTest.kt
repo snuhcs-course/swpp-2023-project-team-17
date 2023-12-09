@@ -239,6 +239,7 @@ class ServiceApiTest {
                             1,
                             "TestStudentName",
                             1,
+                            "0011",
                         ),
                     ),
                     200,
@@ -294,6 +295,10 @@ class ServiceApiTest {
             TestCase.assertEquals(
                 expectedResponse.attendanceList[0].classId,
                 actualResponse.attendanceList[0].classId,
+            )
+            TestCase.assertEquals(
+                expectedResponse.attendanceList[0].attendanceDetail,
+                actualResponse.attendanceList[0].attendanceDetail,
             )
         }
 
@@ -490,7 +495,9 @@ class ServiceApiTest {
                             0,
                             0,
                             1,
+                            "TestStudentName",
                             1,
+                            "0011",
                         ),
                     ),
                     200,
@@ -543,6 +550,10 @@ class ServiceApiTest {
                 expectedResponse.attendanceList[0].classId,
                 actualResponse.attendanceList[0].classId,
             )
+            TestCase.assertEquals(
+                expectedResponse.attendanceList[0].attendanceDetail,
+                actualResponse.attendanceList[0].attendanceDetail,
+            )
         }
 
     @Test
@@ -561,6 +572,7 @@ class ServiceApiTest {
                             1,
                             "TestName",
                             "TestContent",
+                            "TestCommentCount",
                         ),
                     ),
                     200,
@@ -593,6 +605,7 @@ class ServiceApiTest {
             TestCase.assertEquals(expectedResponse.messageList[0].senderId, actualResponse.messageList[0].senderId)
             TestCase.assertEquals(expectedResponse.messageList[0].senderName, actualResponse.messageList[0].senderName)
             TestCase.assertEquals(expectedResponse.messageList[0].content, actualResponse.messageList[0].content)
+            TestCase.assertEquals(expectedResponse.messageList[0].commentCount, actualResponse.messageList[0].commentCount)
         }
 
     @Test
@@ -789,7 +802,9 @@ class ServiceApiTest {
                     60,
                     0,
                     1,
+                    "TestStudentName",
                     1,
+                    "0011",
                     200,
                     "Success",
                 )
@@ -816,6 +831,7 @@ class ServiceApiTest {
             TestCase.assertEquals(expectedResponse.isSent, actualResponse.isSent)
             TestCase.assertEquals(expectedResponse.studentId, actualResponse.studentId)
             TestCase.assertEquals(expectedResponse.classId, actualResponse.classId)
+            TestCase.assertEquals(expectedResponse.attendanceDetail, actualResponse.attendanceDetail)
             TestCase.assertEquals(expectedResponse.code, actualResponse.code)
             TestCase.assertEquals(expectedResponse.message, actualResponse.message)
         }

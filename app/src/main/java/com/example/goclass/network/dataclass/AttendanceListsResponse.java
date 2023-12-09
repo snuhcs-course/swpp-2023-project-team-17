@@ -18,6 +18,11 @@ public class AttendanceListsResponse {
         this.message = message;
     }
 
+    public AttendanceListsResponse(int code, String message) {
+        this.code = code;
+        this.message = message;
+    }
+
     public List<AttendancesResponse> getAttendanceList() {
         return attendanceList;
     }

@@ -253,7 +253,6 @@ class ChatCommentViewModelTest {
             val commentId = 1
             val mockCommentListsResponse =
                 CommentListsResponse(
-                    listOf(),
                     400,
                     failureMessage,
                 )

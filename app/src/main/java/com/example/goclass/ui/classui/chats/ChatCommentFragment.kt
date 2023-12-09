@@ -46,7 +46,7 @@ class ChatCommentFragment : Fragment() {
 
         val userSharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         userId = userSharedPref!!.getInt("userId", -1)
-        userName = userSharedPref?.getString("userName", "") ?: ""
+        userName = userSharedPref.getString("userName", "") ?: ""
 
         // Back Button
         binding.backButton.setOnClickListener {
