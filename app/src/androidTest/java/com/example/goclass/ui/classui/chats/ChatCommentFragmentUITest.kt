@@ -28,6 +28,9 @@ import org.junit.runner.RunWith
 class ChatCommentFragmentUITest {
     private val userId = 1
     private val userName = "abc"
+    private val classId = 7
+    private val className = "test class"
+
     @Test
     fun sendCommentTest() {
         val scenario = setScenario(true, "student")
@@ -40,16 +43,44 @@ class ChatCommentFragmentUITest {
         ).perform(typeText("testing comment send"))
         onView(withId(R.id.commentSendButton))
             .perform(click())
+
         onView(withId(R.id.commentRecyclerView))
             .check(matches(hasDescendant(withText("testing comment send"))))
 
         scenario?.close()
     }
 
-    private fun setScenario(isLoggedIn: Boolean, userRole: String): ActivityScenario<ClassActivity>? {
-        val classId = 7
-        val className = "test class"
+    @Test
+    fun clickBackButton() {
+        val scenario = setScenario(true, "student")
 
+        onView(withId(R.id.chatRecyclerView))
+            .perform(actionOnItemAtPosition<ViewHolder>(0, click()))
+        onView(withId(R.id.backButton))
+            .perform(click())
+
+        onView(withId(R.id.chatSendButton))
+            .check(matches(isDisplayed()))
+        onView(withId(R.id.chatText))
+            .check(matches(withText("")))
+        onView(withId(R.id.chatui))
+            .check(matches(isDisplayed()))
+        onView(withId(R.id.attendanceButton))
+            .check(matches(isDisplayed()))
+        onView(withId(R.id.className))
+            .check(matches(withText(className)))
+        onView(withId(R.id.backButton))
+            .check(matches(isDisplayed()))
+        onView(withId(R.id.toolbar))
+            .check(matches(isDisplayed()))
+        onView(withId(R.id.chatRecyclerView))
+            .check(matches(isDisplayed()))
+
+        scenario?.close()
+    }
+
+
+    private fun setScenario(isLoggedIn: Boolean, userRole: String): ActivityScenario<ClassActivity>? {
         val intent = Intent(ApplicationProvider.getApplicationContext(), ClassActivity::class.java)
         intent.putExtra("classId", classId)
         intent.putExtra("className", className)

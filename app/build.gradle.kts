@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.goclass"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
@@ -75,6 +75,8 @@ dependencies {
     implementation("androidx.test:core-ktx:1.5.0")
     implementation("androidx.test.ext:junit-ktx:1.1.5")
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation("androidx.test.espresso:espresso-contrib:3.5.1")
+    implementation("androidx.test.espresso:espresso-intents:3.5.1")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("io.mockk:mockk:1.11.0")
@@ -91,6 +93,6 @@ dependencies {
     androidTestImplementation("androidx.test:rules:1.5.0")
     androidTestImplementation("androidx.test:runner:1.5.2")
     androidTestImplementation("io.mockk:mockk:1.11.0")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
     androidTestImplementation("androidx.fragment:fragment-testing:1.4.0")
 }
