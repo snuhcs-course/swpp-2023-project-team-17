@@ -81,7 +81,6 @@ class ProfessorAttendanceListViewModelTest {
             val classMap = mapOf("classId" to "1", "userType" to "1")
             val mockAttendanceListsResponse =
                 AttendanceListsResponse(
-                    listOf(),
                     400,
                     failureMessage,
                 )

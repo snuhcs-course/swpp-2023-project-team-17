@@ -18,6 +18,11 @@ public class CommentListsResponse {
         this.message = message;
     }
 
+    public CommentListsResponse(int code, String message) {
+        this.code = code;
+        this.message = message;
+    }
+
     public List<CommentsResponse> getCommentList() {
         return commentList;
     }
