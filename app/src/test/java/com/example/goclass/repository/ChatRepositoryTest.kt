@@ -65,6 +65,7 @@ class ChatRepositoryTest {
                             1,
                             "TestName",
                             "TestContent",
+                            "TestCommentCount",
                         )
                     ),
                     200,

@@ -41,9 +41,9 @@ class LoginViewModelTest {
             val successMessage = "Success"
             val mockUsersResponse =
                 UsersResponse(
-                    "email",
+                    "TestEmail",
                     1,
-                    "name",
+                    "TestName",
                     0,
                     200,
                     successMessage,

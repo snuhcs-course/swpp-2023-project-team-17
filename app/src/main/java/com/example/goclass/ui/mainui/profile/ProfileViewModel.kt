@@ -13,12 +13,10 @@ import java.lang.Exception
 class ProfileViewModel(
     private val repository: UserRepository,
 ) : ViewModel() {
-    private val _toastMessage = MutableLiveData<String>()
     private val _editSuccess = MutableLiveData<Boolean>()
     private val _isLoading: MutableLiveData<Boolean> = MutableLiveData()
     private val _userName: MutableLiveData<String> = MutableLiveData()
 
-    val toastMessage: LiveData<String> get() = _toastMessage
     val editSuccess: LiveData<Boolean> get() = _editSuccess
     val isLoading: LiveData<Boolean> get() = _isLoading
     val userName: LiveData<String> get() = _userName

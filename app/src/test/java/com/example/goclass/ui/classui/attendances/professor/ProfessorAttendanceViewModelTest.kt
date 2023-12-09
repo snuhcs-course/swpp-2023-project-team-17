@@ -41,7 +41,7 @@ class ProfessorAttendanceViewModelTest {
             val classMap = mapOf("classId" to "1", "userType" to "1")
             val attendancesResponse =
                 AttendancesResponse(
-                    "attendanceDate",
+                    "TestAttendanceDate",
                 )
             val mockAttendanceDateListsResponse =
                 AttendanceDateListsResponse(

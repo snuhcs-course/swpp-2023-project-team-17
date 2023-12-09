@@ -18,6 +18,11 @@ public class MessageListsResponse {
         this.message = message;
     }
 
+    public MessageListsResponse(int code, String message) {
+        this.code = code;
+        this.message = message;
+    }
+
     public List<MessagesResponse> getMessageList() {
         return messageList;
     }

@@ -201,12 +201,13 @@ class UserRepositoryTest {
                         AttendancesResponse(
                             1234,
                             0,
-                            "attendanceDate",
+                            "TestAttendanceDate",
                             0,
                             0,
                             1,
                             "TestStudentName",
                             1,
+                            "0011",
                         )
                     ),
                     200,
@@ -240,7 +241,7 @@ class UserRepositoryTest {
                 AttendanceDateListsResponse(
                     listOf(
                         AttendancesResponse(
-                            "attendanceDate",
+                            "TestAttendanceDate",
                         )
                     ),
                     200,

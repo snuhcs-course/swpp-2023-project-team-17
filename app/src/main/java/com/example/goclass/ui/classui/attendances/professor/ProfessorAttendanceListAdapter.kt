@@ -78,16 +78,16 @@ class ProfessorAttendanceListAdapter(
             }
             itemView.setOnClickListener {
                 listener.onItemClicked(
-                    studentAttendanceItem.attendanceId,
-                    studentAttendanceItem.studentName ?: "",
-                    studentAttendanceItem.attendanceStatus
+                    attendanceId,
+                    studentName,
+                    attendanceStatus,
                 )
             }
             binding.attendanceStatusText.setOnClickListener {
                 listener.onItemClicked(
-                    studentAttendanceItem.attendanceId,
-                    studentAttendanceItem.studentName ?: "",
-                    studentAttendanceItem.attendanceStatus
+                    attendanceId,
+                    studentName,
+                    attendanceStatus,
                 )
             }
         }

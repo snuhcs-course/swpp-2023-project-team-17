@@ -44,7 +44,7 @@ class AttendanceServiceViewModelTest {
 
             coEvery { mockRepository.attendanceAdd(any(), any()) } returns mockCodeMessageResponse
 
-            viewModel.saveAttendance(0, 0, 1, 1)
+            viewModel.saveAttendance(0, 0, 1, 1, listOf("0", "0", "1", "1"))
 
             val liveDataValue = viewModel.addSuccess.getOrAwaitValue()
             TestCase.assertTrue(liveDataValue)
@@ -61,7 +61,7 @@ class AttendanceServiceViewModelTest {
 
             coEvery { mockRepository.attendanceAdd(any(), any()) } returns mockCodeMessageResponse
 
-            viewModel.saveAttendance(0, 0, 1, 1)
+            viewModel.saveAttendance(0, 0, 1, 1, listOf("0", "0", "1", "1"))
 
             val liveDataValue = viewModel.addSuccess.getOrAwaitValue()
             TestCase.assertFalse(liveDataValue)
@@ -74,7 +74,7 @@ class AttendanceServiceViewModelTest {
 
             coEvery { mockRepository.attendanceAdd(any(), any()) } throws Exception(exceptionMessage)
 
-            viewModel.saveAttendance(0, 0, 1, 1)
+            viewModel.saveAttendance(0, 0, 1, 1, listOf("0", "0", "1", "1"))
 
             val liveDataValue = viewModel.addSuccess.getOrAwaitValue()
             TestCase.assertFalse(liveDataValue)

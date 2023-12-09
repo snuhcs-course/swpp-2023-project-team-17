@@ -219,6 +219,7 @@ class ChatViewModelTest {
                     1,
                     "TestName",
                     "TestContent",
+                    "TestCommentCount",
                 )
             val mockMessageListsResponse =
                 MessageListsResponse(
@@ -245,7 +246,6 @@ class ChatViewModelTest {
             val classId = 1
             val mockMessageListsResponse =
                 MessageListsResponse(
-                    listOf(),
                     400,
                     failureMessage,
                 )

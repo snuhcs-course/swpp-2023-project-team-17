@@ -78,7 +78,6 @@ class ProfessorMainViewModelTest {
             val failureMessage = "Failed to create..."
             val mockFailureResponse =
                 ClassCreateResponse(
-                    1,
                     400,
                     failureMessage,
                 )
@@ -97,7 +96,8 @@ class ProfessorMainViewModelTest {
     fun createClass_exception() =
         runTest {
             // Given that the repository throws an exception
-            val exceptionMessage = "Network error"
+            val exceptionMessage = "The provided Class Name & Code are already in use by another class."
+
             coEvery { mockClassRepository.classCreate(any()) } throws Exception(exceptionMessage)
 
             // When calling createClass
@@ -105,7 +105,7 @@ class ProfessorMainViewModelTest {
 
             // Then we expect an error message in the snackbarMessage LiveData
             val snackbarValue = viewModel.snackbarMessage.getOrAwaitValue()
-            assertEquals("Error: $exceptionMessage", snackbarValue)
+            assertEquals(exceptionMessage, snackbarValue)
         }
 
     @Test
@@ -188,7 +188,7 @@ class ProfessorMainViewModelTest {
     fun getClassList_exception() =
         runTest {
             val userMap = mapOf("userId" to "1", "userType" to "1")
-            val exceptionMessage = "Network error"
+            val exceptionMessage = "Cannot load class list. Check your network connection."
 
             // Define the mock behavior
             coEvery { mockUserRepository.userGetClassList(any()) } throws Exception(exceptionMessage)
@@ -197,7 +197,7 @@ class ProfessorMainViewModelTest {
             viewModel.getClassList(userMap)
 
             val snackbarValue = viewModel.snackbarMessage.getOrAwaitValue()
-            assertEquals("Error: $exceptionMessage", snackbarValue)
+            assertEquals(exceptionMessage, snackbarValue)
         }
 
     @Test
@@ -241,7 +241,7 @@ class ProfessorMainViewModelTest {
     @Test
     fun deleteClass_failure() =
         runTest {
-            val failureMessage = "Failed to delete..."
+            val failureMessage = "Cannot delete class. Check your network connection."
             val classId = 123
             val professorId = 12
             val mockFailureResponse =
@@ -262,14 +262,14 @@ class ProfessorMainViewModelTest {
         runTest {
             val classId = 123
             val professorId = 12
-            val exceptionMessage = "Network error"
+            val exceptionMessage = "Cannot delete class. Check your network connection."
 
             coEvery { mockClassRepository.classDelete(any()) } throws Exception(exceptionMessage)
 
             viewModel.deleteClass(classId, professorId)
 
             val snackbarValue = viewModel.snackbarMessage.getOrAwaitValue()
-            assertEquals("Error: $exceptionMessage", snackbarValue)
+            assertEquals(exceptionMessage, snackbarValue)
         }
 
     @After

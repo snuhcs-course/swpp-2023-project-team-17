@@ -26,4 +26,9 @@ public class ClassCreateResponse {
         this.code = code;
         this.message = message;
     }
+
+    public ClassCreateResponse(int code, String message) {
+        this.code = code;
+        this.message = message;
+    }
 }

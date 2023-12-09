@@ -51,7 +51,9 @@ class StudentAttendanceViewModelTest {
                     0,
                     0,
                     1,
+                    "TestStudentName",
                     1,
+                    "0011"
                 )
             val mockAttendanceListsResponse =
                 AttendanceListsResponse(
@@ -102,7 +104,9 @@ class StudentAttendanceViewModelTest {
                     0,
                     0,
                     1,
+                    "TestStudentName",
                     1,
+                    "0011",
                 )
             val mockAttendanceListsResponse =
                 AttendanceListsResponse(

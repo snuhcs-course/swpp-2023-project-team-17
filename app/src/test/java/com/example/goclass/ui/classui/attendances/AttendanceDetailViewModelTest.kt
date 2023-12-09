@@ -2,12 +2,8 @@ package com.example.goclass.ui.classui.attendances
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.goclass.LiveDataTestUtil.getOrAwaitValue
-import com.example.goclass.network.dataclass.AttendanceDateListsResponse
-import com.example.goclass.network.dataclass.AttendanceDetailListsResponse
 import com.example.goclass.network.dataclass.AttendancesResponse
 import com.example.goclass.repository.AttendanceRepository
-import com.example.goclass.repository.UserRepository
-import com.example.goclass.ui.classui.attendances.professor.ProfessorAttendanceViewModel
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase
@@ -38,33 +34,72 @@ class AttendanceDetailViewModelTest {
     }
 
     @Test
-    fun getProfessorAttendanceList_success() =
+    fun getAttendance_success() =
         runTest {
             val attendanceId = 12345
             val successMessage = "Success"
-            val attendanceDetailList: List<String> =
-                listOf(
-                    "0",
-                    "1",
-                    "1",
-                    "0",
-                )
-            val mockAttendanceDetailListsResponse =
-                AttendanceDetailListsResponse(
-                    attendanceDetailList,
+            val mockAttendancesResponse =
+                AttendancesResponse(
+                    1234,
+                    0,
+                    "TestAttendanceDate",
+                    0,
+                    0,
+                    1,
+                    "TestStudentName",
+                    1,
+                    "0011",
                     200,
                     successMessage,
                 )
             // Define the mock behavior
-            coEvery { mockRepository.attendanceDetailListGet(any()) } returns mockAttendanceDetailListsResponse
+            coEvery { mockRepository.attendanceGet(any()) } returns mockAttendancesResponse
 
             // Invoke the function
-            viewModel.getAttendanceDetail(attendanceId)
+            viewModel.getAttendance(attendanceId)
 
             // Check if the LiveData has been updated
-            val liveDataValue = viewModel.attendanceDetailListLiveDate.getOrAwaitValue()
-            TestCase.assertEquals(4, liveDataValue.size)
-            TestCase.assertEquals(attendanceDetailList, liveDataValue)
+            val liveDataValue = viewModel.attendanceLiveData.getOrAwaitValue()
+            TestCase.assertEquals(mockAttendancesResponse, liveDataValue)
+        }
+
+    @Test
+    fun getAttendance_failure() =
+        runTest {
+            val attendanceId = 12345
+            val failureMessage = "Error: Database error"
+            val mockAttendancesResponse =
+                AttendancesResponse(
+                    500,
+                    failureMessage,
+                )
+
+            // Define the mock behavior
+            coEvery { mockRepository.attendanceGet(any()) } returns mockAttendancesResponse
+
+            // Invoke the function
+            viewModel.getAttendance(attendanceId)
+
+            // Check if the LiveData has been updated
+            val liveDataValue = viewModel.toastMessage.getOrAwaitValue()
+            TestCase.assertEquals(failureMessage, liveDataValue)
+        }
+
+    @Test
+    fun getAttendance_exception() =
+        runTest {
+            val attendanceId = 12345
+            val exceptionMessage = "Failed to get"
+
+            // Define the mock behavior
+            coEvery { mockRepository.attendanceGet(any()) } throws Exception(exceptionMessage)
+
+            // Invoke the function
+            viewModel.getAttendance(attendanceId)
+
+            // Check if the LiveData has been updated
+            val liveDataValue = viewModel.toastMessage.getOrAwaitValue()
+            TestCase.assertEquals("Error: $exceptionMessage", liveDataValue)
         }
 
     @After

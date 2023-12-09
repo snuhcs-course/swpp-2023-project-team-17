@@ -5,36 +5,36 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.goclass.network.dataclass.AttendancesResponse
 import com.example.goclass.repository.AttendanceRepository
 import kotlinx.coroutines.launch
 
 class AttendanceDetailViewModel(
     private val repository: AttendanceRepository,
 ) : ViewModel() {
-    private val _attendanceDetailListLiveData: MutableLiveData<String> = MutableLiveData()
     private val _toastMessage = MutableLiveData<String>()
 
-    val attendanceDetailListLiveDate: LiveData<String> get() = _attendanceDetailListLiveData
-    val toastMessage: LiveData<String> get() = _toastMessage
+    private val _attendanceLiveData: MutableLiveData<AttendancesResponse> = MutableLiveData()
 
-    fun getAttendanceDetail(
+    val toastMessage: LiveData<String> get() = _toastMessage
+    val attendanceLiveData: LiveData<AttendancesResponse> get() = _attendanceLiveData
+
+    fun getAttendance(
         attendanceId: Int,
-    ): MutableLiveData<String> {
+    ): MutableLiveData<AttendancesResponse> {
         viewModelScope.launch {
             try {
                 val response = repository.attendanceGet(attendanceId)
                 if (response.code == 200) {
-                    _attendanceDetailListLiveData.postValue(response.attendanceDetail)
+                    _attendanceLiveData.postValue(response)
                     _toastMessage.postValue("Successfully get")
-                } else if (response.code == 500) {
-                    _toastMessage.postValue("Error: Database error")
                 } else {
-                    _toastMessage.postValue("Failed to get")
+                    _toastMessage.postValue("Error: Database error")
                 }
             } catch (e: Exception) {
                 _toastMessage.postValue("Error: ${e.message}")
             }
         }
-        return _attendanceDetailListLiveData
+        return _attendanceLiveData
     }
 }

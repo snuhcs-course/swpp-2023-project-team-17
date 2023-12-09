@@ -3,7 +3,6 @@ package com.example.goclass.ui.classui.attendances
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -74,10 +73,11 @@ class AttendanceDetailFragment : Fragment() {
         // BarChart entries
         val barChart: BarChart = binding.chart
         val entries = ArrayList<BarEntry>()
-        val attendanceDetailListLiveDate = viewModel.getAttendanceDetail(attendanceId)
-        attendanceDetailListLiveDate.observe(viewLifecycleOwner) { attendanceDetailList ->
-            if (attendanceDetailList.isNotEmpty()) {
-                for ((index, detail) in attendanceDetailList.withIndex()) {
+        val attendanceLiveDate = viewModel.getAttendance(attendanceId)
+        attendanceLiveDate.observe(viewLifecycleOwner) { attendance ->
+            val attendanceDetail = attendance.attendanceDetail
+            if (attendanceDetail.isNotEmpty()) {
+                for ((index, detail) in attendanceDetail.withIndex()) {
                     if (detail == '1') {
                         entries.add(BarEntry(index.toFloat(), 0.9f))
                     } else {

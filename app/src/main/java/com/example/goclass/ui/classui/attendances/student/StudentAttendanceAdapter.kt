@@ -111,18 +111,18 @@ class StudentAttendanceAdapter(
             }
             itemView.setOnClickListener {
                 listener.onItemClicked(
-                    studentAttendanceItem.attendanceId,
-                    studentAttendanceItem.studentName ?: "",
+                    attendanceId,
+                    studentName,
                     dateText,
-                    studentAttendanceItem.attendanceStatus
+                    attendanceStatus,
                 )
             }
             binding.attendanceStatusText.setOnClickListener {
                 listener.onItemClicked(
-                    studentAttendanceItem.attendanceId,
-                    studentAttendanceItem.studentName ?: "",
+                    attendanceId,
+                    studentName,
                     dateText,
-                    studentAttendanceItem.attendanceStatus
+                    attendanceStatus,
                 )
             }
         }

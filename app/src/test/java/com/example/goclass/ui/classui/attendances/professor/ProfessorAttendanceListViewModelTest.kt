@@ -44,11 +44,13 @@ class ProfessorAttendanceListViewModelTest {
                 AttendancesResponse(
                     1234,
                     0,
-                    "attendanceDate",
+                    "TestAttendanceDate",
                     0,
                     0,
                     1,
+                    "TestStudentName",
                     1,
+                    "0011",
                 )
             val mockAttendanceListsResponse =
                 AttendanceListsResponse(
@@ -72,17 +74,41 @@ class ProfessorAttendanceListViewModelTest {
         }
 
     @Test
+    fun getStudentAttendanceList_failure() =
+        runTest {
+            val failureMessage = "Failed to refresh: Check network connection."
+            val date = "YYYY-MM-DD"
+            val classMap = mapOf("classId" to "1", "userType" to "1")
+            val mockAttendanceListsResponse =
+                AttendanceListsResponse(
+                    listOf(),
+                    400,
+                    failureMessage,
+                )
+
+            // Define the mock behavior
+            coEvery { mockRepository.userGetAttendanceListByDate(date, any()) } returns mockAttendanceListsResponse
+
+            // Invoke the function
+            viewModel.getStudentAttendanceList(date, classMap)
+
+            // Check if the LiveData has been updated
+            val liveDataValue = viewModel.toastMessage.getOrAwaitValue()
+            assertEquals(failureMessage, liveDataValue)
+        }
+
+    @Test
     fun getStudentAttendanceList_exception() =
         runTest {
             val date = "YYYY-MM-DD"
             val classMap = mapOf("classId" to "1", "userType" to "1")
-            val exceptionMessage = "Network error"
+            val exceptionMessage = "Failed to refresh: Check network connection."
             coEvery { mockRepository.userGetAttendanceListByDate(date, any()) } throws Exception(exceptionMessage)
 
             viewModel.getStudentAttendanceList(date, classMap)
 
             val toastValue = viewModel.toastMessage.getOrAwaitValue()
-            assertEquals("Error: $exceptionMessage", toastValue)
+            assertEquals(exceptionMessage, toastValue)
         }
 
     @After
