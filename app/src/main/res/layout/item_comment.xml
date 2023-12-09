@@ -6,14 +6,16 @@
     android:layout_height="wrap_content"
     android:paddingStart="20dp"
     android:paddingVertical="16dp"
-    android:background="@drawable/chat_bg">
+    android:background="@drawable/chat_bg"
+    tools:ignore="RtlSymmetry">
 
     <TextView
         android:id="@+id/commentText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:textColor="@color/black"
         style="@style/Medium"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -25,9 +27,9 @@
         android:id="@+id/commentEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
-        android:layout_marginEnd="40dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:background="@drawable/edit_text_bg"
         android:visibility="gone"
         android:inputType="textMultiLine"
