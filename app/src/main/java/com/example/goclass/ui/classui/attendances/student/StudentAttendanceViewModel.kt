@@ -61,37 +61,4 @@ class StudentAttendanceViewModel(
         }
         return _studentAttendanceListLiveData
     }
-
-    /*
-     * Adds a new attendance record for the current user in the specified class.
-     *
-     * @classId: ID of the class for which the attendance record is added.
-     * @userId: ID of the user for whom the attendance record is being added.
-     */
-    fun addAttendance(
-        classId: Int,
-        userId: Int,
-    ) {
-        viewModelScope.launch {
-            try {
-                val attendanceDetail = "0111111111111111"
-                val attendance =
-                    Attendances(
-                        2,
-                        30,
-                        classId,
-                        attendanceDetail,
-                    )
-                val response = attendanceRepository.attendanceAdd(userId, attendance)
-                if (response.code == 200) {
-                    getStudentAttendanceList(classId, userId)
-                    _toastMessage.postValue("Successfully added")
-                } else {
-                    _toastMessage.postValue("Failed to add")
-                }
-            } catch (e: Exception) {
-                _toastMessage.postValue("Error: ${e.message}")
-            }
-        }
-    }
 }

@@ -92,21 +92,25 @@ class AttendanceDetailFragment : Fragment() {
         // BarChart entries
         val barChart: BarChart = binding.chart
         val entries = ArrayList<BarEntry>()
-
-        // Retrieve attendance details using LiveData
         val attendanceLiveData = viewModel.getAttendance(attendanceId)
         attendanceLiveData.observe(viewLifecycleOwner) { attendance ->
             val attendanceDetail = attendance.attendanceDetail
-
-            // Populate entries based on attendance detail
-            if (attendanceDetail.isNotEmpty()) {
+            val classLength = attendanceDetail.length
+            if (classLength > 1) {
                 for ((index, detail) in attendanceDetail.withIndex()) {
+                    if (index == 0) {
+                        continue
+                    }
+
                     if (detail == '1') {
                         entries.add(BarEntry(index.toFloat(), 0.9f))
                     } else {
                         entries.add(BarEntry(index.toFloat(), 0f))
                     }
                 }
+                val attendanceDuration = attendance.attendanceDuration * 100
+                val durationPercentage = attendanceDuration.div(classLength - 1)
+                binding.duration.text = "Attendance Percentage: $durationPercentage%"
             }
 
             // BarDataSet Configuration

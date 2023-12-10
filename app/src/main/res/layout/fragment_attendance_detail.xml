@@ -74,12 +74,24 @@
         style="@style/SemiBold"
         tools:ignore="HardcodedText" />
 
+    <TextView
+        android:id="@+id/duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="duration"
+        android:layout_margin="15dp"
+        android:layout_gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/status"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/SemiBold"
+        tools:ignore="HardcodedText" />
+
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/chart"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="20dp"
-        app:layout_constraintTop_toBottomOf="@id/status"
+        app:layout_constraintTop_toBottomOf="@id/duration"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.5"
