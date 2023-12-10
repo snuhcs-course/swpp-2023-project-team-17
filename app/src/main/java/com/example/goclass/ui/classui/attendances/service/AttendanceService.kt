@@ -11,10 +11,9 @@ import android.os.Handler
 import android.os.IBinder
 import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.example.goclass.ui.classui.attendances.callback.BleScanCallback
 import org.koin.android.ext.android.inject
 
-class AttendanceService : Service() { //, BleScanCallback {
+class AttendanceService : Service() {
     private val viewModel: AttendanceServiceViewModel by inject()
 
     private var userId = -1
@@ -42,11 +41,7 @@ class AttendanceService : Service() { //, BleScanCallback {
     override fun onCreate() {
         super.onCreate()
         Log.i(TAG, "AttendanceService 생성됨")
-        // Register the BroadcastReceiver to receive scan results
-//        val scanCountFilter = IntentFilter(BleScanService.ACTION_BLE_SCAN_RESULT)
-//        val firstScanFilter = IntentFilter(BleScanService.ACTION_BLE_FIRST_SCAN)
-//        registerReceiver(bleFirstScanReceiver, firstScanFilter)
-//        registerReceiver(bleScanResultReceiver, scanCountFilter)
+
         LocalBroadcastManager.getInstance(this)
             .registerReceiver(scanResultsReceiver, IntentFilter("com.example.goclass.SCAN_RESULTS"))
     }
@@ -55,9 +50,6 @@ class AttendanceService : Service() { //, BleScanCallback {
         Log.d(TAG, "onDestroy")
         super.onDestroy()
 
-        // Unregister the BroadcastReceiver
-//        unregisterReceiver(bleFirstScanReceiver)
-//        unregisterReceiver(bleScanResultReceiver)
         LocalBroadcastManager.getInstance(this).unregisterReceiver(scanResultsReceiver)
 
         // Unbind from the BleScanService

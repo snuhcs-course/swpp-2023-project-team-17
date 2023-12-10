@@ -41,10 +41,6 @@ class BleAdvertService : Service() {
     private var durationMillis = 6300000L // default: 105 min
 
     private lateinit var advertiseData: AdvertiseData
-//    = AdvertiseData.Builder()
-//        .setIncludeDeviceName(true)
-//        .addServiceUuid(ParcelUuid.fromString(uuid)) // Replace with your actual service UUID
-//        .build()
 
     private var advertiseSettings = AdvertiseSettings.Builder()
         .setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY)
@@ -101,19 +97,11 @@ class BleAdvertService : Service() {
                     val sampleUuid = UUID.randomUUID().toString()
                     try {
                         val parcelUuid = ParcelUuid.fromString(formattedUuid)
-//                        val deviceName = Constants.advertisingDeviceName
-//                        advertiseData = AdvertiseData.Builder()
-//                            .setIncludeDeviceName(false)
-//                            .addServiceUuid(parcelUuid)
-//                            .build()
+
                         advertiseData = AdvertiseData.Builder()
-//                            .setIncludeDeviceName(true) // Include the device name
                             .addServiceUuid(parcelUuid)
                             .setIncludeTxPowerLevel(false) // Include if you want to include TX power level
                             .build()
-
-                        // Set the device name
-//                        advertiseSettings = advertiseSettings.setLocalName(deviceName)
 
                         Log.d(TAG, "AdvertiseSettings: $advertiseSettings")
                         Log.d(TAG, "AdvertiseData: $advertiseData")
@@ -157,21 +145,7 @@ class BleAdvertService : Service() {
 
     private fun startAdvertising() {
         Log.d(TAG, "startAdvertising 호출됨")
-//        if (ActivityCompat.checkSelfPermission(
-//                this,
-//                Manifest.permission.BLUETOOTH_ADVERTISE
-//            ) != PackageManager.PERMISSION_GRANTED
-//        ) {
-//            // TODO: Consider calling
-//            //    ActivityCompat#requestPermissions
-//            // here to request the missing permissions, and then overriding
-//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-//            //                                          int[] grantResults)
-//            // to handle the case where the user grants the permission. See the documentation
-//            // for ActivityCompat#requestPermissions for more details.
-//            return
-//        }
-        // Android 12 (API 레벨 31) 이상에서는 BLUETOOTH_CONNECT 권한도 필요
+
         val bluetoothConnectPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             Manifest.permission.BLUETOOTH_CONNECT
         } else {
@@ -186,11 +160,8 @@ class BleAdvertService : Service() {
             return
         }
 
-//<<<<<<< HEAD
         Log.d(TAG, "in startAdvertising - advertiseData: $advertiseData")
-//=======
         startForeground(NOTIFICATION_ID, createNotification())
-//>>>>>>> 40de6801afd7a2dcf7ac48a46f53a9e8c16cabe6
 
         Log.d(TAG, "bluetoothLeAdvertiser: $bluetoothAdapter.bluetoothLeAdvertiser")
         bluetoothAdapter?.bluetoothLeAdvertiser?.startAdvertising(
@@ -206,13 +177,6 @@ class BleAdvertService : Service() {
         advertiseHandler?.postDelayed({
             stopAdvertising()
         }, durationMillis)
-//        Log.d(TAG, "durationMillis: $durationMillis")
-//        advertiseTimer = Timer()
-//        advertiseTimer.schedule(object : TimerTask() {
-//            override fun run() {
-//                stopAdvertising()
-//            }
-//        }, durationMillis)
     }
 
     private fun stopAdvertising() {
@@ -223,17 +187,9 @@ class BleAdvertService : Service() {
                 Manifest.permission.BLUETOOTH_ADVERTISE
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return
         }
         bluetoothAdapter?.bluetoothLeAdvertiser?.stopAdvertising(advertiseCallback)
-//        advertiseTimer.cancel()
         stopSelf()
     }
 

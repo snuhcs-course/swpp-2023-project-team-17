@@ -12,7 +12,6 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.example.goclass.R
 import com.example.goclass.databinding.ActivityMainBinding
-import com.example.goclass.ui.classui.attendances.service.LocationService
 import com.example.goclass.utility.PermissionUtils
 
 class MainActivity : AppCompatActivity() {
