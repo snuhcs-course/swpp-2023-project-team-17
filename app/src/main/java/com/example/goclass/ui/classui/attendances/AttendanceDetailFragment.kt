@@ -111,6 +111,8 @@ class AttendanceDetailFragment : Fragment() {
                 val attendanceDuration = attendance.attendanceDuration * 100
                 val durationPercentage = attendanceDuration.div(classLength - 1)
                 binding.duration.text = "Attendance Percentage: $durationPercentage%"
+            } else {
+                binding.duration.text = "0%"
             }
 
             // BarDataSet Configuration
