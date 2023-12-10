@@ -1,12 +1,20 @@
+/*
+ * AttendanceService is a background service responsible for managing and handling BLE attendance checking in the GoClass app.
+ * It starts the BleScanService, listens for BLE scan results, and performs attendance checks based on scan results.
+ *
+ * @param userId: User ID associated with the attendance check.
+ * @param classId: Class ID for uniquely identifying the class.
+ * @param scanCount: Number of BLE scans performed during the attendance check.
+ * @param firstSuccess: Scan count at the first successful scan during the attendance check.
+ * @param viewModel: ViewModel for handling data related to attendance.
+ * @param scanResultsReceiver: BroadcastReceiver for receiving BLE scan results.
+ * @param serviceConnection: ServiceConnection for binding to the BleScanService.
+ */
+
 package com.example.goclass.ui.classui.attendances.service
 
 import android.app.Service
-import android.content.BroadcastReceiver
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import android.content.ServiceConnection
+import android.content.*
 import android.os.Handler
 import android.os.IBinder
 import android.util.Log
@@ -21,16 +29,19 @@ class AttendanceService : Service() {
     private var scanCount: Int = 0
     private var firstSuccess: Int = 0 // scan count at first successful scan
 
+    // BroadcastReceiver for handling BLE scan results.
     private val scanResultsReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == "com.example.goclass.SCAN_RESULTS") {
+                // Extract relevant information from the received intent.
                 val scanResults = intent.getStringArrayExtra("scanResults")
                 firstSuccess = intent.getIntExtra(BleScanService.FIRST_SCAN_AT, 0) + 1
                 scanCount = intent.getIntExtra(BleScanService.EXTRA_SCAN_COUNT, 0)
                 Log.i(TAG, "Received first scan at: $firstSuccess")
                 Log.i(TAG, "Received scanCount: $scanCount")
 
-                scanResults?.let{
+                // Perform attendance check using the received scan results.
+                scanResults?.let {
                     val scanResultsList = it.toList()
                     performAttendanceCheck(scanResultsList)
                 }
@@ -40,8 +51,9 @@ class AttendanceService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        Log.i(TAG, "AttendanceService 생성됨")
+        Log.i(TAG, "AttendanceService created")
 
+        // Register the BroadcastReceiver for receiving BLE scan results.
         LocalBroadcastManager.getInstance(this)
             .registerReceiver(scanResultsReceiver, IntentFilter("com.example.goclass.SCAN_RESULTS"))
     }
@@ -50,9 +62,10 @@ class AttendanceService : Service() {
         Log.d(TAG, "onDestroy")
         super.onDestroy()
 
+        // Unregister the BroadcastReceiver when the service is destroyed.
         LocalBroadcastManager.getInstance(this).unregisterReceiver(scanResultsReceiver)
 
-        // Unbind from the BleScanService
+        // Unbind from the BleScanService.
         unbindService(serviceConnection)
     }
 
@@ -65,7 +78,7 @@ class AttendanceService : Service() {
         flags: Int,
         startId: Int,
     ): Int {
-        Log.i(TAG, "AttendanceService 시작됨, Intent action: ${intent?.action}")
+        Log.i(TAG, "AttendanceService started, Intent action: ${intent?.action}")
         if (intent != null) {
             val action = intent.action
 
@@ -76,9 +89,11 @@ class AttendanceService : Service() {
                 val startMinute = intent.getIntExtra("startMinute", -1)
                 val endHour = intent.getIntExtra("endHour", -1)
                 val endMinute = intent.getIntExtra("endMinute", -1)
+
+                // Check if user ID and class ID are valid before initiating BLE scanning.
                 if (userId != -1 && classId != -1) {
-                    val durationMillis = ((endHour*60 + endMinute) - (startHour*60 + startMinute))
-                    startBleScanning(durationMillis);
+                    val durationMillis = ((endHour * 60 + endMinute) - (startHour * 60 + startMinute))
+                    startBleScanning(durationMillis)
                 } else {
                     Log.d("Error", "Invalid userId or classId")
                 }
@@ -88,23 +103,26 @@ class AttendanceService : Service() {
         return START_STICKY
     }
 
+    // Start BLE scanning for the specified duration.
     private fun startBleScanning(durationMillis: Int) {
         val durationMillisLong = durationMillis.toLong() * 60000 // Convert minutes to milliseconds
 
-        // Start the BleScanService
+        // Start the BleScanService.
         val serviceIntent = Intent(this, BleScanService::class.java)
         serviceIntent.putExtra(BleScanService.EXTRA_DURATION_MILLIS, durationMillisLong)
         serviceIntent.putExtra("classId", classId)
         startService(serviceIntent)
 
-        // Bind to the BleScanService
+        // Bind to the BleScanService.
         val bindIntent = Intent(this, BleScanService::class.java)
         bindService(bindIntent, serviceConnection, Context.BIND_AUTO_CREATE)
     }
 
+    // Perform attendance check based on BLE scan results.
     private fun performAttendanceCheck(scanResults: List<String>) {
         Log.d(TAG, "performAttendanceCheck")
 
+        // Determine attendance status based on scan count and first successful scan.
         val attendanceStatus =
             if (scanCount == 0) {
                 0
@@ -121,16 +139,18 @@ class AttendanceService : Service() {
 
         Log.d(TAG, scanResults.toString())
 
+        // Save attendance information using the ViewModel.
         viewModel.saveAttendance(attendanceStatus, attendanceDuration, userId, classId, scanResults)
     }
 
+    // ServiceConnection for binding to the BleScanService.
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            // Called when the connection is established
+            // Called when the connection is established.
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
-            // Called when the connection is unexpectedly disconnected
+            // Called when the connection is unexpectedly disconnected.
         }
     }
 

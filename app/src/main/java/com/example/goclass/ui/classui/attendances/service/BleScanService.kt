@@ -1,3 +1,26 @@
+/*
+ * BleScanService is a background service responsible for scanning BLE (Bluetooth Low Energy) devices during class hours for attendance tracking.
+ * It utilizes Bluetooth LE scanning to detect specific devices and beacons related to class attendance.
+ *
+ * @param bluetoothLeScanner: BluetoothLeScanner for handling BLE scanning operations.
+ * @param scanIntervalHandler: Handler for scheduling periodic scans with a 1-minute interval.
+ * @param scanCount: Counter for the number of scans performed.
+ * @param successfulScanCount: Counter for the number of successful scans where target devices are detected.
+ * @param classId: Unique identifier for the class.
+ * @param scanning: Boolean flag indicating whether BLE scanning is currently active.
+ * @param deviceFound: Boolean flag indicating whether a target device has been found during a scan.
+ * @param firstScan: Boolean flag indicating whether it is the first scan.
+ * @param firstScanTime: Counter indicating the scan count when the first scan occurred.
+ * @param profDeviceFound: Boolean flag indicating whether a target professor device has been found.
+ * @param beaconFound: Boolean flag indicating whether a target beacon has been found.
+ * @param durationSec: Duration for which BLE scanning should be active in seconds.
+ * @param scanResultsList: List to store scan results for each minute (0 if no detection, 1 if detection).
+ * @param minutesElapsed: Counter for the number of minutes elapsed during BLE scanning.
+ * @param handler: Handler for scheduling the stop of the service after a certain duration.
+ *
+ * The service scans for specific devices and beacons related to class attendance and records the detection status minute by minute.
+ */
+
 package com.example.goclass.ui.classui.attendances.service
 
 import android.Manifest
@@ -26,8 +49,6 @@ import com.example.goclass.ui.mainui.MainActivity
 import java.util.regex.Pattern
 
 class BleScanService : Service() {
-
-    //    private var bleScanCallback: BleScanCallback? = null
     private var bluetoothLeScanner: BluetoothLeScanner? = null
     private var scanIntervalHandler: Handler? = null
     private var scanCount = 0

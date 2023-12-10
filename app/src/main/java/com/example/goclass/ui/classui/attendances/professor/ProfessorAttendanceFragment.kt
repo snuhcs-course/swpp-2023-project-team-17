@@ -1,3 +1,14 @@
+/*
+ * ProfessorAttendanceFragment is a Fragment responsible for displaying professor attendance data
+ * in the UI. It includes a RecyclerView to show a list of professor attendance entries.
+ *
+ * @property viewModel: ProfessorAttendanceViewModel for handling data operations and updates.
+ *
+ * onCreateView: Inflates the layout for the professor attendance fragment.
+ * onViewCreated: Sets up UI components, handles user interactions, and observes LiveData for updates.
+ * onItemClicked: Navigates to the ProfessorAttendanceListFragment when a professor attendance item is clicked.
+ */
+
 package com.example.goclass.ui.classui.attendances.professor
 
 import android.content.Context
@@ -54,6 +65,7 @@ class ProfessorAttendanceFragment : Fragment() {
         }
     }
 
+    // onItemClicked: Navigates to the ProfessorAttendanceListFragment when a professor attendance item is clicked.
     fun onItemClicked(date: String) {
         val attendanceSharedPref = activity?.getSharedPreferences("AttendancePrefs", Context.MODE_PRIVATE)
         with(attendanceSharedPref?.edit()) {

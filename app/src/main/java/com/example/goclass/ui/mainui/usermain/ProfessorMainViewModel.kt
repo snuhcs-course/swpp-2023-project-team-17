@@ -1,3 +1,8 @@
+/*
+ * ProfessorMainViewModel is a ViewModel class for the ProfessorMainFragment.
+ * It manages the data and business logic related to the professor's main screen, including creating and deleting classes.
+ */
+
 package com.example.goclass.ui.mainui.usermain
 
 import android.app.Application
@@ -19,12 +24,29 @@ class ProfessorMainViewModel(
     private val classRepository: ClassRepository,
     application: Application,
 ) : AndroidViewModel(application), KoinComponent {
+    // LiveData for Snackbar messages
     private val _snackbarMessage = MutableLiveData<String>()
+
+    // LiveData for the list of classes
     private val _classListLiveData: MutableLiveData<List<ClassesResponse>> = MutableLiveData()
 
-    val classListLiveData: LiveData<List<ClassesResponse>> get() = _classListLiveData
+    // Exposed LiveData for observing Snackbar messages
     val snackbarMessage: LiveData<String> get() = _snackbarMessage
 
+    // Exposed LiveData for observing the list of classes
+    val classListLiveData: LiveData<List<ClassesResponse>> get() = _classListLiveData
+
+    /*
+     * createClass is a function to create a new class with the provided information.
+     *
+     * @param className: String, the name of the class.
+     * @param classCode: String, the code associated with the class.
+     * @param professorId: Int, the ID of the professor creating the class.
+     * @param classTime: String, a formatted string representing class times.
+     * @param buildingNumber: String, the building number associated with the class.
+     * @param roomNumber: String, the room number associated with the class.
+     * @param classScheduler: ClassScheduler, a scheduler for class attendance.
+     */
     fun createClass(
         className: String,
         classCode: String,
@@ -47,7 +69,7 @@ class ProfessorMainViewModel(
             try {
                 val response = classRepository.classCreate(newClass)
 
-                // schedule class attendance
+                // Schedule class attendance
                 val classId = response.classId
                 val userType = 1
 
@@ -77,8 +99,6 @@ class ProfessorMainViewModel(
                     }
 
                 for ((dayOfWeek, startHour, startMinute, endHour, endMinute) in parsedTimes) {
-//                    val minPresentDuration = classResponse.minPresentDuration
-//                    val minLateDuration = classResponse.minLateDuration
                     classScheduler.scheduleClass(
                         getApplication(),
                         0, // userId not needed for professors
@@ -105,6 +125,12 @@ class ProfessorMainViewModel(
         }
     }
 
+    /*
+     * getClassList is a function to fetch the list of classes for a given user.
+     *
+     * @param user: Map<String, String>, a map containing user-related information (userId, userType).
+     * @return MutableLiveData<List<ClassesResponse>>, LiveData holding the list of classes.
+     */
     fun getClassList(user: Map<String, String>): MutableLiveData<List<ClassesResponse>> {
         viewModelScope.launch {
             try {
@@ -120,6 +146,12 @@ class ProfessorMainViewModel(
         return _classListLiveData
     }
 
+    /*
+     * deleteClass is a function to delete a class with the provided classId.
+     *
+     * @param classId: Int, the ID of the class to be deleted.
+     * @param professorId: Int, the ID of the professor initiating the deletion.
+     */
     fun deleteClass(classId: Int, professorId: Int) {
         viewModelScope.launch {
             try {

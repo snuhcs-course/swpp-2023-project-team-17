@@ -1,3 +1,20 @@
+/*
+ * LoginFragment is a Fragment responsible for handling user authentication via Google Sign-In.
+ *
+ * @property _binding: FragmentLoginBinding?, nullable binding for the Fragment's layout.
+ * @property binding: FragmentLoginBinding, non-nullable binding for the Fragment's layout.
+ * @property viewModel: LoginViewModel, the associated ViewModel for handling the authentication logic.
+ * @property googleSignInClient: GoogleSignInClient, client for Google Sign-In.
+ * @property signINLauncher: ActivityResultLauncher for handling the result of Google Sign-In.
+ *
+ * onCreateView: Inflates the layout for this fragment.
+ * onViewCreated: Called immediately after onCreateView. Initializes UI elements and sets up the Google Sign-In client.
+ * signInWithGoogle: Initiates the Google Sign-In process.
+ * firebaseAuthWithGoogle: Authenticates the Google Sign-In result with Firebase authentication.
+ * showSnackbar: Displays a Snackbar with a given message and background color.
+ * onDestroyView: Called when the view is about to be destroyed. Cleans up the binding.
+ */
+
 package com.example.goclass.ui.mainui.login
 
 import android.app.Activity
@@ -22,7 +39,6 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
 
 class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null

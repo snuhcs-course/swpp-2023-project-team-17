@@ -1,3 +1,16 @@
+/*
+ * ProfessorAttendanceListFragment is a Fragment that displays the professor's attendance list for a specific date.
+ * It utilizes the ProfessorAttendanceListAdapter to populate the RecyclerView with student attendance data.
+ *
+ * @property viewModel: ProfessorAttendanceListViewModel, the associated ViewModel for handling data and business logic.
+ * @property className: String, the name of the class for which the attendance is being displayed.
+ *
+ * onCreateView: Inflates the layout for the fragment.
+ * onViewCreated: Handles the UI setup, initializes the RecyclerView, and observes LiveData for student attendance data.
+ * refreshData: Refreshes the student attendance data for the current date and class.
+ * onItemClicked: Handles item click events, updating shared preferences and navigating to the attendance detail fragment.
+ */
+
 package com.example.goclass.ui.classui.attendances.professor
 
 import android.content.Context
@@ -18,6 +31,7 @@ class ProfessorAttendanceListFragment : Fragment() {
     private val viewModel: ProfessorAttendanceListViewModel by viewModel()
     private lateinit var className: String
 
+    // onCreateView: Inflates the layout for the fragment.
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -27,6 +41,7 @@ class ProfessorAttendanceListFragment : Fragment() {
         return binding.root
     }
 
+    // onViewCreated: Handles the UI setup, initializes the RecyclerView, and observes LiveData for student attendance data.
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
@@ -35,7 +50,7 @@ class ProfessorAttendanceListFragment : Fragment() {
 
         val classSharedPref = activity?.getSharedPreferences("ClassPrefs", Context.MODE_PRIVATE)
         val classId = classSharedPref!!.getInt("classId", -1)
-        className = classSharedPref.getString("className", "")?: ""
+        className = classSharedPref.getString("className", "") ?: ""
         val attendanceSharedPref = activity?.getSharedPreferences("AttendancePrefs", Context.MODE_PRIVATE)
         val date = attendanceSharedPref!!.getString("date", "") ?: ""
 
@@ -63,15 +78,18 @@ class ProfessorAttendanceListFragment : Fragment() {
         }
     }
 
+    // refreshData: Refreshes the student attendance data for the current date and class.
     private fun refreshData() {
         val classSharedPref = activity?.getSharedPreferences("ClassPrefs", Context.MODE_PRIVATE)
         val classId = classSharedPref!!.getInt("classId", -1)
         val attendanceSharedPref = activity?.getSharedPreferences("AttendancePrefs", Context.MODE_PRIVATE)
         val date = attendanceSharedPref!!.getString("date", "") ?: ""
 
-        val studentAttendanceListLiveData = viewModel.getStudentAttendanceList(date, mapOf("classId" to classId.toString(), "userType" to "1"))
+        val studentAttendanceListLiveData =
+            viewModel.getStudentAttendanceList(date, mapOf("classId" to classId.toString(), "userType" to "1"))
         studentAttendanceListLiveData.observe(viewLifecycleOwner) { studentAttendanceList ->
-            (binding.professorAttendanceListRecyclerView.adapter as? ProfessorAttendanceListAdapter)?.setStudentAttendanceList(studentAttendanceList)
+            (binding.professorAttendanceListRecyclerView.adapter as? ProfessorAttendanceListAdapter)
+                ?.setStudentAttendanceList(studentAttendanceList)
         }
         viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
             SnackbarBuilder(binding.root)
@@ -81,6 +99,7 @@ class ProfessorAttendanceListFragment : Fragment() {
         }
     }
 
+    // onItemClicked: Handles item click events, updating shared preferences and navigating to the attendance detail fragment.
     fun onItemClicked(
         attendanceId: Int,
         studentName: String,

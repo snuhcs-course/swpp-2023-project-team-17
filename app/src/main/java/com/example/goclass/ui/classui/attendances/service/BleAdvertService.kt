@@ -1,3 +1,17 @@
+/*
+ * BleAdvertService is a background service responsible for advertising BLE (Bluetooth Low Energy) during class hours for attendance tracking.
+ * It utilizes Bluetooth LE advertising to broadcast information about the ongoing class.
+ *
+ * @param advertiseTimer: Timer for managing the advertising duration.
+ * @param bluetoothAdapter: BluetoothAdapter for handling Bluetooth operations.
+ * @param advertiseHandler: Handler for scheduling the stop of advertising after a certain duration.
+ * @param classId: Unique identifier for the class.
+ * @param durationMillis: Duration for which BLE advertising should be active.
+ * @param advertiseData: AdvertiseData containing information to be broadcasted.
+ * @param advertiseSettings: AdvertiseSettings specifying the advertising behavior.
+ * @param advertiseCallback: AdvertiseCallback for handling advertising success or failure.
+ */
+
 package com.example.goclass.ui.classui.attendances.service
 
 import android.Manifest
@@ -22,9 +36,7 @@ import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import com.example.goclass.R
-import com.example.goclass.ui.classui.attendances.service.BleScanService
 import com.example.goclass.ui.mainui.MainActivity
-import com.example.goclass.utility.Constants
 import java.util.Timer
 import java.util.TimerTask
 import java.lang.NumberFormatException
@@ -63,18 +75,18 @@ class BleAdvertService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        Log.i(TAG, "BleAdvertService가 생성됨")
+        Log.i(TAG, "BleAdvertService created")
         initializeBluetooth()
         createNotificationChannel()
 
         if (!bluetoothAdapter!!.isMultipleAdvertisementSupported) {
-            Log.e(TAG, "이 기기는 블루투스 LE 광고를 지원하지 않습니다.")
+            Log.e(TAG, "This device does not support Bluetooth LE advertising.")
             stopSelf()
         }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.i(TAG, "BleAdvertService 시작됨, Intent action: ${intent?.action}")
+        Log.i(TAG, "BleAdvertService started, Intent action: ${intent?.action}")
         if (intent != null) {
             val action = intent.action
 
@@ -89,9 +101,9 @@ class BleAdvertService : Service() {
                     Log.d(TAG, "endMinute: $endMinute")
                     Log.d(TAG, "startHour: $startHour")
                     Log.d(TAG, "startMinute: $startMinute")
-                    durationMillis = (((endHour*60 + endMinute) - (startHour*60 + startMinute)) * 60 * 1000).toLong()
+                    durationMillis = (((endHour * 60 + endMinute) - (startHour * 60 + startMinute)) * 60 * 1000).toLong()
                     Log.d(TAG, "durationMillis: $durationMillis")
-                    val formattedClassId = classId.toString().padEnd(8,'0')
+                    val formattedClassId = classId.toString().padEnd(8, '0')
                     Log.d(TAG, "$formattedClassId")
                     val formattedUuid = "$formattedClassId-0000-1100-8000-00805f9b34fc"
                     val sampleUuid = UUID.randomUUID().toString()
@@ -139,24 +151,26 @@ class BleAdvertService : Service() {
             Log.e(TAG, "Bluetooth is not enabled")
             stopSelf()
         } else {
-            Log.d(TAG, "블루투스 어댑터 준비 완료")
+            Log.d(TAG, "Bluetooth adapter ready")
         }
     }
 
     private fun startAdvertising() {
-        Log.d(TAG, "startAdvertising 호출됨")
+        Log.d(TAG, "startAdvertising called")
 
         val bluetoothConnectPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             Manifest.permission.BLUETOOTH_CONNECT
         } else {
-            null // 이전 버전에서는 필요 없음
+            null // Not needed in previous versions
         }
 
-        val hasAdvertisePermission = ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADVERTISE) == PackageManager.PERMISSION_GRANTED
-        val hasConnectPermission = bluetoothConnectPermission?.let { ActivityCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED } ?: true
+        val hasAdvertisePermission =
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADVERTISE) == PackageManager.PERMISSION_GRANTED
+        val hasConnectPermission =
+            bluetoothConnectPermission?.let { ActivityCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED } ?: true
 
         if (!hasAdvertisePermission || !hasConnectPermission) {
-            Log.e(TAG, "필요한 블루투스 광고 권한이 없습니다.")
+            Log.e(TAG, "Required Bluetooth advertising permissions are missing.")
             return
         }
 
@@ -226,7 +240,7 @@ class BleAdvertService : Service() {
         return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setContentTitle(getString(R.string.ble_advert_notification_title))
             .setContentText(getString(R.string.ble_advert_notification_content))
-            .setSmallIcon(R.drawable.ic_launcher_foreground) // 아이콘 설정 필요
+            .setSmallIcon(R.drawable.ic_launcher_foreground) // Icon needs to be set
             .setContentIntent(pendingIntent)
             .build()
     }
@@ -234,7 +248,7 @@ class BleAdvertService : Service() {
     companion object {
         private const val TAG = "BleAdvertService"
         const val EXTRA_DURATION_MILLIS = "extra_duration_millis"
-        private const val DEFAULT_ADVERTISING_DURATION_MILLIS = 6300000L // 105 seconds
+        private const val DEFAULT_ADVERTISING_DURATION_MILLIS = 6300000L // 105 minutes
         private const val NOTIFICATION_CHANNEL_ID = "ble_advert_service_channel"
         private const val NOTIFICATION_ID = 1
     }

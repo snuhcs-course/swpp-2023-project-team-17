@@ -1,3 +1,17 @@
+/*
+ * StudentAttendanceAdapter is a RecyclerView adapter responsible for displaying a list of student attendance records.
+ * It utilizes a ViewHolder pattern for efficient view recycling.
+ *
+ * @param repository: AttendanceRepository for handling attendance-related data operations.
+ * @param lifecycleOwner: LifecycleOwner to observe data changes.
+ * @param listener: StudentAttendanceFragment for handling item click events.
+ * @param viewModel: StudentAttendanceAdapterViewModel for handling data operations.
+ * @param studentAttendanceList: List of AttendancesResponse objects representing student attendance records.
+ *
+ * The adapter displays information such as student name, attendance date, and attendance status.
+ * It also provides a button to mark attendance as sent, and items are clickable to view more details.
+ */
+
 package com.example.goclass.ui.classui.attendances.student
 
 import android.annotation.SuppressLint
@@ -10,7 +24,6 @@ import com.example.goclass.R
 import com.example.goclass.databinding.ItemStudentAttendanceBinding
 import com.example.goclass.network.dataclass.AttendancesResponse
 import com.example.goclass.repository.AttendanceRepository
-import com.example.goclass.ui.classui.attendances.professor.ProfessorAttendanceListFragment
 import kotlinx.coroutines.DelicateCoroutinesApi
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -64,26 +77,31 @@ class StudentAttendanceAdapter(
         @SuppressLint("SetTextI18n")
         fun bind(studentAttendanceItem: AttendancesResponse) {
             val attendanceId = studentAttendanceItem.attendanceId
-            val studentName = studentAttendanceItem.studentName?:""
+            val studentName = studentAttendanceItem.studentName ?: ""
 
-            val originalFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+            val originalFormat =
+                SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
             originalFormat.timeZone = TimeZone.getTimeZone("UTC")
             val targetFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             val date: Date? = originalFormat.parse(studentAttendanceItem.attendanceDate)
-            val dateText = date?.let { targetFormat.format(it) } ?:""
+            val dateText = date?.let { targetFormat.format(it) } ?: ""
 
             binding.attendanceDateText.text = dateText
 
             val attendanceStatus = studentAttendanceItem.attendanceStatus
 
-            if (attendanceStatus == 2) {
-                binding.attendanceStatusText.text = "Present"
-            } else if (attendanceStatus == 1) {
-                binding.attendanceStatusText.text = "Late"
-                binding.attendanceStatusText.background = ContextCompat.getDrawable(itemView.context, R.drawable.late_bg)
-            } else {
-                binding.attendanceStatusText.text = "Absent"
-                binding.attendanceStatusText.background = ContextCompat.getDrawable(itemView.context, R.drawable.absent_bg)
+            when (attendanceStatus) {
+                2 -> binding.attendanceStatusText.text = "Present"
+                1 -> {
+                    binding.attendanceStatusText.text = "Late"
+                    binding.attendanceStatusText.background =
+                        ContextCompat.getDrawable(itemView.context, R.drawable.late_bg)
+                }
+                else -> {
+                    binding.attendanceStatusText.text = "Absent"
+                    binding.attendanceStatusText.background =
+                        ContextCompat.getDrawable(itemView.context, R.drawable.absent_bg)
+                }
             }
 
             val isSent = studentAttendanceItem.isSent
@@ -92,7 +110,8 @@ class StudentAttendanceAdapter(
                 binding.sendButton.text = "Sent"
                 val gray = ContextCompat.getColor(itemView.context, R.color.gray)
                 binding.sendButton.setTextColor(gray)
-                binding.sendButton.background = ContextCompat.getDrawable(itemView.context, R.drawable.sent_bg)
+                binding.sendButton.background =
+                    ContextCompat.getDrawable(itemView.context, R.drawable.sent_bg)
             }
 
             if (binding.sendButton.isEnabled) {
@@ -104,7 +123,8 @@ class StudentAttendanceAdapter(
                             binding.sendButton.text = "Sent"
                             val gray = ContextCompat.getColor(itemView.context, R.color.gray)
                             binding.sendButton.setTextColor(gray)
-                            binding.sendButton.background = ContextCompat.getDrawable(itemView.context, R.drawable.sent_bg)
+                            binding.sendButton.background =
+                                ContextCompat.getDrawable(itemView.context, R.drawable.sent_bg)
                         }
                     }
                 }

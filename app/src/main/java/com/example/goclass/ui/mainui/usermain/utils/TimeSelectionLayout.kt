@@ -1,6 +1,9 @@
+/*
+ * TimeSelectionLayout is a utility object that creates a time selection layout dynamically.
+ */
+
 package com.example.goclass.ui.mainui.usermain.utils
 
-import com.example.goclass.R
 import android.app.TimePickerDialog
 import android.content.Context
 import android.view.LayoutInflater
@@ -12,8 +15,17 @@ import android.widget.ImageButton
 import android.widget.Spinner
 import androidx.appcompat.widget.AppCompatButton
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.example.goclass.R
 
 object TimeSelectionLayout {
+
+    /*
+     * create creates a time selection layout dynamically.
+     *
+     * @param context: Context, the context used to create the layout.
+     * @param deleteButtonRequired: Boolean, flag indicating whether the delete button should be visible.
+     * @return ConstraintLayout, the dynamically created time selection layout.
+     */
     fun create(
         context: Context,
         deleteButtonRequired: Boolean = true
