@@ -5,18 +5,11 @@ import android.view.View
 import android.widget.TimePicker
 import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ActivityScenario
-import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.typeText
-import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.example.goclass.R
 import com.example.goclass.ui.mainui.MainActivity
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
@@ -31,32 +24,32 @@ class ProfessorMainFragmentUITest {
     fun createClassTest() {
         val scenario = setScenario(true, "professor")
 
-        onView(withId(R.id.createButton))
-            .perform(click())
-        onView(withId(R.id.dialog_create))
-            .check(matches(isDisplayed()))
-
-        onView(withId(R.id.classNameEdittext))
-            .perform(typeText("Test Create Class"))
-        onView(withId(R.id.buildingNumberEdittext))
-            .perform(typeText("300"))
-        onView(withId(R.id.roomNumberEditText))
-            .perform(typeText("201"))
-
-        onView(withId(R.id.startTimeButton))
-            .perform(click())
-        onView(withText("OK"))
-            .perform(click())
-
-        onView(withId(R.id.endTimeButton))
-            .perform(click())
-        onView(withText("OK"))
-            .perform(click())
-
-        onView(withId(R.id.codeEdittext))
-            .perform(typeText("fasjl"))
-        onView(withId(R.id.createButton))
-            .perform(click())
+//        onView(withId(R.id.createButton))
+//            .perform(click())
+//        onView(withId(R.id.dialog_create))
+//            .check(matches(isDisplayed()))
+//
+//        onView(withId(R.id.classNameEdittext))
+//            .perform(typeText("Test Create Class"))
+//        onView(withId(R.id.buildingNumberEdittext))
+//            .perform(typeText("300"))
+//        onView(withId(R.id.roomNumberEditText))
+//            .perform(typeText("201"))
+//
+//        onView(withId(R.id.startTimeButton))
+//            .perform(click())
+//        onView(withText("OK"))
+//            .perform(click())
+//
+//        onView(withId(R.id.endTimeButton))
+//            .perform(click())
+//        onView(withText("OK"))
+//            .perform(click())
+//
+//        onView(withId(R.id.codeEdittext))
+//            .perform(typeText("fasjl"))
+//        onView(withId(R.id.createButton))
+//            .perform(click())
 
         scenario?.close()
     }

@@ -28,7 +28,7 @@ import org.junit.runner.RunWith
 class ChatCommentFragmentUITest {
     private val userId = 1
     private val userName = "abc"
-    private val classId = 7
+    private val classId = 8
     private val className = "test class"
 
     @Test

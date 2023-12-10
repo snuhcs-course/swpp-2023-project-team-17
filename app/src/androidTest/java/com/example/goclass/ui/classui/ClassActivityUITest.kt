@@ -14,7 +14,7 @@ import org.junit.Test
 class ClassActivityUITest {
     @Test
     fun checkChatChannelDisplayed() {
-        val classId = 7
+        val classId = 8
         val className = "test class"
 
         val intent = Intent(ApplicationProvider.getApplicationContext(), ClassActivity::class.java)

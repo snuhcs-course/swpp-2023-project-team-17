@@ -1,4 +1,4 @@
-package com.example.goclass.ui.classui.attendances.professor
+package com.example.goclass.ui.classui.attendances
 
 import android.content.Context
 import android.content.Intent
@@ -17,7 +17,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class ProfessorAttendanceFragmentUITest {
+class AttendanceFragmentUITest {
     private val userId = 1
     private val userName = "abc"
     @Test
@@ -33,7 +33,7 @@ class ProfessorAttendanceFragmentUITest {
     }
 
     private fun setScenario(isLoggedIn: Boolean, userRole: String): ActivityScenario<ClassActivity>? {
-        val classId = 7
+        val classId = 8
         val className = "test class"
 
         val intent = Intent(ApplicationProvider.getApplicationContext(), ClassActivity::class.java)
