@@ -65,7 +65,7 @@ class ProfessorAttendanceListAdapter(
             val attendanceDuration = studentAttendanceItem.attendanceDuration * 100
             val durationPercentage = attendanceDuration.div(classLength - 1)
 
-            binding.durationText.text = "Attendance Percentage: $durationPercentage%"
+            binding.durationText.text = "$durationPercentage%"
             binding.studentNameText.text = studentName
 
             when (attendanceStatus) {
