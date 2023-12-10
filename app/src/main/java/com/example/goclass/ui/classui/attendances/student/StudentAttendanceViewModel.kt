@@ -38,31 +38,4 @@ class StudentAttendanceViewModel(
         }
         return _studentAttendanceListLiveData
     }
-
-    fun addAttendance(
-        classId: Int,
-        userId: Int,
-    ) {
-        viewModelScope.launch {
-            try {
-                val attendanceDetail = "0111111111111111"
-                val attendance =
-                    Attendances(
-                        2,
-                        30,
-                        classId,
-                        attendanceDetail,
-                    )
-                val response = attendanceRepository.attendanceAdd(userId, attendance)
-                if (response.code == 200) {
-                    getStudentAttendanceList(classId, userId)
-                    _toastMessage.postValue("Successfully added")
-                } else {
-                    _toastMessage.postValue("Failed to add")
-                }
-            } catch (e: Exception) {
-                _toastMessage.postValue("Error: ${e.message}")
-            }
-        }
-    }
 }
