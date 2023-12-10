@@ -89,10 +89,14 @@ class StudentAttendanceAdapter(
             binding.attendanceDateText.text = dateText
 
             val classLength = studentAttendanceItem.attendanceDetail.length
-            val attendanceDuration = studentAttendanceItem.attendanceDuration * 100
-            val durationPercentage = attendanceDuration.div(classLength - 1)
 
-            binding.durationText.text = "$durationPercentage%"
+            if (classLength > 1) {
+                val attendanceDuration = studentAttendanceItem.attendanceDuration * 100
+                val durationPercentage = attendanceDuration.div(classLength - 1)
+                binding.durationText.text = "$durationPercentage%"
+            } else {
+                binding.durationText.text = "0%"
+            }
 
             val attendanceStatus = studentAttendanceItem.attendanceStatus
 
