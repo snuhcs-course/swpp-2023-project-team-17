@@ -1,3 +1,8 @@
+/*
+ * StudentMainFragment is a Fragment class responsible for managing the UI and user interactions
+ * on the student's main screen. It includes features such as joining classes and displaying the class list.
+ */
+
 package com.example.goclass.ui.mainui.usermain
 
 import android.annotation.SuppressLint
@@ -18,17 +23,15 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.goclass.ui.classui.ClassActivity
 import com.example.goclass.R
 import com.example.goclass.databinding.FragmentStudentMainBinding
+import com.example.goclass.ui.classui.ClassActivity
 import com.example.goclass.ui.classui.ClassScheduler
 import com.example.goclass.ui.mainui.usermain.utils.InputValidnessTest
-import com.example.goclass.utility.PermissionUtils
 import com.example.goclass.utility.SnackbarBuilder
 import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-
 
 class StudentMainFragment : Fragment() {
     private lateinit var binding: FragmentStudentMainBinding
@@ -131,6 +134,7 @@ class StudentMainFragment : Fragment() {
             startActivity(intent)
         }
     }
+
     private fun showSnackbar(message: String, colorResId: Int) {
         SnackbarBuilder(binding.root)
             .setMessage(message)

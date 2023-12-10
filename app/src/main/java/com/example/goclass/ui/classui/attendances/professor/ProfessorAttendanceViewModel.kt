@@ -1,3 +1,14 @@
+/*
+ * ProfessorAttendanceViewModel is a ViewModel responsible for managing the data and business logic
+ * related to the professor's attendance overview in the UI.
+ *
+ * @property repository: UserRepository, the repository responsible for handling user-related data operations.
+ * @property _professorAttendanceListLiveData: MutableLiveData<List<AttendancesResponse>>, holds the LiveData for professor attendance overview data.
+ * @property _toastMessage: MutableLiveData<String>, holds the LiveData for displaying toast messages in the UI.
+ *
+ * getProfessorAttendanceList: Fetches the professor attendance overview data, updating the LiveData accordingly.
+ */
+
 package com.example.goclass.ui.classui.attendances.professor
 
 import android.util.Log
@@ -15,9 +26,16 @@ class ProfessorAttendanceViewModel(
     private val _professorAttendanceListLiveData: MutableLiveData<List<AttendancesResponse>> = MutableLiveData()
     private val _toastMessage = MutableLiveData<String>()
 
+    // professorAttendanceListLiveData: Exposes the LiveData for professor attendance overview data to observers.
     val professorAttendanceListLiveData: LiveData<List<AttendancesResponse>> get() = _professorAttendanceListLiveData
+    // toastMessage: Exposes the LiveData for toast messages to observers.
     val toastMessage: LiveData<String> get() = _toastMessage
 
+    /*
+     * getProfessorAttendanceList: Fetches the professor attendance overview data,
+     * updating the LiveData accordingly. Handles network and repository errors and notifies
+     * the UI with appropriate toast messages.
+     */
     fun getProfessorAttendanceList(classMap: Map<String, String>): MutableLiveData<List<AttendancesResponse>> {
         viewModelScope.launch {
             try {

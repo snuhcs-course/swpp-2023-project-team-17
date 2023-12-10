@@ -48,7 +48,6 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".ui.classui.attendances.service.LocationService" />
         <service
             android:name=".ui.classui.attendances.service.AttendanceService"
             android:enabled="true"

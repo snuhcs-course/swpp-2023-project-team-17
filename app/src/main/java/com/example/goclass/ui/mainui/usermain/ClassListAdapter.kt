@@ -1,3 +1,7 @@
+/*
+ * ClassListAdapter is a RecyclerView adapter responsible for displaying a list of classes.
+ */
+
 package com.example.goclass.ui.mainui.usermain
 
 import android.animation.ObjectAnimator
@@ -25,11 +29,23 @@ class ClassListAdapter(
     private var classList = listOf<ClassesResponse>()
     private var expandedPosition = -1
 
+    /*
+     * setClassList sets the list of classes to be displayed in the RecyclerView.
+     *
+     * @param list: List<ClassesResponse>, the list of classes.
+     */
     fun setClassList(list: List<ClassesResponse>) {
         classList = list
         notifyDataSetChanged()
     }
 
+    /*
+     * onCreateViewHolder is called when RecyclerView needs a new ViewHolder of the given type to represent an item.
+     *
+     * @param parent: ViewGroup, the parent view.
+     * @param viewType: Int, the type of the view.
+     * @return ClassViewHolder, the created ViewHolder.
+     */
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -43,6 +59,12 @@ class ClassListAdapter(
         return ClassViewHolder(binding, viewModel, userType)
     }
 
+    /*
+     * onBindViewHolder is called to bind the data to the views inside the ViewHolder.
+     *
+     * @param holder: ClassViewHolder, the ViewHolder to bind the data.
+     * @param position: Int, the position of the item in the data set.
+     */
     @SuppressLint("NotifyDataSetChanged")
     override fun onBindViewHolder(
         holder: ClassViewHolder,
@@ -55,8 +77,16 @@ class ClassListAdapter(
         }
     }
 
+    /*
+     * getItemCount returns the total number of items in the data set held by the adapter.
+     *
+     * @return Int, the total number of items.
+     */
     override fun getItemCount() = classList.size
 
+    /*
+     * hideAllDeleteButtons hides all delete buttons in the RecyclerView items.
+     */
     @SuppressLint("NotifyDataSetChanged")
     fun hideAllDeleteButtons() {
         expandedPosition = -1
@@ -64,11 +94,22 @@ class ClassListAdapter(
         notifyDataSetChanged()
     }
 
+    /*
+     * ClassViewHolder is a ViewHolder for the RecyclerView items.
+     */
     class ClassViewHolder(
         private val binding: ItemClassBinding,
         private val viewModel: ProfessorMainViewModel,
         private val userType: Int,
     ) : RecyclerView.ViewHolder(binding.root) {
+
+        /*
+         * bind binds the data to the views inside the ViewHolder.
+         *
+         * @param classItem: ClassesResponse, the class item data.
+         * @param isExpanded: Boolean, flag indicating whether the item is expanded.
+         * @param onExpandChange: (Int) -> Unit, callback to handle item expansion changes.
+         */
         @SuppressLint("SetTextI18n")
         fun bind(
             classItem: ClassesResponse,
@@ -82,7 +123,7 @@ class ClassListAdapter(
             if (isExpanded && userType == 1) {
                 val shake = ObjectAnimator.ofPropertyValuesHolder(
                     itemView,
-                    PropertyValuesHolder.ofFloat("translationX",0f, 5f, -5f, 5f, -5f, 5f, -5f, 0f)
+                    PropertyValuesHolder.ofFloat("translationX", 0f, 5f, -5f, 5f, -5f, 5f, -5f, 0f)
                 )
                 shake.duration = 500
                 shake.start()
@@ -103,7 +144,8 @@ class ClassListAdapter(
             }
 
             binding.deleteButton.setOnClickListener {
-                val dialogView = LayoutInflater.from(itemView.context).inflate(R.layout.dialog_delete_class, null)
+                val dialogView =
+                    LayoutInflater.from(itemView.context).inflate(R.layout.dialog_delete_class, null)
                 val deleteDialog = AlertDialog.Builder(itemView.context)
                     .setView(dialogView)
                     .create()

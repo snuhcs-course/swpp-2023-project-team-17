@@ -1,3 +1,8 @@
+/*
+ * ProfessorMainFragment is a Fragment that represents the main screen for professors in the application.
+ * Professors can view and create classes from this screen.
+ */
+
 package com.example.goclass.ui.mainui.usermain
 
 import android.annotation.SuppressLint
@@ -36,6 +41,14 @@ class ProfessorMainFragment : Fragment() {
     private val viewModel: ProfessorMainViewModel by viewModel()
     private lateinit var classListAdapter: ClassListAdapter
 
+    /*
+     * onCreateView is called to create and return the view hierarchy associated with the fragment.
+     *
+     * @param inflater: LayoutInflater, the LayoutInflater object that can be used to inflate any views in the fragment.
+     * @param container: ViewGroup?, the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState: Bundle?, saved instance state.
+     * @return View?, the root view of the fragment.
+     */
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,27 +57,32 @@ class ProfessorMainFragment : Fragment() {
     ): View? {
         binding = FragmentProfessorMainBinding.inflate(inflater, container, false)
 
+        // Retrieve user information from SharedPreferences
         val sharedPref = activity?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         val userId = sharedPref!!.getInt("userId", -1)
         val userName = sharedPref.getString("userName", "") ?: ""
 
+        // Initialize ClassListAdapter and set up RecyclerView
         classListAdapter = ClassListAdapter(viewModel, 1)
         binding.professorClassRecyclerView.adapter = classListAdapter
         binding.professorClassRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        // Name Textview
+        // Set professor's name in the UI
         binding.name.text = userName
 
+        // Observe Snackbar messages from the ViewModel
         viewModel.snackbarMessage.observe(viewLifecycleOwner) { message ->
             Snackbar.make(binding.root, message, Toast.LENGTH_SHORT).show()
         }
 
+        // Create Button - Show dialog for creating a new class
         binding.createButton.setOnClickListener {
             val dialog = Dialog(requireContext())
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setContentView(R.layout.dialog_create)
             dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_bg)
 
+            // Dialog UI components
             val editClassName = dialog.findViewById<EditText>(R.id.classNameEdittext)
             val timeSelectionContainer = dialog.findViewById<LinearLayout>(R.id.timeSelectionContainer)
             val addTimeButton = dialog.findViewById<ImageButton>(R.id.addTimeButton)
@@ -83,7 +101,7 @@ class ProfessorMainFragment : Fragment() {
                 timeSelectionContainer.addView(newTimeSelectionLayout)
             }
 
-            // Keyboard down when you touch other space in screen
+            // Keyboard down when touching outside of the keyboard
             dialog.findViewById<ConstraintLayout>(R.id.dialog_create).setOnTouchListener { _, _ ->
                 val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(dialog.currentFocus?.windowToken, 0)
@@ -91,41 +109,61 @@ class ProfessorMainFragment : Fragment() {
                 true
             }
 
+            // Create Button in the dialog - Handle class creation
             createButtonDialog.setOnClickListener {
+                // Retrieve entered information from the dialog
                 val enteredClassName = editClassName.text.toString()
                 val enteredClassTime = generateClassTimeString(timeSelectionContainer)
                 val enteredBuildingNumber = editBuildingNumber.text.toString()
                 val enteredRoomNumber = editRoomNumber.text.toString()
                 val enteredCode = editCode.text.toString()
 
+                // Validate entered information
                 if (!InputValidnessTest.isClassNameValid(enteredClassName)) {
-                    Snackbar.make(dialog.findViewById<EditText>(R.id.classNameEdittext), "Please enter class name.", Snackbar.LENGTH_SHORT)
+                    Snackbar.make(
+                        dialog.findViewById<EditText>(R.id.classNameEdittext),
+                        "Please enter class name.",
+                        Snackbar.LENGTH_SHORT
+                    )
                         .setBackgroundTint(Color.parseColor("#FF515C"))
                         .show()
                     return@setOnClickListener
                 }
 
                 if (!InputValidnessTest.isClassTimeValid(timeSelectionContainer)) {
-                    Snackbar.make(dialog.findViewById<LinearLayout>(R.id.classNameEdittext), "Invalid class time", Snackbar.LENGTH_SHORT)
+                    Snackbar.make(
+                        dialog.findViewById<LinearLayout>(R.id.classNameEdittext),
+                        "Invalid class time",
+                        Snackbar.LENGTH_SHORT
+                    )
                         .setBackgroundTint(Color.parseColor("#FF515c"))
                         .show()
                     return@setOnClickListener
                 }
 
                 if (!InputValidnessTest.isClassValid(enteredBuildingNumber, enteredRoomNumber)) {
-                    Snackbar.make(dialog.findViewById<LinearLayout>(R.id.classNameEdittext), "Please enter building number and room number.", Snackbar.LENGTH_SHORT)
+                    Snackbar.make(
+                        dialog.findViewById<LinearLayout>(R.id.classNameEdittext),
+                        "Please enter building number and room number.",
+                        Snackbar.LENGTH_SHORT
+                    )
                         .setBackgroundTint(Color.parseColor("#FF515c"))
                         .show()
                     return@setOnClickListener
                 }
 
                 if (!InputValidnessTest.isClassCodeValid(enteredCode)) {
-                    Snackbar.make(dialog.findViewById<LinearLayout>(R.id.classNameEdittext), "Please enter class code", Snackbar.LENGTH_SHORT)
+                    Snackbar.make(
+                        dialog.findViewById<LinearLayout>(R.id.classNameEdittext),
+                        "Please enter class code",
+                        Snackbar.LENGTH_SHORT
+                    )
                         .setBackgroundTint(Color.parseColor("#FF515c"))
                         .show()
                     return@setOnClickListener
                 }
 
+                // Call ViewModel to create a new class
                 viewModel.createClass(
                     enteredClassName,
                     enteredCode,
@@ -151,6 +189,12 @@ class ProfessorMainFragment : Fragment() {
         return binding.root
     }
 
+    /*
+     * onViewCreated is called after onCreateView. It is used to set up the UI and handle user interactions.
+     *
+     * @param view: View, the root view of the fragment.
+     * @param savedInstanceState: Bundle?, saved instance state.
+     */
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(
         view: View,
@@ -158,25 +202,31 @@ class ProfessorMainFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Profile Button
+        // Profile Button - Navigate to the profile screen
         binding.profileButton.setOnClickListener {
             findNavController().navigate(R.id.action_professorMainFragment_to_profileFragment)
         }
 
-        // recyclerView
+        // RecyclerView - Navigate to the ClassActivity when clicked
         binding.professorClassRecyclerView.setOnClickListener {
             val intent = Intent(view.context, ClassActivity::class.java)
             startActivity(intent)
         }
 
-        // hide delete button
+        // Hide delete buttons when touching outside the RecyclerView
         binding.root.setOnTouchListener { _, _ ->
             classListAdapter.hideAllDeleteButtons()
             true
         }
     }
 
-    private fun generateClassTimeString(container: LinearLayout):String {
+    /*
+     * generateClassTimeString is a utility function to generate a formatted string representing class times.
+     *
+     * @param container: LinearLayout, the container holding time selection layouts.
+     * @return String, a formatted string representing class times.
+     */
+    private fun generateClassTimeString(container: LinearLayout): String {
         val classTimes = mutableListOf<String>()
 
         for (i in 0 until container.childCount) {
@@ -196,6 +246,12 @@ class ProfessorMainFragment : Fragment() {
         return classTimes.joinToString(", ")
     }
 
+    /*
+     * convertDayStringToNumber is a utility function to convert a day string to its corresponding numeric value.
+     *
+     * @param day: String, the day string (e.g., "Mon").
+     * @return String, the numeric value corresponding to the day.
+     */
     private fun convertDayStringToNumber(day: String): String {
         return when (day) {
             "Mon" -> "2"
@@ -203,7 +259,7 @@ class ProfessorMainFragment : Fragment() {
             "Wed" -> "4"
             "Thu" -> "5"
             "Fri" -> "6"
-            else -> "-1" // 또는 에러 처리
+            else -> "-1" // Or handle the error
         }
     }
 }

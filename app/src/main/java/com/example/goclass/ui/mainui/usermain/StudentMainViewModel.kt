@@ -1,3 +1,8 @@
+/*
+ * StudentMainViewModel is a ViewModel class that provides data and business logic for the StudentMainFragment.
+ * It handles actions related to class joining and retrieving the list of classes for a student user.
+ */
+
 package com.example.goclass.ui.mainui.usermain
 
 import android.app.Application
@@ -26,6 +31,18 @@ class StudentMainViewModel(
     val snackbarMessage: LiveData<String> get() = _snackbarMessage
     val classListLiveData: LiveData<List<ClassesResponse>> get() = _classListLiveData
 
+    data class TimeElement(
+        val dayOfWeek: Int,
+        val startHour: Int,
+        val startMinute: Int,
+        val endHour: Int,
+        val endMinute: Int,
+    )
+
+    /**
+     * Attempts to join a class by making a network request and scheduling class attendance.
+     * Updates the LiveData with the result and retrieves the updated class list.
+     */
     fun classJoin(
         userId: Int,
         className: String,
@@ -39,11 +56,11 @@ class StudentMainViewModel(
                     classCode,
                 )
             try {
-                // join class
+                // Join class
                 val response = classRepository.classJoin(userId, joinClass)
                 val userType = 0
 
-                // schedule class attendance
+                // Schedule class attendance
                 val classId = response.classId
                 val classTime = response.classTime
 
@@ -67,8 +84,6 @@ class StudentMainViewModel(
                     }
 
                 for ((dayOfWeek, startHour, startMinute, endHour, endMinute) in parsedTimes) {
-//                    val minPresentDuration = classResponse.minPresentDuration
-//                    val minLateDuration = classResponse.minLateDuration
                     classScheduler.scheduleClass(
                         getApplication(),
                         userId,
@@ -94,6 +109,9 @@ class StudentMainViewModel(
         }
     }
 
+    /**
+     * Retrieves the list of classes for the student user.
+     */
     fun getClassList(user: Map<String, String>): MutableLiveData<List<ClassesResponse>> {
         viewModelScope.launch {
             try {
@@ -108,12 +126,4 @@ class StudentMainViewModel(
         }
         return _classListLiveData
     }
-
-    data class TimeElement(
-        val dayOfWeek: Int,
-        val startHour: Int,
-        val startMinute: Int,
-        val endHour: Int,
-        val endMinute: Int,
-    )
 }

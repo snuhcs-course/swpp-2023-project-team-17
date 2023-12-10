@@ -1,3 +1,13 @@
+/*
+ * AttendanceDetailFragment is a Fragment responsible for displaying detailed attendance information for a specific student or class.
+ * It includes a BarChart to visualize the attendance details.
+ *
+ * @viewModel: ViewModel associated with the fragment for handling business logic.
+ *
+ * onCreateView: Inflates the layout for this fragment.
+ * onViewCreated: Called when the fragment's view has been created, where it initializes UI components and handles user interactions.
+ */
+
 package com.example.goclass.ui.classui.attendances
 
 import android.annotation.SuppressLint
@@ -30,6 +40,10 @@ class AttendanceDetailFragment : Fragment() {
         return binding.root
     }
 
+    /*
+     * onViewCreated is called when the fragment's view has been created.
+     * It initializes UI components, retrieves attendance information, and sets up the BarChart.
+     */
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(
         view: View,
@@ -37,7 +51,9 @@ class AttendanceDetailFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        val attendanceSharedPref = activity?.getSharedPreferences("AttendancePrefs", Context.MODE_PRIVATE)
+        // Retrieve attendance details from SharedPreferences
+        val attendanceSharedPref =
+            activity?.getSharedPreferences("AttendancePrefs", Context.MODE_PRIVATE)
         val className = attendanceSharedPref!!.getString("className", "")
         val userRole = attendanceSharedPref.getString("userRole", "")
         val attendanceId = attendanceSharedPref.getInt("attendanceId", -1)
@@ -45,10 +61,12 @@ class AttendanceDetailFragment : Fragment() {
         val date = attendanceSharedPref.getString("date", "")
         val attendanceStatus = attendanceSharedPref.getInt("attendanceStatus", -1)
 
+        // Set UI components based on retrieved information
         binding.className.text = className
         binding.date.text = date
         binding.studentName.text = studentName
 
+        // Set attendance status text based on status code
         when (attendanceStatus) {
             2 -> {
                 binding.status.text = "Present"
@@ -63,6 +81,7 @@ class AttendanceDetailFragment : Fragment() {
 
         // Back Button
         binding.backButton.setOnClickListener {
+            // Navigate back to the appropriate destination based on user role
             if (userRole == "student") {
                 findNavController().navigate(R.id.action_attendanceDetailFragment_to_studentAttendanceFragment)
             } else {
@@ -103,7 +122,7 @@ class AttendanceDetailFragment : Fragment() {
             val barData = BarData(barDataSet)
             barData.barWidth = 0.9f
 
-            // LineChart Configuration
+            // BarChart Configuration
             barChart.data = barData
             barChart.description.isEnabled = false
             barChart.xAxis.isEnabled = true
@@ -113,7 +132,7 @@ class AttendanceDetailFragment : Fragment() {
             barChart.axisLeft.axisMinimum = 0f
             barChart.axisRight.isEnabled = false
 
-            // Line Update
+            // Invalidate to update the chart
             barChart.invalidate()
         }
     }

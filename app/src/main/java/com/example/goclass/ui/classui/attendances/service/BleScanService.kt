@@ -1,3 +1,26 @@
+/*
+ * BleScanService is a background service responsible for scanning BLE (Bluetooth Low Energy) devices during class hours for attendance tracking.
+ * It utilizes Bluetooth LE scanning to detect specific devices and beacons related to class attendance.
+ *
+ * @param bluetoothLeScanner: BluetoothLeScanner for handling BLE scanning operations.
+ * @param scanIntervalHandler: Handler for scheduling periodic scans with a 1-minute interval.
+ * @param scanCount: Counter for the number of scans performed.
+ * @param successfulScanCount: Counter for the number of successful scans where target devices are detected.
+ * @param classId: Unique identifier for the class.
+ * @param scanning: Boolean flag indicating whether BLE scanning is currently active.
+ * @param deviceFound: Boolean flag indicating whether a target device has been found during a scan.
+ * @param firstScan: Boolean flag indicating whether it is the first scan.
+ * @param firstScanTime: Counter indicating the scan count when the first scan occurred.
+ * @param profDeviceFound: Boolean flag indicating whether a target professor device has been found.
+ * @param beaconFound: Boolean flag indicating whether a target beacon has been found.
+ * @param durationSec: Duration for which BLE scanning should be active in seconds.
+ * @param scanResultsList: List to store scan results for each minute (0 if no detection, 1 if detection).
+ * @param minutesElapsed: Counter for the number of minutes elapsed during BLE scanning.
+ * @param handler: Handler for scheduling the stop of the service after a certain duration.
+ *
+ * The service scans for specific devices and beacons related to class attendance and records the detection status minute by minute.
+ */
+
 package com.example.goclass.ui.classui.attendances.service
 
 import android.Manifest
@@ -23,11 +46,10 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.goclass.R
 //>>>>>>> 40de6801afd7a2dcf7ac48a46f53a9e8c16cabe6
 import com.example.goclass.ui.mainui.MainActivity
+import com.example.goclass.utility.Constants
 import java.util.regex.Pattern
 
 class BleScanService : Service() {
-
-    //    private var bleScanCallback: BleScanCallback? = null
     private var bluetoothLeScanner: BluetoothLeScanner? = null
     private var scanIntervalHandler: Handler? = null
     private var scanCount = 0
@@ -168,7 +190,7 @@ class BleScanService : Service() {
     private fun isTargetDevice(result: ScanResult): Boolean {
         Log.d(TAG, "check isTargetDevice")
         val formattedClassId = classId.toString().padEnd(8, '0')
-        val targetUuid = "$formattedClassId-0000-1100-8000-00805f9b34fc"
+        val targetUuid = formattedClassId + Constants.UUID_STRING
         Log.d(TAG, "target uuid: $targetUuid")
         val targetDeviceUuid = ParcelUuid.fromString(targetUuid)
         Log.d(TAG, "detected serviceUuids: ${result.scanRecord?.serviceUuids}")
@@ -179,7 +201,7 @@ class BleScanService : Service() {
 
     private fun isTargetBeacon(result: ScanResult): Boolean {
         Log.d(TAG, "check isTargetBeacon")
-        val beaconId = "8ec90001-f315-4f60-9fb8-838830daea50"//"2cdbdd00-13ee-11e4-9b6c-0002a5d5c518"
+        val beaconId = Constants.BEACON_UUID
         val targetBeaconUuid = ParcelUuid.fromString(beaconId)
         Log.d(TAG, "detected serviceUuids: ${result.scanRecord?.serviceUuids}")
         Log.d(TAG, "isTargetDevice: ${result.scanRecord?.serviceUuids?.contains(targetBeaconUuid)}")
@@ -209,13 +231,6 @@ class BleScanService : Service() {
     private fun stopScanningService() {
         Log.d(TAG, "stopScanningService")
         if (checkSelfPermission(Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    Activity#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for Activity#requestPermissions for more details.
             return
         }
         if(profDeviceFound && beaconFound) {
@@ -238,13 +253,6 @@ class BleScanService : Service() {
     private fun stopScanning() {
         Log.d(TAG, "stopScanning")
         if (checkSelfPermission(Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    Activity#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for Activity#requestPermissions for more details.
             return
         }
         bluetoothLeScanner?.stopScan(scanCallback)
@@ -270,9 +278,8 @@ class BleScanService : Service() {
         Log.d(TAG, "start scan")
         val formattedClassId = classId.toString().padEnd(8, '0')
 
-        val targetBeaconId = "8ec90001-f315-4f60-9fb8-838830daea50"//"2cdbdd00-13ee-11e4-9b6c-0002a5d5c518"
-        val targetDeviceId = "$formattedClassId-0000-1100-8000-00805f9b34fc"
-        val targetDeviceUuid32BitPattern = "5f9b34fc"
+        val targetBeaconId = Constants.BEACON_UUID
+        val targetDeviceId = formattedClassId + Constants.UUID_STRING
 
         val targetBeaconUuid = ParcelUuid.fromString(targetBeaconId)
         val targetDeviceUuid = ParcelUuid.fromString(targetDeviceId)
@@ -283,7 +290,6 @@ class BleScanService : Service() {
         val scanFilterDevice = ScanFilter.Builder()
             .setServiceUuid(targetDeviceUuid, deviceMask)
             .build()
-        // TODO: modify scanFilterBeacon to filter based on unique signal info of SNU attendance beacons
         val scanFilterBeacon = ScanFilter.Builder()
             .setServiceUuid(targetBeaconUuid, beaconMask)
             .build()
@@ -299,12 +305,6 @@ class BleScanService : Service() {
             .build()
 
         if (checkSelfPermission(Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling Activity#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for Activity#requestPermissions for more details.
             Log.d(TAG, "no bleScanning permission")
             Log.d(TAG, checkSelfPermission(Manifest.permission.BLUETOOTH_SCAN).toString())
             return
@@ -325,10 +325,8 @@ class BleScanService : Service() {
 
         if (!hasScanPermission || !hasConnectPermission) {
             Log.e(TAG, "필요한 블루투스 권한이 없습니다.")
-//            return
         }
 
-//        if (scanCount < durationSec) {
         if (scanning) {
             Log.d(TAG, "IN SCANNING!")
             bluetoothLeScanner?.stopScan(scanCallback)

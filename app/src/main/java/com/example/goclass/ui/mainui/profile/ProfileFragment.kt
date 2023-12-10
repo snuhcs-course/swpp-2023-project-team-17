@@ -1,3 +1,17 @@
+/*
+ * ProfileFragment is a Fragment class responsible for managing the user profile settings.
+ *
+ * @property binding: FragmentProfileBinding, the ViewBinding instance for the profile fragment.
+ * @property viewModel: ProfileViewModel, the ViewModel handling the logic for the profile fragment.
+ * @property googleSignInClient: GoogleSignInClient, the Google Sign-In client for user authentication.
+ * @property permissionUtils: PermissionUtils, utility class for handling runtime permissions.
+ *
+ * onCreateView: Initializes the ViewBinding and checks for necessary runtime permissions.
+ * onViewCreated: Sets up UI elements and observes ViewModel changes for updating the UI.
+ * observeViewModel: Observes ViewModel changes and displays appropriate snackbar messages.
+ * showSnackbar: Displays a snackbar with the given message and background color.
+ */
+
 package com.example.goclass.ui.mainui.profile
 
 import android.annotation.SuppressLint

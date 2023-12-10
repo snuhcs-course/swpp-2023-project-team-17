@@ -1,3 +1,18 @@
+/*
+ * ClassScheduler is a utility class responsible for scheduling class attendance checks in the GoClass app.
+ * It uses the Android AlarmManager to trigger AttendanceReceiver at specified class times.
+ *
+ * @param context: The context in which the alarm is scheduled.
+ * @param userId: User ID associated with the class attendance.
+ * @param classId: Class ID for uniquely identifying the class.
+ * @param dayOfWeek: Day of the week when the class occurs (Calendar.DAY_OF_WEEK format).
+ * @param startHour: Starting hour of the class.
+ * @param startMinute: Starting minute of the class.
+ * @param endHour: Ending hour of the class.
+ * @param endMinute: Ending minute of the class.
+ * @param userType: User type for distinguishing between different users (students, professors).
+ */
+
 package com.example.goclass.ui.classui
 
 import android.app.AlarmManager
@@ -10,6 +25,7 @@ import android.util.Log
 import com.example.goclass.ui.classui.attendances.reciever.AttendanceReceiver
 
 class ClassScheduler {
+    // Schedule a class attendance alarm based on provided parameters.
     fun scheduleClass(
         context: Context,
         userId: Int,
@@ -21,7 +37,10 @@ class ClassScheduler {
         endMinute: Int,
         userType: Int,
     ) {
+        // Get the AlarmManager service.
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        // Create an intent to be triggered by the alarm, passing necessary information.
         val intent = Intent(context, AttendanceReceiver::class.java).apply {
             action = "ATTENDANCE_ALARM_ACTION"
             putExtra("userId", userId)
@@ -31,15 +50,9 @@ class ClassScheduler {
             putExtra("endHour", endHour)
             putExtra("endMinute", endMinute)
             putExtra("userType", userType)
-            Log.d("classScheduler", "endHour: $endHour")
-            Log.d("classScheduler", "endMinute: $endMinute")
-            Log.d("classScheduler", "startHour: $startHour")
-            Log.d("classScheduler", "startMinute: $startMinute")
         }
 
-        Log.d("classScheduler", "dayOfWeek: $dayOfWeek")
-        Log.d("classScheduler", "classId: $classId")
-
+        // Create a unique PendingIntent using class parameters for later retrieval and modification.
         val pendingIntent =
             PendingIntent.getBroadcast(
                 context,
@@ -48,6 +61,7 @@ class ClassScheduler {
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
 
+        // Get the current time and set the alarm time to the specified class time.
         val now = Calendar.getInstance()
         val alarmTime = Calendar.getInstance().apply {
             set(Calendar.DAY_OF_WEEK, dayOfWeek)
@@ -56,20 +70,19 @@ class ClassScheduler {
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
 
+            // If the specified time is in the past, set the alarm for the next week.
             if (before(now)) {
                 add(Calendar.WEEK_OF_YEAR, 1)
             }
         }
 
-        // Schedule the alarm to repeat weekly
+        // Schedule the alarm to repeat weekly.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !alarmManager.canScheduleExactAlarms()) {
-            // 권한 요청을 위한 인텐트 생성 및 전송 필요 (Activity에서 처리)
-            // 예를 들어, 권한 요청 인텐트를 Broadcast로 보내고, Activity에서 이를 받아 처리
+            // Request permission for exact alarm scheduling (handled in the activity).
             val permissionIntent = Intent("com.example.goclass.REQUEST_EXACT_ALARM")
             context.sendBroadcast(permissionIntent)
         } else {
-            Log.d("classScheduler", "setexact call")
-            // 정확한 알람 설정
+            // Set the exact alarm based on the Android version.
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 alarmManager.setExactAndAllowWhileIdle(
                     AlarmManager.RTC_WAKEUP,
@@ -85,9 +98,11 @@ class ClassScheduler {
             }
         }
 
-        Log.d("classScheduler", "알람 설정됨: $dayOfWeek, $startHour:$startMinute")
+        // Log the scheduled alarm details.
+        Log.d("classScheduler", "Alarm scheduled: $dayOfWeek, $startHour:$startMinute")
     }
 
+    // Generate a unique request ID based on class parameters.
     fun uniqueRequestId(
         userId: Int,
         classId: Int,

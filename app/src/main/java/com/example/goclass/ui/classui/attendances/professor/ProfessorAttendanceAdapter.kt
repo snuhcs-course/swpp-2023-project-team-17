@@ -1,3 +1,21 @@
+/*
+ * ProfessorAttendanceAdapter is a RecyclerView adapter responsible for managing and displaying
+ * attendance data for a professor in the ProfessorAttendanceFragment.
+ *
+ * It inflates item views for professor attendance, binds data to the views, and handles user interactions.
+ *
+ * @param listener: ProfessorAttendanceFragment instance for handling item click events.
+ * @property professorAttendanceList: List of AttendancesResponse items representing professor attendance data.
+ *
+ * setProfessorAttendanceList: Updates the professorAttendanceList and notifies the adapter of the data change.
+ * onCreateViewHolder: Inflates the layout for professor attendance item views.
+ * onBindViewHolder: Binds data to the item views based on the position in the list.
+ * getItemCount: Returns the total number of professor attendance items in the list.
+ * ProfessorAttendanceViewHolder: ViewHolder class responsible for holding and binding item views.
+ *
+ * bind: Binds data to the views within the item view.
+ */
+
 package com.example.goclass.ui.classui.attendances.professor
 
 import android.annotation.SuppressLint

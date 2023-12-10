@@ -1,3 +1,13 @@
+/*
+ * LoginViewModel is a ViewModel class responsible for handling the authentication logic.
+ *
+ * @property repository: UserRepository, the repository for making user-related API calls.
+ * @property _userId: MutableLiveData<Int?>, holds the user ID obtained after successful login.
+ * @property userId: LiveData<Int?>, publicly exposed LiveData for observing user ID changes.
+ *
+ * userLogin: Coroutine function that performs user login based on the provided email.
+ */
+
 package com.example.goclass.ui.mainui.login
 
 import androidx.lifecycle.LiveData
