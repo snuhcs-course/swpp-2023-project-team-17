@@ -37,6 +37,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import com.example.goclass.R
 import com.example.goclass.ui.mainui.MainActivity
+import com.example.goclass.utility.Constants
 import java.util.Timer
 import java.util.TimerTask
 import java.lang.NumberFormatException
@@ -105,7 +106,7 @@ class BleAdvertService : Service() {
                     Log.d(TAG, "durationMillis: $durationMillis")
                     val formattedClassId = classId.toString().padEnd(8, '0')
                     Log.d(TAG, "$formattedClassId")
-                    val formattedUuid = "$formattedClassId-0000-1100-8000-00805f9b34fc"
+                    val formattedUuid = formattedClassId + Constants.UUID_STRING
                     val sampleUuid = UUID.randomUUID().toString()
                     try {
                         val parcelUuid = ParcelUuid.fromString(formattedUuid)
